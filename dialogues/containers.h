@@ -1,0 +1,39 @@
+#ifndef CONTAINERS_H
+#define CONTAINERS_H
+
+#include "core/containersstruct.h"
+#include "core/sqlite.h"
+#include "dialogues/akiwake_dialog.h"
+#include "dialogues/createcontainer.h"
+#include "widgets/akiwake_containerslist.h"
+#include "widgets/akiwake_pushbutton.h"
+#include <QDialog>
+#include <QFileDialog>
+#include <QString>
+#include <QTreeWidgetItem>
+
+class Containers : public AkiwakeDialog {
+public:
+  explicit Containers(QWidget *parent = nullptr);
+  ~Containers();
+  void loadingFromFile();
+  void appendCLTree(QList<containerProperties> Set);
+  void addDB();
+  void createDB();
+  void removeDB();
+  void disconnect();
+  void connector();
+
+private:
+  Q_DISABLE_COPY(Containers)
+  QString openFile();
+  AkiwakeContainersList *acl;
+  AkiwakePushButton *addContainer;
+  AkiwakePushButton *createContainer;
+  AkiwakePushButton *disconnectContainer;
+  AkiwakePushButton *removeContainer;
+  AkiwakePushButton *ok;
+  virtual void closeEvent(QCloseEvent *event);
+};
+
+#endif // CONTAINERS_H
