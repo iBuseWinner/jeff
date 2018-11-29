@@ -125,9 +125,7 @@ thinking::microMapCombinator(QList<linksMicroMap> selectionSearchResults) {
 QStringList thinking::sorting(QStringList keys) {
   if (keys.length() <= 1)
     return keys;
-  qDebug() << keys.length() << int(keys.length() / 2);
   QString partition = keys.takeAt(int(keys.length() / 2));
-  qDebug() << partition;
   QStringList early, late;
   foreach (QString key, keys) {
     if (currentInput.indexOf(key) > currentInput.indexOf(partition))
