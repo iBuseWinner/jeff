@@ -41,6 +41,7 @@ public:
                               bool hasAdditionalProperties);
   globalExpressionNetworkMap
   microMapCombinator(QList<linksMicroMap> selectionSearchResults);
+  QStringList sorting(QStringList keys);
   void selectReagents(globalExpressionNetworkMap genm);
   QString get();
 
@@ -48,6 +49,7 @@ signals:
   QString resultOfThinkingChanged();
 
 private:
+  QString simplifier(QString expression);
   sqlite *SQ;
   Q_DISABLE_COPY(thinking)
   QString currentInput;

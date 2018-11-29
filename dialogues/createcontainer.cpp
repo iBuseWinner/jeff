@@ -4,7 +4,6 @@ CreateContainer::CreateContainer(QWidget *parent) : AkiwakeDialog(parent) {
   this->containerName = new AkiwakeLineEdit();
   this->containerName->setPlaceholderText("Enter container's name");
   this->save = new AkiwakePushButton("Save");
-
   QGridLayout *entireLayout = new QGridLayout();
   QSpacerItem *lineSpacer =
       new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);

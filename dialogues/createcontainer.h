@@ -13,6 +13,7 @@ public:
   explicit CreateContainer(QWidget *parent = nullptr);
 private:
   Q_DISABLE_COPY(CreateContainer)
+  void connector();
   AkiwakeLineEdit *containerName;
   AkiwakePushButton *save;
 };

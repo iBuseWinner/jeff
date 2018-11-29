@@ -62,10 +62,14 @@ QList<containerProperties> thinking::getSelection() {
 bool thinking::preparePlugins(QString userExpression) {
   // Handles expression by Python scripts and built-in methods.
   // Here will be the expression processing code in scripts...
-  handlers HD;
-  currentInput = HD.purifyString(userExpression);
+  currentInput = this->simplifier(userExpression);
   // < ... >
   return false;
+}
+
+QString thinking::simplifier(QString expression) {
+  handlers HD;
+  return HD.purifyString(expression);
 }
 
 linksMicroMap thinking::handlePlugins(QList<containerRow> containerMaterial,
@@ -75,6 +79,7 @@ linksMicroMap thinking::handlePlugins(QList<containerRow> containerMaterial,
   QMap<QString, QList<int>> compressedLines;
   foreach (containerRow expandedLine, containerMaterial) {
     // If there isn't current activator in compressed lines...
+    expandedLine.activator = this->simplifier(expandedLine.activator);
     if (!compressedLines.contains(expandedLine.activator)) {
       QList<int> addresses;
       compressedLines.insert(expandedLine.activator, addresses);
@@ -117,14 +122,40 @@ thinking::microMapCombinator(QList<linksMicroMap> selectionSearchResults) {
   return genm;
 }
 
+QStringList thinking::sorting(QStringList keys) {
+  if (keys.length() <= 1)
+    return keys;
+  qDebug() << keys.length() << int(keys.length() / 2);
+  QString partition = keys.takeAt(int(keys.length() / 2));
+  qDebug() << partition;
+  QStringList early, late;
+  foreach (QString key, keys) {
+    if (currentInput.indexOf(key) > currentInput.indexOf(partition))
+      late.append(key);
+    else
+      early.append(key);
+  }
+  QStringList sorted;
+  early = this->sorting(early);
+  foreach (QString key, early) { sorted.append(key); }
+  sorted.append(partition);
+  late = this->sorting(late);
+  foreach (QString key, late) { sorted.append(key); }
+  foreach (QString key, sorted) {}
+  return sorted;
+}
+
 void thinking::selectReagents(globalExpressionNetworkMap genm) {
-  QStringList keys = genm.allFoundReagents.keys();
+  if (genm.allFoundReagents.keys().length() == 0)
+    return;
+  QStringList keys = this->sorting(genm.allFoundReagents.keys());
   QString tempResult;
   foreach (QString key, keys) {
     currentInput.remove(key);
     QRandomGenerator rand(quint32(QTime::currentTime().msec()));
     tempResult += genm.allFoundReagents.value(key).at(
-        rand.bounded(genm.allFoundReagents.value(key).length())) + " ";
+                      rand.bounded(genm.allFoundReagents.value(key).length())) +
+                  " ";
     stringResult = tempResult;
   }
 }

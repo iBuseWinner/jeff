@@ -24,7 +24,6 @@ class ASW : public QMainWindow {
   Q_OBJECT
 public:
   ASW(QWidget *parent = nullptr);
-  void connector();
   ~ASW();
   AkiwakeDisplay *display;
   AkiwakeLine *line;
@@ -33,6 +32,7 @@ public:
 
 private:
   Q_DISABLE_COPY(ASW)
+  void connector();
   AkiwakeMessage::ThemeType themeFolder = AkiwakeMessage::Light;
   AkiwakeMessage *current = nullptr;
   QList<AkiwakeMessage *> messages;

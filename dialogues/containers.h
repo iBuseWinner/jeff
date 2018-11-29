@@ -22,10 +22,10 @@ public:
   void createDB();
   void removeDB();
   void disconnect();
-  void connector();
 
 private:
   Q_DISABLE_COPY(Containers)
+  void connector();
   QString openFile();
   AkiwakeContainersList *acl;
   AkiwakePushButton *addContainer;
