@@ -1,16 +1,26 @@
 #include "sqlite.h"
 #include <QDebug>
 
-void sqlite::create_db(QString Path, QString Container) {
+void sqlite::create_db(containerProperties newCP) {
   // Creates a database if it does not exist, and a new container if it does not
   // exist either.
   QSqlDatabase NewDB = QSqlDatabase::database();
-  NewDB.setDatabaseName(Path);
+  NewDB.setDatabaseName(newCP.path);
   NewDB.open();
   QSqlQuery Query(NewDB);
   Query.exec(
       QString("CREATE TABLE %1(address INTEGER, expression TEXT, links TEXT)")
-          .arg(Container));
+          .arg(newCP.container));
+  Query.exec("CREATE TABLE IF NOT EXISTS tables(container TEXT, title TEXT, "
+             "readOnly BOOL, private BOOL, catching BOOL)");
+  Query.prepare(
+      "INSERT OR REPLACE INTO tables VALUES (:cnt, :ttl, :ro, :prv, :ctch)");
+  Query.bindValue(":cnt", newCP.container);
+  Query.bindValue(":ttl", newCP.title);
+  Query.bindValue(":ro", newCP.readOnly);
+  Query.bindValue(":prv", newCP.isPrivate);
+  Query.bindValue(":ctch", newCP.isCatching);
+  Query.exec();
   NewDB.close();
 }
 
@@ -32,6 +42,43 @@ QStringList sqlite::containers(QString Path) {
   }
   DB.close();
   return Containers;
+}
+
+containerProperties sqlite::optionsLoader(containerProperties container) {
+  QSqlDatabase DB = QSqlDatabase::database();
+  DB.setDatabaseName(container.path);
+  DB.open();
+  QSqlQuery Query(DB);
+  Query.prepare("SELECT (title, ro, private, catching) FROM tables WHERE "
+                "container=:cont");
+  Query.bindValue(":cont", container.container);
+  Query.exec();
+  if (!Query.first())
+    return container;
+  container.title = Query.value(0).toString();
+  container.readOnly = Query.value(1).toBool();
+  container.isPrivate = Query.value(2).toBool();
+  container.isCatching = Query.value(3).toBool();
+  DB.close();
+  return container;
+}
+
+void sqlite::optionsWriter(containerProperties container) {
+  QSqlDatabase DB = QSqlDatabase::database();
+  DB.setDatabaseName(container.path);
+  DB.open();
+  QSqlQuery Query(DB);
+  Query.exec("CREATE TABLE IF NOT EXISTS tables(container TEXT, title TEXT, "
+             "readOnly BOOL, private BOOL, catching BOOL)");
+  Query.prepare(
+      "INSERT OR REPLACE INTO tables VALUES (:cnt, :ttl, :ro, :prv, :ctch)");
+  Query.bindValue(":cnt", container.container);
+  Query.bindValue(":ttl", container.title);
+  Query.bindValue(":ro", container.readOnly);
+  Query.bindValue(":prv", container.isPrivate);
+  Query.bindValue(":ctch", container.isCatching);
+  Query.exec();
+  DB.close();
 }
 
 void sqlite::insert(QString Path, QString Container, int Address,

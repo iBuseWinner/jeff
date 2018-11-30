@@ -2,6 +2,7 @@
 #define CONTAINERS_H
 
 #include "core/containersstruct.h"
+#include "core/settingsstore.h"
 #include "core/sqlite.h"
 #include "dialogues/akiwake_dialog.h"
 #include "dialogues/createcontainer.h"
@@ -25,6 +26,7 @@ public:
 
 private:
   Q_DISABLE_COPY(Containers)
+  QMap<QTreeWidgetItem *, containerProperties> containers;
   void connector();
   QString openFile();
   AkiwakeContainersList *acl;

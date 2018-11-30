@@ -53,16 +53,17 @@ void Containers::addDB() {
   // Adds database and containers into AS selection for searching.
   QString Path = QFileDialog::getOpenFileName(this, "Select database", nullptr,
                                               "SQLite3 database(*.db)");
-  sqlite SQ;
-  QStringList Containers = SQ.containers(Path);
+  sqlite *SQ = new sqlite();
+  QStringList Containers = SQ->containers(Path);
   QList<containerProperties> Set;
-  for (int i = 0; i < Containers.length(); i++) {
+  foreach (QString Container, Containers) {
     containerProperties CP;
     CP.path = Path;
-    CP.container = Containers.at(i);
+    CP.container = Container;
     Set.append(CP);
   }
   this->appendCLTree(Set);
+  delete SQ;
 }
 
 void Containers::createDB() {
@@ -104,6 +105,7 @@ void Containers::appendCLTree(QList<containerProperties> Set) {
       // Adds container:
       QTreeWidgetItem *childElement = new QTreeWidgetItem(element);
       childElement->setText(0, Set.at(i).container);
+      this->containers.insert(childElement, Set.at(i));
     }
   }
 }
@@ -125,16 +127,11 @@ void Containers::removeDB() {
 void Containers::closeEvent(QCloseEvent *event) {
   // Saves the container's list.
   QList<containerProperties> Set;
-  for (int i = 0; i < this->acl->topLevelItemCount(); i++) {
+  for (int i = 0; i < this->acl->topLevelItemCount(); i++)
     for (int j = 0; j < this->acl->invisibleRootItem()->child(i)->childCount();
-         j++) {
-      containerProperties Container;
-      Container.path = this->acl->invisibleRootItem()->child(i)->text(0);
-      Container.container =
-          this->acl->invisibleRootItem()->child(i)->child(j)->text(0);
-      Set.append(Container);
-    }
-  }
+         j++)
+      Set.append(this->containers.value(
+          this->acl->invisibleRootItem()->child(i)->child(j)));
   SettingsStore *ST = new SettingsStore();
   ST->write(Set);
   delete ST;

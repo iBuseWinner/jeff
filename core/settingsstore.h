@@ -2,6 +2,7 @@
 #define SETTINGSSTORE_H
 
 #include "core/containersstruct.h"
+#include "core/sqlite.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -24,7 +25,7 @@ public:
   void write(QString key, QVariant data);
   void write(QList<containerProperties> Set);
   QString settingsPath();
-  const QString company = "ACLO";
+  const QString company = "CCLC";
   const QString application = "ASW";
   QJsonObject toJson(containerProperties obj);
   containerProperties toContainerStruct(QJsonObject obj);
