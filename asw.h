@@ -11,6 +11,7 @@
 #include "widgets/akiwake_line.h"
 #include "widgets/akiwake_message.h"
 #include "widgets/akiwake_pushbutton.h"
+#include "widgets/akiwake_menubar.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -27,6 +28,7 @@ public:
   ~ASW();
   AkiwakeDisplay *display;
   AkiwakeLine *line;
+  AkiwakeMenuBar *mBar;
   void userSendsMessage();
   void themeUpdater();
 
