@@ -8,6 +8,8 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QSqlResult>
+#include <QSqlError>
 #include <QString>
 #include <QStringList>
 #include <QVariant>

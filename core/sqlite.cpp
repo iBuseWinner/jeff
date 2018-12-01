@@ -12,8 +12,7 @@ void sqlite::create_db(containerProperties newCP) {
           .arg(newCP.container));
   Query.exec("CREATE TABLE IF NOT EXISTS tables(container TEXT, title TEXT, "
              "readOnly BOOL, private BOOL, catching BOOL)");
-  Query.prepare("INSERT OR REPLACE INTO tables VALUES (:ttl, :ro, :prv, :ctch) "
-                "WHERE container=:cnt");
+  Query.prepare("INSERT INTO tables VALUES (:cnt, :ttl, :ro, :prv, :ctch)");
   Query.bindValue(":cnt", newCP.container);
   Query.bindValue(":ttl", newCP.title);
   Query.bindValue(":ro", newCP.readOnly);
@@ -70,8 +69,10 @@ void sqlite::optionsWriter(containerProperties container) {
   QSqlQuery Query(DB);
   Query.exec("CREATE TABLE IF NOT EXISTS tables(container TEXT, title TEXT, "
              "readOnly BOOL, private BOOL, catching BOOL)");
-  Query.prepare("INSERT OR REPLACE INTO tables VALUES (:ttl, :ro, :prv, :ctch) "
-                "WHERE container=:cnt");
+  Query.prepare("DELETE FROM tables WHERE container=:cnt");
+  Query.bindValue(":cnt", container.container);
+  Query.exec();
+  Query.prepare("INSERT INTO tables VALUES(:cnt, :ttl, :ro, :prv, :ctch)");
   Query.bindValue(":cnt", container.container);
   Query.bindValue(":ttl", container.title);
   Query.bindValue(":ro", container.readOnly);
