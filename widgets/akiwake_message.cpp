@@ -90,15 +90,17 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
   QFont Font = this->messageLabel->font();
   QFontMetrics Metrics = QFontMetrics(Font);
   QString Text = this->currentText;
+  Text.replace("<br>", " <br> ");
+  Text.remove("\n");
   // Counts width of all text...
   int TextWidth = Metrics.width(Text);
-  if (TextWidth + 80 <= width) {
+  if (TextWidth + 60 <= width) {
     this->messageLabel->setText(this->currentText);
     return;
   }
   // If message is wider than window width...
   this->messageLabel->clear();
-  while (TextWidth + 80 > width) {
+  while (TextWidth + 60 > width) {
     QString SingleLine = "";
     if (Text.split(" ").isEmpty()) {
       break;
@@ -106,7 +108,7 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
     QStringList Words = Text.split(" ");
     for (int index = 0; index < Words.length(); index++) {
       // If we have a very large word...
-      if (Metrics.width(Words.at(index)) + 80 > width) {
+      if (Metrics.width(Words.at(index)) + 60 > width) {
         this->labelAppending(SingleLine);
         Text = Text.remove(0, SingleLine.length()).simplified();
         SingleLine.clear();
@@ -118,15 +120,11 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
         TextWidth = Metrics.width(Text);
         continue;
       }
+      if (Metrics.width(SingleLine + Words.at(index)) + 60 >= width)
+        break;
       SingleLine += " " + Words.at(index);
-      // If there is still space...
-      if (Metrics.width(SingleLine) + 80 < width) {
-        // ...just get the next word.
-        continue;
-      }
-      // But if space is over...
-      SingleLine.chop(Words.at(index).length() + 1);
-      break;
+      if (Words.at(index) == "<br>")
+        break;
     }
     // Cuts the remaining text...
     Text = Text.remove(0, SingleLine.length());
@@ -136,10 +134,6 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
     this->labelAppending(SingleLine);
   }
   this->labelAppending(Text);
-  // In HTML, we have other characters for line breaks. That's why...
-  if (this->messageLabel->textFormat() == Qt::RichText)
-    this->messageLabel->setText(
-        this->messageLabel->text().replace("\n", "<br>"));
 }
 
 void AkiwakeMessage::commonMaker() {
