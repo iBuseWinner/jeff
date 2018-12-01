@@ -1,5 +1,4 @@
 #include "akiwake_menubar.h"
-#include <QDebug>
 
 AkiwakeMenuBar::AkiwakeMenuBar(QWidget *parent) : QMenuBar(parent) {
   QMenu *menuFile = this->addMenu("File"); // Add File in Menu Bar

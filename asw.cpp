@@ -1,5 +1,4 @@
 #include "asw.h"
-#include <QDebug>
 
 ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   SettingsStore *ST = new SettingsStore;
@@ -38,29 +37,12 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   this->setMenuBar(mBar);
   this->setCentralWidget(central);
   QSqlDatabase::addDatabase("QSQLITE");
-
-  /* sqlite sq;
-   * sq.create_db("tuta.db", "elastica");
-   * sq.insert("tuta.db", "elastica", 0, "Hello!", "1");
-   * sq.insert("tuta.db", "elastica", 1, "Hi!", "0"); */
-
-  // /*
-  // QList<containerProperties> CP;
-  // containerProperties CPa;
-  // CPa.path = "hello";
-  // CPa.container = "it's me";
-  // CP.append(CPa);
-  // CP.append(CPa);
-  // sq.writeSelection(CP);
-  // */
-
   // Creates a welcome message...
   thinking *TH = new thinking;
   TH->putExpression("Hello!");
   TH->startProcessing();
   this->addMessage(AkiwakeMessage::ASW, TH->get());
   delete TH;
-
   this->connector();
 }
 

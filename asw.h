@@ -11,6 +11,7 @@
 #include "widgets/akiwake_menubar.h"
 #include "widgets/akiwake_message.h"
 #include "widgets/akiwake_pushbutton.h"
+#include "widgets/akiwake_menubar.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
