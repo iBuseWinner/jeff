@@ -30,12 +30,13 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   centralLayout->setSpacing(0);
   this->display = new AkiwakeDisplay();
   this->line = new AkiwakeLine();
+  this->mBar = new AkiwakeMenuBar();
   // Appends widgets and output...
   central->setLayout(centralLayout);
   central->layout()->addWidget(this->display);
   central->layout()->addWidget(this->line);
+  this->setMenuBar(mBar);
   this->setCentralWidget(central);
-
   QSqlDatabase::addDatabase("QSQLITE");
 
   /* sqlite sq;
@@ -51,13 +52,6 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   // CP.append(CPa);
   // CP.append(CPa);
   // sq.writeSelection(CP);
-  // */
-
-  // Temporary piece of code
-  // /*
-  Containers *cs = new Containers();
-  cs->exec();
-  delete cs;
   // */
 
   // Creates a welcome message...

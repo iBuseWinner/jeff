@@ -4,7 +4,7 @@
 int main(int argc, char *argv[]) {
   QApplication asw(argc, argv);
   QCoreApplication::setApplicationName("asw-qt");
-  QCoreApplication::setApplicationVersion("0.0.1");
+  QCoreApplication::setApplicationVersion("0.0.2");
   ASW window;
   window.show();
   return asw.exec();

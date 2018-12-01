@@ -1,5 +1,4 @@
 #include "akiwake_line.h"
-#include <QDebug>
 
 AkiwakeLine::AkiwakeLine(QWidget *parent) : AkiwakeBoard(parent) {
   // Creates a user input widget.

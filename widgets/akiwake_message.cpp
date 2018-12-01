@@ -1,5 +1,4 @@
 #include "akiwake_message.h"
-#include <QDebug>
 
 AkiwakeMessage::AkiwakeMessage(QString Text, AuthorType Author,
                                ThemeType Theme = AkiwakeMessage::Light,

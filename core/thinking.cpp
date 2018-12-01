@@ -1,5 +1,4 @@
 #include "thinking.h"
-#include <QDebug>
 
 thinking::thinking() {}
 

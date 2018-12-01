@@ -1,5 +1,4 @@
 #include "akiwake_display.h"
-#include <QDebug>
 
 AkiwakeDisplay::AkiwakeDisplay(QWidget *parent) : QScrollArea(parent) {
   // Creates a zone for displaying messages.

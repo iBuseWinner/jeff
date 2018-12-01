@@ -1,5 +1,4 @@
 #include "settingsstore.h"
-#include <QDebug>
 
 SettingsStore::~SettingsStore() {
   // Prevents memory leaks.

@@ -5,10 +5,10 @@
 #include "core/settingsstore.h"
 #include "core/sqlite.h"
 #include "core/thinking.h"
-#include "dialogues/containers.h"
 #include "widgets/akiwake_board.h"
 #include "widgets/akiwake_display.h"
 #include "widgets/akiwake_line.h"
+#include "widgets/akiwake_menubar.h"
 #include "widgets/akiwake_message.h"
 #include "widgets/akiwake_pushbutton.h"
 #include <QApplication>
@@ -27,6 +27,7 @@ public:
   ~ASW();
   AkiwakeDisplay *display;
   AkiwakeLine *line;
+  AkiwakeMenuBar *mBar;
   void userSendsMessage();
   void themeUpdater();
 
