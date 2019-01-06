@@ -41,6 +41,7 @@ private:
   void addMessage(AkiwakeMessage::AuthorType Author, QString Text);
   virtual void resizeEvent(QResizeEvent *event);
   virtual void closeEvent(QCloseEvent *event);
+  virtual void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // ASW_H
