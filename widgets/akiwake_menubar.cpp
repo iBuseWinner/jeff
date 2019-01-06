@@ -22,6 +22,8 @@ AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line,QWidget *parent) : QMenuBar(par
   QAction *fullScreen = new QAction ("Full screen",this);
   fullScreen->setShortcut(Qt::Key_F11);
   fullScreen->setCheckable(true);
+  QAction *hideMenuBar = new QAction ("Hide menu bar",this);
+  hideMenuBar->setShortcut(Qt::CTRL + Qt::Key_H);
 
   menuFile->addAction(containersMng);
   connect(containersMng, &QAction::triggered, this,&AkiwakeMenuBar::openContainerManager);
@@ -43,8 +45,10 @@ AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line,QWidget *parent) : QMenuBar(par
   menuEdit->addSeparator();
   menuEdit->addAction(selectAll);
   connect(selectAll, &QAction::triggered,line->textLine,&AkiwakeLineEdit::selectAll);
+  menuTools->addAction(hideMenuBar);
+  connect(hideMenuBar, &QAction::triggered, this,&AkiwakeMenuBar::hideThis);
   menuTools->addAction(fullScreen);
-  connect(fullScreen, &QAction::triggered, this,&AkiwakeMenuBar::clearScreen);
+  connect(fullScreen, &QAction::triggered, this,&AkiwakeMenuBar::fScreen);
 
 
 
@@ -66,5 +70,9 @@ void AkiwakeMenuBar::clearScreen(){
 void AkiwakeMenuBar::fScreen(){
 
 
+}
+void AkiwakeMenuBar::hideThis(){
+    if (this->isVisible()) this->setVisible(false);
+    else this->setVisible(true);
 }
 

@@ -21,6 +21,7 @@ private:
   void saveToFile();
   void clearScreen();
   void fScreen();
+  void hideThis();
 
 };
 
