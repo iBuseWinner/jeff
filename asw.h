@@ -35,6 +35,7 @@ public:
 private:
   Q_DISABLE_COPY(ASW)
   void connector();
+  void fullscreenHandler(bool isFullscreenMode);
   AkiwakeMessage::ThemeType themeFolder = AkiwakeMessage::Light;
   AkiwakeMessage *current = nullptr;
   QList<AkiwakeMessage *> messages;

@@ -3,11 +3,11 @@
 Containers::Containers(QWidget *parent) : AkiwakeDialog(parent) {
   // Creates main objects.
   this->acl = new AkiwakeContainersList();
-  this->addContainer = new AkiwakePushButton("Add container");
-  this->createContainer = new AkiwakePushButton("Create container");
-  this->disconnectContainer = new AkiwakePushButton("Disconnect container");
-  this->removeContainer = new AkiwakePushButton("Remove container");
-  this->ok = new AkiwakePushButton("Save && Close");
+  this->addContainer = new AkiwakePushButton("Add container", this);
+  this->createContainer = new AkiwakePushButton("Create container", this);
+  this->disconnectContainer = new AkiwakePushButton("Disconnect container", this);
+  this->removeContainer = new AkiwakePushButton("Remove container", this);
+  this->ok = new AkiwakePushButton("Save && Close", this);
   QGridLayout *entireLayout = new QGridLayout();
   entireLayout->addWidget(this->acl, 0, 0, 1, 0);
   entireLayout->addWidget(this->addContainer, 1, 0);

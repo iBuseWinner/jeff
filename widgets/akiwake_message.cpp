@@ -40,9 +40,7 @@ AkiwakeMessage::AkiwakeMessage(QString Text, AuthorType Author,
   this->Animation->start();
 }
 
-AkiwakeMessage::~AkiwakeMessage() {
-  delete this->Animation;
-}
+AkiwakeMessage::~AkiwakeMessage() { delete this->Animation; }
 
 QLabel *AkiwakeMessage::getMessageLabel(QString Text) {
   // Creates the message label.
