@@ -34,7 +34,7 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   central->setLayout(centralLayout);
   central->layout()->addWidget(this->display);
   central->layout()->addWidget(this->line);
-  this->setMenuBar(mBar);
+  this->setMenuBar(this->mBar);
   this->setCentralWidget(central);
   QSqlDatabase::addDatabase("QSQLITE");
   // Creates a welcome message...
@@ -52,14 +52,18 @@ void ASW::connector() {
           &ASW::userSendsMessage);
   connect(this->mBar, &AkiwakeMenuBar::fullscreenModeChanged, this,
           &ASW::fullscreenHandler);
+  connect(this->mBar, &AkiwakeMenuBar::clearScreenPressed, this,
+          &ASW::clearScreen);
 }
 
-ASW::~ASW() {}
+ASW::~ASW() {
+  this->clearScreen();
+}
 
 void ASW::resizeEvent(QResizeEvent *event) {
   // Calibrates all messages.
   for (int i = 0; i < this->messages.length(); i++)
-    messages.at(i)->textLayoutDesigner(this->width());
+    this->messages.at(i)->textLayoutDesigner(this->width());
   event->accept();
 }
 
@@ -82,10 +86,9 @@ void ASW::addMessage(AkiwakeMessage::AuthorType Author, QString Text = "") {
     return;
   AkiwakeMessage *msg = new AkiwakeMessage(Text, Author, this->themeFolder);
   // Style unification...
-  if ((this->current != nullptr) &&
-      (this->current->messageAuthor == msg->messageAuthor))
-
-    this->current->commonMaker();
+  if (this->current != nullptr)
+    if (this->current->messageAuthor == msg->messageAuthor)
+      this->current->commonMaker();
   // Calibrates the message and add it to the screen...
   msg->textLayoutDesigner(this->width());
   this->current = msg;
@@ -109,18 +112,18 @@ void ASW::userSendsMessage() {
 void ASW::themeUpdater() {
   // Changes message color.
   for (int i = 0; i < this->messages.length(); i++) {
-    messages.at(i)->themeFolder = this->themeFolder;
-    messages.at(i)->themeUpdater();
+    this->messages.at(i)->themeFolder = this->themeFolder;
+    this->messages.at(i)->themeUpdater();
   }
 }
 
 void ASW::keyPressEvent(QKeyEvent *event) {
   if ((event->modifiers() == Qt::ControlModifier) &&
       (event->key() == Qt::Key_H)) {
-    if (mBar->isVisible())
-      mBar->setVisible(false);
+    if (this->mBar->isVisible())
+      this->mBar->setVisible(false);
     else
-      mBar->setVisible(true);
+      this->mBar->setVisible(true);
   }
 }
 
@@ -129,4 +132,13 @@ void ASW::fullscreenHandler(bool isFullscreenMode) {
     this->showFullScreen();
   else
     this->showNormal();
+}
+
+void ASW::clearScreen() {
+  foreach (AkiwakeMessage *msg, this->messages) {
+    this->display->layout->removeWidget(msg);
+    delete msg;
+  }
+  this->messages.clear();
+  this->current = nullptr;
 }

@@ -72,7 +72,9 @@ void AkiwakeMenuBar::openContainerManager() {
 
 void AkiwakeMenuBar::saveToFile() {}
 
-void AkiwakeMenuBar::clearScreen() {}
+void AkiwakeMenuBar::clearScreen() {
+  emit clearScreenPressed();
+}
 
 void AkiwakeMenuBar::fScreen() {
   if (this->fullScreen->isChecked())

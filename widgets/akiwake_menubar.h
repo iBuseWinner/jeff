@@ -17,6 +17,7 @@ public:
 
 signals:
   void fullscreenModeChanged(bool mode);
+  void clearScreenPressed();
 
 private:
   Q_DISABLE_COPY(AkiwakeMenuBar)
