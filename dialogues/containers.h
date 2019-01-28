@@ -16,9 +16,8 @@
 class Containers : public AkiwakeDialog {
 public:
   explicit Containers(QWidget *parent = nullptr);
-  ~Containers();
   void loadingFromFile();
-  void appendCLTree(QList<containerProperties> Set);
+  void appendCLTree(const QList<containerProperties>& Set);
   void addDB();
   void createDB();
   void removeDB();

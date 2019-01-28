@@ -50,7 +50,7 @@ signals:
 
 private:
   QString simplifier(QString expression);
-  sqlite *SQ;
+  sqlite *SQ{};
   Q_DISABLE_COPY(thinking)
   QString currentInput;
   QString stringResult = "";

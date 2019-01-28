@@ -20,15 +20,15 @@ class SettingsStore {
 
 public:
   ~SettingsStore();
-  QVariant read(QString key);
+  QVariant read(const QString& key);
   QList<containerProperties> read();
-  void write(QString key, QVariant data);
-  void write(QList<containerProperties> Set);
+  void write(const QString& key, const QVariant& data);
+  void write(const QList<containerProperties>& Set);
   QString settingsPath();
   const QString company = "CCLC";
   const QString application = "ASW";
   QJsonObject toJson(containerProperties obj);
-  containerProperties toContainerStruct(QJsonObject obj);
+  containerProperties toContainerStruct(const QJsonObject& obj);
 
 private:
   const QString selectionFileName = "selection.json";

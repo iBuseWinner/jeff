@@ -9,12 +9,12 @@ AkiwakeDisplay::AkiwakeDisplay(QWidget *parent) : QScrollArea(parent) {
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setWidgetResizable(true);
   this->setObjectName("display");
-  this->layout = new QVBoxLayout();
+  this->layout = new QVBoxLayout(this);
   this->layout->setSpacing(0);
   this->layout->setMargin(0);
-  QSpacerItem *lineSpacer =
+  auto *lineSpacer =
       new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Expanding);
-  QWidget *box = new QWidget();
+  QWidget *box = new QWidget(this);
   box->setObjectName("box");
   this->setStyleSheet(
       "#display, #box { background-color: rgba(255, 255, 255, 0); }");

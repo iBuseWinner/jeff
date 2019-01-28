@@ -2,13 +2,14 @@
 
 Containers::Containers(QWidget *parent) : AkiwakeDialog(parent) {
   // Creates main objects.
-  this->acl = new AkiwakeContainersList();
+  this->acl = new AkiwakeContainersList(this);
   this->addContainer = new AkiwakePushButton("Add container", this);
   this->createContainer = new AkiwakePushButton("Create container", this);
-  this->disconnectContainer = new AkiwakePushButton("Disconnect container", this);
+  this->disconnectContainer =
+      new AkiwakePushButton("Disconnect container", this);
   this->removeContainer = new AkiwakePushButton("Remove container", this);
   this->ok = new AkiwakePushButton("Save && Close", this);
-  QGridLayout *entireLayout = new QGridLayout();
+  auto *entireLayout = new QGridLayout();
   entireLayout->addWidget(this->acl, 0, 0, 1, 0);
   entireLayout->addWidget(this->addContainer, 1, 0);
   entireLayout->addWidget(this->createContainer, 1, 1);
@@ -20,19 +21,9 @@ Containers::Containers(QWidget *parent) : AkiwakeDialog(parent) {
   this->connector();
 }
 
-Containers::~Containers() {
-  // Prevents memory leaks
-  delete this->addContainer;
-  delete this->createContainer;
-  delete this->disconnectContainer;
-  delete this->removeContainer;
-  delete this->ok;
-  delete this->acl;
-}
-
 void Containers::loadingFromFile() {
   // Loads containers from saved AS selection.
-  SettingsStore *ST = new SettingsStore();
+  auto *ST = new SettingsStore();
   QList<containerProperties> Set = ST->read();
   delete ST;
   this->appendCLTree(Set);
@@ -53,7 +44,7 @@ void Containers::addDB() {
   // Adds database and containers into AS selection for searching.
   QString Path = QFileDialog::getOpenFileName(this, "Select database", nullptr,
                                               "SQLite3 database(*.db)");
-  sqlite *SQ = new sqlite();
+  auto *SQ = new sqlite();
   QStringList Containers = SQ->containers(Path);
   QList<containerProperties> Set;
   foreach (QString Container, Containers) {
@@ -67,21 +58,21 @@ void Containers::addDB() {
 }
 
 void Containers::createDB() {
-  CreateContainer *CC = new CreateContainer();
+  auto *CC = new CreateContainer();
   CC->exec();
 }
 
-void Containers::appendCLTree(QList<containerProperties> Set) {
+void Containers::appendCLTree(const QList<containerProperties>& Set) {
   // Appends container's table.
   // For every record in "Set" selection...
-  for (int i = 0; i < Set.length(); i++) {
+  for (const auto & i : Set) {
     // "element" - Path field...
     QTreeWidgetItem *element = nullptr;
     bool into = false;
     for (int j = 0; j < acl->topLevelItemCount(); j++)
       // If this path already in the tree (because we can have a lot of
       // containers into one database path)...
-      if (this->acl->invisibleRootItem()->child(j)->text(0) == Set.at(i).path) {
+      if (this->acl->invisibleRootItem()->child(j)->text(0) == i.path) {
         into = true;
         element = this->acl->invisibleRootItem()->takeChild(j);
         // ...we links element on it.
@@ -90,22 +81,22 @@ void Containers::appendCLTree(QList<containerProperties> Set) {
     // If this path isn't in the tree...
     if (!into) {
       element = new QTreeWidgetItem();
-      element->setText(0, Set.at(i).path);
+      element->setText(0, i.path);
     }
     this->acl->addTopLevelItem(element);
     // Now AS can go to add a container:
     bool notContains = true;
     for (int j = 0; j < element->childCount(); j++)
-      if (element->child(j)->text(0) == Set.at(i).container) {
+      if (element->child(j)->text(0) == i.container) {
         // If this container's name already in the tree and have common path...
         notContains = false;
         break;
       }
     if (notContains) {
       // Adds container:
-      QTreeWidgetItem *childElement = new QTreeWidgetItem(element);
-      childElement->setText(0, Set.at(i).container);
-      this->containers.insert(childElement, Set.at(i));
+      auto *childElement = new QTreeWidgetItem(element);
+      childElement->setText(0, i.container);
+      this->containers.insert(childElement, i);
     }
   }
 }
@@ -132,7 +123,7 @@ void Containers::closeEvent(QCloseEvent *event) {
          j++)
       Set.append(this->containers.value(
           this->acl->invisibleRootItem()->child(i)->child(j)));
-  SettingsStore *ST = new SettingsStore();
+  auto *ST = new SettingsStore();
   ST->write(Set);
   delete ST;
   event->accept();

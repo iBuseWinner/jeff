@@ -1,9 +1,11 @@
 #include "thinking.h"
 
-thinking::thinking() {}
+#include <utility>
+
+thinking::thinking() = default;
 
 void thinking::putExpression(QString userExpression) {
-  this->currentInput = userExpression;
+  this->currentInput = std::move(userExpression);
 }
 
 void thinking::startProcessing() {
@@ -52,7 +54,7 @@ void thinking::startProcessing() {
 
 QList<containerProperties> thinking::getSelection() {
   // Gets AS selection.
-  SettingsStore *ST = new SettingsStore();
+  auto *ST = new SettingsStore();
   QList<containerProperties> selection = ST->read();
   delete ST;
   return selection;
@@ -61,14 +63,14 @@ QList<containerProperties> thinking::getSelection() {
 bool thinking::preparePlugins(QString userExpression) {
   // Handles expression by Python scripts and built-in methods.
   // Here will be the expression processing code in scripts...
-  currentInput = this->simplifier(userExpression);
+  currentInput = this->simplifier(std::move(userExpression));
   // < ... >
   return false;
 }
 
 QString thinking::simplifier(QString expression) {
   handlers HD;
-  return HD.purifyString(expression);
+  return HD.purifyString(std::move(expression));
 }
 
 linksMicroMap thinking::handlePlugins(QList<containerRow> containerMaterial,
@@ -138,7 +140,6 @@ QStringList thinking::sorting(QStringList keys) {
   sorted.append(partition);
   late = this->sorting(late);
   foreach (QString key, late) { sorted.append(key); }
-  foreach (QString key, sorted) {}
   return sorted;
 }
 

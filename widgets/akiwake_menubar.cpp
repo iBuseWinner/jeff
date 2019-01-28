@@ -33,7 +33,7 @@ AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent)
   this->menuFile->addAction(sFile);
   connect(sFile, &QAction::triggered, this, &AkiwakeMenuBar::saveToFile);
   this->menuFile->addSeparator();
-  this->menuFile->addAction("&Exit", qApp, SLOT(quit()), Qt::ALT + Qt::Key_F4);
+  this->menuFile->addAction("&Exit", &QApplication::quit, Qt::ALT + Qt::Key_F4);
   this->menuEdit->addAction(clearScr);
   connect(clearScr, &QAction::triggered, this, &AkiwakeMenuBar::clearScreen);
   this->menuEdit->addSeparator();
@@ -65,16 +65,14 @@ AkiwakeMenuBar::~AkiwakeMenuBar() {
 }
 
 void AkiwakeMenuBar::openContainerManager() {
-  Containers *containersWindow = new Containers();
+  auto *containersWindow = new Containers();
   containersWindow->exec();
   delete containersWindow;
 }
 
 void AkiwakeMenuBar::saveToFile() {}
 
-void AkiwakeMenuBar::clearScreen() {
-  emit clearScreenPressed();
-}
+void AkiwakeMenuBar::clearScreen() { emit clearScreenPressed(); }
 
 void AkiwakeMenuBar::fScreen() {
   if (this->fullScreen->isChecked())

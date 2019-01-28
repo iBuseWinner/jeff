@@ -5,7 +5,7 @@ SettingsStore::~SettingsStore() {
   delete this->settings;
 }
 
-QVariant SettingsStore::read(QString key) {
+QVariant SettingsStore::read(const QString& key) {
   // Reads the setting by key.
   return this->settings->value(key);
 }
@@ -18,7 +18,7 @@ QList<containerProperties> SettingsStore::read() {
   if (!SelectionFile.open(QIODevice::ReadOnly | QIODevice::Text))
     return QList<containerProperties>();
   QTextStream stream(&SelectionFile);
-  QJsonParseError *err = new QJsonParseError;
+  auto *err = new QJsonParseError;
   QJsonDocument DatabaseList =
       QJsonDocument::fromJson(stream.readAll().toUtf8(), err);
   if (err->error != QJsonParseError::NoError)
@@ -27,10 +27,10 @@ QList<containerProperties> SettingsStore::read() {
   SelectionFile.close();
   QJsonArray Containers = DatabaseList.array();
   QList<containerProperties> Set;
-  sqlite *SQ = new sqlite();
-  for (int i = 0; i < Containers.size(); i++) {
+  auto *SQ = new sqlite();
+  for (auto && i : Containers) {
     containerProperties Container =
-        this->toContainerStruct(Containers.at(i).toObject());
+        this->toContainerStruct(i.toObject());
     Container = SQ->optionsLoader(Container);
     Set.append(Container);
   }
@@ -38,19 +38,19 @@ QList<containerProperties> SettingsStore::read() {
   return Set;
 }
 
-void SettingsStore::write(QString key, QVariant data) {
+void SettingsStore::write(const QString& key, const QVariant& data) {
   // Records the setting by key.
   this->settings->setValue(key, data);
 }
 
-void SettingsStore::write(QList<containerProperties> Set) {
+void SettingsStore::write(const QList<containerProperties>& Set) {
   // Writes selection of AS into file.
   QString SettingsPath = this->settingsPath();
   QJsonArray Containers;
-  sqlite *SQ = new sqlite();
-  for (int i = 0; i < Set.length(); i++) {
-    Containers.append(this->toJson(Set.at(i)));
-    SQ->optionsWriter(Set.at(i));
+  auto *SQ = new sqlite();
+  for (const auto & i : Set) {
+    Containers.append(this->toJson(i));
+    SQ->optionsWriter(i);
   }
   delete SQ;
   QJsonDocument DatabaseList(Containers);
@@ -79,7 +79,7 @@ QJsonObject SettingsStore::toJson(containerProperties obj) {
   return converted;
 }
 
-containerProperties SettingsStore::toContainerStruct(QJsonObject obj) {
+containerProperties SettingsStore::toContainerStruct(const QJsonObject& obj) {
   // Converts JSON object into container structure.
   containerProperties converted;
   converted.container = obj.value("container").toString();

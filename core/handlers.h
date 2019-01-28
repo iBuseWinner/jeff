@@ -6,7 +6,7 @@
 class handlers {
 public:
   const char symbols[8] = {'.', ',', ':', ';', '!', '?', '-', '\''};
-  QString purifyString(QString line);
+  QString purifyString(const QString& line);
   QString removeCharacters(QString line);
 };
 

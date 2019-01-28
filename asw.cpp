@@ -1,7 +1,7 @@
 #include "asw.h"
 
 ASW::ASW(QWidget *parent) : QMainWindow(parent) {
-  SettingsStore *ST = new SettingsStore;
+  auto *ST = new SettingsStore;
   this->setWindowTitle(ST->application); // windowsTitle = "ASW"
   this->setMinimumSize(300, 150); // It's not allowed to reduce the size of the
   // window is less than these values.
@@ -38,11 +38,10 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   this->setCentralWidget(central);
   QSqlDatabase::addDatabase("QSQLITE");
   // Creates a welcome message...
-  thinking *TH = new thinking;
-  TH->putExpression("Hello!");
-  TH->startProcessing();
-  this->addMessage(AkiwakeMessage::ASW, TH->get());
-  delete TH;
+  thinking TH;
+  TH.putExpression("Hello!");
+  TH.startProcessing();
+  this->addMessage(AkiwakeMessage::ASW, TH.get());
   this->connector();
 }
 
@@ -56,20 +55,18 @@ void ASW::connector() {
           &ASW::clearScreen);
 }
 
-ASW::~ASW() {
-  this->clearScreen();
-}
+ASW::~ASW() = default;
 
 void ASW::resizeEvent(QResizeEvent *event) {
   // Calibrates all messages.
-  for (int i = 0; i < this->messages.length(); i++)
-    this->messages.at(i)->textLayoutDesigner(this->width());
+  for (auto message : this->messages)
+    message->textLayoutDesigner(this->width());
   event->accept();
 }
 
 void ASW::closeEvent(QCloseEvent *event) {
   // Saves the window settings.
-  SettingsStore *ST = new SettingsStore();
+  auto *ST = new SettingsStore();
   ST->write("asw/size", this->size());
   delete ST;
   event->accept();
@@ -84,7 +81,8 @@ void ASW::addMessage(AkiwakeMessage::AuthorType Author, QString Text = "") {
   }
   if (Text.trimmed() == "")
     return;
-  AkiwakeMessage *msg = new AkiwakeMessage(Text, Author, this->themeFolder);
+  AkiwakeMessage *msg =
+      new AkiwakeMessage(Text, Author, this->themeFolder, this->display);
   // Style unification...
   if (this->current != nullptr)
     if (this->current->messageAuthor == msg->messageAuthor)
@@ -96,11 +94,10 @@ void ASW::addMessage(AkiwakeMessage::AuthorType Author, QString Text = "") {
   this->display->layout->addWidget(this->current);
   // Responses to user expression...
   if (Author == AkiwakeMessage::User) {
-    thinking *TH = new thinking;
-    TH->putExpression(Text);
-    TH->startProcessing();
-    this->addMessage(AkiwakeMessage::ASW, TH->get());
-    delete TH;
+    thinking TH;
+    TH.putExpression(Text);
+    TH.startProcessing();
+    this->addMessage(AkiwakeMessage::ASW, TH.get());
   }
 }
 
@@ -111,9 +108,9 @@ void ASW::userSendsMessage() {
 
 void ASW::themeUpdater() {
   // Changes message color.
-  for (int i = 0; i < this->messages.length(); i++) {
-    this->messages.at(i)->themeFolder = this->themeFolder;
-    this->messages.at(i)->themeUpdater();
+  for (auto message : this->messages) {
+    message->themeFolder = this->themeFolder;
+    message->themeUpdater();
   }
 }
 

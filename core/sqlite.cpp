@@ -22,7 +22,7 @@ void sqlite::create_db(containerProperties newCP) {
   NewDB.close();
 }
 
-QStringList sqlite::containers(QString Path) {
+QStringList sqlite::containers(const QString& Path) {
   // Returns list of existing containers.
   QSqlDatabase DB = QSqlDatabase::database();
   DB.setDatabaseName(Path);
@@ -82,8 +82,8 @@ void sqlite::optionsWriter(containerProperties container) {
   DB.close();
 }
 
-void sqlite::insert(QString Path, QString Container, int Address,
-                    QString Expression, QString Links) {
+void sqlite::insert(const QString& Path, const QString& Container, int Address,
+                    const QString& Expression, const QString& Links) {
   // Inserts a new entry into the container.
   QSqlDatabase DB = QSqlDatabase::database();
   DB.setDatabaseName(Path);
@@ -98,7 +98,7 @@ void sqlite::insert(QString Path, QString Container, int Address,
   DB.close();
 }
 
-QPair<QString, QString> sqlite::scan(QString Path, QString Container,
+QPair<QString, QString> sqlite::scan(const QString& Path, const QString& Container,
                                      int Address) {
   // Returns expression and links by address value.
   QSqlDatabase DB = QSqlDatabase::database();
@@ -121,19 +121,17 @@ QPair<QString, QString> sqlite::scan(QString Path, QString Container,
   return QPair<QString, QString>(Expressions, Links);
 }
 
-bool sqlite::hasAdditionalProperties(QString Path, QString Container) {
+bool sqlite::hasAdditionalProperties(const QString& Path, const QString& Container) {
   // Find out if the table has additional properties.
   QSqlDatabase DB = QSqlDatabase::database();
   DB.setDatabaseName(Path);
   DB.open();
   QSqlRecord Record = DB.record(Container);
   DB.close();
-  if (Record.fieldName(3) != "")
-    return true;
-  return false;
+  return Record.fieldName(3) != "";
 }
 
-QMap<QString, QString> sqlite::scanAP(QString Path, QString Container,
+QMap<QString, QString> sqlite::scanAP(const QString& Path, const QString& Container,
                                       int Address) {
   // Returns additional table properties.
   QSqlDatabase DB = QSqlDatabase::database();
@@ -154,8 +152,8 @@ QMap<QString, QString> sqlite::scanAP(QString Path, QString Container,
   return additionalProperties;
 }
 
-QList<QPair<QString, QString>> sqlite::scan(QString Path, QString Container,
-                                            QString Expression) {
+QList<QPair<QString, QString>> sqlite::scan(const QString& Path, const QString& Container,
+                                            const QString& Expression) {
   // Returns activators and links by expression value.
   QSqlDatabase DB = QSqlDatabase::database();
   DB.setDatabaseName(Path);

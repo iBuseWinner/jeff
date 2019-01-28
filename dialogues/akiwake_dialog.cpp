@@ -4,14 +4,14 @@ AkiwakeDialog::AkiwakeDialog(QWidget *parent) : QDialog(parent) {
   // Prepares dialog windows for using.
   this->setMinimumSize(300, 150);
   this->resize(600, 450);
-  this->mainBoard = new AkiwakeBoard();
-  QGridLayout *mainBoardContainer = new QGridLayout();
+  this->mainBoard = new AkiwakeBoard(this);
+  auto *mainBoardContainer = new QGridLayout();
   mainBoardContainer->setMargin(6);
   mainBoardContainer->setSpacing(0);
-  QGridLayout *baseLayout = new QGridLayout();
+  auto *baseLayout = new QGridLayout();
   baseLayout->setMargin(0);
   baseLayout->setSpacing(0);
-  QWidget *themeWidget = new QWidget();
+  QWidget *themeWidget = new QWidget(this);
   themeWidget->setObjectName("themeWidget");
   themeWidget->setStyleSheet("#themeWidget {"
                              "background-image: url(:/arts/background.jpg);"

@@ -13,7 +13,6 @@ class AkiwakeLine : public AkiwakeBoard {
   Q_OBJECT
 public:
   explicit AkiwakeLine(QWidget *parent = nullptr);
-  ~AkiwakeLine();
   AkiwakeLineEdit *textLine;
   AkiwakePushButton *sendButton;
 

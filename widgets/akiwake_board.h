@@ -10,15 +10,15 @@ public:
   explicit AkiwakeBoard(QWidget *parent = nullptr);
   static QString borderTheme(qint8 Folder, qint8 ID);
   static QString borderTheme(qint8 Folder, qint8 ID, bool Swap);
-  QWidget *centralWidget = new QWidget();
-  QWidget *LH = new QWidget();
-  QWidget *H = new QWidget();
-  QWidget *RH = new QWidget();
-  QWidget *L = new QWidget();
-  QWidget *R = new QWidget();
-  QWidget *LL1 = new QWidget();
-  QWidget *L1 = new QWidget();
-  QWidget *RL1 = new QWidget();
+  QWidget *centralWidget = new QWidget(this);
+  QWidget *LH = new QWidget(this);
+  QWidget *H = new QWidget(this);
+  QWidget *RH = new QWidget(this);
+  QWidget *L = new QWidget(this);
+  QWidget *R = new QWidget(this);
+  QWidget *LL1 = new QWidget(this);
+  QWidget *L1 = new QWidget(this);
+  QWidget *RL1 = new QWidget(this);
 
 private:
   Q_DISABLE_COPY(AkiwakeBoard)

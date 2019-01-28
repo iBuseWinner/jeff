@@ -1,6 +1,6 @@
 #include "akiwake_message.h"
 
-AkiwakeMessage::AkiwakeMessage(QString Text, AuthorType Author,
+AkiwakeMessage::AkiwakeMessage(const QString& Text, AuthorType Author,
                                ThemeType Theme = AkiwakeMessage::Light,
                                QWidget *parent)
     : QWidget(parent) {
@@ -8,7 +8,13 @@ AkiwakeMessage::AkiwakeMessage(QString Text, AuthorType Author,
   // Variable assignment...
   this->themeFolder = Theme;
   this->messageAuthor = Author;
-  this->messageLabel = this->getMessageLabel(Text);
+  this->messageLabel = new QLabel(Text, this);
+  this->messageLabel->setTextFormat(Qt::RichText);
+  this->currentText = Text;
+  this->messageLabel->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                                              Qt::LinksAccessibleByMouse);
+  this->messageLabel->setFocusPolicy(Qt::NoFocus);
+  this->messageLabel->setOpenExternalLinks(true);
   this->labelTextColor();
   this->themeUpdater();
   // Creating layout for adding message into AkiwakeBoard...
@@ -18,10 +24,10 @@ AkiwakeMessage::AkiwakeMessage(QString Text, AuthorType Author,
   labelLayout->addWidget(this->messageLabel);
   this->board->centralWidget->setLayout(labelLayout);
   // Creating message output format...
-  QHBoxLayout *line = new QHBoxLayout();
+  auto *line = new QHBoxLayout(this);
   line->setContentsMargins(0, 0, 0, 6);
   line->setSpacing(0);
-  QSpacerItem *lineSpacer =
+  auto *lineSpacer =
       new QSpacerItem(20, 20, QSizePolicy::Expanding, QSizePolicy::Fixed);
   if (this->messageAuthor == AkiwakeMessage::ASW) {
     line->addWidget(this->board);
@@ -31,32 +37,6 @@ AkiwakeMessage::AkiwakeMessage(QString Text, AuthorType Author,
     line->addWidget(this->board);
   }
   this->setLayout(line);
-  // Animation block...
-  this->Animation = new QPropertyAnimation(this, "maximumHeight");
-  this->Animation->setDuration(1000);
-  this->Animation->setStartValue(0);
-  this->Animation->setEndValue(1000);
-  this->Animation->setEasingCurve(QEasingCurve::InOutQuad);
-  this->Animation->start();
-}
-
-AkiwakeMessage::~AkiwakeMessage() { delete this->Animation; }
-
-QLabel *AkiwakeMessage::getMessageLabel(QString Text) {
-  // Creates the message label.
-  QLabel *Message = new QLabel(Text);
-  int ID = QFontDatabase::addApplicationFont(
-      ":/arts/fonts/fira-sans-condensed-regular.ttf");
-  QFont Font = QFontDatabase::applicationFontFamilies(ID).at(0);
-  Font.setPixelSize(18);
-  Message->setFont(Font);
-  Message->setTextFormat(Qt::RichText);
-  this->currentText = Text;
-  Message->setTextInteractionFlags(Qt::TextSelectableByMouse |
-                                   Qt::LinksAccessibleByMouse);
-  Message->setFocusPolicy(Qt::NoFocus);
-  Message->setOpenExternalLinks(true);
-  return Message;
 }
 
 void AkiwakeMessage::labelTextColor() {
@@ -74,7 +54,7 @@ QString AkiwakeMessage::returnCurrentText() {
   return this->currentText;
 }
 
-void AkiwakeMessage::labelAppending(QString Text) {
+void AkiwakeMessage::labelAppending(const QString& Text) {
   // Transfer part of the text to a new line.
   this->messageLabel->setText(this->messageLabel->text() + "\n" +
                               Text.simplified());
@@ -131,6 +111,7 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
     this->labelAppending(SingleLine);
   }
   this->labelAppending(Text);
+  this->messageLabel->setText(this->messageLabel->text().replace("\n", "<br>"));
 }
 
 void AkiwakeMessage::commonMaker() {

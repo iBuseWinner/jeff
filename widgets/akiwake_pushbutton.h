@@ -4,7 +4,6 @@
 #include <QAbstractAnimation>
 #include <QAction>
 #include <QFocusEvent>
-#include <QFontDatabase>
 #include <QObject>
 #include <QPropertyAnimation>
 #include <QPushButton>
@@ -17,9 +16,9 @@ class AkiwakePushButton : public QPushButton {
   Q_PROPERTY(QString theme MEMBER m_theme)
 
 public:
-  explicit AkiwakePushButton(QString Text, QWidget *parent = nullptr);
+  explicit AkiwakePushButton(const QString& Text, QWidget *parent = nullptr);
   ~AkiwakePushButton() override;
-  QPropertyAnimation *animation = new QPropertyAnimation();
+  QPropertyAnimation *animation = new QPropertyAnimation(this);
   QString styleSheet();
 
 signals:

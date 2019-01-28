@@ -1,13 +1,9 @@
 #include "akiwake_pushbutton.h"
 
-AkiwakePushButton::AkiwakePushButton(QString Text, QWidget *parent)
+AkiwakePushButton::AkiwakePushButton(const QString& Text, QWidget *parent)
     : QPushButton(parent) {
   // Creates a functional button.
   this->setStyleSheet(this->styleSheet());
-  int ID = QFontDatabase::addApplicationFont(
-      ":/arts/fonts/fira-sans-condensed-regular.ttf");
-  QFont Font = QFontDatabase::applicationFontFamilies(ID).at(0);
-  this->setFont(Font);
   this->setText(Text);
   this->animation->setDuration(300);
   this->animation->setEasingCurve(QEasingCurve::InOutQuad);
