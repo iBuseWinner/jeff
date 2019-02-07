@@ -1,5 +1,4 @@
 #include "asw.h"
-#include <QApplication>
 
 int main(int argc, char *argv[]) {
   QApplication asw(argc, argv);

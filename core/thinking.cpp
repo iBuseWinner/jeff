@@ -160,5 +160,5 @@ void thinking::selectReagents(globalExpressionNetworkMap genm) {
 
 QString thinking::get() {
   // Returns result.
-  return this->stringResult;
+  return this->stringResult.trimmed();
 }

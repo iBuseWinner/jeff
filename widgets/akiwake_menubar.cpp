@@ -74,12 +74,7 @@ void AkiwakeMenuBar::saveToFile() {}
 
 void AkiwakeMenuBar::clearScreen() { emit clearScreenPressed(); }
 
-void AkiwakeMenuBar::fScreen() {
-  if (this->fullScreen->isChecked())
-    emit fullscreenModeChanged(true);
-  else
-    emit fullscreenModeChanged(false);
-}
+void AkiwakeMenuBar::fScreen() { emit fullscreenModeChanged(); }
 
 void AkiwakeMenuBar::hideThis() {
   if (this->isVisible())

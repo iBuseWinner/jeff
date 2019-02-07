@@ -30,19 +30,18 @@ public:
   AkiwakeLine *line;
   AkiwakeMenuBar *mBar;
   void userSendsMessage();
-  void themeUpdater();
 
 private:
   Q_DISABLE_COPY(ASW)
+  void applyingSettings();
   void connector();
-  void fullscreenHandler(bool isFullscreenMode);
+  void fullscreenHandler();
   void clearScreen();
   AkiwakeMessage::ThemeType themeFolder = AkiwakeMessage::Light;
   AkiwakeMessage *current = nullptr;
   QList<AkiwakeMessage *> messages;
   void addMessage(AkiwakeMessage::AuthorType Author, QString Text);
   virtual void resizeEvent(QResizeEvent *event);
-  virtual void closeEvent(QCloseEvent *event);
   virtual void keyPressEvent(QKeyEvent *event);
 };
 

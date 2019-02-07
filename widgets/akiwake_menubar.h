@@ -14,9 +14,10 @@ class AkiwakeMenuBar : public QMenuBar {
 public:
   explicit AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent = nullptr);
   ~AkiwakeMenuBar() override;
+   QAction *fullScreen;
 
 signals:
-  void fullscreenModeChanged(bool mode);
+  void fullscreenModeChanged();
   void clearScreenPressed();
 
 private:
@@ -30,7 +31,6 @@ private:
   QMenu *menuFile;
   QMenu *menuEdit;
   QMenu *menuTools;
-  QAction *fullScreen;
 };
 
 #endif // AKIWAKE_MENUBAR_H

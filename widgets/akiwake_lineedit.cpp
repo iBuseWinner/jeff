@@ -6,4 +6,5 @@ AkiwakeLineEdit::AkiwakeLineEdit(QWidget *parent) : QLineEdit(parent) {
   QFont Font = QFontDatabase::applicationFontFamilies(ID).at(0);
   this->setFont(Font);
   this->setStyleSheet("color: rgb(0, 0, 0);");
+  this->setFrame(0);
 }

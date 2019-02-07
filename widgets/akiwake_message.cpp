@@ -1,6 +1,6 @@
 #include "akiwake_message.h"
 
-AkiwakeMessage::AkiwakeMessage(const QString& Text, AuthorType Author,
+AkiwakeMessage::AkiwakeMessage(const QString &Text, AuthorType Author,
                                ThemeType Theme = AkiwakeMessage::Light,
                                QWidget *parent)
     : QWidget(parent) {
@@ -19,7 +19,7 @@ AkiwakeMessage::AkiwakeMessage(const QString& Text, AuthorType Author,
   this->themeUpdater();
   // Creating layout for adding message into AkiwakeBoard...
   QLayout *labelLayout = new QGridLayout();
-  labelLayout->setContentsMargins(0, 0, 0, 0);
+  labelLayout->setMargin(3);
   labelLayout->setSpacing(0);
   labelLayout->addWidget(this->messageLabel);
   this->board->centralWidget->setLayout(labelLayout);
@@ -54,21 +54,22 @@ QString AkiwakeMessage::returnCurrentText() {
   return this->currentText;
 }
 
-void AkiwakeMessage::labelAppending(const QString& Text) {
+void AkiwakeMessage::labelAppending(const QString &Text) {
   // Transfer part of the text to a new line.
   this->messageLabel->setText(this->messageLabel->text() + "\n" +
                               Text.simplified());
-  this->messageLabel->setText(this->messageLabel->text().trimmed());
 }
 
 void AkiwakeMessage::textLayoutDesigner(int width) {
   // Makes messages more readable no matter what text is written.
   // Takes metrics from message label font...
+  // WARNING!!! THIS IS NOW REFORMING!
+
   QFont Font = this->messageLabel->font();
   QFontMetrics Metrics = QFontMetrics(Font);
   QString Text = this->currentText;
-  Text.replace("<br>", " <br> ");
   Text.remove("\n");
+  Text.replace("<br>", " <br> ");
   // Counts width of all text...
   int TextWidth = Metrics.width(Text);
   if (TextWidth + 60 <= width) {
@@ -83,81 +84,36 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
       break;
     }
     QStringList Words = Text.split(" ");
-    for (int index = 0; index < Words.length(); index++) {
+    for (QString Word : Words) {
       // If we have a very large word...
-      if (Metrics.width(Words.at(index)) + 60 > width) {
+      if (Metrics.width(Word) + 60 > width) {
         this->labelAppending(SingleLine);
         Text = Text.remove(0, SingleLine.length()).simplified();
         SingleLine.clear();
         // We eliding it...
-        QString Elided =
-            Metrics.elidedText(Words.at(index), Qt::ElideRight, width - 80);
+        QString Elided = Metrics.elidedText(Word, Qt::ElideRight, width - 80);
         this->labelAppending(Elided);
-        Text = Text.remove(0, Words.at(index).length()).trimmed();
+        Text = Text.remove(0, Word.length()).trimmed();
         TextWidth = Metrics.width(Text);
         continue;
       }
-      if (Metrics.width(SingleLine + Words.at(index)) + 60 >= width)
+      if (Metrics.width(QString(SingleLine + Word).replace("<br>", "")) + 60 >= width)
         break;
-      SingleLine += " " + Words.at(index);
-      if (Words.at(index) == "<br>")
+      SingleLine += " " + Word;
+      if (Word == "<br>")
         break;
     }
     // Cuts the remaining text...
     Text = Text.remove(0, SingleLine.length());
+    SingleLine.remove("<br>");
     SingleLine = SingleLine.simplified();
     // Gets new metrics...
     TextWidth = Metrics.width(Text);
     this->labelAppending(SingleLine);
   }
   this->labelAppending(Text);
+  this->messageLabel->setText(this->messageLabel->text().trimmed());
   this->messageLabel->setText(this->messageLabel->text().replace("\n", "<br>"));
 }
 
-void AkiwakeMessage::commonMaker() {
-  // If we have two messages in a row from one user, they are combined into a
-  // unit: each previous message looks like a regular board, and only the latter
-  // points to the author.
-  this->board->LL1->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 6));
-  this->board->RL1->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 7));
-  this->unitedStyle = true;
-}
-
-void AkiwakeMessage::authorDefine() {
-  // When changing the topic or adding a message, its authorship is displayed by
-  // a special pointer.
-  if (this->unitedStyle)
-    return;
-  if (this->messageAuthor == AkiwakeMessage::ASW)
-    this->board->LL1->setStyleSheet(
-        AkiwakeBoard::borderTheme(this->themeFolder, 6, true));
-  else
-    this->board->RL1->setStyleSheet(
-        AkiwakeBoard::borderTheme(this->themeFolder, 7, true));
-}
-
-void AkiwakeMessage::themeUpdater() {
-  // Changes all style sheets.
-  this->board->LH->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 1));
-  this->board->H->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 2));
-  this->board->RH->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 3));
-  this->board->L->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 4));
-  this->board->centralWidget->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 2));
-  this->board->R->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 5));
-  this->board->LL1->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 6));
-  this->board->L1->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 2));
-  this->board->RL1->setStyleSheet(
-      AkiwakeBoard::borderTheme(this->themeFolder, 7));
-  this->labelTextColor();
-  this->authorDefine();
-}
+void AkiwakeMessage::themeUpdater() { this->labelTextColor(); }

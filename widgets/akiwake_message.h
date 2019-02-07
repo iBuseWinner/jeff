@@ -22,7 +22,6 @@ public:
   explicit AkiwakeMessage(const QString& Text, AuthorType Author, ThemeType Theme,
                           QWidget *parent = nullptr);
   QString returnCurrentText();
-  void commonMaker();
   void textLayoutDesigner(int width);
   void themeUpdater();
   AkiwakeBoard *board = new AkiwakeBoard(this);
@@ -30,7 +29,6 @@ public:
 
 private:
   Q_DISABLE_COPY(AkiwakeMessage)
-  void authorDefine();
   void labelAppending(const QString& Text);
   void labelTextColor();
 };

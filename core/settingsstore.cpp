@@ -28,7 +28,7 @@ QList<containerProperties> SettingsStore::read() {
   QJsonArray Containers = DatabaseList.array();
   QList<containerProperties> Set;
   auto *SQ = new sqlite();
-  for (auto && i : Containers) {
+  for (auto i : Containers) {
     containerProperties Container =
         this->toContainerStruct(i.toObject());
     Container = SQ->optionsLoader(Container);
