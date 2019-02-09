@@ -1,21 +1,22 @@
 #include "containers.h"
 
 Containers::Containers(QWidget *parent) : AkiwakeDialog(parent) {
-  // Creates main objects.
+  this->setWindowTitle("Containers");
+  // Creates main objects...
+  auto *entireLayout = new QGridLayout();
   this->acl = new AkiwakeContainersList(this);
   this->addContainer = new AkiwakePushButton("Add container", this);
-  this->createContainer = new AkiwakePushButton("Create container", this);
-  this->disconnectContainer =
-      new AkiwakePushButton("Disconnect container", this);
+  // this->createContainer = new AkiwakePushButton("Create container", this);
+  // this->disconnectContainer =
+  //    new AkiwakePushButton("Disconnect container", this);
   this->removeContainer = new AkiwakePushButton("Remove container", this);
   this->ok = new AkiwakePushButton("Save && Close", this);
-  auto *entireLayout = new QGridLayout();
   entireLayout->addWidget(this->acl, 0, 0, 1, 0);
   entireLayout->addWidget(this->addContainer, 1, 0);
-  entireLayout->addWidget(this->createContainer, 1, 1);
-  entireLayout->addWidget(this->disconnectContainer, 1, 2);
-  entireLayout->addWidget(this->removeContainer, 1, 3);
-  entireLayout->addWidget(this->ok, 1, 4);
+  // entireLayout->addWidget(this->createContainer, 1, 1);
+  // entireLayout->addWidget(this->disconnectContainer, 1, 2);
+  entireLayout->addWidget(this->removeContainer, 1, 1);
+  entireLayout->addWidget(this->ok, 1, 2);
   this->mainBoard->centralWidget->setLayout(entireLayout);
   this->loadingFromFile();
   this->connector();
@@ -25,6 +26,9 @@ void Containers::loadingFromFile() {
   // Loads containers from saved AS selection.
   auto *ST = new SettingsStore();
   QList<containerProperties> Set = ST->read();
+  // Loading window config...
+  if (ST->read(sizeSt).toSize() != QSize(-1, -1))
+    this->resize(ST->read(sizeSt).toSize());
   delete ST;
   this->appendCLTree(Set);
 }
@@ -33,11 +37,25 @@ void Containers::connector() {
   // Connects signals with slots.
   connect(this->addContainer, &AkiwakePushButton::clicked, this,
           &Containers::addDB);
-  connect(this->createContainer, &AkiwakePushButton::clicked, this,
-          &Containers::createDB);
+  // connect(this->createContainer, &AkiwakePushButton::clicked, this,
+  //        &Containers::createDB);
   connect(this->removeContainer, &AkiwakePushButton::clicked, this,
           &Containers::removeDB);
   connect(this->ok, &AkiwakePushButton::clicked, this, &Containers::close);
+}
+
+Containers::~Containers() {
+  // Saves the container's list.
+  QList<containerProperties> Set;
+  for (int i = 0; i < this->acl->topLevelItemCount(); i++)
+    for (int j = 0; j < this->acl->invisibleRootItem()->child(i)->childCount();
+         j++)
+      Set.append(this->containers.value(
+          this->acl->invisibleRootItem()->child(i)->child(j)));
+  auto *ST = new SettingsStore();
+  ST->write(Set);
+  ST->write(this->sizeSt, this->size());
+  delete ST;
 }
 
 void Containers::addDB() {
@@ -62,10 +80,10 @@ void Containers::createDB() {
   CC->exec();
 }
 
-void Containers::appendCLTree(const QList<containerProperties>& Set) {
+void Containers::appendCLTree(const QList<containerProperties> &Set) {
   // Appends container's table.
   // For every record in "Set" selection...
-  for (const auto & i : Set) {
+  for (const auto &i : Set) {
     // "element" - Path field...
     QTreeWidgetItem *element = nullptr;
     bool into = false;
@@ -113,18 +131,4 @@ void Containers::removeDB() {
     if ((box->childCount() == 0) && (box != this->acl->invisibleRootItem()))
       this->acl->invisibleRootItem()->removeChild(box);
   }
-}
-
-void Containers::closeEvent(QCloseEvent *event) {
-  // Saves the container's list.
-  QList<containerProperties> Set;
-  for (int i = 0; i < this->acl->topLevelItemCount(); i++)
-    for (int j = 0; j < this->acl->invisibleRootItem()->child(i)->childCount();
-         j++)
-      Set.append(this->containers.value(
-          this->acl->invisibleRootItem()->child(i)->child(j)));
-  auto *ST = new SettingsStore();
-  ST->write(Set);
-  delete ST;
-  event->accept();
 }

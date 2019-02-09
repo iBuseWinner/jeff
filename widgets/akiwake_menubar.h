@@ -1,6 +1,7 @@
 #ifndef AKIWAKE_MENUBAR_H
 #define AKIWAKE_MENUBAR_H
 
+#include "dialogues/about.h"
 #include "dialogues/containers.h"
 #include "widgets/akiwake_line.h"
 #include <QAction>
@@ -24,13 +25,15 @@ private:
   Q_DISABLE_COPY(AkiwakeMenuBar)
   bool m_isFullscreen = 0;
   void openContainerManager();
-  void saveToFile();
+  void openAbout();
+  // void saveToFile();
   void clearScreen();
   void fScreen();
   void hideThis();
   QMenu *menuFile;
   QMenu *menuEdit;
   QMenu *menuTools;
+  QMenu *menuHelp;
 };
 
 #endif // AKIWAKE_MENUBAR_H

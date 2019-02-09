@@ -1,6 +1,7 @@
 #include "asw.h"
 
 ASW::ASW(QWidget *parent) : QMainWindow(parent) {
+  this->setWindowIcon(QIcon(":/arts/icons/500/icon.png"));
   // Removes interface padding, making it smaller...
   this->layout()->setMargin(0);
   this->layout()->setSpacing(0);
@@ -37,20 +38,25 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
 
 void ASW::applyingSettings() {
   auto *ST = new SettingsStore();
+  // If ASW starts first time...
+  if (ST->read(isNotFirstStartSt).toBool() == false) {
+    auto *FW = new FirstStart(this);
+    FW->exec();
+    delete FW;
+  }
   this->setWindowTitle(ST->application);
   // It's not allowed to reduce the size of the
   // window is less than these values...
   this->setMinimumSize(300, 150);
   this->resize(800, 496);
   // Restores window settings...
-  if (ST->read("asw/size").toSize() != QSize(-1, -1))
-    this->resize(ST->read("asw/size").toSize());
-  if (ST->read("asw/isfullscreen") == true) {
+  if (ST->read(sizeSt).toSize() != QSize(-1, -1))
+    this->resize(ST->read(sizeSt).toSize());
+  if (ST->read(isFullscreenSt).toBool() == true) {
     this->showFullScreen();
     this->mBar->fullScreen->setChecked(true);
   }
-  if (ST->read("asw/menubarishidden") == true)
-    this->mBar->setVisible(false);
+  this->mBar->setVisible(!ST->read(isMenubarHiddenSt).toBool());
   delete ST;
 }
 
@@ -67,9 +73,10 @@ void ASW::connector() {
 ASW::~ASW() {
   // Saves the window settings.
   auto *ST = new SettingsStore();
-  ST->write("asw/size", this->size());
-  ST->write("asw/menubarishidden", this->mBar->isHidden());
-  ST->write("asw/isfullscreen", this->isFullScreen());
+  ST->write(this->sizeSt, this->size());
+  ST->write(this->isMenubarHiddenSt, this->mBar->isHidden());
+  ST->write(this->isFullscreenSt, this->isFullScreen());
+  ST->write(this->isNotFirstStartSt, true);
   delete ST;
 }
 

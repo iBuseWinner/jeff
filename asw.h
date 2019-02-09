@@ -5,13 +5,13 @@
 #include "core/settingsstore.h"
 #include "core/sqlite.h"
 #include "core/thinking.h"
+#include "dialogues/firststart.h"
 #include "widgets/akiwake_board.h"
 #include "widgets/akiwake_display.h"
 #include "widgets/akiwake_line.h"
 #include "widgets/akiwake_menubar.h"
 #include "widgets/akiwake_message.h"
 #include "widgets/akiwake_pushbutton.h"
-#include "widgets/akiwake_menubar.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -33,6 +33,10 @@ public:
 
 private:
   Q_DISABLE_COPY(ASW)
+  const QString isMenubarHiddenSt = "asw/menubarishidden";
+  const QString sizeSt = "asw/size";
+  const QString isFullscreenSt = "asw/isfullscreen";
+  const QString isNotFirstStartSt = "asw/isnotfirststart";
   void applyingSettings();
   void connector();
   void fullscreenHandler();

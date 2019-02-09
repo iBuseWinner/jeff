@@ -1,10 +1,12 @@
 #include "createcontainer.h"
 
 CreateContainer::CreateContainer(QWidget *parent) : AkiwakeDialog(parent) {
+  this->setWindowTitle("Create container");
+  // Creates main objects...
+  auto *entireLayout = new QGridLayout();
   this->containerName = new AkiwakeLineEdit(this);
   this->containerName->setPlaceholderText("Enter container's name");
   this->save = new AkiwakePushButton("Save");
-  auto *entireLayout = new QGridLayout();
   auto *lineSpacer =
       new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
   auto *inlineSpacer =

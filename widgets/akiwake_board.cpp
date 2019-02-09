@@ -9,9 +9,9 @@ AkiwakeBoard::AkiwakeBoard(QWidget *parent) : QFrame(parent) {
   this->setStyleSheet("#fr {border-width: 4px;"
                       "border-style: solid;"
                       "border-color: white;"
-                      "border-radius: 6px;}"
+                      "border-radius: 6px;"
+                      "background-color: white;}"
                       "* {"
-                      "background-color: white;"
                       "color: black;"
                       "}");
   auto *Layout = new QGridLayout(this);

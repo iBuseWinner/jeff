@@ -3,6 +3,7 @@
 
 #include "widgets/akiwake_board.h"
 #include <QDialog>
+#include <QGridLayout>
 
 class AkiwakeDialog : public QDialog {
   Q_OBJECT

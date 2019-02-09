@@ -16,6 +16,7 @@
 class Containers : public AkiwakeDialog {
 public:
   explicit Containers(QWidget *parent = nullptr);
+  ~Containers();
   void loadingFromFile();
   void appendCLTree(const QList<containerProperties>& Set);
   void addDB();
@@ -25,16 +26,16 @@ public:
 
 private:
   Q_DISABLE_COPY(Containers)
+  const QString sizeSt = "containers/size";
   QMap<QTreeWidgetItem *, containerProperties> containers;
   void connector();
   QString openFile();
   AkiwakeContainersList *acl;
   AkiwakePushButton *addContainer;
-  AkiwakePushButton *createContainer;
-  AkiwakePushButton *disconnectContainer;
+  // AkiwakePushButton *createContainer;
+  // AkiwakePushButton *disconnectContainer;
   AkiwakePushButton *removeContainer;
   AkiwakePushButton *ok;
-  virtual void closeEvent(QCloseEvent *event);
 };
 
 #endif // CONTAINERS_H

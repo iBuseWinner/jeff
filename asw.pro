@@ -34,7 +34,10 @@ SOURCES += \
     dialogues/createcontainer.cpp \
     widgets/akiwake_lineedit.cpp \
     widgets/akiwake_menubar.cpp \
-    core/history_processor.cpp
+    core/history_processor.cpp \
+    dialogues/help.cpp \
+    dialogues/firststart.cpp \
+    dialogues/about.cpp
 
 HEADERS += \
     asw.h \
@@ -54,7 +57,10 @@ HEADERS += \
     dialogues/createcontainer.h \
     widgets/akiwake_lineedit.h \
     widgets/akiwake_menubar.h \
-    core/history_processor.h
+    core/history_processor.h \
+    dialogues/help.h \
+    dialogues/firststart.h \
+    dialogues/about.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
