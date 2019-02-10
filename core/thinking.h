@@ -11,6 +11,7 @@
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
+#include <utility>
 
 struct containerRow {
   QString activator;
@@ -29,31 +30,21 @@ struct globalExpressionNetworkMap {
 
 class thinking : public QObject {
   Q_OBJECT
-  Q_PROPERTY(QString resultOfThinking MEMBER stringResult NOTIFY
-                 resultOfThinkingChanged)
 public:
   thinking();
-  void putExpression(QString userExpression);
-  void startProcessing();
+  QString get(QString userExpression);
   QList<containerProperties> getSelection();
-  bool preparePlugins(QString userExpression);
+  QString preparePlugins(QString userExpression);
   linksMicroMap handlePlugins(QList<containerRow> containerMaterial,
                               bool hasAdditionalProperties);
   globalExpressionNetworkMap
-  microMapCombinator(QList<linksMicroMap> selectionSearchResults);
-  QStringList sorting(QStringList keys);
-  void selectReagents(globalExpressionNetworkMap genm);
-  QString get();
-
-signals:
-  QString resultOfThinkingChanged();
+  microMapCombinator(sqlite *SQ, QList<linksMicroMap> selectionSearchResults);
+  QStringList sorting(QString userExpression, QStringList keys);
+  QString selectReagents(QString userExpression, globalExpressionNetworkMap genm);
 
 private:
   QString simplifier(QString expression);
-  sqlite *SQ{};
   Q_DISABLE_COPY(thinking)
-  QString currentInput;
-  QString stringResult = "";
 };
 
 #endif // THINKING_H

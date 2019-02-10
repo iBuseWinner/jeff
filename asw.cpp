@@ -30,10 +30,7 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   this->connector();
   this->applyingSettings();
   // Creates a welcome message...
-  thinking TH;
-  TH.putExpression("Hello!");
-  TH.startProcessing();
-  this->addMessage(AkiwakeMessage::ASW, TH.get());
+  this->addMessage(AkiwakeMessage::ASW, TH->get("Hello!"));
 }
 
 void ASW::applyingSettings() {
@@ -105,10 +102,7 @@ void ASW::addMessage(AkiwakeMessage::AuthorType Author, QString Text = "") {
   this->display->layout->addWidget(this->current);
   // Responses to user expression...
   if (Author == AkiwakeMessage::User) {
-    thinking TH;
-    TH.putExpression(Text);
-    TH.startProcessing();
-    this->addMessage(AkiwakeMessage::ASW, TH.get());
+    this->addMessage(AkiwakeMessage::ASW, TH->get(Text));
   }
 }
 

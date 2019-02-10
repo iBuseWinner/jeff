@@ -1,26 +1,20 @@
 #include "thinking.h"
 
-#include <utility>
-
-thinking::thinking() = default;
-
-void thinking::putExpression(QString userExpression) {
-  this->currentInput = std::move(userExpression);
-}
-
-void thinking::startProcessing() {
+QString thinking::get(QString userExpression) {
   // Forms associative system core and finds reagents.
   // Prepares user expression...
-  if (this->preparePlugins(currentInput))
-    return;
+  userExpression = this->preparePlugins(userExpression);
+  if (userExpression == "")
+    return "";
+  QString stringResult = "";
   // For each container in AS selection...
   QList<containerProperties> ASSelection = this->getSelection();
   QList<linksMicroMap> containerMaterials;
-  SQ = new sqlite();
+  auto *SQ = new sqlite();
   foreach (containerProperties table, ASSelection) {
     // Gets the activators found in the custom expression and the reagent links
     QList<QPair<QString, QString>> activatorsAndLinks =
-        SQ->scan(table.path, table.container, currentInput);
+        SQ->scan(table.path, table.container, userExpression);
     QList<containerRow> containerMaterial;
     bool hasAdditionalProperties =
         SQ->hasAdditionalProperties(table.path, table.container);
@@ -47,9 +41,9 @@ void thinking::startProcessing() {
   }
   // And we have the all needed materials. Let's compose it...
   globalExpressionNetworkMap genm =
-      this->microMapCombinator(containerMaterials);
+      this->microMapCombinator(SQ, containerMaterials);
   delete SQ;
-  this->selectReagents(genm);
+  return this->selectReagents(userExpression, genm);
 }
 
 QList<containerProperties> thinking::getSelection() {
@@ -60,12 +54,11 @@ QList<containerProperties> thinking::getSelection() {
   return selection;
 }
 
-bool thinking::preparePlugins(QString userExpression) {
+QString thinking::preparePlugins(QString userExpression) {
   // Handles expression by Python scripts and built-in methods.
   // Here will be the expression processing code in scripts...
-  currentInput = this->simplifier(std::move(userExpression));
   // < ... >
-  return false;
+  return this->simplifier(userExpression);
 }
 
 QString thinking::simplifier(QString expression) {
@@ -102,7 +95,7 @@ linksMicroMap thinking::handlePlugins(QList<containerRow> containerMaterial,
 }
 
 globalExpressionNetworkMap
-thinking::microMapCombinator(QList<linksMicroMap> selectionSearchResults) {
+thinking::microMapCombinator(sqlite *SQ, QList<linksMicroMap> selectionSearchResults) {
   globalExpressionNetworkMap genm;
   foreach (linksMicroMap microMap, selectionSearchResults) {
     foreach (QList<int> links, microMap.expandedLines) {
@@ -123,42 +116,37 @@ thinking::microMapCombinator(QList<linksMicroMap> selectionSearchResults) {
   return genm;
 }
 
-QStringList thinking::sorting(QStringList keys) {
+QStringList thinking::sorting(QString userExpression, QStringList keys) {
   if (keys.length() <= 1)
     return keys;
   QString partition = keys.takeAt(int(keys.length() / 2));
   QStringList early, late;
   foreach (QString key, keys) {
-    if (currentInput.indexOf(key) > currentInput.indexOf(partition))
+    if (userExpression.indexOf(key) > userExpression.indexOf(partition))
       late.append(key);
     else
       early.append(key);
   }
   QStringList sorted;
-  early = this->sorting(early);
+  early = this->sorting(userExpression, early);
   foreach (QString key, early) { sorted.append(key); }
   sorted.append(partition);
-  late = this->sorting(late);
+  late = this->sorting(userExpression, late);
   foreach (QString key, late) { sorted.append(key); }
   return sorted;
 }
 
-void thinking::selectReagents(globalExpressionNetworkMap genm) {
+QString thinking::selectReagents(QString userExpression, globalExpressionNetworkMap genm) {
   if (genm.allFoundReagents.keys().length() == 0)
-    return;
-  QStringList keys = this->sorting(genm.allFoundReagents.keys());
+    return "";
+  QStringList keys = this->sorting(userExpression, genm.allFoundReagents.keys());
   QString tempResult;
   foreach (QString key, keys) {
-    currentInput.remove(key);
+    userExpression.remove(key);
     QRandomGenerator rand(quint32(QTime::currentTime().msec()));
     tempResult += genm.allFoundReagents.value(key).at(
                       rand.bounded(genm.allFoundReagents.value(key).length())) +
                   " ";
-    stringResult = tempResult;
   }
-}
-
-QString thinking::get() {
-  // Returns result.
-  return this->stringResult.trimmed();
+  return tempResult;
 }
