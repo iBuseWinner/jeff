@@ -1,6 +1,7 @@
 #include "about.h"
 
 About::About(QWidget *parent) : AkiwakeDialog(parent) {
+  this->setWindowTitle("About ASW");
   // Creating main objects...
   auto *entireLayout = new QGridLayout();
   auto *aswpic = new QLabel("<img src=\":/arts/littleasw.png\">", this);
@@ -9,7 +10,12 @@ About::About(QWidget *parent) : AkiwakeDialog(parent) {
   auto *inlineSpacer =
       new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   auto *tabs = new QTabWidget(this);
-  auto *aboutTab = new QLabel("", this);
+  auto *aboutTab = new QLabel(
+      "ASW - Associative System Window<br><br>(c) 2018-2019 The ASW "
+      "Authors<br><br><a href=\"https://github.com/kollieartwolf/asw\">ASW on "
+      "GitHub</a>",
+      this);
+  aboutTab->setOpenExternalLinks(true);
   aboutTab->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   auto *authorsTab = new QLabel(
       "<b>Shamshin Victor</b><br>Developer<br><a "
@@ -44,6 +50,7 @@ void About::applyingSettings() {
   this->resize(320, 240);
   if (ST->read(sizeSt).toSize() != QSize(-1, -1))
     this->resize(ST->read(sizeSt).toSize());
+  delete ST;
 }
 
 About::~About() {

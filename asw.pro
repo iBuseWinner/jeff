@@ -37,7 +37,8 @@ SOURCES += \
     core/history_processor.cpp \
     dialogues/help.cpp \
     dialogues/firststart.cpp \
-    dialogues/about.cpp
+    dialogues/about.cpp \
+    core/standardtemplates.cpp
 
 HEADERS += \
     asw.h \
@@ -60,7 +61,8 @@ HEADERS += \
     core/history_processor.h \
     dialogues/help.h \
     dialogues/firststart.h \
-    dialogues/about.h
+    dialogues/about.h \
+    core/standardtemplates.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -97,7 +97,9 @@ void AkiwakeMessage::textLayoutDesigner(int width) {
         TextWidth = Metrics.width(Text);
         continue;
       }
-      if (Metrics.width(QString(SingleLine + Word).replace("<br>", "")) + 60 >= width)
+      if (Metrics.width(QString(SingleLine + " " + Word).replace(" <br>", "")) +
+              60 >=
+          width)
         break;
       SingleLine += " " + Word;
       if (Word == "<br>")

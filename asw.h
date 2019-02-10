@@ -43,6 +43,7 @@ private:
   void clearScreen();
   AkiwakeMessage::ThemeType themeFolder = AkiwakeMessage::Light;
   AkiwakeMessage *current = nullptr;
+  thinking *TH;
   QList<AkiwakeMessage *> messages;
   void addMessage(AkiwakeMessage::AuthorType Author, QString Text);
   virtual void resizeEvent(QResizeEvent *event);
