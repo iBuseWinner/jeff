@@ -1,6 +1,6 @@
-#include "akiwake_containerslist.h"
+#include "a_containerslist.h"
 
-AkiwakeContainersList::AkiwakeContainersList(QWidget *parent)
+AContainersList::AContainersList(QWidget *parent)
     : QTreeWidget(parent) {
   // Creates a special tree widget for displaying containers.
   this->setHeaderLabel("Containers");

@@ -17,39 +17,35 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
                          "}");
   QLayout *centralLayout = new QVBoxLayout();
   centralLayout->setSpacing(0);
-  this->display = new AkiwakeDisplay();
-  this->line = new AkiwakeLine();
-  this->mBar = new AkiwakeMenuBar(this->line);
+  this->display = new ADisplay(this);
+  this->line = new ALine(this);
+  this->mBar = new AMenuBar(this->line);
   // Appends widgets and output...
-  central->setLayout(centralLayout);
-  central->layout()->addWidget(this->display);
-  central->layout()->addWidget(this->line);
+  centralLayout->addWidget(this->display);
+  centralLayout->addWidget(this->line);
   this->setMenuBar(this->mBar);
+  central->setLayout(centralLayout);
   this->setCentralWidget(central);
   QSqlDatabase::addDatabase("QSQLITE");
   this->connector();
   this->applyingSettings();
-  // Creates a welcome message...
-  this->addMessage(AkiwakeMessage::ASW, TH->get("Hello!"));
+  emit readyState();
 }
 
 void ASW::applyingSettings() {
   auto *ST = new SettingsStore();
   // If ASW starts first time...
-  if (ST->read(isNotFirstStartSt).toBool() == false) {
-    auto *FW = new FirstStart(this);
-    FW->exec();
-    delete FW;
-  }
+  if (!ST->read(isNotFirstStartSt).toBool())
+    this->fsStarter();
   this->setWindowTitle(ST->application);
   // It's not allowed to reduce the size of the
   // window is less than these values...
-  this->setMinimumSize(300, 150);
+  this->setMinimumSize(600, 370);
   this->resize(800, 496);
   // Restores window settings...
   if (ST->read(sizeSt).toSize() != QSize(-1, -1))
     this->resize(ST->read(sizeSt).toSize());
-  if (ST->read(isFullscreenSt).toBool() == true) {
+  if (ST->read(isFullscreenSt).toBool()) {
     this->showFullScreen();
     this->mBar->fullScreen->setChecked(true);
   }
@@ -59,12 +55,16 @@ void ASW::applyingSettings() {
 
 void ASW::connector() {
   // Connects signals with slots.
-  connect(this->line->sendButton, &AkiwakePushButton::clicked, this,
+  connect(this->line->sendButton, &APushButton::clicked, this,
           &ASW::userSendsMessage);
-  connect(this->mBar, &AkiwakeMenuBar::fullscreenModeChanged, this,
+  connect(this->mBar, &AMenuBar::fullscreenModeChanged, this,
           &ASW::fullscreenHandler);
-  connect(this->mBar, &AkiwakeMenuBar::clearScreenPressed, this,
+  connect(this->mBar, &AMenuBar::clearScreenTriggered, this,
           &ASW::clearScreen);
+  connect(this->mBar, &AMenuBar::aboutTriggered, this,
+          &ASW::aboutStarter);
+  connect(this->mBar, &AMenuBar::contManTriggered, this, &ASW::cmStarter);
+  connect(this, &ASW::readyState, this, &ASW::greeting);
 }
 
 ASW::~ASW() {
@@ -77,38 +77,37 @@ ASW::~ASW() {
   delete ST;
 }
 
-void ASW::resizeEvent(QResizeEvent *event) {
-  // Calibrates all messages.
-  for (auto message : this->messages)
-    message->textLayoutDesigner(this->width());
-  event->accept();
-}
+void ASW::greeting() { this->addMessage(AMessage::ASW, "hello!"); }
 
-void ASW::addMessage(AkiwakeMessage::AuthorType Author, QString Text = "") {
-  // Text preparation...
-  if (Author == AkiwakeMessage::User) {
-    Text = this->line->textLine->text();
-    this->line->textLine->clear();
-    this->display->scrollEnabled = true;
-  }
+void ASW::resizeEvent(QResizeEvent *event) { event->accept(); }
+
+void ASW::addMessage(AMessage::AT Author, const QString &Text) {
   if (Text.trimmed() == "")
     return;
-  AkiwakeMessage *msg =
-      new AkiwakeMessage(Text, Author, this->themeFolder, this->display);
-  // Calibrates the message and add it to the screen...
-  msg->textLayoutDesigner(this->width());
-  this->current = msg;
-  this->messages.append(msg);
-  this->display->layout->addWidget(this->current);
-  // Responses to user expression...
-  if (Author == AkiwakeMessage::User) {
-    this->addMessage(AkiwakeMessage::ASW, TH->get(Text));
+  AMessage *msg = nullptr;
+  if (Author == AMessage::User) {
+    this->line->textLine->clear();
+    this->display->scrollEnabled = true;
+    msg = new AMessage(this);
+    msg->setAuthor(Author);
+    msg->setMessageType(AMessage::HTML, Text);
+  } else {
+    msg = TH->get(Text, Author, this);
+    if (msg == nullptr)
+      return;
+    if ((msg->returnMessageType() != AMessage::Widget) and
+        (msg->returnText() == ""))
+      return;
   }
+  this->messages.append(msg);
+  this->display->layout->addWidget(msg);
+  // Responses to user expression...
+  if (Author == AMessage::User)
+    this->addMessage(AMessage::ASW, Text);
 }
 
 void ASW::userSendsMessage() {
-  // Redirecting...
-  this->addMessage(AkiwakeMessage::User);
+  this->addMessage(AMessage::User, this->line->textLine->text());
 }
 
 void ASW::keyPressEvent(QKeyEvent *event) {
@@ -122,17 +121,21 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 }
 
 void ASW::fullscreenHandler() {
-  if (this->mBar->fullScreen->isChecked() == true)
+  if (this->mBar->fullScreen->isChecked())
     this->showFullScreen();
   else
     this->showNormal();
 }
 
 void ASW::clearScreen() {
-  foreach (AkiwakeMessage *msg, this->messages) {
-    this->display->layout->removeWidget(msg);
-    delete msg;
-  }
+  this->display->start();
   this->messages.clear();
-  this->current = nullptr;
 }
+
+void ASW::fsStarter() { this->addMessage(AMessage::User, "/first"); }
+
+void ASW::aboutStarter() { this->addMessage(AMessage::User, "/about"); }
+
+void ASW::cmStarter() { this->addMessage(AMessage::User, "/cm"); }
+
+void ASW::helpStarter() { this->addMessage(AMessage::User, "/help"); }

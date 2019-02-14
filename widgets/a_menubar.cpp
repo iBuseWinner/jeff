@@ -1,6 +1,6 @@
-#include "akiwake_menubar.h"
+#include "a_menubar.h"
 
-AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent)
+AMenuBar::AMenuBar(ALine *line, QWidget *parent)
     : QMenuBar(parent) {
   // Sub-menu bar in four stages:
   //    1) creating items;
@@ -18,7 +18,7 @@ AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent)
   this->menuFile->addSeparator();
   this->menuFile->addAction("&Exit", &QApplication::quit, Qt::ALT + Qt::Key_F4);
   connect(containersMng, &QAction::triggered, this,
-          &AkiwakeMenuBar::openContainerManager);
+          &AMenuBar::openContainerManager);
   // connect(sFile, &QAction::triggered, this, &AkiwakeMenuBar::saveToFile);
   // "Edit" menu group...
   this->menuEdit = this->addMenu("Edit");
@@ -42,14 +42,14 @@ AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent)
   this->menuEdit->addAction(paste);
   this->menuEdit->addSeparator();
   this->menuEdit->addAction(selectAll);
-  connect(clearScr, &QAction::triggered, this, &AkiwakeMenuBar::clearScreen);
+  connect(clearScr, &QAction::triggered, this, &AMenuBar::clearScreen);
   connect(del, &QAction::triggered, line->textLine,
-          &AkiwakeLineEdit::backspace);
-  connect(cut, &QAction::triggered, line->textLine, &AkiwakeLineEdit::cut);
-  connect(copy, &QAction::triggered, line->textLine, &AkiwakeLineEdit::copy);
-  connect(paste, &QAction::triggered, line->textLine, &AkiwakeLineEdit::paste);
+          &ALineEdit::backspace);
+  connect(cut, &QAction::triggered, line->textLine, &ALineEdit::cut);
+  connect(copy, &QAction::triggered, line->textLine, &ALineEdit::copy);
+  connect(paste, &QAction::triggered, line->textLine, &ALineEdit::paste);
   connect(selectAll, &QAction::triggered, line->textLine,
-          &AkiwakeLineEdit::selectAll);
+          &ALineEdit::selectAll);
   // "Tools" menu group...
   this->menuTools = this->addMenu("Tools");
   QAction *hideMenuBar = new QAction("Hide menu bar", this->menuTools);
@@ -61,18 +61,18 @@ AkiwakeMenuBar::AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent)
   hideMenuBar->setShortcut(Qt::CTRL + Qt::Key_H);
   this->menuTools->addAction(hideMenuBar);
   this->menuTools->addAction(this->fullScreen);
-  connect(hideMenuBar, &QAction::triggered, this, &AkiwakeMenuBar::hideThis);
+  connect(hideMenuBar, &QAction::triggered, this, &AMenuBar::hideThis);
   connect(this->fullScreen, &QAction::triggered, this,
-          &AkiwakeMenuBar::fScreen);
+          &AMenuBar::fScreen);
   // "Help" menu group...
   this->menuHelp = this->addMenu("Help");
   QAction *about = new QAction("About", this->menuHelp);
   this->menuHelp->addAction(about);
   this->menuHelp->addAction("About Qt", &QApplication::aboutQt);
-  connect(about, &QAction::triggered, this, &AkiwakeMenuBar::openAbout);
+  connect(about, &QAction::triggered, this, &AMenuBar::openAbout);
 }
 
-AkiwakeMenuBar::~AkiwakeMenuBar() {
+AMenuBar::~AMenuBar() {
   // Prevents memory leaks.
   delete this->menuFile;
   delete this->menuEdit;
@@ -80,25 +80,17 @@ AkiwakeMenuBar::~AkiwakeMenuBar() {
   delete this->menuHelp;
 }
 
-void AkiwakeMenuBar::openContainerManager() {
-  auto *containersWindow = new Containers();
-  containersWindow->exec();
-  delete containersWindow;
-}
+void AMenuBar::openContainerManager() { emit contManTriggered(); }
 
-void AkiwakeMenuBar::openAbout() {
-  auto *aboutWindow = new About();
-  aboutWindow->exec();
-  delete aboutWindow;
-}
+void AMenuBar::openAbout() { emit aboutTriggered(); }
 
-// void AkiwakeMenuBar::saveToFile() {}
+void AMenuBar::saveToFile() { emit saveToFileTriggered(); }
 
-void AkiwakeMenuBar::clearScreen() { emit clearScreenPressed(); }
+void AMenuBar::clearScreen() { emit clearScreenTriggered(); }
 
-void AkiwakeMenuBar::fScreen() { emit fullscreenModeChanged(); }
+void AMenuBar::fScreen() { emit fullscreenModeChanged(); }
 
-void AkiwakeMenuBar::hideThis() {
+void AMenuBar::hideThis() {
   if (this->isVisible())
     this->setVisible(false);
   else

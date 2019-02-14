@@ -1,47 +1,29 @@
 #include "containers.h"
 
-Containers::Containers(QWidget *parent) : AkiwakeDialog(parent) {
-  this->setWindowTitle("Containers");
+Containers::Containers(QWidget *parent) : QWidget(parent) {
+  this->setAttribute(Qt::WA_DeleteOnClose);
+  this->setMinimumSize(320, 230);
+  this->setMaximumSize(320, 230);
   // Creates main objects...
   auto *entireLayout = new QGridLayout();
-  this->acl = new AkiwakeContainersList(this);
-  this->addContainer = new AkiwakePushButton("Add container", this);
+  entireLayout->setSpacing(0);
+  entireLayout->setMargin(0);
+  this->acl = new AContainersList(this);
+  this->addContainer = new APushButton("Add container", this);
   // this->createContainer = new AkiwakePushButton("Create container", this);
   // this->disconnectContainer =
   //    new AkiwakePushButton("Disconnect container", this);
-  this->removeContainer = new AkiwakePushButton("Remove container", this);
-  this->ok = new AkiwakePushButton("Save && Close", this);
+  this->removeContainer = new APushButton("Remove container", this);
+  this->ok = new APushButton("Save && Close", this);
   entireLayout->addWidget(this->acl, 0, 0, 1, 0);
   entireLayout->addWidget(this->addContainer, 1, 0);
   // entireLayout->addWidget(this->createContainer, 1, 1);
   // entireLayout->addWidget(this->disconnectContainer, 1, 2);
   entireLayout->addWidget(this->removeContainer, 1, 1);
   entireLayout->addWidget(this->ok, 1, 2);
-  this->mainBoard->centralWidget->setLayout(entireLayout);
-  this->loadingFromFile();
+  this->setLayout(entireLayout);
   this->connector();
-}
-
-void Containers::loadingFromFile() {
-  // Loads containers from saved AS selection.
-  auto *ST = new SettingsStore();
-  QList<containerProperties> Set = ST->read();
-  // Loading window config...
-  if (ST->read(sizeSt).toSize() != QSize(-1, -1))
-    this->resize(ST->read(sizeSt).toSize());
-  delete ST;
-  this->appendCLTree(Set);
-}
-
-void Containers::connector() {
-  // Connects signals with slots.
-  connect(this->addContainer, &AkiwakePushButton::clicked, this,
-          &Containers::addDB);
-  // connect(this->createContainer, &AkiwakePushButton::clicked, this,
-  //        &Containers::createDB);
-  connect(this->removeContainer, &AkiwakePushButton::clicked, this,
-          &Containers::removeDB);
-  connect(this->ok, &AkiwakePushButton::clicked, this, &Containers::close);
+  this->loadingFromFile();
 }
 
 Containers::~Containers() {
@@ -54,14 +36,32 @@ Containers::~Containers() {
           this->acl->invisibleRootItem()->child(i)->child(j)));
   auto *ST = new SettingsStore();
   ST->write(Set);
-  ST->write(this->sizeSt, this->size());
   delete ST;
+}
+
+void Containers::connector() {
+  // Connects signals with slots.
+  connect(this->addContainer, &APushButton::clicked, this,
+          &Containers::addDB);
+  // connect(this->createContainer, &AkiwakePushButton::clicked, this,
+  //        &Containers::createDB);
+  connect(this->removeContainer, &APushButton::clicked, this,
+          &Containers::removeDB);
+  connect(this->ok, &APushButton::clicked, this->parentWidget(), &QWidget::close);
+}
+
+void Containers::loadingFromFile() {
+  // Loads containers from saved AS selection.
+  auto *ST = new SettingsStore();
+  QList<containerProperties> Set = ST->read();
+  delete ST;
+  this->appendCLTree(Set);
 }
 
 void Containers::addDB() {
   // Adds database and containers into AS selection for searching.
-  QString Path = QFileDialog::getOpenFileName(this, "Select database", nullptr,
-                                              "SQLite3 database(*.db)");
+  QString Path = QFileDialog::getOpenFileName(
+      nullptr, "Select database", nullptr, "ASW database(*.asw.db)");
   auto *SQ = new sqlite();
   QStringList Containers = SQ->containers(Path);
   QList<containerProperties> Set;
@@ -73,11 +73,6 @@ void Containers::addDB() {
   }
   this->appendCLTree(Set);
   delete SQ;
-}
-
-void Containers::createDB() {
-  auto *CC = new CreateContainer();
-  CC->exec();
 }
 
 void Containers::appendCLTree(const QList<containerProperties> &Set) {
@@ -118,6 +113,10 @@ void Containers::appendCLTree(const QList<containerProperties> &Set) {
     }
   }
 }
+
+// void Containers::createDB() {}
+
+// void Containers::disconnectDB() {}
 
 void Containers::removeDB() {
   // Removes a container from the widget.

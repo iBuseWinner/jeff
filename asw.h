@@ -6,12 +6,12 @@
 #include "core/sqlite.h"
 #include "core/thinking.h"
 #include "dialogues/firststart.h"
-#include "widgets/akiwake_board.h"
-#include "widgets/akiwake_display.h"
-#include "widgets/akiwake_line.h"
-#include "widgets/akiwake_menubar.h"
-#include "widgets/akiwake_message.h"
-#include "widgets/akiwake_pushbutton.h"
+#include "widgets/a_board.h"
+#include "widgets/a_display.h"
+#include "widgets/a_line.h"
+#include "widgets/a_menubar.h"
+#include "widgets/a_message.h"
+#include "widgets/a_pushbutton.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -26,10 +26,13 @@ class ASW : public QMainWindow {
 public:
   ASW(QWidget *parent = nullptr);
   ~ASW();
-  AkiwakeDisplay *display;
-  AkiwakeLine *line;
-  AkiwakeMenuBar *mBar;
-  void userSendsMessage();
+  ADisplay *display = nullptr;
+  ALine *line = nullptr;
+  AMenuBar *mBar = nullptr;
+  void greeting();
+
+signals:
+  void readyState();
 
 private:
   Q_DISABLE_COPY(ASW)
@@ -40,12 +43,16 @@ private:
   void applyingSettings();
   void connector();
   void fullscreenHandler();
+  void userSendsMessage();
   void clearScreen();
-  AkiwakeMessage::ThemeType themeFolder = AkiwakeMessage::Light;
-  AkiwakeMessage *current = nullptr;
-  thinking *TH;
-  QList<AkiwakeMessage *> messages;
-  void addMessage(AkiwakeMessage::AuthorType Author, QString Text);
+  void fsStarter();
+  void aboutStarter();
+  void cmStarter();
+  void helpStarter();
+  AMessage::T m_theme = AMessage::Light;
+  thinking *TH{};
+  QList<AMessage *> messages;
+  void addMessage(AMessage::AT Author, const QString& Text);
   virtual void resizeEvent(QResizeEvent *event);
   virtual void keyPressEvent(QKeyEvent *event);
 };

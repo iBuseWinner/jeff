@@ -1,12 +1,13 @@
 #ifndef AKIWAKE_HELP_H
 #define AKIWAKE_HELP_H
 
-#include <dialogues/akiwake_dialog.h>
+#include <QGridLayout>
 #include <QLabel>
+#include <QWidget>
 
-class ASWHelp : public AkiwakeDialog {
+class ASWHelp : public QWidget {
 public:
-  explicit ASWHelp(QWidget *parent = nullptr);
+  ASWHelp(QWidget *parent = nullptr);
 };
 
 #endif // AKIWAKE_HELP_H

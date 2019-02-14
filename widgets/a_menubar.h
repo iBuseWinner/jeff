@@ -1,32 +1,37 @@
-#ifndef AKIWAKE_MENUBAR_H
-#define AKIWAKE_MENUBAR_H
+#ifndef A_MENUBAR_H
+#define A_MENUBAR_H
 
 #include "dialogues/about.h"
 #include "dialogues/containers.h"
-#include "widgets/akiwake_line.h"
+#include "widgets/a_line.h"
 #include <QAction>
 #include <QApplication>
+#include <QJsonArray>
 #include <QMenu>
 #include <QMenuBar>
 #include <QWidget>
 
-class AkiwakeMenuBar : public QMenuBar {
+class AMenuBar : public QMenuBar {
   Q_OBJECT
 public:
-  explicit AkiwakeMenuBar(AkiwakeLine *line, QWidget *parent = nullptr);
-  ~AkiwakeMenuBar() override;
-   QAction *fullScreen;
+  AMenuBar(ALine *line, QWidget *parent = nullptr);
+  ~AMenuBar() override;
+  QAction *fullScreen;
 
 signals:
   void fullscreenModeChanged();
-  void clearScreenPressed();
+  void clearScreenTriggered();
+  void aboutTriggered();
+  void contManTriggered();
+  void helpTriggered();
+  void saveToFileTriggered();
 
 private:
-  Q_DISABLE_COPY(AkiwakeMenuBar)
+  Q_DISABLE_COPY(AMenuBar)
   bool m_isFullscreen = 0;
   void openContainerManager();
   void openAbout();
-  // void saveToFile();
+  void saveToFile();
   void clearScreen();
   void fScreen();
   void hideThis();

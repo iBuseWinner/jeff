@@ -1,14 +1,15 @@
 #ifndef FIRSTSTART_H
 #define FIRSTSTART_H
 
-#include "dialogues/akiwake_dialog.h"
+#include "widgets/a_pushbutton.h"
+#include <QGridLayout>
 #include <QLabel>
-#include <QScrollArea>
 #include <QSpacerItem>
+#include <QWidget>
 
-class FirstStart : public AkiwakeDialog {
+class FirstStart : public QWidget {
 public:
-  explicit FirstStart(QWidget *parent = nullptr);
+  FirstStart(QWidget *parent = nullptr);
 };
 
 #endif // FIRSTSTART_H

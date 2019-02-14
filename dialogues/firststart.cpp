@@ -1,14 +1,8 @@
 #include "firststart.h"
 
-FirstStart::FirstStart(QWidget *parent) : AkiwakeDialog(parent) {
-  this->setWindowTitle("First start");
+FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
+  this->setAttribute(Qt::WA_DeleteOnClose);
   // Creates main objects...
-  auto *scroller = new QScrollArea(this);
-  scroller->setFocusPolicy(Qt::NoFocus);
-  scroller->setFrameStyle(QFrame::NoFrame);
-  scroller->setFrameShadow(QFrame::Plain);
-  auto *elL = new QGridLayout();
-  auto *entireWidget = new QWidget(this);
   auto *entireLayout = new QVBoxLayout();
   auto *title = new QLabel("<font size=\"8\">Associative System</font>", this);
   auto *startText = new QLabel("<font size=\"4\">This is the first start of "
@@ -21,13 +15,19 @@ FirstStart::FirstStart(QWidget *parent) : AkiwakeDialog(parent) {
                                this);
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse |
                                      Qt::LinksAccessibleByMouse);
-  auto *lineSpacer =
-      new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+  auto *okLine = new QWidget(this);
+  auto *ok = new APushButton("Close", okLine);
+  auto *okLayout = new QHBoxLayout();
+  okLayout->setMargin(0);
+  okLayout->setSpacing(0);
+  auto *okSpacer =
+      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  okLayout->addItem(okSpacer);
+  okLayout->addWidget(ok);
+  okLine->setLayout(okLayout);
+  connect(ok, &APushButton::clicked, this->parentWidget(), &QWidget::close);
   entireLayout->addWidget(title);
   entireLayout->addWidget(startText);
-  entireLayout->addItem(lineSpacer);
-  entireWidget->setLayout(entireLayout);
-  scroller->setWidget(entireWidget);
-  elL->addWidget(scroller);
-  this->mainBoard->centralWidget->setLayout(elL);
+  entireLayout->addWidget(okLine);
+  this->setLayout(entireLayout);
 }

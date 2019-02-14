@@ -2,20 +2,17 @@
 #define ABOUT_H
 
 #include "core/settingsstore.h"
-#include "dialogues/akiwake_dialog.h"
+#include "widgets/a_pushbutton.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QScrollArea>
 #include <QSizePolicy>
 #include <QTabWidget>
+#include <QWidget>
 
-class About : public AkiwakeDialog {
+class About : public QWidget {
 public:
-  explicit About(QWidget *parent = nullptr);
-  ~About();
-  void applyingSettings();
-private:
-  const QString sizeSt = "about/size";
+  About(QWidget *parent = nullptr);
 };
 
 #endif // ABOUT_H

@@ -1,17 +1,29 @@
 #include "thinking.h"
+#include <QDebug>
 
-QString thinking::get(QString userExpression) {
-  // Forms associative system core and finds reagents.
+AMessage *thinking::get(const QString& userExpression, AMessage::AT Author,
+                        QWidget *parent) {
   // Prepares user expression...
-  userExpression = this->preparePlugins(userExpression);
   if (userExpression == "")
-    return "";
+    return nullptr;
+  auto *msg = new AMessage(parent);
+  msg->setAuthor(Author);
+  QString preparedUserExpression = this->preparePlugins(userExpression, msg);
+  if (msg->returnMessageType() == AMessage::Widget) {
+    return msg;
+  }
+  msg->setMessageType(AMessage::HTML, this->think(preparedUserExpression /*, msg*/));
+  return msg;
+}
+
+QString thinking::think(const QString& userExpression /*, AkiwakeMessage *msg*/) {
+  // Forms associative system core and finds reagents.
   QString stringResult = "";
   // For each container in AS selection...
-  QList<containerProperties> ASSelection = this->getSelection();
   QList<linksMicroMap> containerMaterials;
   auto *SQ = new sqlite();
-  foreach (containerProperties table, ASSelection) {
+  SettingsStore ST;
+  foreach (containerProperties table, ST.read()) {
     // Gets the activators found in the custom expression and the reagent links
     QList<QPair<QString, QString>> activatorsAndLinks =
         SQ->scan(table.path, table.container, userExpression);
@@ -34,8 +46,8 @@ QString thinking::get(QString userExpression) {
       }
     }
     // We have the container row's list now...
-    linksMicroMap compressedContainerMaterial =
-        this->handlePlugins(containerMaterial, hasAdditionalProperties);
+    linksMicroMap compressedContainerMaterial = this->handlePlugins(
+        containerMaterial, hasAdditionalProperties /*, msg*/);
     compressedContainerMaterial.parent = table;
     containerMaterials.append(compressedContainerMaterial);
   }
@@ -46,28 +58,23 @@ QString thinking::get(QString userExpression) {
   return this->selectReagents(userExpression, genm);
 }
 
-QList<containerProperties> thinking::getSelection() {
-  // Gets AS selection.
-  auto *ST = new SettingsStore();
-  QList<containerProperties> selection = ST->read();
-  delete ST;
-  return selection;
-}
-
-QString thinking::preparePlugins(QString userExpression) {
+QString thinking::preparePlugins(QString userExpression, AMessage *msg) {
   // Handles expression by Python scripts and built-in methods.
   // Here will be the expression processing code in scripts...
+  standardTemplates stdTemplates;
+  userExpression = stdTemplates.dialogues(userExpression, msg);
   // < ... >
   return this->simplifier(userExpression);
 }
 
 QString thinking::simplifier(QString expression) {
   handlers HD;
-  return HD.purifyString(std::move(expression));
+  return HD.purifyString(expression);
 }
 
-linksMicroMap thinking::handlePlugins(QList<containerRow> containerMaterial,
-                                      bool hasAdditionalProperties) {
+linksMicroMap thinking::handlePlugins(
+    QList<containerRow> containerMaterial,
+    bool hasAdditionalProperties /*, AkiwakeMessage *msg*/) {
   // Handles all answer expressions by Python scripts and built-in methods.
   linksMicroMap compressedContainerMaterial;
   QMap<QString, QList<int>> compressedLines;
@@ -95,7 +102,8 @@ linksMicroMap thinking::handlePlugins(QList<containerRow> containerMaterial,
 }
 
 globalExpressionNetworkMap
-thinking::microMapCombinator(sqlite *SQ, QList<linksMicroMap> selectionSearchResults) {
+thinking::microMapCombinator(sqlite *SQ,
+                             QList<linksMicroMap> selectionSearchResults) {
   globalExpressionNetworkMap genm;
   foreach (linksMicroMap microMap, selectionSearchResults) {
     foreach (QList<int> links, microMap.expandedLines) {
@@ -116,7 +124,7 @@ thinking::microMapCombinator(sqlite *SQ, QList<linksMicroMap> selectionSearchRes
   return genm;
 }
 
-QStringList thinking::sorting(QString userExpression, QStringList keys) {
+QStringList thinking::sorting(const QString& userExpression, QStringList keys) {
   if (keys.length() <= 1)
     return keys;
   QString partition = keys.takeAt(int(keys.length() / 2));
@@ -136,12 +144,16 @@ QStringList thinking::sorting(QString userExpression, QStringList keys) {
   return sorted;
 }
 
-QString thinking::selectReagents(QString userExpression, globalExpressionNetworkMap genm) {
+QString thinking::selectReagents(QString userExpression,
+                                 globalExpressionNetworkMap genm) {
   if (genm.allFoundReagents.keys().length() == 0)
     return "";
-  QStringList keys = this->sorting(userExpression, genm.allFoundReagents.keys());
+  QStringList keys =
+      this->sorting(userExpression, genm.allFoundReagents.keys());
   QString tempResult;
   foreach (QString key, keys) {
+    if (!userExpression.contains(key))
+      continue;
     userExpression.remove(key);
     QRandomGenerator rand(quint32(QTime::currentTime().msec()));
     tempResult += genm.allFoundReagents.value(key).at(

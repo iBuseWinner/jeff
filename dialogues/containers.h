@@ -4,38 +4,36 @@
 #include "core/containersstruct.h"
 #include "core/settingsstore.h"
 #include "core/sqlite.h"
-#include "dialogues/akiwake_dialog.h"
 #include "dialogues/createcontainer.h"
-#include "widgets/akiwake_containerslist.h"
-#include "widgets/akiwake_pushbutton.h"
+#include "widgets/a_containerslist.h"
+#include "widgets/a_pushbutton.h"
 #include <QDialog>
 #include <QFileDialog>
 #include <QString>
 #include <QTreeWidgetItem>
 
-class Containers : public AkiwakeDialog {
+class Containers : public QWidget {
 public:
-  explicit Containers(QWidget *parent = nullptr);
+  Containers(QWidget *parent = nullptr);
   ~Containers();
   void loadingFromFile();
-  void appendCLTree(const QList<containerProperties>& Set);
+  void appendCLTree(const QList<containerProperties> &Set);
   void addDB();
-  void createDB();
+  // void createDB();
+  // void disconnect();
   void removeDB();
-  void disconnect();
 
 private:
   Q_DISABLE_COPY(Containers)
-  const QString sizeSt = "containers/size";
-  QMap<QTreeWidgetItem *, containerProperties> containers;
   void connector();
   QString openFile();
-  AkiwakeContainersList *acl;
-  AkiwakePushButton *addContainer;
+  QMap<QTreeWidgetItem *, containerProperties> containers;
+  AContainersList *acl = nullptr;
+  APushButton *addContainer = nullptr;
   // AkiwakePushButton *createContainer;
   // AkiwakePushButton *disconnectContainer;
-  AkiwakePushButton *removeContainer;
-  AkiwakePushButton *ok;
+  APushButton *removeContainer = nullptr;
+  APushButton *ok = nullptr;
 };
 
 #endif // CONTAINERS_H

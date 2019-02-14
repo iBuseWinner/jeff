@@ -5,13 +5,14 @@
 #include "core/handlers.h"
 #include "core/settingsstore.h"
 #include "core/sqlite.h"
+#include "core/standardtemplates.h"
+#include "widgets/a_message.h"
 #include <QMap>
 #include <QObject>
 #include <QPair>
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
-#include <utility>
 
 struct containerRow {
   QString activator;
@@ -31,20 +32,22 @@ struct globalExpressionNetworkMap {
 class thinking : public QObject {
   Q_OBJECT
 public:
-  thinking();
-  QString get(QString userExpression);
-  QList<containerProperties> getSelection();
-  QString preparePlugins(QString userExpression);
+  AMessage *get(const QString& userExpression, AMessage::AT Author,
+                QWidget *parent = nullptr);
+  QString think(const QString& userExpression /*, AkiwakeMessage *msg*/);
+  QString preparePlugins(QString userExpression, AMessage *msg);
   linksMicroMap handlePlugins(QList<containerRow> containerMaterial,
-                              bool hasAdditionalProperties);
+                              bool hasAdditionalProperties/*,
+                              AkiwakeMessage *msg*/);
   globalExpressionNetworkMap
   microMapCombinator(sqlite *SQ, QList<linksMicroMap> selectionSearchResults);
-  QStringList sorting(QString userExpression, QStringList keys);
-  QString selectReagents(QString userExpression, globalExpressionNetworkMap genm);
+  QStringList sorting(const QString& userExpression, QStringList keys);
+  QString selectReagents(QString userExpression,
+                         globalExpressionNetworkMap genm);
 
 private:
-  QString simplifier(QString expression);
   Q_DISABLE_COPY(thinking)
+  QString simplifier(QString expression);
 };
 
 #endif // THINKING_H
