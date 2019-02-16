@@ -26,8 +26,17 @@ Containers::Containers(QWidget *parent) : QWidget(parent) {
   this->loadingFromFile();
 }
 
-Containers::~Containers() {
-  // Saves the container's list.
+void Containers::connector() {
+  // Connects signals with slots.
+  connect(this->addContainer, &APushButton::clicked, this, &Containers::addDB);
+  // connect(this->createContainer, &AkiwakePushButton::clicked, this,
+  //        &Containers::createDB);
+  connect(this->removeContainer, &APushButton::clicked, this,
+          &Containers::removeDB);
+  connect(this->ok, &APushButton::clicked, this, &Containers::saveAndClose);
+}
+
+void Containers::saveAndClose() {
   QList<containerProperties> Set;
   for (int i = 0; i < this->acl->topLevelItemCount(); i++)
     for (int j = 0; j < this->acl->invisibleRootItem()->child(i)->childCount();
@@ -37,17 +46,8 @@ Containers::~Containers() {
   auto *ST = new SettingsStore();
   ST->write(Set);
   delete ST;
-}
-
-void Containers::connector() {
-  // Connects signals with slots.
-  connect(this->addContainer, &APushButton::clicked, this,
-          &Containers::addDB);
-  // connect(this->createContainer, &AkiwakePushButton::clicked, this,
-  //        &Containers::createDB);
-  connect(this->removeContainer, &APushButton::clicked, this,
-          &Containers::removeDB);
-  connect(this->ok, &APushButton::clicked, this->parentWidget(), &QWidget::close);
+  this->close();
+  this->parentWidget()->close();
 }
 
 void Containers::loadingFromFile() {

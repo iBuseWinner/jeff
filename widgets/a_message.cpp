@@ -26,7 +26,7 @@ void AMessage::setAuthor(AT Author) {
 
 void AMessage::createStdLayout_asw() {
   auto *spacer =
-      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+      new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
   this->entireLayout->addWidget(this->board); // content is on the left
   this->entireLayout->addItem(spacer);
   this->update();
@@ -34,7 +34,7 @@ void AMessage::createStdLayout_asw() {
 
 void AMessage::createStdLayout_user() {
   auto *spacer =
-      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
+      new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
   this->entireLayout->addItem(spacer);
   this->entireLayout->addWidget(this->board); // content is on the right
   this->update();
@@ -73,6 +73,7 @@ void AMessage::setMessageType(MT Type, QWidget *Content) {
 void AMessage::setupMessage_html(const QString& text) {
   this->m_content = text;
   auto *label = new QLabel(text, this);
+  label->setWordWrap(true);
   auto *boardLayout = new QGridLayout();
   boardLayout->addWidget(label);
   this->board->setLayout(boardLayout);

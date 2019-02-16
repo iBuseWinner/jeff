@@ -15,7 +15,6 @@
 class Containers : public QWidget {
 public:
   Containers(QWidget *parent = nullptr);
-  ~Containers();
   void loadingFromFile();
   void appendCLTree(const QList<containerProperties> &Set);
   void addDB();
@@ -26,6 +25,7 @@ public:
 private:
   Q_DISABLE_COPY(Containers)
   void connector();
+  void saveAndClose();
   QString openFile();
   QMap<QTreeWidgetItem *, containerProperties> containers;
   AContainersList *acl = nullptr;

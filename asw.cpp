@@ -59,10 +59,8 @@ void ASW::connector() {
           &ASW::userSendsMessage);
   connect(this->mBar, &AMenuBar::fullscreenModeChanged, this,
           &ASW::fullscreenHandler);
-  connect(this->mBar, &AMenuBar::clearScreenTriggered, this,
-          &ASW::clearScreen);
-  connect(this->mBar, &AMenuBar::aboutTriggered, this,
-          &ASW::aboutStarter);
+  connect(this->mBar, &AMenuBar::clearScreenTriggered, this, &ASW::clearScreen);
+  connect(this->mBar, &AMenuBar::aboutTriggered, this, &ASW::aboutStarter);
   connect(this->mBar, &AMenuBar::contManTriggered, this, &ASW::cmStarter);
   connect(this, &ASW::readyState, this, &ASW::greeting);
 }
@@ -79,7 +77,11 @@ ASW::~ASW() {
 
 void ASW::greeting() { this->addMessage(AMessage::ASW, "hello!"); }
 
-void ASW::resizeEvent(QResizeEvent *event) { event->accept(); }
+void ASW::resizeEvent(QResizeEvent *event) {
+  foreach (AMessage *msg, this->messages)
+    msg->setMaximumWidth(this->width() - 10);
+  event->accept();
+}
 
 void ASW::addMessage(AMessage::AT Author, const QString &Text) {
   if (Text.trimmed() == "")
@@ -96,9 +98,12 @@ void ASW::addMessage(AMessage::AT Author, const QString &Text) {
     if (msg == nullptr)
       return;
     if ((msg->returnMessageType() != AMessage::Widget) and
-        (msg->returnText() == ""))
+        (msg->returnText().trimmed() == "")) {
+      delete msg;
       return;
+    }
   }
+  msg->setMaximumWidth(this->width() - 10);
   this->messages.append(msg);
   this->display->layout->addWidget(msg);
   // Responses to user expression...
