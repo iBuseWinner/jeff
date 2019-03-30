@@ -25,7 +25,6 @@ class ASW : public QMainWindow {
   Q_OBJECT
 public:
   ASW(QWidget *parent = nullptr);
-  ~ASW();
   ADisplay *display = nullptr;
   ALine *line = nullptr;
   AMenuBar *mBar = nullptr;
@@ -36,11 +35,13 @@ signals:
 
 private:
   Q_DISABLE_COPY(ASW)
+  SettingsStore *ST = new SettingsStore();
   const QString isMenubarHiddenSt = "asw/menubarishidden";
   const QString sizeSt = "asw/size";
   const QString isFullscreenSt = "asw/isfullscreen";
   const QString isNotFirstStartSt = "asw/isnotfirststart";
   void applyingSettings();
+  void saveSettings();
   void connector();
   void fullscreenHandler();
   void userSendsMessage();

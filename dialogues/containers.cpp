@@ -46,8 +46,7 @@ void Containers::saveAndClose() {
   auto *ST = new SettingsStore();
   ST->write(Set);
   delete ST;
-  this->close();
-  this->parentWidget()->close();
+  this->parentWidget()->parentWidget()->close();
 }
 
 void Containers::loadingFromFile() {

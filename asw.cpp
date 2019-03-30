@@ -29,28 +29,29 @@ ASW::ASW(QWidget *parent) : QMainWindow(parent) {
   QSqlDatabase::addDatabase("QSQLITE");
   this->connector();
   this->applyingSettings();
+  this->saveSettings();
   emit readyState();
 }
 
 void ASW::applyingSettings() {
-  auto *ST = new SettingsStore();
-  // If ASW starts first time...
-  if (!ST->read(isNotFirstStartSt).toBool())
-    this->fsStarter();
-  this->setWindowTitle(ST->application);
+  this->setWindowTitle(this->ST->application);
   // It's not allowed to reduce the size of the
   // window is less than these values...
   this->setMinimumSize(600, 370);
   this->resize(800, 496);
   // Restores window settings...
-  if (ST->read(sizeSt).toSize() != QSize(-1, -1))
-    this->resize(ST->read(sizeSt).toSize());
-  if (ST->read(isFullscreenSt).toBool()) {
+  if (this->ST->read(sizeSt).toSize() != QSize(-1, -1))
+    this->resize(this->ST->read(sizeSt).toSize());
+  if (this->ST->read(isFullscreenSt).toBool()) {
     this->showFullScreen();
     this->mBar->fullScreen->setChecked(true);
+    // If ASW starts first time...
+    if (!this->ST->read(isNotFirstStartSt).toBool())
+      this->fsStarter();
+  } else {
+    this->saveSettings();
   }
-  this->mBar->setVisible(!ST->read(isMenubarHiddenSt).toBool());
-  delete ST;
+  this->mBar->setVisible(!this->ST->read(isMenubarHiddenSt).toBool());
 }
 
 void ASW::connector() {
@@ -65,14 +66,11 @@ void ASW::connector() {
   connect(this, &ASW::readyState, this, &ASW::greeting);
 }
 
-ASW::~ASW() {
-  // Saves the window settings.
-  auto *ST = new SettingsStore();
-  ST->write(this->sizeSt, this->size());
-  ST->write(this->isMenubarHiddenSt, this->mBar->isHidden());
-  ST->write(this->isFullscreenSt, this->isFullScreen());
-  ST->write(this->isNotFirstStartSt, true);
-  delete ST;
+void ASW::saveSettings() {
+  this->ST->write(this->sizeSt, this->size());
+  this->ST->write(this->isMenubarHiddenSt, this->mBar->isHidden());
+  this->ST->write(this->isFullscreenSt, this->isFullScreen());
+  this->ST->write(this->isNotFirstStartSt, true);
 }
 
 void ASW::greeting() { this->addMessage(AMessage::ASW, "hello!"); }
