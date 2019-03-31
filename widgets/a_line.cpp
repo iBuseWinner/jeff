@@ -4,6 +4,7 @@ ALine::ALine(QWidget *parent) : ABoard(parent) {
   // Creates a user input widget.
   this->textLine = new ALineEdit(this);
   this->sendButton = new APushButton("Send", this);
+  this->sendButton->setIcon(QIcon(":/arts/icons/16/send.svg"));
   this->sendButton->setFocusPolicy(Qt::NoFocus);
   connect(this->textLine, &QLineEdit::returnPressed, this->sendButton,
           &APushButton::click);

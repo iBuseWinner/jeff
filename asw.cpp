@@ -115,11 +115,11 @@ void ASW::userSendsMessage() {
 
 void ASW::keyPressEvent(QKeyEvent *event) {
   if ((event->modifiers() == Qt::ControlModifier) &&
-      (event->key() == Qt::Key_H)) {
-    if (this->mBar->isVisible())
-      this->mBar->setVisible(false);
-    else
-      this->mBar->setVisible(true);
+      (event->key() == Qt::Key_H))
+    this->mBar->setVisible(!this->mBar->isVisible());
+  if (!this->mBar->isVisible() && (event->key() == Qt::Key_F11)) {
+    this->mBar->fullScreen->setChecked(!this->mBar->fullScreen->isChecked());
+    this->fullscreenHandler();
   }
 }
 

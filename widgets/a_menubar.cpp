@@ -27,14 +27,14 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   QAction *copy = new QAction("Copy", this->menuEdit);
   QAction *paste = new QAction("Paste", this->menuEdit);
   QAction *selectAll = new QAction("Select all", this->menuEdit);
-  QAction *clearScr = new QAction("Clear screen", this->menuEdit);
+  QAction *clearMsgHist = new QAction("Clear message history", this->menuEdit);
   del->setShortcut(Qt::Key_Backspace);
   cut->setShortcuts(QKeySequence::Cut);
   copy->setShortcuts(QKeySequence::Copy);
   paste->setShortcuts(QKeySequence::Paste);
   selectAll->setShortcuts(QKeySequence::SelectAll);
-  clearScr->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
-  this->menuEdit->addAction(clearScr);
+  clearMsgHist->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
+  this->menuEdit->addAction(clearMsgHist);
   this->menuEdit->addSeparator();
   this->menuEdit->addAction(del);
   this->menuEdit->addAction(cut);
@@ -42,7 +42,7 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   this->menuEdit->addAction(paste);
   this->menuEdit->addSeparator();
   this->menuEdit->addAction(selectAll);
-  connect(clearScr, &QAction::triggered, this, &AMenuBar::clearScreen);
+  connect(clearMsgHist, &QAction::triggered, this, &AMenuBar::clearScreen);
   connect(del, &QAction::triggered, line->textLine,
           &ALineEdit::backspace);
   connect(cut, &QAction::triggered, line->textLine, &ALineEdit::cut);
