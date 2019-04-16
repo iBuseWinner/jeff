@@ -1,7 +1,7 @@
 #include "thinking.h"
 #include <QDebug>
 
-AMessage *thinking::get(const QString& userExpression, AMessage::AT Author,
+AMessage *thinking::get(const QString& userExpression, AMessage::A Author,
                         QWidget *parent) {
   // Prepares user expression...
   if (userExpression == "")

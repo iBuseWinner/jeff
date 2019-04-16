@@ -32,7 +32,7 @@ struct globalExpressionNetworkMap {
 class thinking : public QObject {
   Q_OBJECT
 public:
-  AMessage *get(const QString& userExpression, AMessage::AT Author,
+  AMessage *get(const QString& userExpression, AMessage::A Author,
                 QWidget *parent = nullptr);
   QString think(const QString& userExpression /*, AkiwakeMessage *msg*/);
   QString preparePlugins(QString userExpression, AMessage *msg);

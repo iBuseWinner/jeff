@@ -1,7 +1,6 @@
 #include "a_menubar.h"
 
-AMenuBar::AMenuBar(ALine *line, QWidget *parent)
-    : QMenuBar(parent) {
+AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   // Sub-menu bar in four stages:
   //    1) creating items;
   //    2) assigning of key sequences;
@@ -43,8 +42,7 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   this->menuEdit->addSeparator();
   this->menuEdit->addAction(selectAll);
   connect(clearMsgHist, &QAction::triggered, this, &AMenuBar::clearScreen);
-  connect(del, &QAction::triggered, line->textLine,
-          &ALineEdit::backspace);
+  connect(del, &QAction::triggered, line->textLine, &ALineEdit::backspace);
   connect(cut, &QAction::triggered, line->textLine, &ALineEdit::cut);
   connect(copy, &QAction::triggered, line->textLine, &ALineEdit::copy);
   connect(paste, &QAction::triggered, line->textLine, &ALineEdit::paste);
@@ -62,8 +60,7 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   this->menuTools->addAction(hideMenuBar);
   this->menuTools->addAction(this->fullScreen);
   connect(hideMenuBar, &QAction::triggered, this, &AMenuBar::hideThis);
-  connect(this->fullScreen, &QAction::triggered, this,
-          &AMenuBar::fScreen);
+  connect(this->fullScreen, &QAction::triggered, this, &AMenuBar::fScreen);
   // "Help" menu group...
   this->menuHelp = this->addMenu("Help");
   QAction *about = new QAction("About", this->menuHelp);
@@ -90,9 +87,4 @@ void AMenuBar::clearScreen() { emit clearScreenTriggered(); }
 
 void AMenuBar::fScreen() { emit fullscreenModeChanged(); }
 
-void AMenuBar::hideThis() {
-  if (this->isVisible())
-    this->setVisible(false);
-  else
-    this->setVisible(true);
-}
+void AMenuBar::hideThis() { this->setVisible(!this->isVisible()); }

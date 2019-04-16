@@ -75,13 +75,7 @@ void ASW::saveSettings() {
 
 void ASW::greeting() { this->addMessage(AMessage::ASW, "hello!"); }
 
-void ASW::resizeEvent(QResizeEvent *event) {
-  foreach (AMessage *msg, this->messages)
-    msg->setMaximumWidth(this->width() - 10);
-  event->accept();
-}
-
-void ASW::addMessage(AMessage::AT Author, const QString &Text) {
+void ASW::addMessage(AMessage::A Author, const QString &Text) {
   if (Text.trimmed() == "")
     return;
   AMessage *msg = nullptr;
@@ -101,7 +95,7 @@ void ASW::addMessage(AMessage::AT Author, const QString &Text) {
       return;
     }
   }
-  msg->setMaximumWidth(this->width() - 10);
+  msg->alignTextToWindowWidth(this->width() - 10);
   this->messages.append(msg);
   this->display->layout->addWidget(msg);
   // Responses to user expression...
@@ -113,13 +107,24 @@ void ASW::userSendsMessage() {
   this->addMessage(AMessage::User, this->line->textLine->text());
 }
 
+void ASW::resizeEvent(QResizeEvent *event) {
+  foreach (AMessage *msg, this->messages)
+    msg->alignTextToWindowWidth(this->width() - 10);
+  event->accept();
+}
+
 void ASW::keyPressEvent(QKeyEvent *event) {
   if ((event->modifiers() == Qt::ControlModifier) &&
       (event->key() == Qt::Key_H))
     this->mBar->setVisible(!this->mBar->isVisible());
-  if (!this->mBar->isVisible() && (event->key() == Qt::Key_F11)) {
-    this->mBar->fullScreen->setChecked(!this->mBar->fullScreen->isChecked());
-    this->fullscreenHandler();
+  if (!this->mBar->isVisible()) {
+    if (event->key() == Qt::Key_F11) {
+      this->mBar->fullScreen->setChecked(!this->mBar->fullScreen->isChecked());
+      this->fullscreenHandler();
+    }
+    if ((event->modifiers() == Qt::ControlModifier) &&
+        (event->modifiers() == Qt::AltModifier) && (event->key() == Qt::Key_D))
+      this->clearScreen();
   }
 }
 

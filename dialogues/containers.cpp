@@ -2,25 +2,23 @@
 
 Containers::Containers(QWidget *parent) : QWidget(parent) {
   this->setAttribute(Qt::WA_DeleteOnClose);
-  this->setMinimumSize(320, 230);
-  this->setMaximumSize(320, 230);
   // Creates main objects...
   auto *entireLayout = new QGridLayout();
   entireLayout->setSpacing(0);
   entireLayout->setMargin(0);
   this->acl = new AContainersList(this);
   this->addContainer = new APushButton("Add container", this);
-  // this->createContainer = new AkiwakePushButton("Create container", this);
+  this->createContainer = new APushButton("Create container", this);
   // this->disconnectContainer =
-  //    new AkiwakePushButton("Disconnect container", this);
+  //    new APushButton("Disconnect container", this);
   this->removeContainer = new APushButton("Remove container", this);
   this->ok = new APushButton("Save && Close", this);
   entireLayout->addWidget(this->acl, 0, 0, 1, 0);
   entireLayout->addWidget(this->addContainer, 1, 0);
-  // entireLayout->addWidget(this->createContainer, 1, 1);
+  entireLayout->addWidget(this->createContainer, 1, 1);
   // entireLayout->addWidget(this->disconnectContainer, 1, 2);
-  entireLayout->addWidget(this->removeContainer, 1, 1);
-  entireLayout->addWidget(this->ok, 1, 2);
+  entireLayout->addWidget(this->removeContainer, 1, 2);
+  entireLayout->addWidget(this->ok, 1, 3);
   this->setLayout(entireLayout);
   this->connector();
   this->loadingFromFile();
@@ -29,8 +27,8 @@ Containers::Containers(QWidget *parent) : QWidget(parent) {
 void Containers::connector() {
   // Connects signals with slots.
   connect(this->addContainer, &APushButton::clicked, this, &Containers::addDB);
-  // connect(this->createContainer, &AkiwakePushButton::clicked, this,
-  //        &Containers::createDB);
+  connect(this->createContainer, &APushButton::clicked, this,
+          &Containers::createDB);
   connect(this->removeContainer, &APushButton::clicked, this,
           &Containers::removeDB);
   connect(this->ok, &APushButton::clicked, this, &Containers::saveAndClose);
@@ -113,7 +111,9 @@ void Containers::appendCLTree(const QList<containerProperties> &Set) {
   }
 }
 
-// void Containers::createDB() {}
+void Containers::createDB() {
+  // emit addCCMessage();
+}
 
 // void Containers::disconnectDB() {}
 

@@ -18,9 +18,12 @@ public:
   void loadingFromFile();
   void appendCLTree(const QList<containerProperties> &Set);
   void addDB();
-  // void createDB();
+  void createDB();
   // void disconnect();
   void removeDB();
+
+signals:
+  void addCCMessage();
 
 private:
   Q_DISABLE_COPY(Containers)
@@ -30,8 +33,8 @@ private:
   QMap<QTreeWidgetItem *, containerProperties> containers;
   AContainersList *acl = nullptr;
   APushButton *addContainer = nullptr;
-  // AkiwakePushButton *createContainer;
-  // AkiwakePushButton *disconnectContainer;
+  APushButton *createContainer;
+  // APushButton *disconnectContainer;
   APushButton *removeContainer = nullptr;
   APushButton *ok = nullptr;
 };

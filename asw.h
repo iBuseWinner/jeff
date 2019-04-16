@@ -33,6 +33,10 @@ public:
 signals:
   void readyState();
 
+protected:
+  void resizeEvent(QResizeEvent *event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+
 private:
   Q_DISABLE_COPY(ASW)
   SettingsStore *ST = new SettingsStore();
@@ -53,9 +57,7 @@ private:
   AMessage::T m_theme = AMessage::Light;
   thinking *TH{};
   QList<AMessage *> messages;
-  void addMessage(AMessage::AT Author, const QString& Text);
-  virtual void resizeEvent(QResizeEvent *event);
-  virtual void keyPressEvent(QKeyEvent *event);
+  void addMessage(AMessage::A Author, const QString &Text);
 };
 
 #endif // ASW_H
