@@ -1,5 +1,4 @@
 #include "thinking.h"
-#include <QDebug>
 
 AMessage *thinking::get(const QString& userExpression, AMessage::A Author,
                         QWidget *parent) {

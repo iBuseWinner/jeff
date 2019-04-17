@@ -22,14 +22,13 @@ public:
   // void disconnect();
   void removeDB();
 
-signals:
-  void addCCMessage();
-
 private:
   Q_DISABLE_COPY(Containers)
   void connector();
   void saveAndClose();
   QString openFile();
+  void closeCreateDB();
+  QGridLayout *entireLayout = nullptr;
   QMap<QTreeWidgetItem *, containerProperties> containers;
   AContainersList *acl = nullptr;
   APushButton *addContainer = nullptr;
@@ -37,6 +36,7 @@ private:
   // APushButton *disconnectContainer;
   APushButton *removeContainer = nullptr;
   APushButton *ok = nullptr;
+  CreateContainer *cc = nullptr;
 };
 
 #endif // CONTAINERS_H

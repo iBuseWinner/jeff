@@ -122,8 +122,8 @@ void ASW::keyPressEvent(QKeyEvent *event) {
       this->mBar->fullScreen->setChecked(!this->mBar->fullScreen->isChecked());
       this->fullscreenHandler();
     }
-    if ((event->modifiers() == Qt::ControlModifier) &&
-        (event->modifiers() == Qt::AltModifier) && (event->key() == Qt::Key_D))
+    if ((event->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) &&
+        (event->key() == Qt::Key_D))
       this->clearScreen();
   }
 }
