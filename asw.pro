@@ -21,7 +21,6 @@ SOURCES += \
     asw.cpp \
     core/handlers.cpp \
     core/sqlite.cpp \
-    core/thinking.cpp \
     core/settingsstore.cpp \
     dialogues/containers.cpp \
     dialogues/createcontainer.cpp \
@@ -37,13 +36,13 @@ SOURCES += \
     widgets/a_line.cpp \
     widgets/a_lineedit.cpp \
     widgets/a_menubar.cpp \
-    widgets/a_pushbutton.cpp
+    widgets/a_pushbutton.cpp \
+    core/nlp-module.cpp
 
 HEADERS += \
     asw.h \
     core/handlers.h \
     core/sqlite.h \
-    core/thinking.h \
     core/settingsstore.h \
     dialogues/containers.h \
     core/containersstruct.h \
@@ -60,7 +59,8 @@ HEADERS += \
     widgets/a_line.h \
     widgets/a_lineedit.h \
     widgets/a_menubar.h \
-    widgets/a_pushbutton.h
+    widgets/a_pushbutton.h \
+    core/nlp-module.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

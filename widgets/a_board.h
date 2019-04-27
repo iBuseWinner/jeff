@@ -7,10 +7,10 @@
 
 class ABoard : public QFrame {
   Q_OBJECT
-public:
+ public:
   ABoard(QWidget *parent = nullptr);
 
-private:
+ private:
   Q_DISABLE_COPY(ABoard)
   QString objectName = "a_board";
   QString css =
@@ -18,4 +18,4 @@ private:
       "border-radius: 6px; background-color: white;} * { color: black; }";
 };
 
-#endif // A_BOARD_H
+#endif  // A_BOARD_H

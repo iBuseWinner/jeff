@@ -1,33 +1,36 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
-#include "core/containersstruct.h"
-#include "core/handlers.h"
 #include <QMap>
 #include <QPair>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
-#include <QSqlError>
 #include <QString>
 #include <QStringList>
 #include <QVariant>
+#include "core/containersstruct.h"
+#include "core/handlers.h"
 
 class sqlite {
-public:
-  void create_db(containerProperties newCP);
-  QStringList containers(const QString& Path);
-  containerProperties optionsLoader(containerProperties container);
-  void optionsWriter(containerProperties container);
-  void insert(const QString& Path, const QString& Container, int Address, const QString& Expression,
-              const QString& Links);
-  QPair<QString, QString> scan(const QString& Path, const QString& Container, int Address);
-  bool hasAdditionalProperties(const QString& Path, const QString& Container);
-  QMap<QString, QString> scanAP(const QString& Path, const QString& Container, int Address);
-  QList<QPair<QString, QString>> scan(const QString& Path, const QString& Container,
-                                      const QString& Expression);
+ public:
+  void create(const containerProperties &ncp);
+  QList<containerProperties> containers(const QString &p);
+  containerProperties optionsLoader(containerProperties cp);
+  void optionsWriter(const containerProperties &cp);
+  void insert(const QString &p, const QString &c, int a, const QString &ex,
+              const QString &ls);
+  QPair<QString, QString> scan(const QString &p, const QString &c, int a);
+  bool hasAdditionalProperties(const QString &p, const QString &c);
+  QMap<QString, QString> scanAP(const QString &p, const QString &c, int a);
+  QList<QPair<QString, QString>> scan(const QString &p, const QString &c,
+                                      const QString &ex);
   QList<QPair<QString, QString>> paths();
+
+ private:
+  void ct(QSqlQuery q);
 };
 
-#endif // SQLITE_H
+#endif  // SQLITE_H

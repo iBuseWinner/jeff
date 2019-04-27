@@ -1,7 +1,6 @@
 #ifndef A_MESSAGE_H
 #define A_MESSAGE_H
 
-#include "widgets/a_board.h"
 #include <QDateTime>
 #include <QFont>
 #include <QFontMetrics>
@@ -11,41 +10,43 @@
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QWidget>
+#include "widgets/a_board.h"
 
 class AMessage : public QWidget {
   Q_OBJECT
-public:
+ public:
   enum A { undefA, ASW, User };
-  enum MT { undefMT, Text, HTML, Widget, Picture, File };
+  enum CT { undefCT, Text, HTML, Widget, Picture, File };
   enum T { undefT, Light, Dark, Red, Green, Blue, Yellow };
   AMessage(QWidget *parent = nullptr);
-  void setAuthor(A Author);
-  void setMessageType(MT Type, QString Content);
-  void setMessageType(MT Type, QWidget *Content);
-  void setTheme(T Theme);
-  enum A returnAuthor() { return this->m_author; }
-  enum MT returnMessageType() { return this->m_contentType; }
-  enum T returnTheme() { return this->m_theme; }
+  void setAuthor(A _a);
+  void setMessageType(CT _ct, const QString &_cn);
+  void setMessageType(CT _ct, QWidget *_cn);
+  void setTheme(T _t);
+  enum A returnAuthor() { return a; }
+  enum CT returnMessageType() { return ct; }
+  enum T returnTheme() { return t; }
   QString returnText();
-  void alignTextToWindowWidth(int MaxWidth);
 
-private:
+ private:
   Q_DISABLE_COPY(AMessage)
-  A m_author = A::undefA;
-  MT m_contentType = MT::undefMT;
-  T m_theme = T::undefT;
-  QHBoxLayout *entireLayout = new QHBoxLayout();
-  ABoard *board = new ABoard(this);
-  QString m_content = "";
-  QLabel *text_label = nullptr;
-  void createStdLayout_asw();
-  void createStdLayout_user();
-  void setupMessage_plain(const QString& text);
-  void setupMessage_html(const QString& text);
-  void setupMessage_widget(QWidget *widget);
+  const int bm = 6;
+  const int mmw = 400;
+  A a = A::undefA;
+  CT ct = CT::undefCT;
+  T t = T::undefT;
+  QHBoxLayout *el = new QHBoxLayout();
+  ABoard *b = new ABoard(this);
+  QString cn = "";
+  QLabel *tl = nullptr;
+  void createASWLayout();
+  void createUserLayout();
+  void setupPlainMessage(const QString &_cn);
+  void setupHTMLMessage(const QString &_cn);
+  void setupWidgetMessage(QWidget *_cn);
   // void setupMessage_pict(QString path);
   // void setupMessage_file(QString path);
-  void appendLabel(QString Text);
+  void alignTextToWindowWidth();
 };
 
-#endif // A_MESSAGE_H
+#endif  // A_MESSAGE_H

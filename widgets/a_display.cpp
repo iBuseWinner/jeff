@@ -1,54 +1,50 @@
 #include "a_display.h"
 
-ADisplay::ADisplay(QWidget *parent) : QScrollArea(parent) {
+ADisplay::ADisplay(QWidget *p) : QScrollArea(p) {
   // Creates a zone for displaying messages.
-  this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  this->setFocusPolicy(Qt::NoFocus);
-  this->setFrameStyle(QFrame::NoFrame);
-  this->setFrameShadow(QFrame::Plain);
-  this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-  this->setWidgetResizable(true);
-  this->setObjectName("display");
-  this->start();
-  this->connector();
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  setFocusPolicy(Qt::NoFocus);
+  setFrameStyle(QFrame::NoFrame);
+  setFrameShadow(QFrame::Plain);
+  setWidgetResizable(true);
+  setObjectName("display");
+  start();
+  connector();
 }
 
 void ADisplay::connector() {
   // Connects signals with slots.
-  connect(this->verticalScrollBar(), &QScrollBar::rangeChanged, this,
+  connect(verticalScrollBar(), &QScrollBar::rangeChanged, this,
           &ADisplay::scrollDown);
-  connect(this->verticalScrollBar(), &QScrollBar::valueChanged, this,
+  connect(verticalScrollBar(), &QScrollBar::valueChanged, this,
           &ADisplay::scrollTumbler);
 }
 
 void ADisplay::start() {
-  if (this->layout != nullptr)
-    delete this->layout;
-  QWidget *box = new QWidget(this);
-  box->setObjectName("box");
-  this->setStyleSheet(
-      "#display, #box { background-color: rgba(255, 255, 255, 0); }");
-  auto *lineSpacer =
-      new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Expanding);
-  this->layout = new QVBoxLayout(this);
-  this->layout->setSpacing(0);
-  this->layout->setMargin(0);
-  this->layout->addItem(lineSpacer);
-  box->setLayout(this->layout);
-  this->setWidget(box);
+  delete l;
+  QWidget *b = new QWidget(this);
+  b->setObjectName("box");
+  setStyleSheet("#display, #box { background-color: rgba(255, 255, 255, 0); }");
+  auto *ls = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+  l = new QVBoxLayout(this);
+  l->setSpacing(0);
+  l->setMargin(0);
+  l->addItem(ls);
+  b->setLayout(l);
+  setWidget(b);
 }
 
-void ADisplay::scrollTumbler(int value) {
+void ADisplay::scrollTumbler(int v) {
   // Turns off and on autoscroll, reacting to user scrolling.
-  if (value != this->verticalScrollBar()->maximum())
-    this->scrollEnabled = false;
+  if (v != verticalScrollBar()->maximum())
+    se = false;
   else
-    this->scrollEnabled = true;
+    se = true;
 }
 
 void ADisplay::scrollDown(int min, int max) {
   // Scrolls the display down.
   Q_UNUSED(min)
-  if (this->scrollEnabled)
-    this->verticalScrollBar()->setValue(max);
+  if (se) verticalScrollBar()->setValue(max);
 }

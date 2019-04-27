@@ -8,17 +8,17 @@
 
 class ADisplay : public QScrollArea {
   Q_OBJECT
-public:
-  explicit ADisplay(QWidget *parent = nullptr);
+ public:
+  explicit ADisplay(QWidget *p = nullptr);
   void connector();
   void start();
-  QVBoxLayout *layout = nullptr;
-  bool scrollEnabled = true;
+  QVBoxLayout *l = nullptr;
+  bool se = true;
 
-private:
+ private:
   Q_DISABLE_COPY(ADisplay)
   void scrollDown(int min, int max);
-  void scrollTumbler(int value);
+  void scrollTumbler(int v);
 };
 
-#endif // A_DISPLAY_H
+#endif  // A_DISPLAY_H

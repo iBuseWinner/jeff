@@ -6,8 +6,8 @@
 #include <QWidget>
 
 class ASWHelp : public QWidget {
-public:
+ public:
   ASWHelp(QWidget *parent = nullptr);
 };
 
-#endif // AKIWAKE_HELP_H
+#endif  // AKIWAKE_HELP_H

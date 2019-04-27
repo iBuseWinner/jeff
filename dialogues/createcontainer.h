@@ -1,30 +1,40 @@
 #ifndef CREATECONTAINER_H
 #define CREATECONTAINER_H
 
+#include <QFileDialog>
+#include <QGridLayout>
+#include <QRandomGenerator>
+#include <QSpacerItem>
+#include <QTime>
+#include <QUuid>
+#include <QWidget>
+#include "core/containersstruct.h"
 #include "widgets/a_lineedit.h"
 #include "widgets/a_pushbutton.h"
-#include <QGridLayout>
-#include <QSpacerItem>
-#include <QWidget>
 
 class CreateContainer : public QWidget {
   Q_OBJECT
-public:
-  CreateContainer(QWidget *parent = nullptr);
+ public:
+  CreateContainer(QWidget *p = nullptr);
 
-signals:
-  void closingSignal();
+ signals:
+  void c();
+  containerProperties cont(containerProperties _cProps);
 
-protected:
-  void closeEvent(QCloseEvent *event) override;
+ protected:
+  void closeEvent(QCloseEvent *e) override;
 
-private:
+ private:
   Q_DISABLE_COPY(CreateContainer)
   void connector();
-  ALineEdit *containerName = nullptr;
-  APushButton *databasePath = nullptr;
-  APushButton *save = nullptr;
-  APushButton *cancel = nullptr;
+  void selStart();
+  void select();
+  void save();
+  QString m_dbpath = "";
+  ALineEdit *t = nullptr;
+  APushButton *sel = nullptr;
+  APushButton *s = nullptr;
+  APushButton *cc = nullptr;
 };
 
-#endif // CREATECONTAINER_H
+#endif  // CREATECONTAINER_H

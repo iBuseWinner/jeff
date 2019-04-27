@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>arts/fonts/fira-sans-condensed-regular.ttf</file>
-        <file>arts/fonts/iosevka-regular.ttf</file>
         <file>arts/background.jpg</file>
         <file>arts/shots/menufile.png</file>
         <file>arts/shots/addcontainer.png</file>
@@ -26,5 +24,7 @@
         <file>arts/icons/16/show-menu.svg</file>
         <file>arts/icons/16/view-fullscreen.svg</file>
         <file>arts/icons/16/qt.svg</file>
+        <file>arts/icons/16/document-open.svg</file>
+        <file>arts/icons/16/db-file.svg</file>
     </qresource>
 </RCC>

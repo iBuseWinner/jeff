@@ -3,15 +3,9 @@
 int main(int argc, char *argv[]) {
   QApplication asw(argc, argv);
   QCoreApplication::setApplicationName("asw-qt");
-  QCoreApplication::setApplicationVersion("0.1.0");
-  // Setting default font...
-  int ID = QFontDatabase::addApplicationFont(
-      ":/arts/fonts/fira-sans-condensed-regular.ttf");
-  QFont Font = QFontDatabase::applicationFontFamilies(ID).at(0);
-  Font.setPointSize(QApplication::font().pointSize());
-  QApplication::setFont(Font);
+  QCoreApplication::setApplicationVersion("0.1.3");
   // Starting main window...
-  ASW window;
-  window.show();
+  ASW w;
+  w.show();
   return QApplication::exec();
 }

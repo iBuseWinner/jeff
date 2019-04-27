@@ -1,13 +1,12 @@
 #include "handlers.h"
 
-QString handlers::purifyString(const QString& line) {
+QString handlers::purifyString(const QString& l) {
   // Prepares the activator to search by keywords.
-  return handlers::removeCharacters(line.trimmed().toLower());
+  return handlers::removeCharacters(l.trimmed().toLower());
 }
 
-QString handlers::removeCharacters(QString line) {
+QString handlers::removeCharacters(QString l) {
   // Cuts punctuation marks.
-  for (char symbol : symbols)
-    line.remove(symbol);
-  return line;
+  for (char s : ss) l.remove(s);
+  return l;
 }

@@ -4,10 +4,10 @@
 #include <QString>
 
 class handlers {
-public:
-  const char symbols[8] = {'.', ',', ':', ';', '!', '?', '-', '\''};
-  QString purifyString(const QString& line);
-  QString removeCharacters(QString line);
+ public:
+  const char ss[9] = {'.', ',', ':', ';', '!', '?', '-', '\'', '"'};
+  QString purifyString(const QString& l);
+  QString removeCharacters(QString l);
 };
 
-#endif // HANDLERS_H
+#endif  // HANDLERS_H

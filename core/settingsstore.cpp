@@ -5,59 +5,54 @@ SettingsStore::~SettingsStore() {
   delete this->settings;
 }
 
-QVariant SettingsStore::read(const QString& key) {
+QVariant SettingsStore::read(const QString &k) {
   // Reads the setting by key.
-  return this->settings->value(key);
+  return this->settings->value(k);
 }
 
 QList<containerProperties> SettingsStore::read() {
   // Reads selection of AS from file.
-  QString SettingsPath = this->settingsPath();
-  QFile SelectionFile(SettingsPath + QDir::separator() +
-                      this->selectionFileName);
-  if (!SelectionFile.open(QIODevice::ReadOnly | QIODevice::Text))
+  QString sPath = this->settingsPath();
+  QFile sf(sPath + QDir::separator() + this->selectionFileName);
+  if (!sf.open(QIODevice::ReadOnly | QIODevice::Text))
     return QList<containerProperties>();
-  QTextStream stream(&SelectionFile);
+  QTextStream ts(&sf);
   auto *err = new QJsonParseError;
-  QJsonDocument DatabaseList =
-      QJsonDocument::fromJson(stream.readAll().toUtf8(), err);
+  QJsonDocument dbl = QJsonDocument::fromJson(ts.readAll().toUtf8(), err);
   if (err->error != QJsonParseError::NoError)
     return QList<containerProperties>();
   delete err;
-  SelectionFile.close();
-  QJsonArray Containers = DatabaseList.array();
-  QList<containerProperties> Set;
-  auto *SQ = new sqlite();
-  for (auto i : Containers) {
-    containerProperties Container =
-        this->toContainerStruct(i.toObject());
-    Container = SQ->optionsLoader(Container);
-    Set.append(Container);
+  sf.close();
+  QJsonArray cs = dbl.array();
+  QList<containerProperties> cps;
+  auto *sq = new sqlite();
+  for (auto i : cs) {
+    containerProperties cp = this->toContainerStruct(i.toObject());
+    cp = sq->optionsLoader(cp);
+    cps.append(cp);
   }
-  delete SQ;
-  return Set;
+  delete sq;
+  return cps;
 }
 
-void SettingsStore::write(const QString& key, const QVariant& data) {
+void SettingsStore::write(const QString &k, const QVariant &d) {
   // Records the setting by key.
-  this->settings->setValue(key, data);
+  this->settings->setValue(k, d);
 }
 
-void SettingsStore::write(const QList<containerProperties>& Set) {
+void SettingsStore::write(const QList<containerProperties> &cp) {
   // Writes selection of AS into file.
-  QString SettingsPath = this->settingsPath();
-  QJsonArray Containers;
-  auto *SQ = new sqlite();
-  for (const auto & i : Set) {
-    Containers.append(this->toJson(i));
-    SQ->optionsWriter(i);
+  QString sPath = this->settingsPath();
+  QJsonArray cs;
+  auto *sq = new sqlite();
+  for (const auto &i : cp) {
+    cs.append(this->toJson(i));
+    sq->optionsWriter(i);
   }
-  delete SQ;
-  QJsonDocument DatabaseList(Containers);
-  QFile SelectionFile(SettingsPath + QDir::separator() +
-                      this->selectionFileName);
-  if (!SelectionFile.open(QIODevice::WriteOnly | QIODevice::Text))
-    return;
+  delete sq;
+  QJsonDocument DatabaseList(cs);
+  QFile SelectionFile(sPath + QDir::separator() + this->selectionFileName);
+  if (!SelectionFile.open(QIODevice::WriteOnly | QIODevice::Text)) return;
   QTextStream stream(&SelectionFile);
   stream << DatabaseList.toJson(QJsonDocument::Indented);
   SelectionFile.close();
@@ -65,25 +60,25 @@ void SettingsStore::write(const QList<containerProperties>& Set) {
 
 QString SettingsStore::settingsPath() {
   // Returns the setting path.
-  QFileInfo *inf = new QFileInfo(this->settings->fileName());
-  QString path = inf->absolutePath();
-  delete inf;
-  return path;
+  QFileInfo *fi = new QFileInfo(this->settings->fileName());
+  QString p = fi->absolutePath();
+  delete fi;
+  return p;
 }
 
-QJsonObject SettingsStore::toJson(containerProperties obj) {
+QJsonObject SettingsStore::toJson(const containerProperties &cp) {
   // Converts container structure into JSON object.
-  QJsonObject converted{{"container", obj.container},
-                        {"disabled", obj.disabled},
-                        {"path", obj.path}};
+  QJsonObject converted{
+      {"container", cp.c}, {"disabled", cp.d}, {"path", cp.p}, {"title", cp.t}};
   return converted;
 }
 
-containerProperties SettingsStore::toContainerStruct(const QJsonObject& obj) {
+containerProperties SettingsStore::toContainerStruct(const QJsonObject &obj) {
   // Converts JSON object into container structure.
-  containerProperties converted;
-  converted.container = obj.value("container").toString();
-  converted.disabled = obj.value("disabled").toBool();
-  converted.path = obj.value("path").toString();
-  return converted;
+  containerProperties cp;
+  cp.c = obj.value("container").toString();
+  cp.d = obj.value("disabled").toBool();
+  cp.p = obj.value("path").toString();
+  cp.t = obj.value("title").toString();
+  return cp;
 }

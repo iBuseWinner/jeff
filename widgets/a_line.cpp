@@ -1,17 +1,16 @@
 #include "a_line.h"
 
-ALine::ALine(QWidget *parent) : ABoard(parent) {
+ALine::ALine(QWidget *p) : ABoard(p) {
   // Creates a user input widget.
-  this->textLine = new ALineEdit(this);
-  this->sendButton = new APushButton("Send", this);
-  this->sendButton->setIcon(QIcon(":/arts/icons/16/send.svg"));
-  this->sendButton->setFocusPolicy(Qt::NoFocus);
-  connect(this->textLine, &QLineEdit::returnPressed, this->sendButton,
-          &APushButton::click);
-  auto *entireLayout = new QHBoxLayout(this);
-  entireLayout->setMargin(0);
-  entireLayout->setSpacing(0);
-  entireLayout->addWidget(this->textLine);
-  entireLayout->addWidget(this->sendButton);
-  this->setLayout(entireLayout);
+  tl = new ALineEdit(this);
+  s = new APushButton("Send", this);
+  s->setIcon(QIcon(":/arts/icons/16/send.svg"));
+  s->setFocusPolicy(Qt::NoFocus);
+  connect(tl, &QLineEdit::returnPressed, s, &APushButton::click);
+  auto *el = new QHBoxLayout(this);
+  el->setMargin(0);
+  el->setSpacing(0);
+  el->addWidget(tl);
+  el->addWidget(s);
+  setLayout(el);
 }

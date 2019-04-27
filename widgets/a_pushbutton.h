@@ -1,30 +1,29 @@
 #ifndef A_PUSHBUTTON_H
 #define A_PUSHBUTTON_H
 
-#include <QAbstractAnimation>
 #include <QAction>
 #include <QFocusEvent>
 #include <QObject>
-#include <QPropertyAnimation>
 #include <QPushButton>
 #include <QStyle>
 
 class APushButton : public QPushButton {
   Q_OBJECT
 
-public:
-  APushButton(const QString& Text, QWidget *parent = nullptr);
+ public:
+  APushButton(const QString &t, QWidget *p = nullptr);
   QString styleSheet();
 
-protected:
+ protected:
   virtual void focusInEvent(QFocusEvent *e) override;
   virtual void focusOutEvent(QFocusEvent *e) override;
   void updateBorderColor();
 
-private:
+ private:
   Q_DISABLE_COPY(APushButton)
-  const QColor l_border_color = QColor(255, 255, 255);
-  QColor m_border_color = l_border_color;
+  const QColor lbc = QColor(255, 255, 255);
+  const QColor nbc = QColor(0, 170, 255);
+  QColor mbc = lbc;
 };
 
-#endif // A_PUSHBUTTON_H
+#endif  // A_PUSHBUTTON_H

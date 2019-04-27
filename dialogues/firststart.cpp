@@ -5,14 +5,15 @@ FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   // Creates main objects...
   auto *entireLayout = new QVBoxLayout();
   auto *title = new QLabel("<font size=\"8\">Associative System</font>", this);
-  auto *startText = new QLabel("<font size=\"4\">This is the first start of "
-                               "ASW. Before you start working:<br>"
-                               "1) go to the Container Manager..."
-                               "<p><img src=\":/arts/shots/menufile.png\"></p>"
-                               "2) add databases..."
-                               "<p><img src=\":/arts/shots/addcontainer.png\"></p>"
-                               "And now you've done.</font>",
-                               this);
+  auto *startText = new QLabel(
+      "<font size=\"4\">This is the first start of "
+      "ASW. Before you start working:<br>"
+      "1) go to the Container Manager..."
+      "<p><img src=\":/arts/shots/menufile.png\"></p>"
+      "2) add databases..."
+      "<p><img src=\":/arts/shots/addcontainer.png\"></p>"
+      "And now you've done.</font>",
+      this);
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse |
                                      Qt::LinksAccessibleByMouse);
   auto *okLine = new QWidget(this);

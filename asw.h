@@ -1,17 +1,5 @@
 #ifndef ASW_H
 #define ASW_H
-#include "core/containersstruct.h"
-#include "core/handlers.h"
-#include "core/settingsstore.h"
-#include "core/sqlite.h"
-#include "core/thinking.h"
-#include "dialogues/firststart.h"
-#include "widgets/a_board.h"
-#include "widgets/a_display.h"
-#include "widgets/a_line.h"
-#include "widgets/a_menubar.h"
-#include "widgets/a_message.h"
-#include "widgets/a_pushbutton.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -20,26 +8,41 @@
 #include <QPair>
 #include <QResizeEvent>
 #include <QWidget>
+#include "core/containersstruct.h"
+#include "core/handlers.h"
+#include "core/nlp-module.h"
+#include "core/settingsstore.h"
+#include "core/sqlite.h"
+#include "dialogues/firststart.h"
+#include "widgets/a_board.h"
+#include "widgets/a_display.h"
+#include "widgets/a_line.h"
+#include "widgets/a_menubar.h"
+#include "widgets/a_message.h"
+#include "widgets/a_pushbutton.h"
 
 class ASW : public QMainWindow {
   Q_OBJECT
-public:
-  ASW(QWidget *parent = nullptr);
-  ADisplay *display = nullptr;
-  ALine *line = nullptr;
-  AMenuBar *mBar = nullptr;
+ public:
+  ASW(QWidget *p = nullptr);
+  ADisplay *d = nullptr;
+  ALine *l = nullptr;
+  AMenuBar *mb = nullptr;
   void greeting();
 
-signals:
+ signals:
   void readyState();
 
-protected:
-  void resizeEvent(QResizeEvent *event) override;
+ protected:
   void keyPressEvent(QKeyEvent *event) override;
 
-private:
+ private:
   Q_DISABLE_COPY(ASW)
-  SettingsStore *ST = new SettingsStore();
+  SettingsStore *st = new SettingsStore();
+  const int mw = 600;
+  const int mh = 370;
+  const int currw = 800;
+  const int currh = 496;
   const QString isMenubarHiddenSt = "asw/menubarishidden";
   const QString sizeSt = "asw/size";
   const QString isFullscreenSt = "asw/isfullscreen";
@@ -47,17 +50,17 @@ private:
   void applyingSettings();
   void saveSettings();
   void connector();
-  void fullscreenHandler();
+  void fullScreenHandler();
   void userSendsMessage();
   void clearScreen();
   void fsStarter();
   void aboutStarter();
   void cmStarter();
   void helpStarter();
-  AMessage::T m_theme = AMessage::Light;
-  thinking *TH{};
-  QList<AMessage *> messages;
-  void addMessage(AMessage::A Author, const QString &Text);
+  AMessage::T t = AMessage::Light;
+  NLPmodule *nm{};
+  QList<AMessage *> ms;
+  void addMessage(AMessage::A a, const QString &_t);
 };
 
-#endif // ASW_H
+#endif  // ASW_H

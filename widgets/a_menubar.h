@@ -1,24 +1,24 @@
 #ifndef A_MENUBAR_H
 #define A_MENUBAR_H
 
-#include "dialogues/about.h"
-#include "dialogues/containers.h"
-#include "widgets/a_line.h"
 #include <QAction>
 #include <QApplication>
 #include <QJsonArray>
 #include <QMenu>
 #include <QMenuBar>
 #include <QWidget>
+#include "dialogues/about.h"
+#include "dialogues/containers.h"
+#include "widgets/a_line.h"
 
 class AMenuBar : public QMenuBar {
   Q_OBJECT
-public:
-  AMenuBar(ALine *line, QWidget *parent = nullptr);
+ public:
+  AMenuBar(ALine *l, QWidget *p = nullptr);
   ~AMenuBar() override;
-  QAction *fullScreen;
+  QAction *fsa;
 
-signals:
+ signals:
   void fullscreenModeChanged();
   void clearScreenTriggered();
   void aboutTriggered();
@@ -26,19 +26,19 @@ signals:
   void helpTriggered();
   void saveToFileTriggered();
 
-private:
+ private:
   Q_DISABLE_COPY(AMenuBar)
-  bool m_isFullscreen = 0;
+  bool fs = 0;
   void openContainerManager();
   void openAbout();
   void saveToFile();
-  void clearScreen();
+  void clearMsgHist();
   void fScreen();
   void hideThis();
-  QMenu *menuFile;
-  QMenu *menuEdit;
-  QMenu *menuTools;
-  QMenu *menuHelp;
+  QMenu *mf;
+  QMenu *me;
+  QMenu *mt;
+  QMenu *mh;
 };
 
-#endif // AKIWAKE_MENUBAR_H
+#endif  // AKIWAKE_MENUBAR_H
