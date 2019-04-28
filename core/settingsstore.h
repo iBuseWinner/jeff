@@ -24,13 +24,13 @@ class SettingsStore {
   void write(const QString& k, const QVariant& d);
   void write(const QList<containerProperties>& cp);
   QString settingsPath();
-  const QString company = "CCLC";
-  const QString application = "ASW";
+  const QString c = "CCLC";
+  const QString a = "ASW";
 
  private:
-  const QString selectionFileName = "selection.json";
-  QSettings* settings = new QSettings(
-      QSettings::IniFormat, QSettings::UserScope, company, application);
+  const QString sfn = "selection.json";
+  QSettings* s =
+      new QSettings(QSettings::IniFormat, QSettings::UserScope, c, a);
   QJsonObject toJson(const containerProperties& cp);
   containerProperties toContainerStruct(const QJsonObject& obj);
 };

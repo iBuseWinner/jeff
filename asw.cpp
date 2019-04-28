@@ -35,7 +35,7 @@ ASW::ASW(QWidget *p) : QMainWindow(p) {
 }
 
 void ASW::applyingSettings() {
-  setWindowTitle(st->application);
+  setWindowTitle(st->a);
   // It's not allowed to reduce the size of the
   // window is less than these values...
   setMinimumSize(mw, mh);

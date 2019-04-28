@@ -7,7 +7,7 @@ void sqlite::create(const containerProperties &ncp) {
   db.setDatabaseName(ncp.p);
   db.open();
   QSqlQuery q(db);
-  q.exec(QString("CREATE TABLE IF NOT EXISTS %1(address INTEGER, expression "
+  q.exec(QString("CREATE TABLE IF NOT EXISTS \"%1\" (address INTEGER, expression "
                  "TEXT, links TEXT)")
              .arg(ncp.c));
   ct(q);
@@ -189,6 +189,6 @@ QList<QPair<QString, QString>> sqlite::scan(const QString &p, const QString &c,
 
 void sqlite::ct(QSqlQuery q) {
   q.exec(
-      "CREATE TABLE IF NOT EXISTS tables(container TEXT, title TEXT, "
+      "CREATE TABLE IF NOT EXISTS tables (container TEXT, title TEXT, "
       "readOnly BOOL, private BOOL, catching BOOL)");
 }

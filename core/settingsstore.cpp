@@ -2,18 +2,18 @@
 
 SettingsStore::~SettingsStore() {
   // Prevents memory leaks.
-  delete this->settings;
+  delete this->s;
 }
 
 QVariant SettingsStore::read(const QString &k) {
   // Reads the setting by key.
-  return this->settings->value(k);
+  return this->s->value(k);
 }
 
 QList<containerProperties> SettingsStore::read() {
   // Reads selection of AS from file.
   QString sPath = this->settingsPath();
-  QFile sf(sPath + QDir::separator() + this->selectionFileName);
+  QFile sf(sPath + QDir::separator() + sfn);
   if (!sf.open(QIODevice::ReadOnly | QIODevice::Text))
     return QList<containerProperties>();
   QTextStream ts(&sf);
@@ -37,32 +37,30 @@ QList<containerProperties> SettingsStore::read() {
 
 void SettingsStore::write(const QString &k, const QVariant &d) {
   // Records the setting by key.
-  this->settings->setValue(k, d);
+  this->s->setValue(k, d);
 }
 
 void SettingsStore::write(const QList<containerProperties> &cp) {
   // Writes selection of AS into file.
   QString sPath = this->settingsPath();
   QJsonArray cs;
-  auto *sq = new sqlite();
+  sqlite sq;
   for (const auto &i : cp) {
     cs.append(this->toJson(i));
-    sq->optionsWriter(i);
+    sq.optionsWriter(i);
   }
-  delete sq;
   QJsonDocument DatabaseList(cs);
-  QFile SelectionFile(sPath + QDir::separator() + this->selectionFileName);
-  if (!SelectionFile.open(QIODevice::WriteOnly | QIODevice::Text)) return;
-  QTextStream stream(&SelectionFile);
-  stream << DatabaseList.toJson(QJsonDocument::Indented);
-  SelectionFile.close();
+  QFile sf(sPath + QDir::separator() + sfn);
+  if (!sf.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+  QTextStream st(&sf);
+  st << DatabaseList.toJson(QJsonDocument::Indented);
+  sf.close();
 }
 
 QString SettingsStore::settingsPath() {
   // Returns the setting path.
-  QFileInfo *fi = new QFileInfo(this->settings->fileName());
-  QString p = fi->absolutePath();
-  delete fi;
+  QFileInfo fi(s->fileName());
+  QString p = fi.absolutePath();
   return p;
 }
 
