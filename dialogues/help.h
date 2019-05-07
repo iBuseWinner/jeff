@@ -8,6 +8,9 @@
 class ASWHelp : public QWidget {
  public:
   ASWHelp(QWidget *parent = nullptr);
+
+ private:
+  Q_DISABLE_COPY(ASWHelp)
 };
 
 #endif  // AKIWAKE_HELP_H

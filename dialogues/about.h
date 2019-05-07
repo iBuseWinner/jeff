@@ -7,14 +7,14 @@
 #include <QSizePolicy>
 #include <QTabWidget>
 #include <QWidget>
-#include "core/settingsstore.h"
-#include "widgets/a_pushbutton.h"
+#include "widgets/a_button.h"
 
 class About : public QWidget {
  public:
   About(QWidget *p = nullptr);
 
  private:
+  Q_DISABLE_COPY(About)
   const int fw = 320;
   const int fh = 230;
 };

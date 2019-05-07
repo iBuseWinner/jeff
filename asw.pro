@@ -17,18 +17,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    core/core.cpp \
+    core/history-processor.cpp \
+    core/settings.cpp \
+    core/standard-templates.cpp \
     main.cpp \
     asw.cpp \
     core/handlers.cpp \
     core/sqlite.cpp \
-    core/settingsstore.cpp \
     dialogues/containers.cpp \
     dialogues/createcontainer.cpp \
-    core/history_processor.cpp \
     dialogues/help.cpp \
     dialogues/firststart.cpp \
     dialogues/about.cpp \
-    core/standardtemplates.cpp \
+    widgets/a_button.cpp \
     widgets/a_message.cpp \
     widgets/a_board.cpp \
     widgets/a_containerslist.cpp \
@@ -36,22 +38,24 @@ SOURCES += \
     widgets/a_line.cpp \
     widgets/a_lineedit.cpp \
     widgets/a_menubar.cpp \
-    widgets/a_pushbutton.cpp \
     core/nlp-module.cpp
 
 HEADERS += \
     asw.h \
+    core/container.h \
+    core/core.h \
     core/handlers.h \
+    core/history-processor.h \
+    core/message.h \
+    core/settings.h \
     core/sqlite.h \
-    core/settingsstore.h \
+    core/standard-templates.h \
     dialogues/containers.h \
-    core/containersstruct.h \
     dialogues/createcontainer.h \
-    core/history_processor.h \
     dialogues/help.h \
     dialogues/firststart.h \
     dialogues/about.h \
-    core/standardtemplates.h \
+    widgets/a_button.h \
     widgets/a_message.h \
     widgets/a_board.h \
     widgets/a_containerslist.h \
@@ -59,7 +63,6 @@ HEADERS += \
     widgets/a_line.h \
     widgets/a_lineedit.h \
     widgets/a_menubar.h \
-    widgets/a_pushbutton.h \
     core/nlp-module.h
 
 # Default rules for deployment.

@@ -2,8 +2,8 @@
 
 About::About(QWidget *p) : QWidget(p) {
   setAttribute(Qt::WA_DeleteOnClose);
+  setObjectName("about");
   setFixedSize(fw, fh);
-  // Creating main objects...
   auto *el = new QGridLayout();
   el->setMargin(0);
   el->setSpacing(0);
@@ -36,7 +36,7 @@ About::About(QWidget *p) : QWidget(p) {
   authorsSc->setFrameStyle(QFrame::NoFrame);
   authorsSc->setFrameShadow(QFrame::Plain);
   auto *okLine = new QWidget(this);
-  auto *ok = new APushButton("Close", okLine);
+  auto *ok = new AButton("Close", okLine);
   auto *okLayout = new QHBoxLayout();
   okLayout->setMargin(0);
   okLayout->setSpacing(0);
@@ -45,7 +45,7 @@ About::About(QWidget *p) : QWidget(p) {
   okLayout->addItem(okSpacer);
   okLayout->addWidget(ok);
   okLine->setLayout(okLayout);
-  connect(ok, &APushButton::clicked, p, &QWidget::close);
+  connect(ok, &AButton::clicked, this, &QWidget::close);
   aboutSc->setWidget(aTab);
   authorsSc->setWidget(asTab);
   ts->addTab(aboutSc, "About");

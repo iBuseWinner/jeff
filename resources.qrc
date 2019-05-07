@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>arts/background.jpg</file>
         <file>arts/shots/menufile.png</file>
         <file>arts/shots/addcontainer.png</file>
         <file>arts/icons/500/icon.png</file>
@@ -26,5 +25,6 @@
         <file>arts/icons/16/qt.svg</file>
         <file>arts/icons/16/document-open.svg</file>
         <file>arts/icons/16/db-file.svg</file>
+        <file>arts/icons/16/document-export.svg</file>
     </qresource>
 </RCC>

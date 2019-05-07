@@ -14,31 +14,31 @@
 class AMenuBar : public QMenuBar {
   Q_OBJECT
  public:
+  QAction *fsa = nullptr;
   AMenuBar(ALine *l, QWidget *p = nullptr);
   ~AMenuBar() override;
-  QAction *fsa;
 
  signals:
   void fullscreenModeChanged();
-  void clearScreenTriggered();
+  void clearHistoryTriggered();
   void aboutTriggered();
-  void contManTriggered();
+  void containersTriggered();
   void helpTriggered();
-  void saveToFileTriggered();
+  void exportTriggered();
 
  private:
   Q_DISABLE_COPY(AMenuBar)
   bool fs = 0;
+  QMenu *mf = nullptr;
+  QMenu *me = nullptr;
+  QMenu *mt = nullptr;
+  QMenu *mh = nullptr;
   void openContainerManager();
   void openAbout();
-  void saveToFile();
-  void clearMsgHist();
+  void exportMessageHistory();
+  void clearMessageHistory();
   void fScreen();
   void hideThis();
-  QMenu *mf;
-  QMenu *me;
-  QMenu *mt;
-  QMenu *mh;
 };
 
 #endif  // AKIWAKE_MENUBAR_H

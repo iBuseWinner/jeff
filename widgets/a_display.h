@@ -9,14 +9,14 @@
 class ADisplay : public QScrollArea {
   Q_OBJECT
  public:
-  explicit ADisplay(QWidget *p = nullptr);
-  void connector();
-  void start();
   QVBoxLayout *l = nullptr;
   bool se = true;
+  explicit ADisplay(QWidget *p = nullptr);
+  void start();
 
  private:
   Q_DISABLE_COPY(ADisplay)
+  void connector();
   void scrollDown(int min, int max);
   void scrollTumbler(int v);
 };

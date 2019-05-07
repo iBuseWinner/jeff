@@ -8,9 +8,9 @@
 #include <QTime>
 #include <QUuid>
 #include <QWidget>
-#include "core/containersstruct.h"
+#include "core/container.h"
 #include "widgets/a_lineedit.h"
-#include "widgets/a_pushbutton.h"
+#include "widgets/a_button.h"
 
 class CreateContainer : public QWidget {
   Q_OBJECT
@@ -19,22 +19,22 @@ class CreateContainer : public QWidget {
 
  signals:
   void c();
-  containerProperties cont(containerProperties _cProps);
+  container cont(container _cProps);
 
  protected:
   void closeEvent(QCloseEvent *e) override;
 
  private:
   Q_DISABLE_COPY(CreateContainer)
+  QString m_dbpath = "";
+  ALineEdit *t = nullptr;
+  AButton *sel = nullptr;
+  AButton *s = nullptr;
+  AButton *cc = nullptr;
   void connector();
   void selStart();
   void select();
   void save();
-  QString m_dbpath = "";
-  ALineEdit *t = nullptr;
-  APushButton *sel = nullptr;
-  APushButton *s = nullptr;
-  APushButton *cc = nullptr;
 };
 
 #endif  // CREATECONTAINER_H

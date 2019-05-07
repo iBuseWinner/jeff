@@ -1,7 +1,10 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
+#include <QFile>
+#include <QJsonObject>
 #include <QMap>
+#include <QObject>
 #include <QPair>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -11,26 +14,34 @@
 #include <QString>
 #include <QStringList>
 #include <QVariant>
-#include "core/containersstruct.h"
+#include "core/container.h"
 #include "core/handlers.h"
 
-class sqlite {
+class sqlite : public QObject {
+  Q_OBJECT
  public:
-  void create(const containerProperties &ncp);
-  QList<containerProperties> containers(const QString &p);
-  containerProperties optionsLoader(containerProperties cp);
-  void optionsWriter(const containerProperties &cp);
-  void insert(const QString &p, const QString &c, int a, const QString &ex,
+  sqlite(QObject *p = nullptr);
+  void create(const container &cProp);
+  QList<container> containers(const QString &p);
+  container optionsLoader(container cProp);
+  void optionsWriter(const container &cProp);
+  void insert(const container &cProp, int a, const QString &e,
               const QString &ls);
-  QPair<QString, QString> scan(const QString &p, const QString &c, int a);
-  bool hasAdditionalProperties(const QString &p, const QString &c);
-  QMap<QString, QString> scanAP(const QString &p, const QString &c, int a);
-  QList<QPair<QString, QString>> scan(const QString &p, const QString &c,
-                                      const QString &ex);
-  QList<QPair<QString, QString>> paths();
+  QPair<QString, QString> scan(const container &cProp, int a);
+  bool hasAdditionalProperties(const container &cProp);
+  QMap<QString, QString> scanAP(const container &cProp, int a);
+  QMap<QString, QString> scan(const container &cProp, const QString &e);
+
+ signals:
+  QString sqliteError(QString et);
+  QString sqliteWarning(QString wt);
 
  private:
-  void ct(QSqlQuery q);
+  void createMainTable(QSqlQuery q);
+  bool exists(const QString &p);
+  QPair<QSqlDatabase, bool> openDB(const QString &p);
+  bool isDBEmpty(QSqlDatabase _db);
+  QSqlQuery execQuery(QSqlQuery q);
 };
 
 #endif  // SQLITE_H

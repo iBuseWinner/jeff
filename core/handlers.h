@@ -5,9 +5,11 @@
 
 class handlers {
  public:
-  const char ss[9] = {'.', ',', ':', ';', '!', '?', '-', '\'', '"'};
-  QString purifyString(const QString& l);
-  QString removeCharacters(QString l);
+  static QString purify(const QString& l);
+  static QString removeCharacters(QString l);
+
+ private:
+  static QString ss() { return QString(".,:;!?-'\""); }
 };
 
 #endif  // HANDLERS_H

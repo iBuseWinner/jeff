@@ -12,10 +12,10 @@ class ABoard : public QFrame {
 
  private:
   Q_DISABLE_COPY(ABoard)
-  QString objectName = "a_board";
-  QString css =
+  QString objn = "a_board";
+  QString ss =
       "#a_board {border-width: 4px; border-style: solid; border-color: white; "
       "border-radius: 6px; background-color: white;} * { color: black; }";
 };
 
-#endif  // A_BOARD_H
+#endif

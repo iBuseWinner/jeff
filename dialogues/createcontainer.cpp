@@ -1,13 +1,11 @@
 #include "createcontainer.h"
 
 CreateContainer::CreateContainer(QWidget *parent) : QWidget(parent) {
-  setAttribute(Qt::WA_DeleteOnClose);
-  // Creates main objects...
   auto *el = new QGridLayout();
   t = new ALineEdit(this);
-  sel = new APushButton("", this);
-  s = new APushButton("Save", this);
-  cc = new APushButton("Cancel", this);
+  sel = new AButton("", this);
+  s = new AButton("Save", this);
+  cc = new AButton("Cancel", this);
   auto *is = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   t->setPlaceholderText("Enter container's name");
   s->setIcon(QIcon(":/arts/icons/16/document-save.svg"));
@@ -22,19 +20,24 @@ CreateContainer::CreateContainer(QWidget *parent) : QWidget(parent) {
   selStart();
 }
 
-void CreateContainer::connector() {
-  connect(sel, &APushButton::clicked, this, &CreateContainer::select);
-  connect(s, &APushButton::clicked, this, &CreateContainer::save);
-  connect(cc, &APushButton::clicked, this, &QWidget::close);
-}
-
 void CreateContainer::closeEvent(QCloseEvent *e) {
   emit c();
   e->accept();
 }
 
+void CreateContainer::connector() {
+  connect(sel, &AButton::clicked, this, &CreateContainer::select);
+  connect(s, &AButton::clicked, this, &CreateContainer::save);
+  connect(cc, &AButton::clicked, this, &QWidget::close);
+}
+
+void CreateContainer::selStart() {
+  sel->setText("Select database file...");
+  sel->setIcon(QIcon(":/arts/icons/16/document-open.svg"));
+}
+
 void CreateContainer::select() {
-  m_dbpath = QFileDialog::getSaveFileName(this, "Select database...", "",
+  m_dbpath = QFileDialog::getSaveFileName(nullptr, "Select database...", "",
                                           "ASW database(*.asw.db)", nullptr,
                                           QFileDialog::DontConfirmOverwrite);
   if (!m_dbpath.isEmpty()) {
@@ -46,7 +49,7 @@ void CreateContainer::select() {
 
 void CreateContainer::save() {
   if ((m_dbpath.isEmpty()) || (t->text().isEmpty())) close();
-  containerProperties cProp;
+  container cProp;
   QRandomGenerator rand(quint32(QTime::currentTime().msec()));
   cProp.p = m_dbpath;
   cProp.t = t->text();
@@ -59,9 +62,4 @@ void CreateContainer::save() {
                 .toString();
   emit cont(cProp);
   close();
-}
-
-void CreateContainer::selStart() {
-  sel->setText("Select database file...");
-  sel->setIcon(QIcon(":/arts/icons/16/document-open.svg"));
 }

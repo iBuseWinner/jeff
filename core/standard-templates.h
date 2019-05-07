@@ -7,11 +7,15 @@
 #include "dialogues/createcontainer.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"
-#include "widgets/a_message.h"
 
-class standardTemplates {
+class standardTemplates : public QObject {
+  Q_OBJECT
  public:
-  QString dialogues(QString ue, AMessage *msg);
+  standardTemplates(QObject *p = nullptr);
+  bool dialogues(const QString &_cn);
+
+ signals:
+  QWidget *showASWDialog(QWidget *w);
 };
 
 #endif  // STANDARDTEMPLATES_H

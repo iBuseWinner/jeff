@@ -1,106 +1,149 @@
 #include "a_message.h"
 
-AMessage::AMessage(QWidget *parent) : QWidget(parent) {
-  // Creates a message.
-  el->setContentsMargins(0, 0, 0, bm);
-  el->setSpacing(0);
-  setLayout(el);
+AMessage::AMessage() {
+  QHBoxLayout *l = new QHBoxLayout();
+  l->setContentsMargins(0, 0, 0, bm);
+  l->setSpacing(0);
+  setLayout(l);
+}
+
+AMessage::AMessage(message _daemon) {
+  QHBoxLayout *l = new QHBoxLayout();
+  l->setContentsMargins(0, 0, 0, bm);
+  l->setSpacing(0);
+  setLayout(l);
+  setDaemon(_daemon);
+}
+
+void AMessage::setDaemon(message _daemon) {
+  if (daemon.dt != "") return;
+  daemon = _daemon;
+  setAuthor(daemon.aType);
+  setMessageType(daemon.cType);
+  // setTheme(daemon.tType);
+}
+
+void AMessage::setWidget(QWidget *_w) {
+  if (w != nullptr) return;
+  w = _w;
+  connect(w, &QWidget::destroyed, this, &AMessage::close);
+  el->addWidget(w);
 }
 
 void AMessage::setAuthor(A _a) {
-  if (a != A::undefA) return;
-  a = _a;
-  switch (a) {
+  switch (_a) {
     case 1:
-      createASWLayout();
+      setupASW();
       break;
     case 2:
-      createUserLayout();
+      setupUser();
       break;
     default:;
   }
 }
 
-void AMessage::createASWLayout() {
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-                                 QSizePolicy::Minimum);
-  el->addWidget(b);  // content is on the left
-  el->addItem(spacer);
-  update();
-}
-
-void AMessage::createUserLayout() {
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-                                 QSizePolicy::Minimum);
-  el->addItem(spacer);
-  el->addWidget(b);  // content is on the right
-  update();
-}
-
-void AMessage::setMessageType(CT _ct, const QString &_cn) {
-  if (ct != CT::undefCT) return;
-  ct = _ct;
-  switch (ct) {
+void AMessage::setMessageType(C _ct) {
+  switch (_ct) {
     case 1:
-      setupPlainMessage(_cn);
+      setupText(daemon.cn);
       break;
     case 2:
-      setupHTMLMessage(_cn);
+      setupMarkdown(daemon.cn);
       break;
+    // case 3:
+    //  setupPicture(daemon.cn);
+    //  break;
     // case 4:
-    //   setupMessage_pict(_cn);
-    //   break;
-    // case 5:
-    //   setupMessage_file(_cn);
-    //   break;
+    //  setupFile(daemon.cn);
+    //  break;
+    case 5:
+      setupWarning(daemon.cn);
+      break;
+    case 6:
+      setupError(daemon.cn);
+      break;
+    case 7:
+      prepareSetupWidget();
+      return;
     default:;
   }
-}
-
-void AMessage::setMessageType(CT _ct, QWidget *_cn) {
-  if (ct != CT::undefCT) return;
-  ct = _ct;
-  setupWidgetMessage(_cn);
-}
-
-void AMessage::setupPlainMessage(const QString &_cn) {
-  cn = _cn;
-  tl = new QLabel(_cn, this);
-  tl->setTextFormat(Qt::PlainText);
-  auto *bl = new QGridLayout();
-  bl->addWidget(tl);
-  b->setLayout(bl);
+  connect(w, &QWidget::destroyed, this, &AMessage::close);
   alignTextToWindowWidth();
 }
 
-void AMessage::setupHTMLMessage(const QString &_cn) {
-  setupPlainMessage(_cn);
+// void AMessage::setTheme(T _t) {}
+
+void AMessage::setupASW() {
+  QPair<QSpacerItem *, ABoard *> ws = mk();
+  layout()->addWidget(ws.second);
+  layout()->addItem(ws.first);
+}
+
+void AMessage::setupUser() {
+  QPair<QSpacerItem *, ABoard *> ws = mk();
+  layout()->addItem(ws.first);
+  layout()->addWidget(ws.second);
+}
+
+void AMessage::setupText(const QString &_cn) {
+  auto *tl = new QLabel(_cn, this);
+  w = tl;
+  tl->setObjectName("text");
+  tl->setTextFormat(Qt::PlainText);
+  tl->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                              Qt::TextSelectableByKeyboard);
+  tl->setFocusPolicy(Qt::NoFocus);
+  el->addWidget(w);
+}
+
+void AMessage::setupMarkdown(const QString &_cn) {
+  setupText(_cn);
+  auto *tl = static_cast<QLabel *>(w);  // test
   tl->setTextFormat(Qt::RichText);
+  tl->setText(tl->text().replace("\n", "<br>"));
 }
 
-void AMessage::setupWidgetMessage(QWidget *_cn) {
-  auto *bl = new QGridLayout();
-  bl->addWidget(_cn);
-  b->setLayout(bl);
-  b->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+// void AMessage::setupPicture(QString path) {}
+
+// void AMessage::setupFile(QString path) {}
+
+void AMessage::setupWarning(const QString &_cn) {
+  setupText(QString("Warning: " + _cn));
 }
 
-// void AMessage::setupMessage_pict(QString path) {}
+void AMessage::setupError(const QString &_cn) {
+  setupText(QString("Error: " + _cn));
+}
 
-// void AMessage::setupMessage_file(QString path) {}
-
-QString AMessage::returnText() {
-  if (returnMessageType() != AMessage::Widget) return cn;
-  return "";
+void AMessage::prepareSetupWidget() {
+  el->parentWidget()->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
 void AMessage::alignTextToWindowWidth() {
-  if ((ct != CT::Text) && (ct != CT::HTML)) return;
-  if (tl->fontMetrics().width(cn) < mmw) {
-    tl->setWordWrap(false);
-    tl->setFixedWidth(tl->fontMetrics().width(cn));
-  } else if (tl->fontMetrics().width(cn) > mmw) {
-    tl->setWordWrap(true);
-    tl->setFixedWidth(mmw);
+  auto *_tl = static_cast<QLabel *>(w);
+  if (_tl == nullptr) return;
+  QTextDocument td;
+  if (daemon.cType == C::Markdown)
+    td.setHtml(_tl->text());
+  else if (daemon.cType == C::Text)
+    td.setPlainText(_tl->text());
+  else
+    return;
+  if (td.idealWidth() < mmw)
+    _tl->setWordWrap(false);
+  else {
+    _tl->setWordWrap(true);
+    _tl->setFixedWidth(mmw);
   }
+}
+
+QPair<QSpacerItem *, ABoard *> AMessage::mk() {
+  auto *s = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
+                            QSizePolicy::Minimum);
+  auto *b = new ABoard(this);
+  el = new QGridLayout();
+  el->setSpacing(0);
+  el->setMargin(6);
+  b->setLayout(el);
+  return QPair<QSpacerItem *, ABoard *>(s, b);
 }

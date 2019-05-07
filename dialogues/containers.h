@@ -5,12 +5,12 @@
 #include <QFileDialog>
 #include <QString>
 #include <QTreeWidgetItem>
-#include "core/containersstruct.h"
-#include "core/settingsstore.h"
+#include "core/container.h"
+#include "core/settings.h"
 #include "core/sqlite.h"
 #include "dialogues/createcontainer.h"
+#include "widgets/a_button.h"
 #include "widgets/a_containerslist.h"
-#include "widgets/a_pushbutton.h"
 
 class Containers : public QWidget {
  public:
@@ -20,23 +20,22 @@ class Containers : public QWidget {
 
  private:
   Q_DISABLE_COPY(Containers)
+  QMap<QTreeWidgetItem *, container> csm;
+  CreateContainer *_cc = nullptr;
+  AContainersList *cl = nullptr;
+  QGridLayout *el = nullptr;
+  AButton *ac = nullptr;
+  AButton *cc = nullptr;
+  AButton *rc = nullptr;
+  AButton *ok = nullptr;
   bool ed = false;
-  void lf();
   void connector();
-  QString openF();
-  void app(const QList<containerProperties> &cProp);
-  void cd(containerProperties _cProp);
+  void lf();
+  void app(const QList<container> &cProp);
+  void cd(container _cProp);
   void sncl();
   void openCC();
   void closeCC();
-  QGridLayout *el = nullptr;
-  QMap<QTreeWidgetItem *, containerProperties> csm;
-  AContainersList *cl = nullptr;
-  APushButton *ac = nullptr;
-  APushButton *cc = nullptr;
-  APushButton *rc = nullptr;
-  APushButton *ok = nullptr;
-  CreateContainer *_cc = nullptr;
 };
 
 #endif  // CONTAINERS_H

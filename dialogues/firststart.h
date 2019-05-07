@@ -5,11 +5,14 @@
 #include <QLabel>
 #include <QSpacerItem>
 #include <QWidget>
-#include "widgets/a_pushbutton.h"
+#include "widgets/a_button.h"
 
 class FirstStart : public QWidget {
  public:
-  FirstStart(QWidget *parent = nullptr);
+  FirstStart(QWidget *p = nullptr);
+
+ private:
+  Q_DISABLE_COPY(FirstStart)
 };
 
 #endif  // FIRSTSTART_H
