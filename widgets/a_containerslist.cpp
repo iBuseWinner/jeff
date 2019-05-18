@@ -1,6 +1,10 @@
 #include "a_containerslist.h"
 
-AContainersList::AContainersList(QWidget *p) : QTreeWidget(p) {
-  setHeaderLabel("Containers");
+/*!
+ * Argument: QWidget {*parent}.
+ * Creates an AContainerList.
+ */
+AContainersList::AContainersList(QWidget *parent) : QTreeWidget(parent) {
+  setHeaderLabel(tr("Containers"));
   setAnimated(false);
 }

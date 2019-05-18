@@ -3,15 +3,27 @@
 
 #include <QString>
 
+/*!
+ * Struct: container.
+ * Contains data about the container of regular expressions for the NLP-module.
+ */
 struct container {
-  QString p = QString();  // path to database
-  QString c = QString();  // table path
-  QString t = QString();  // table name
-  bool d = 0;      // does not participate in the selection of reagents
-  bool ro = 0;     // not available for adding expressions from ASW
-  bool pv = 0;     // unavailable until purposeful entry
-  bool ch = 0;     // the search for reagents occurs exclusively in it
-  bool pr = 0;     // the input is first validated using this container
+  /*! Path to database. */
+  QString path = "";
+  /*! Table name [UUID, name of database table]. */
+  QString tableName = "";
+  /*! Table title [username]. */
+  QString tableTitle = "";
+  /*! Means that does not participate in the selection of reagents. */
+  bool isDisabled = false;
+  /*! Means that not available for adding expressions from ASW. */
+  bool isReadOnly = false;
+  /*! Means that unavailable until purposeful entry. */
+  bool isPrivate = false;
+  /*! Means that the search for reagents occurs exclusively in it. */
+  bool isCatching = false;
+  /*! Means that the input is first validated using this container. */
+  bool isPriority = false;
 };
 
 #endif  // CONTAINERSSTRUCT_H

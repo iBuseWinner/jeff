@@ -21,12 +21,12 @@ SOURCES += \
     core/history-processor.cpp \
     core/settings.cpp \
     core/standard-templates.cpp \
+    dialogues/containers/createcontainer.cpp \
     main.cpp \
     asw.cpp \
     core/handlers.cpp \
     core/sqlite.cpp \
     dialogues/containers.cpp \
-    dialogues/createcontainer.cpp \
     dialogues/help.cpp \
     dialogues/firststart.cpp \
     dialogues/about.cpp \
@@ -51,6 +51,7 @@ HEADERS += \
     core/sqlite.h \
     core/standard-templates.h \
     dialogues/containers.h \
+    dialogues/containers/createcontainer.h \
     dialogues/createcontainer.h \
     dialogues/help.h \
     dialogues/firststart.h \

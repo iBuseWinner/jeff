@@ -8,12 +8,22 @@
 #include "widgets/a_button.h"
 #include "widgets/a_lineedit.h"
 
+/*!
+ * Class: ALine
+ * Widget for sending user messages.
+ */
 class ALine : public ABoard {
   Q_OBJECT
  public:
-  AButton *s = nullptr;
-  ALineEdit *tl = nullptr;
-  ALine(QWidget *p = nullptr);
+  // Objects:
+  AButton *sendButton = nullptr;
+  ALineEdit *lineEdit = nullptr;
+
+  // Functions:
+  ALine(QWidget *parent = nullptr);
+
+ protected:
+  void keyPressEvent(QKeyEvent *event);
 
  private:
   Q_DISABLE_COPY(ALine)

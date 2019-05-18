@@ -1,15 +1,29 @@
 #include "a_line.h"
 
-ALine::ALine(QWidget *p) : ABoard(p) {
-  tl = new ALineEdit(this);
-  s = new AButton("", this);
-  s->setToolButtonStyle(Qt::ToolButtonIconOnly);
-  s->setIcon(QIcon(":/arts/icons/16/send.svg"));
-  connect(tl, &QLineEdit::returnPressed, s, &AButton::click);
-  auto *el = new QHBoxLayout(this);
-  el->setMargin(0);
-  el->setSpacing(0);
-  el->addWidget(tl);
-  el->addWidget(s);
-  setLayout(el);
+/*
+ * All short named objects and their explanations:
+ * {lt} <- layout
+ */
+
+/*!
+ * Argument: QWidget {*parent}.
+ * Creates an ALine.
+ */
+ALine::ALine(QWidget *parent) : ABoard(parent) {
+  lineEdit = new ALineEdit(this);
+  sendButton = new AButton("", this);
+  sendButton->setToolButtonStyle(Qt::ToolButtonIconOnly);
+  sendButton->setIcon(QIcon(":/arts/icons/16/send.svg"));
+  auto *lt = new QHBoxLayout(this);
+  lt->setMargin(0);
+  lt->setSpacing(0);
+  lt->addWidget(lineEdit);
+  lt->addWidget(sendButton);
+  setLayout(lt);
+}
+
+void ALine::keyPressEvent(QKeyEvent *event) {
+  if (event->key() == Qt::Key_Return)
+    event->modifiers() == Qt::ControlModifier ? lineEdit->insert("\n")
+                                              : sendButton->click();
 }

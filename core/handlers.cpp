@@ -1,10 +1,25 @@
 #include "handlers.h"
 
-QString handlers::purify(const QString& l) {
-  return handlers::removeCharacters(l.trimmed().toLower());
+/*
+ * All short named variables and their explanations:
+ * {sb} <- symbol
+ */
+
+/*!
+ * Argument: QString {str} [string to be purified].
+ * Purifies {str}.
+ * Returns: purified string.
+ */
+QString handlers::purify(const QString& str) {
+  return handlers::removeCharacters(str.trimmed().toLower());
 }
 
-QString handlers::removeCharacters(QString l) {
-  for (auto s : ss()) l.remove(s);
-  return l;
+/*!
+ * Argument: QString {str}.
+ * Removes punctuation.
+ * Returns: set of words.
+ */
+QString handlers::removeCharacters(QString str) {
+  for (auto sb : sbs()) str.remove(sb);
+  return str;
 }

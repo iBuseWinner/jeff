@@ -4,10 +4,15 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
+/*!
+ * Class: AContainersList
+ * Container list widget.
+ */
 class AContainersList : public QTreeWidget {
   Q_OBJECT
  public:
-  AContainersList(QWidget *p = nullptr);
+  // Functions:
+  AContainersList(QWidget *parent = nullptr);
 
  private:
   Q_DISABLE_COPY(AContainersList)

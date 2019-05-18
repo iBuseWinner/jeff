@@ -1,17 +1,21 @@
 #include "standard-templates.h"
 
-standardTemplates::standardTemplates(QObject *p) : QObject(p) {}
-
-bool standardTemplates::dialogues(const QString &_cn) {
-  if (_cn == "/about") {
+/*!
+ * Argument: QString {expression} [processed string].
+ * Looking for a command in the expression. If found, then shows an ASW
+ * dialog box.
+ * Returns: found or not.
+ */
+bool standardTemplates::dialogues(const QString &expression) {
+  if (expression == "/about") {
     emit showASWDialog(new About());
     return true;
   }
-  if (_cn == "/cm") {
-    emit showASWDialog(new Containers());
+  if (expression == "/cm") {
+    emit showASWDialog(new Containers(st));
     return true;
   }
-  if (_cn == "/first") {
+  if (expression == "/first") {
     emit showASWDialog(new FirstStart());
     return true;
   }

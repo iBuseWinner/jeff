@@ -7,6 +7,7 @@
 
 class ASWHelp : public QWidget {
  public:
+  // Functions:
   ASWHelp(QWidget *parent = nullptr);
 
  private:

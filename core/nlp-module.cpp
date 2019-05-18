@@ -1,106 +1,184 @@
 #include "nlp-module.h"
 
-NLPmodule::NLPmodule(settings *_st, sqlite *_sq, QObject *p) : QObject(p) {
-  st = _st;
-  sq = _sq;
+/*
+ * All short named variables and their explanations:
+ * {st} <- settings
+ * {ac} <- single activator
+ * {acs} <- activators
+ * {rg} <- single reagent
+ * {rgs} <- reagents
+ * {ue} <- user expression
+ * {re} <- answer expression
+ * {cProp} <- container properties
+ * {lm} <- linkMap
+ * {lms} <- list of linkMap
+ * {el} <- single containerRow [expression and links]
+ * {crs} <- list of containerRow
+ * {els} <- expressions and links
+ * {ap} <- additional properties
+ * {exls} <- single expression and links
+ * {exl} <- expression-link pair
+ * {gm} <- globalMap
+ */
+
+/*!
+ * Arguments: settings {*_settings} [reference to Settings instance],
+ *            QObject {*parent}.
+ * Adds SQLite database, sets references to private objects.
+ */
+NLPmodule::NLPmodule(settings *_settings, QObject *parent) : QObject(parent) {
+  QSqlDatabase::addDatabase("QSQLITE");
+  st = _settings;
 }
 
-void NLPmodule::search(QString ue) {
-  ue = simplifier(ue);
+/*!
+ * Argument: QString {ue} [user input expression].
+ * Runs regular expression searches in databases in several stages:
+ *   1) purifies expression {ue};
+ *   2) scans every container {cProp} for a regular expressions;
+ *   3) selects the results and sends them to the core.
+ */
+void NLPmodule::search(QString userExpression) {
+  // 1)
+  userExpression = simplifier(userExpression);
+  // 2)
   QList<linkMap> lms;
-  for (auto cProp : st->read()) {
+  for (auto cProp : st->readContainerList()) {
     QList<containerRow> crs;
-    QMap<QString, QString> els = sq->scan(cProp, ue);
-    bool hasAddProps = sq->hasAdditionalProperties(cProp);
-    for (auto mc : els.keys()) {
-      QStringList links = els.value(mc).split(',');
+    // First receives a map {els} of activators in {ue}.
+    // The first argument is the activator, the second is the references to the
+    // reagents.
+    QMap<QString, QString> els = st->SQL->scanContainer(cProp, userExpression);
+    bool ap = st->SQL->hasAdditionalProperties(cProp);
+    for (auto ac : els.keys()) {
+      QStringList links = els.value(ac).split(',');
       for (auto link : links) {
         containerRow el;
-        el.a = mc;
+        el.ac = ac;
         el.ra = link.toInt();
-        if (hasAddProps) el.rProps = sq->scanAP(cProp, el.ra);
+        // Among other things, containerRow retains additional properties. For
+        // each expression, they are different.
+        if (ap) el.rProps = st->SQL->scanAdditionalProperties(cProp, el.ra);
         crs.append(el);
       }
     }
-    linkMap lm = toLinkMap(crs, hasAddProps);
+    // The list of containerRow {crs} turns into a linkMap.
+    // As a result of executing toLinkMap, additional properties are processed,
+    // individual response options are discarded, added or changed.
+    // [!] It is important to process additional properties now, in order not to
+    // waste machine time and memory on this later.
+    linkMap lm = toLinkMap(crs, ap);
+    // To convert links to reagents, container information is recorded in
+    // linkMap {lm}. Thus, one linkMap is formed per container.
     lm.cProp = cProp;
     lms.append(lm);
   }
-  select(ue, toGlobalMap(lms));
+  // 3)
+  // The linkMap {lms} turns into a list of activator-reagent pairs.
+  // Thus, information from databases is finally transformed into a structured
+  // data set.
+  select(userExpression, toGlobalMap(lms));
 }
 
-linkMap NLPmodule::toLinkMap(const QList<containerRow> &cm, bool _aProp) {
-  linkMap lm;
-  QMap<QString, QList<int>> cls;
-  for (containerRow el : cm) {
-    el.a = simplifier(el.a);
-    if (!cls.contains(el.a)) {
-      QList<int> addresses;
-      cls.insert(el.a, addresses);
-    }
-    if (!cls.value(el.a).contains(el.ra)) {
-      QList<int> addresses = cls.value(el.a);
-      addresses.append(el.ra);
-      cls.insert(el.a, addresses);
-    }
-  }
+/*!
+ * Arguments: QList of containerRow {cm} [list of rows of the table to be
+ * converted to a linkMap],
+ *            bool {_aProp} [reports whether the table has additional
+ * properties].
+ * Turns the containerRow list into a linkMap, handles additional properties.
+ * Returns: linkMap.
+ */
+linkMap NLPmodule::toLinkMap(QList<containerRow> crs, bool _aProp) {
+  // Further, additional properties will be discarded, so that they are
+  // processed here.
   if (_aProp) {
     // < ... >
   }
-  lm.rl = cls;
+  linkMap lm;
+  for (containerRow exl : crs) {
+    exl.ac = simplifier(exl.ac);
+    // Possible duplicates are discarded here, the activator reagents are
+    // combined.
+    if (lm.al.value(exl.ac).contains(exl.ra)) continue;
+    QList<int> addresses;
+    if (!lm.al.value(exl.ac).isEmpty()) addresses = lm.al.take(exl.ac);
+    addresses.append(exl.ra);
+    lm.al.insert(exl.ac, addresses);
+  }
   return lm;
 }
 
-globalMap NLPmodule::toGlobalMap(const QList<linkMap> &sRes) {
-  globalMap genm;
-  for (auto mm : sRes) {
-    for (auto ls : mm.rl) {
-      QString a = mm.rl.key(ls);
-      QStringList rs;
-      if (genm.ar.contains(a)) rs = genm.ar.value(a);
-      for (int l : ls) {
-        QString r = sq->scan(mm.cProp, l).first;
-        if ((!rs.contains(r)) && (r != "")) rs.append(r);
+/*!
+ * Argument: QList of linkMap {lms} [list of all linkMap to form a globalMap].
+ * Gets reagents on the links, forms globalMap {gm}.
+ * Returns: map of activators and their reagents.
+ */
+globalMap NLPmodule::toGlobalMap(const QList<linkMap> &lms) {
+  globalMap gm;
+  for (auto lm : lms) {
+    for (auto links : lm.al) {
+      QString ac = lm.al.key(links);
+      // Possible duplicates are discarded here, the activator reagents are
+      // combined.
+      QStringList rgs;
+      if (gm.ars.contains(ac)) rgs = gm.ars.value(ac);
+      for (int link : links) {
+        QString rg = st->SQL->getExpression(lm.cProp, link).first;
+        if ((!rgs.contains(rg)) && (rg != "")) rgs.append(rg);
       }
-      genm.ar.insert(a, rs);
+      gm.ars.insert(ac, rgs);
     }
   }
-  return genm;
+  return gm;
 }
 
-QStringList NLPmodule::sorting(const QString &ue, QStringList ks) {
-  if (ks.length() <= 1) return ks;
-  QString pn = ks.takeAt(int(ks.length() / 2));
-  QStringList esl;
-  QStringList lsl;
-  for (QString k : ks) {
-    if (ue.indexOf(k) > ue.indexOf(pn))
-      lsl.append(k);
+/*!
+ * Arguments: QString {ue} [user input expression],
+ *            QStringList {as} [activators to be sorted].
+ * Sorts activators depending on the place of entry. This is necessary in order
+ * for the NLP-module to give answers in which the reagents were in the order
+ * given in {ue}, for example:
+ *    1) ue: "Hello! How are you?"
+ *       ae: "Hi! Fine."
+ *    2) ue: "How are you? Hello!"
+ *       ae: "Fine. Hi!"
+ * Algorithm: insertion sort.
+ * Returns: sorted list of activators.
+ */
+QStringList NLPmodule::sorting(const QString &ue, QStringList as) {
+  if (as.length() <= 1) return as;
+  QString section = as.takeAt(int(as.length() / 2));
+  QStringList earlierActivators;
+  QStringList laterActivators;
+  for (QString a : as) {
+    if (ue.indexOf(a) > ue.indexOf(section))
+      laterActivators.append(a);
     else
-      esl.append(k);
+      earlierActivators.append(a);
   }
-  QStringList sd;
-  esl = sorting(ue, esl);
-  for (QString key : esl) sd.append(key);
-  sd.append(pn);
-  lsl = sorting(ue, lsl);
-  for (QString key : lsl) sd.append(key);
-  return sd;
+  QStringList sorted;
+  earlierActivators = sorting(ue, earlierActivators);
+  for (QString a : earlierActivators) sorted.append(a);
+  sorted.append(section);
+  laterActivators = sorting(ue, laterActivators);
+  for (QString a : laterActivators) sorted.append(a);
+  return sorted;
 }
 
-void NLPmodule::select(QString ue, const globalMap &genm) {
-  if (genm.ar.keys().length() == 0) return;
-  QStringList ks = sorting(ue, genm.ar.keys());
-  QString s;
-  for (QString k : ks) {
-    if (!ue.contains(k)) continue;
-    ue.remove(k);
+/*!
+ * Arguments: QString {ue} [user input expression],
+ *            globalMap {gm} [map of activators and reagents].
+ * Of the proposed equivalent reagents randomly selects one by one, forming a
+ * response expression.
+ */
+void NLPmodule::select(QString ue, const globalMap &gm) {
+  QStringList as = sorting(ue, gm.ars.keys());
+  QString re;
+  for (QString a : as) {
+    if (!ue.contains(a)) continue;
+    ue.remove(a);
     QRandomGenerator rand(quint32(QTime::currentTime().msec()));
-    s += genm.ar.value(k).at(rand.bounded(genm.ar.value(k).length())) + " ";
+    re += gm.ars.value(a).at(rand.bounded(gm.ars.value(a).length())) + " ";
   }
-  emit ready(s.trimmed());
-}
-
-QString NLPmodule::simplifier(const QString &ex) {
-  return handlers::purify(ex);
+  emit ready(re.trimmed());
 }

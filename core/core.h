@@ -3,35 +3,54 @@
 
 #include <QDateTime>
 #include <QObject>
+#include <QTimer>
 #include "core/history-processor.h"
 #include "core/nlp-module.h"
 #include "core/standard-templates.h"
 
+/*!
+ * Class: core.
+ * Controls I/O.
+ */
 class core : public QObject {
   Q_OBJECT
  public:
-  sqlite *sq = new sqlite(this);
-  settings *st = new settings(this);
-  history_processor *hp = new history_processor(st, this);
-  core(QObject *p = nullptr);
-  void getUser(QString _ue);
-  void getNLP(QString _cn);
-  void getWarning(QString _wt);
-  void getError(QString _et);
-  void getWidget(QWidget *_w);
-  message getDaemon(QString _cn, A _a, C _ct, T _t) {
-    return d(_cn, _a, _ct, _t);
-  }
+  // Objects:
+  settings *Settings = new settings(this);
+  historyProcessor *HistoryProcessor = new historyProcessor(Settings, this);
+
+  // Functions:
+  core(QObject *parent = nullptr);
+  void getUser(QString userExpression);
+  void getNLP(QString resultExpression);
+  void getWarning(QString warningText);
+  void getError(QString errorText);
+  void getWidget(QWidget *widget);
   // void getScript();
 
+  /*! Creates a shadow on demand. */
+  message getShadow(QString content, eA author, eC contentType, eT theme) {
+    return shadow(content, author, contentType, theme);
+  }
+
  signals:
-  AMessage *show(AMessage *msg);
+  AMessage *show(AMessage *message);
 
  private:
   Q_DISABLE_COPY(core)
-  NLPmodule *nlp = new NLPmodule(st, sq, this);
-  standardTemplates *stdTs = new standardTemplates(this);
-  message d(QString _cn, A _a, C _ct, T _t);
+
+  // Objects:
+  NLPmodule *nlp = new NLPmodule(Settings, this);
+  standardTemplates *stdTs = new standardTemplates(Settings, this);
+  const QString isMonologueEnabledSt = "core/ismonologueenabled";
+  const QString isDelayEnabledSt = "core/isdelayenabled";
+  const QString minDelaySt = "core/mindelay";
+  const QString maxDelaySt = "core/maxdelay";
+
+  // Functions:
+  message shadow(QString _cn, eA _a, eC _ct, eT _t);
+
+  /*! Returns a date and time string. */
   QString curDT() { return QDateTime::currentDateTime().toString(Qt::ISODate); }
 };
 

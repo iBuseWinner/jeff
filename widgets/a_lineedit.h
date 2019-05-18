@@ -4,9 +4,14 @@
 #include <QLineEdit>
 #include <QWidget>
 
+/*!
+ * Class: ALineEdit
+ * The text entry line.
+ */
 class ALineEdit : public QLineEdit {
  public:
-  ALineEdit(QWidget *p = nullptr);
+  // Functions:
+  ALineEdit(QWidget *parent = nullptr);
 
  private:
   Q_DISABLE_COPY(ALineEdit)

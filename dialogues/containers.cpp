@@ -1,131 +1,155 @@
 #include "containers.h"
 
-Containers::Containers(QWidget *p) : QWidget(p) {
+/*
+ * All short named objects and their explanations:
+ * {st} <- settings
+ * {objn} <- object name
+ * {lt} <- layout
+ * {addBtn} <- add container
+ * {crtBtn} <- create container
+ * {remBtn} <- remove container
+ * {snclBtn} <- save and close
+ * {cl} <- container list
+ * {csm} <- containers map
+ * {p} <- path
+ * {cProps} <- containers properties
+ * {cProp} <- container properties
+ * {_cc} <- CreateContainer
+ * {tli2} <- top-level item index
+ */
+
+/*!
+ * Arguments: settings {_settings} [reference to Settings instance],
+ *            QWidget {*parent}.
+ * Constructs and prepares Container Manager.
+ */
+Containers::Containers(settings *_settings, QWidget *parent) : QWidget(parent) {
+  st = _settings;
   setAttribute(Qt::WA_DeleteOnClose);
-  setObjectName("containers");
-  setFixedWidth(400);
-  el = new QGridLayout();
-  el->setSpacing(0);
-  el->setMargin(0);
-  ac = new AButton("Add container", this);
-  cc = new AButton("Create", this);
-  rc = new AButton("Remove", this);
-  ok = new AButton("Save and close", this);
-  ac->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
-  cc->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
-  rc->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
-  ok->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
+  setObjectName(objn);
+  lt = new QGridLayout();
+  lt->setSpacing(0);
+  lt->setMargin(0);
+  addBtn = new AButton(tr("Add container"), this);
+  crtBtn = new AButton(tr("Create"), this);
+  remBtn = new AButton(tr("Remove"), this);
+  snclBtn = new AButton(tr("Save and close"), this);
+  addBtn->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
+  crtBtn->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
+  remBtn->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
+  snclBtn->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
   cl = new AContainersList(this);
-  el->addWidget(cl, 0, 0, 1, 0);
-  el->addWidget(ac, 1, 0);
-  el->addWidget(cc, 1, 1);
-  el->addWidget(rc, 1, 2);
-  el->addWidget(ok, 1, 3);
-  setLayout(el);
+  lt->addWidget(cl, 0, 0, 1, 0);
+  lt->addWidget(addBtn, 1, 0);
+  lt->addWidget(crtBtn, 1, 1);
+  lt->addWidget(remBtn, 1, 2);
+  lt->addWidget(snclBtn, 1, 3);
+  setLayout(lt);
   connector();
-  lf();
+  load();
 }
 
+/*! Adds a container to the widget, loads its data. */
 void Containers::add() {
-  QString p = QFileDialog::getOpenFileName(nullptr, "Select database", nullptr,
-                                           "ASW database(*.asw.db)");
+  QString p =
+      QFileDialog::getOpenFileName(nullptr, tr("Select database"), nullptr,
+                                   tr("ASW database") + "(*.asw.db)");
   if (p.isEmpty()) return;
-  sqlite sq;
-  QList<container> cProps = sq.containers(p);
-  ed = true;
-  app(cProps);
+  edited = true;
+  append(st->SQL->containers(p));
 }
 
+/*! Removes selected containers. */
 void Containers::remove() {
   if (cl->selectedItems().length() < 1) return;
-  ed = true;
+  edited = true;
   for (int i = 0; i < cl->selectedItems().length(); i++) {
-    QTreeWidgetItem *b;
+    QTreeWidgetItem *parent;
     if (cl->selectedItems().at(i)->parent() == nullptr)
-      b = cl->invisibleRootItem();
+      parent = cl->invisibleRootItem();
     else
-      b = cl->selectedItems().at(i)->parent();
-    b->removeChild(cl->selectedItems().at(i));
-    if ((b->childCount() == 0) && (b != cl->invisibleRootItem()))
-      cl->invisibleRootItem()->removeChild(b);
+      parent = cl->selectedItems().at(i)->parent();
+    parent->removeChild(cl->selectedItems().at(i));
+    if ((parent->childCount() == 0) && (parent != cl->invisibleRootItem()))
+      cl->invisibleRootItem()->removeChild(parent);
   }
 }
 
+/*! Establishes communications for user interaction through the dialog box. */
 void Containers::connector() {
-  connect(ac, &AButton::clicked, this, &Containers::add);
-  connect(cc, &AButton::clicked, this, &Containers::openCC);
-  connect(rc, &AButton::clicked, this, &Containers::remove);
-  connect(ok, &AButton::clicked, this, &Containers::sncl);
+  connect(addBtn, &AButton::clicked, this, &Containers::add);
+  connect(crtBtn, &AButton::clicked, this, &Containers::openCC);
+  connect(remBtn, &AButton::clicked, this, &Containers::remove);
+  connect(snclBtn, &AButton::clicked, this, &Containers::sncl);
 }
 
-void Containers::lf() {
-  settings st;
-  QList<container> cProps = st.read();
-  this->app(cProps);
-}
-
-void Containers::app(const QList<container> &cProp) {
-  for (const auto &i : cProp) {
-    QTreeWidgetItem *e = nullptr;
-    bool in = false;
-    for (int j = 0; j < cl->topLevelItemCount(); j++)
-      if (cl->invisibleRootItem()->child(j)->text(0) == i.p) {
-        in = true;
-        e = cl->invisibleRootItem()->takeChild(j);
+/*!
+ * Argument: QList of containers {cProps}.
+ * Adds containers to the selection.
+ */
+void Containers::append(const QList<container> &cProps) {
+  for (const auto &cProp : cProps) {
+    QTreeWidgetItem *parent = nullptr;
+    bool isInside = false;
+    for (int tli2 = 0; tli2 < cl->topLevelItemCount(); tli2++)
+      if (cl->invisibleRootItem()->child(tli2)->text(0) == cProp.path) {
+        isInside = true;
+        parent = cl->invisibleRootItem()->takeChild(tli2);
         break;
       }
-    if (!in) {
-      delete e;
-      e = new QTreeWidgetItem();
-      e->setText(0, i.p);
-    }
-    cl->addTopLevelItem(e);
+    if (!isInside) parent = new QTreeWidgetItem(QStringList(cProp.path));
+    cl->addTopLevelItem(parent);
     bool notContains = true;
-    for (int j = 0; j < e->childCount(); j++)
-      if (e->child(j)->text(0) == i.t) {
+    for (int childIndex = 0; childIndex < parent->childCount(); childIndex++)
+      if (parent->child(childIndex)->text(0) == cProp.tableTitle) {
         notContains = false;
         break;
       }
     if (notContains) {
-      auto *ce = new QTreeWidgetItem(e);
-      ce->setText(0, i.t);
-      csm.insert(ce, i);
+      auto *cell = new QTreeWidgetItem(parent, QStringList(cProp.tableTitle));
+      csm.insert(cell, cProp);
     }
   }
 }
 
-void Containers::cd(container _cProp) {
-  sqlite sq;
-  sq.create(_cProp);
+/*! Creates a container and adds it to the selection. */
+void Containers::create(container _cProp) {
+  st->SQL->create(_cProp);
+  _cProp.tableName = st->SQL->getUuid();
   QList<container> cProps;
   cProps.append(_cProp);
-  ed = true;
-  app(cProps);
+  edited = true;
+  append(cProps);
 }
 
+/*! Saves the selection and closes the dialog. */
 void Containers::sncl() {
-  if (ed) {
+  if (edited) {
     QList<container> cProps;
-    for (int i = 0; i < cl->topLevelItemCount(); i++)
-      for (int j = 0; j < cl->invisibleRootItem()->child(i)->childCount(); j++)
-        cProps.append(csm.value(cl->invisibleRootItem()->child(i)->child(j)));
-    settings st;
-    st.write(cProps);
+    for (int tli2 = 0; tli2 < cl->topLevelItemCount(); tli2++)
+      for (int childIndex = 0;
+           childIndex < cl->invisibleRootItem()->child(tli2)->childCount();
+           childIndex++)
+        cProps.append(
+            csm.value(cl->invisibleRootItem()->child(tli2)->child(childIndex)));
+    st->writeContainerList(cProps);
   }
   close();
 }
 
+/*! Opens the container creation dialog. */
 void Containers::openCC() {
-  disconnect(cc, &AButton::clicked, this, &Containers::openCC);
+  disconnect(crtBtn, &AButton::clicked, this, &Containers::openCC);
   _cc = new CreateContainer(this);
-  el->addWidget(_cc, 2, 0, 1, 0);
-  connect(_cc, &CreateContainer::cont, this, &Containers::cd);
-  connect(_cc, &CreateContainer::c, this, &Containers::closeCC);
+  lt->addWidget(_cc, 2, 0, 1, 0);
+  connect(_cc, &CreateContainer::completed, this, &Containers::create);
+  connect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
 }
 
+/*! Closes the container creation dialog. */
 void Containers::closeCC() {
-  disconnect(_cc, &CreateContainer::cont, this, &Containers::cd);
-  disconnect(_cc, &CreateContainer::c, this, &Containers::closeCC);
-  el->removeWidget(_cc);
-  connect(cc, &AButton::clicked, this, &Containers::openCC);
+  disconnect(_cc, &CreateContainer::completed, this, &Containers::create);
+  disconnect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
+  lt->removeWidget(_cc);
+  connect(crtBtn, &AButton::clicked, this, &Containers::openCC);
 }

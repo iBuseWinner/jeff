@@ -11,34 +11,37 @@
 #include "dialogues/containers.h"
 #include "widgets/a_line.h"
 
+/*!
+ * Class: AMenuBar
+ * Provides the ability to interact with ASW using the menubar.
+ */
 class AMenuBar : public QMenuBar {
   Q_OBJECT
  public:
-  QAction *fsa = nullptr;
-  AMenuBar(ALine *l, QWidget *p = nullptr);
-  ~AMenuBar() override;
+  // Objects:
+  QAction *fullScreenAction = nullptr;
+
+  // Functions:
+  AMenuBar(ALine *line, QWidget *parent = nullptr);
 
  signals:
   void fullscreenModeChanged();
   void clearHistoryTriggered();
   void aboutTriggered();
   void containersTriggered();
-  void helpTriggered();
+  // void helpTriggered();
   void exportTriggered();
 
  private:
   Q_DISABLE_COPY(AMenuBar)
-  bool fs = 0;
-  QMenu *mf = nullptr;
-  QMenu *me = nullptr;
-  QMenu *mt = nullptr;
-  QMenu *mh = nullptr;
-  void openContainerManager();
-  void openAbout();
-  void exportMessageHistory();
-  void clearMessageHistory();
-  void fScreen();
-  void hideThis();
+
+  // Functions:
+  void openContainerManager() { emit containersTriggered(); }
+  void openAbout() { emit aboutTriggered(); }
+  void exportMessageHistory() { emit exportTriggered(); }
+  void clearMessageHistory() { emit clearHistoryTriggered(); }
+  void fScreen() { emit fullscreenModeChanged(); }
+  void hideThis() { setVisible(!isVisible()); }
 };
 
 #endif  // AKIWAKE_MENUBAR_H

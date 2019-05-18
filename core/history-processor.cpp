@@ -1,38 +1,45 @@
 #include "history-processor.h"
-#include <QDebug>
 
-history_processor::history_processor(settings *_st, QObject *p) : QObject(p) {
-  st = _st;
+/*
+ * All short named variables and their explanations:
+ * {st} <- settings
+ * {mh} <- message history
+ * {sf} <- savefile
+ */
+
+/*!
+ * Arguments: settings {*_settings} [reference to Settings instance],
+ *            QObject {*parent}.
+ * Sets references to private objects.
+ */
+historyProcessor::historyProcessor(settings *_settings, QObject *parent)
+    : QObject(parent) {
+  st = _settings;
 }
 
-void history_processor::addVisibleMessage(AMessage *msg) {
-  m_VisMsgHist.append(msg);
+/*!
+ * Argument: QString {filename} [filename to save].
+ * Saves {messageHistory} to file.
+ */
+void historyProcessor::save(const QString &filename) {
+  auto *sf = new QFile(filename);
+  st->writeMessageHistory(mh, sf);
 }
 
-void history_processor::clearVisibleHistory() { m_VisMsgHist.clear(); }
-
-void history_processor::exportVisibleHistory() {
-  QString fn = QFileDialog::getSaveFileName(
-      nullptr, "Save history", nullptr, "JSON File(*.json)");
-  if (fn == QString()) return;
-  auto *f = new QFile(fn);
-  st->write(fromVisibleHistory(m_VisMsgHist), f);
-}
-
-void history_processor::deleteVisibleMessage(AMessage *msg) {
-  m_VisMsgHist.removeOne(msg);
-  msg->close();
-}
-
-QList<AMessage *> history_processor::fromTextHistory(QList<message> mh) {
-  QList<AMessage *> vms;
-  for (auto const &i : mh) vms.append(new AMessage(i));
-  return vms;
-}
-
-QList<message> history_processor::fromVisibleHistory(QList<AMessage *> mh) {
-  QList<message> th;
-  for (auto i : mh)
-    if (i != nullptr) th.append(i->returnDaemon());
-  return th;
+/*!
+ * Argument: message {_message}.
+ * Removes {_message} from {mh}.
+ */
+void historyProcessor::removeOne(message _message) {
+  // Qt does not provide the ability to compare structures, therefore
+  // historyProcessor independently compares elements and deletes an identical
+  // one.
+  // Everything else, there is no need to compare all the characteristics.
+  // Authorship and the date of creation during the operation of the program
+  // will be able to coincide only once.
+  for (int i = 0; i < mh.length(); i++)
+    if ((mh.at(i).aType == _message.aType) && (mh.at(i).datetime == _message.datetime)) {
+      mh.removeAt(i);
+      break;
+    }
 }

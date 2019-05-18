@@ -1,35 +1,45 @@
 #include "firststart.h"
 
-FirstStart::FirstStart(QWidget *p) : QWidget(p) {
+/*
+ * All short named objects and their explanations:
+ * {lt} <- layout
+ * {sp} <- spacer
+ * {objn} <- object name
+ */
+
+/*!
+ * Argument: QWidget {*parent}.
+ * Constructs and prepares First Start.
+ */
+FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   setAttribute(Qt::WA_DeleteOnClose);
-  setObjectName("firststart");
-  setFixedWidth(400);
-  auto *el = new QVBoxLayout();
-  auto *title = new QLabel("<font size=\"6\">Associative System</font>", this);
+  setObjectName(objn);
+  auto *lt = new QVBoxLayout();
+  auto *title = new QLabel(
+      "<font size=\"6\">" + tr("Associative System") + "</font>", this);
   auto *startText = new QLabel(
-      "<font size=\"3\">This is the first start of "
-      "ASW. Before you start working:<br>"
-      "1) go to the Container Manager..."
-      "<p><img src=\":/arts/shots/menufile.png\"></p>"
-      "2) add databases..."
-      "<p><img src=\":/arts/shots/addcontainer.png\"></p>"
-      "And now you've done.</font>",
+      "<font size=\"3\">" +
+          tr("This is the first start of ASW. Before you start working:") +
+          "<br>" + tr("1) go to the Container Manager...") +
+          "<p><img src=\":/arts/shots/menufile.png\"></p>" +
+          tr("2) add databases...") +
+          "<p><img src=\":/arts/shots/addcontainer.png\"></p>" +
+          tr("And now you've done.") + "</font>",
       this);
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse |
                                      Qt::LinksAccessibleByMouse);
-  auto *okLine = new QWidget(this);
-  auto *ok = new AButton("Close", okLine);
-  auto *okLayout = new QHBoxLayout();
-  okLayout->setMargin(0);
-  okLayout->setSpacing(0);
-  auto *okSpacer =
-      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-  okLayout->addItem(okSpacer);
-  okLayout->addWidget(ok);
-  okLine->setLayout(okLayout);
-  connect(ok, &AButton::clicked, this, &QWidget::close);
-  el->addWidget(title);
-  el->addWidget(startText);
-  el->addWidget(okLine);
-  setLayout(el);
+  auto *bottomLine = new QWidget(this);
+  auto *closeBtn = new AButton(tr("Close"), bottomLine);
+  auto *bottomLayout = new QHBoxLayout();
+  bottomLayout->setMargin(0);
+  bottomLayout->setSpacing(0);
+  auto *sp = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  bottomLayout->addItem(sp);
+  bottomLayout->addWidget(closeBtn);
+  bottomLine->setLayout(bottomLayout);
+  connect(closeBtn, &AButton::clicked, this, &QWidget::close);
+  lt->addWidget(title);
+  lt->addWidget(startText);
+  lt->addWidget(bottomLine);
+  setLayout(lt);
 }

@@ -11,38 +11,65 @@
 #include "core/sqlite.h"
 #include "widgets/a_message.h"
 
+/*!
+ * Struct: containerRow.
+ * Contains information about a single row [without address] of a database
+ * table.
+ */
 struct containerRow {
-  QString a;                      // activator
-  int ra;                         // reagent address
-  QMap<QString, QString> rProps;  // reagents properties (name, value)
+  /*! Activator. */
+  QString ac;
+  /*! Reagent address. */
+  int ra;
+  /*! Reagents properties (name, value). */
+  QMap<QString, QString> rProps;
 };
 
+/*!
+ * Struct: linkMap.
+ * Contains a map with user expression reagents of a single container.
+ */
 struct linkMap {
-  QMap<QString, QList<int>> rl;  // reagents and their links
-  container cProp;               // container data
+  /*! Activators and links to their reagents. */
+  QMap<QString, QList<int>> al;
+  /*! Container data. */
+  container cProp;
 };
 
+/*!
+ * Struct: globalMap.
+ * Contains a list with activator-reagents pairs.
+ */
 struct globalMap {
-  QMap<QString, QStringList> ar;  // activators and their reagents
+  /*! Activators and their reagents. */
+  QMap<QString, QStringList> ars;
 };
 
+/*!
+ * Class: NLPmodule.
+ * Looks for regular expressions in user input and displays answers to them.
+ */
 class NLPmodule : public QObject {
   Q_OBJECT
  public:
-  NLPmodule(settings *_st, sqlite *_sq, QObject *p = nullptr);
-  void search(QString ue);
+  NLPmodule(settings *_settings, QObject *parent = nullptr);
+  void search(QString userExpression);
 
  signals:
-  QString ready(QString rs);
+  QString ready(QString resultExpression);
 
  private:
-  sqlite *sq = nullptr;
+  // Objects:
   settings *st = nullptr;
-  linkMap toLinkMap(const QList<containerRow> &cm, bool _aProp);
-  globalMap toGlobalMap(const QList<linkMap> &sRes);
-  QStringList sorting(const QString &ue, QStringList ks);
-  void select(QString ue, const globalMap &genm);
-  QString simplifier(const QString &ex);
+
+  // Functions:
+  linkMap toLinkMap(QList<containerRow> crs, bool _aProp);
+  globalMap toGlobalMap(const QList<linkMap> &lms);
+  QStringList sorting(const QString &ue, QStringList as);
+  void select(QString ue, const globalMap &gm);
+
+  /*! Purifies {str}. */
+  QString simplifier(const QString &str) { return handlers::purify(str); }
 };
 
 #endif  // NLPMODULE_H

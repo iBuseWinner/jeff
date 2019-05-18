@@ -9,12 +9,20 @@
 #include <QWidget>
 #include "widgets/a_button.h"
 
+/*!
+ * Class: About
+ * Contains information about the program and the authors.
+ */
 class About : public QWidget {
  public:
-  About(QWidget *p = nullptr);
+  // Functions:
+  About(QWidget *parent = nullptr);
 
  private:
   Q_DISABLE_COPY(About)
+
+  // Objects:
+  const QString objn = "about";
   const int fw = 320;
   const int fh = 230;
 };

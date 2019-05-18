@@ -16,14 +16,19 @@
 #include "widgets/a_line.h"
 #include "widgets/a_menubar.h"
 
+/*!
+ * Class: ASW
+ * Application window class.
+ */
 class ASW : public QMainWindow {
   Q_OBJECT
  public:
-  ADisplay *d = new ADisplay(this);
-  ALine *l = new ALine(this);
-  AMenuBar *mb = new AMenuBar(l, this);
+  // Functions:
   ASW();
   void greeting();
+
+  /*! Saves window settings. */
+  ~ASW() override { saveWindowSettings(); }
 
  signals:
   void readyState();
@@ -34,26 +39,36 @@ class ASW : public QMainWindow {
 
  private:
   Q_DISABLE_COPY(ASW)
+
+  // Objects:
+  ALine *ln = new ALine(this);
+  ADisplay *d = new ADisplay(this);
+  AMenuBar *mb = new AMenuBar(ln, this);
   core *cr = new core(this);
   const int mw = 600;
   const int mh = 370;
   const int stdw = 800;
   const int stdh = 496;
-  const QString isMenubarHiddenSt = "asw/menubarishidden";
+  const QString isMenuBarHiddenSt = "asw/menubarishidden";
   const QString sizeSt = "asw/size";
-  const QString isFullscreenSt = "asw/isfullscreen";
+  const QString isFullScreenSt = "asw/isfullscreen";
   const QString isNotFirstStartSt = "asw/isnotfirststart";
+
+  // Functions:
   void applyingSettings();
-  void saveSettings();
+  void saveWindowSettings();
   void connector();
-  void fsh();
-  void userInput();
-  void clearScreen();
-  void fsStarter();
-  void aboutStarter();
-  void cmStarter();
-  // void helpStarter();
+  void fullScreenHandler();
+  void userInputHandler();
+  void exportMessageHistory();
+  void clear();
   void addMessage(AMessage *msg);
+
+  void about() { emit send("/about"); }
+  void containerManager() { emit send("/cm"); }
+  void firstStart() { emit send("/first"); }
+  // void help() { emit send("/help"); }
+
 };
 
 #endif  // ASW_H

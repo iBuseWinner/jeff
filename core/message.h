@@ -3,16 +3,30 @@
 
 #include <QString>
 
-enum A { undefA, ASW, User };
-enum C { undefC, Text, Markdown, Picture, File, Warning, Error, Widget };
-enum T { undefT, Std, White, Dark, Red, Green, Blue, Yellow };
+/*! Enum: eA [author]. */
+enum eA { undefA, ASW, User };
 
+/*! Enum: eC [content type]. */
+enum eC { undefC, Text, Markdown, Picture, File, Warning, Error, Widget };
+
+/*! Enum: eT [theme]. */
+enum eT { undefT, Std, White, Dark, Red, Green, Blue, Yellow };
+
+/*!
+ * Struct: message.
+ * Contains the message and its properties.
+ */
 struct message {
-  QString cn = QString();
-  QString dt = QString();
-  A aType = A::undefA;
-  C cType = C::undefC;
-  T tType = T::Std;
+  /*! Content. */
+  QString content = "";
+  /*! Data and time of creation/change. */
+  QString datetime = "";
+  /*! Message author. */
+  eA aType = eA::undefA;
+  /*! Type of message content. */
+  eC cType = eC::undefC;
+  /*! Message theme. */
+  eT tType = eT::Std;
 };
 
 #endif  // MESSAGE_H

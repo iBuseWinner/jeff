@@ -1,22 +1,35 @@
 #include "a_button.h"
 
-AButton::AButton(const QString &t, QWidget *p) : QToolButton(p) {
+/*!
+ * Arguments: QString {text} [button text],
+ *            QWidget {parent}.
+ * Creates an AButton.
+ */
+AButton::AButton(const QString &text, QWidget *parent) : QToolButton(parent) {
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
   setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
   setFocusPolicy(Qt::NoFocus);
   setStyleSheet(ss());
   setAutoRaise(true);
-  setText(t);  
+  setText(text);
 }
 
+/*!
+ * Argument: QMouseEvent {*e} [transmitted automatically by Qt].
+ * Responsible for the style of the pressed button.
+ */
 void AButton::mousePressEvent(QMouseEvent *e) {
-  mbc = nbc;
+  currentButtonColor = pressedButtonColor;
   setStyleSheet(ss());
   QToolButton::mousePressEvent(e);
 }
 
+/*!
+ * Argument: QMouseEvent {*e} [transmitted automatically by Qt].
+ * Responsible for the style of the unpressed button.
+ */
 void AButton::mouseReleaseEvent(QMouseEvent *e) {
-  mbc = lbc;
+  currentButtonColor = unpressedButtonColor;
   setStyleSheet(ss());
   QToolButton::mouseReleaseEvent(e);
 }

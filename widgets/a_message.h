@@ -11,40 +11,51 @@
 #include "core/message.h"
 #include "widgets/a_board.h"
 
+/*!
+ * Class: AMessage
+ * Widget that displays data.
+ */
 class AMessage : public QWidget {
   Q_OBJECT
  public:
+  // Functions:
   AMessage();
-  AMessage(message _daemon);
-  void setDaemon(message _daemon);
-  void setWidget(QWidget *_w);
-  enum A returnAuthor() { return daemon.aType; }
-  enum C returnContentType() { return daemon.cType; }
-  enum T returnTheme() { return daemon.tType; }
-  QString returnContent() { return daemon.cn; }
-  message returnDaemon() { return daemon; }
+  AMessage(message shadow);
+  void setShadow(message shadow);
+  void setWidget(QWidget *widget);
+
+  enum eA returnAuthor() { return sh.aType; }
+  enum eC returnContentType() { return sh.cType; }
+  enum eT returnTheme() { return sh.tType; }
+  QString returnContent() { return sh.content; }
+  QDateTime returnDateTime() { return QDateTime::fromString(sh.datetime); }
+  message returnShadow() { return sh; }
 
  private:
   Q_DISABLE_COPY(AMessage)
-  message daemon;
-  QGridLayout *el = nullptr;
+
+  // Objects:
+  message sh;
+  QGridLayout *lt = nullptr;
   QWidget *w = nullptr;
   const int mmw = 400;
-  const int bm = 6;
-  void setAuthor(A _a);
-  void setMessageType(C _ct);
-  void setTheme(T _t);
+  const int stdm = 6;
+
+  // Functions:
+  void setAuthor(eA aType);
+  void setMessageType(eC cType);
+  // void setTheme(eT tType);
   void setupASW();
   void setupUser();
-  void setupText(const QString &_cn);
-  void setupMarkdown(const QString &_cn);
-  // void setupPicture(const QString &_cn);
-  // void setupFile(const QString &_cn);
-  void setupWarning(const QString &_cn);
-  void setupError(const QString &_cn);
+  void setupText(const QString &content);
+  void setupMarkdown(const QString &content);
+  // void setupPicture(const QString &content);
+  // void setupFile(const QString &content);
+  void setupWarning(const QString &content);
+  void setupError(const QString &content);
   void prepareSetupWidget();
   void alignTextToWindowWidth();
-  QPair<QSpacerItem *, ABoard *> mk();
+  QPair<QSpacerItem *, ABoard *> mkLt();
 };
 
 #endif  // A_MESSAGE_H

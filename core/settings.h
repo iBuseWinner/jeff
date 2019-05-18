@@ -18,31 +18,54 @@
 #include "core/message.h"
 #include "core/sqlite.h"
 
+/*!
+ * Class: settings.
+ * Contains methods for working with program settings.
+ */
 class settings : public QObject {
   Q_OBJECT
  public:
-  settings(QObject* p = nullptr);
-  const QString c = "CCLC";
-  const QString a = "ASW";
-  QVariant read(const QString& k);
-  QList<container> read();
-  QList<message> read(QFile* sf);
-  void write(const QString& k, const QVariant& d);
-  void write(QList<container> cp);
-  void write(QList<message> mh, QFile* sf);
-  QString settingsPath();
+  // Objects:
+  sqlite* SQL = new sqlite(this);
+  const QString companyName = "CCLC";
+  const QString applicationName = "ASW";
+
+  // Functions:
+  settings(QObject* parent = nullptr);
+  QList<container> readContainerList();
+  QList<message> readMessageHistory(QFile* file);
+  void write(const QString& key, const QVariant& data);
+  void writeContainerList(QList<container> containerList);
+  void writeMessageHistory(QVector<message> messageHistory, QFile* sf);
+
+  /*! Returns whether the settings file exists. */
+  bool exists() { return QFile::exists(s->fileName()); }
+  /*! There is no access to the settings file? */
+  bool isUnaccessed() { return !access; }
+  /*! The file is incorrect? */
+  bool isIncorrect() { return !correct; }
+  /*! Reads the setting. */
+  QVariant read(const QString& key) { return s->value(key); }
+  /*! Returns the path to the settings. */
+  QString settingsPath() { return QFileInfo(s->fileName()).absolutePath(); }
 
  signals:
-  QString jsonError(QString et);
-  QString roWarning(QString wt = "Settings file is read only.");
+  QString jsonError(QString errorText);
+  QString settingsWarning(QString warningText);
 
  private:
-  const QString sfn = "selection.json";
-  QSettings* s =
-      new QSettings(QSettings::IniFormat, QSettings::UserScope, c, a, this);
-  QJsonArray r(QFile* sf);
+  // Objects:
+  bool access = true;
+  bool correct = true;
+  const QString cfn = "containers.json";
+  QSettings* s = new QSettings(QSettings::IniFormat, QSettings::UserScope,
+                               companyName, applicationName, this);
+
+  // Functions:
+  QJsonArray readJson(QFile* f);
+  void writeJson(QFile* sf, QJsonArray arr);
   QJsonObject toJ(const container& cProp);
-  QJsonObject toJ(const message& daemon);
+  QJsonObject toJ(const message& shadow);
   container toC(const QJsonObject& obj);
   message toM(const QJsonObject& obj);
 };

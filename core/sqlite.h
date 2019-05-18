@@ -1,11 +1,13 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
+#include <QDebug>
 #include <QFile>
 #include <QJsonObject>
 #include <QMap>
 #include <QObject>
 #include <QPair>
+#include <QRandomGenerator>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlQuery>
@@ -13,35 +15,73 @@
 #include <QSqlResult>
 #include <QString>
 #include <QStringList>
+#include <QTime>
+#include <QUuid>
 #include <QVariant>
 #include "core/container.h"
 #include "core/handlers.h"
 
+/*! Enum: check [what to check]. */
+enum check { All, OnlyOpen, AnyContent };
+
+/*! Enum: todo [what to do with db]. */
+enum todo {
+  CreateMainTable,
+  CreateContainerTable,
+  WithDraw,
+  LoadOptions,
+  WriteOptions,
+  SelectContainers,
+  InsertExpression,
+  SelectExpressionsAndLinks,
+  SelectExpressionAndLinksByAddress,
+  SelectAdditionalProperties
+};
+
+/*!
+ * Class: sqlite
+ * Contains methods of working with databases.
+ */
 class sqlite : public QObject {
   Q_OBJECT
  public:
-  sqlite(QObject *p = nullptr);
-  void create(const container &cProp);
-  QList<container> containers(const QString &p);
-  container optionsLoader(container cProp);
-  void optionsWriter(const container &cProp);
-  void insert(const container &cProp, int a, const QString &e,
-              const QString &ls);
-  QPair<QString, QString> scan(const container &cProp, int a);
-  bool hasAdditionalProperties(const container &cProp);
-  QMap<QString, QString> scanAP(const container &cProp, int a);
-  QMap<QString, QString> scan(const container &cProp, const QString &e);
+  // Functions:
+  void create(const container &_container);
+  QList<container> containers(const QString &path);
+  container load(container _container);
+  void write(const container &_container);
+  void insert(const container &_container, int address,
+              const QString &expression, const QString &links);
+  QPair<QString, QString> getExpression(const container &_container,
+                                        int address);
+  QMap<QString, QString> scanContainer(const container &_container,
+                                       const QString &expression);
+  bool hasAdditionalProperties(const container &_container);
+  QMap<QString, QString> scanAdditionalProperties(const container &_container,
+                                                  int address);
+
+  /*! Class initialization. */
+  sqlite(QObject *parent = nullptr) { setParent(parent); }
+
+  /*! Returns the UUID of the created container. */
+  QString getUuid() {
+    QString _u = uuid;
+    uuid.clear();
+    return _u;
+  }
 
  signals:
-  QString sqliteError(QString et);
-  QString sqliteWarning(QString wt);
+  QString sqliteError(QString errorText);
+  QString sqliteWarning(QString warningText);
 
  private:
-  void createMainTable(QSqlQuery q);
-  bool exists(const QString &p);
-  QPair<QSqlDatabase, bool> openDB(const QString &p);
-  bool isDBEmpty(QSqlDatabase _db);
-  QSqlQuery execQuery(QSqlQuery q);
+  // Objects:
+  int mna = 4;
+  QString uuid = "";
+
+  // Functions:
+  QSqlDatabase prepare(const QString &path, check o = check::All);
+  void exec(QSqlQuery *q, todo o, QStringList vs = QStringList());
 };
 
 #endif  // SQLITE_H

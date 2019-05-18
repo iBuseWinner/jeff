@@ -3,13 +3,20 @@
 
 #include <QString>
 
+/*!
+ * Class: handlers.
+ * Contains methods for working with strings.
+ */
 class handlers {
  public:
-  static QString purify(const QString& l);
-  static QString removeCharacters(QString l);
+  // Functions:
+  static QString purify(const QString& str);
+  static QString removeCharacters(QString str);
 
  private:
-  static QString ss() { return QString(".,:;!?-'\""); }
+  // Functions:
+  /*! Returns punctuation. */
+  static QString sbs() { return QString(".,:;!?-'\""); }
 };
 
 #endif  // HANDLERS_H
