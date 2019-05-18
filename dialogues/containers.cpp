@@ -6,8 +6,8 @@
  * {objn} <- object name
  * {lt} <- layout
  * {addBtn} <- add container
- * {crtBtn} <- create container
- * {remBtn} <- remove container
+ * {crtAct} <- create container
+ * {remAct} <- remove container
  * {snclBtn} <- save and close
  * {cl} <- container list
  * {csm} <- containers map
@@ -30,20 +30,21 @@ Containers::Containers(settings *_settings, QWidget *parent) : QWidget(parent) {
   lt = new QGridLayout();
   lt->setSpacing(0);
   lt->setMargin(0);
-  addBtn = new AButton(tr("Add container"), this);
-  crtBtn = new AButton(tr("Create"), this);
-  remBtn = new AButton(tr("Remove"), this);
-  snclBtn = new AButton(tr("Save and close"), this);
+  addBtn = new AButton(QTranslator::tr("Add container"), this);
+  crtAct = new QAction(QTranslator::tr("Create"), this);
+  remAct = new QAction(QTranslator::tr("Remove"), this);
+  snclBtn = new AButton(QTranslator::tr("Save and close"), this);
   addBtn->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
-  crtBtn->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
-  remBtn->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
+  crtAct->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
+  remAct->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
   snclBtn->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
+  addBtn->setPopupMode(QToolButton::MenuButtonPopup);
+  addBtn->addAction(crtAct);
+  addBtn->addAction(remAct);
   cl = new AContainersList(this);
   lt->addWidget(cl, 0, 0, 1, 0);
   lt->addWidget(addBtn, 1, 0);
-  lt->addWidget(crtBtn, 1, 1);
-  lt->addWidget(remBtn, 1, 2);
-  lt->addWidget(snclBtn, 1, 3);
+  lt->addWidget(snclBtn, 1, 1);
   setLayout(lt);
   connector();
   load();
@@ -52,8 +53,8 @@ Containers::Containers(settings *_settings, QWidget *parent) : QWidget(parent) {
 /*! Adds a container to the widget, loads its data. */
 void Containers::add() {
   QString p =
-      QFileDialog::getOpenFileName(nullptr, tr("Select database"), nullptr,
-                                   tr("ASW database") + "(*.asw.db)");
+      QFileDialog::getOpenFileName(nullptr, QTranslator::tr("Select database"), nullptr,
+                                   QTranslator::tr("ASW database") + "(*.asw.db)");
   if (p.isEmpty()) return;
   edited = true;
   append(st->SQL->containers(p));
@@ -78,8 +79,8 @@ void Containers::remove() {
 /*! Establishes communications for user interaction through the dialog box. */
 void Containers::connector() {
   connect(addBtn, &AButton::clicked, this, &Containers::add);
-  connect(crtBtn, &AButton::clicked, this, &Containers::openCC);
-  connect(remBtn, &AButton::clicked, this, &Containers::remove);
+  connect(crtAct, &QAction::triggered, this, &Containers::openCC);
+  connect(remAct, &QAction::triggered, this, &Containers::remove);
   connect(snclBtn, &AButton::clicked, this, &Containers::sncl);
 }
 
@@ -139,7 +140,7 @@ void Containers::sncl() {
 
 /*! Opens the container creation dialog. */
 void Containers::openCC() {
-  disconnect(crtBtn, &AButton::clicked, this, &Containers::openCC);
+  disconnect(crtAct, &QAction::triggered, this, &Containers::openCC);
   _cc = new CreateContainer(this);
   lt->addWidget(_cc, 2, 0, 1, 0);
   connect(_cc, &CreateContainer::completed, this, &Containers::create);
@@ -151,5 +152,5 @@ void Containers::closeCC() {
   disconnect(_cc, &CreateContainer::completed, this, &Containers::create);
   disconnect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
   lt->removeWidget(_cc);
-  connect(crtBtn, &AButton::clicked, this, &Containers::openCC);
+  connect(crtAct, &QAction::triggered, this, &Containers::openCC);
 }

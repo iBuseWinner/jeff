@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QMenu>
 #include <QString>
+#include <QTranslator>
 #include <QTreeWidgetItem>
 #include "core/settings.h"
 #include "dialogues/containers/createcontainer.h"
@@ -33,9 +34,10 @@ class Containers : public QWidget {
   AContainersList *cl = nullptr;
   QGridLayout *lt = nullptr;
   AButton *addBtn = nullptr;
-  AButton *crtBtn = nullptr;
-  AButton *remBtn = nullptr;
+  QAction *crtAct = nullptr;
+  QAction *remAct = nullptr;
   AButton *snclBtn = nullptr;
+  QAction *cancel = nullptr;
   bool edited = false;
 
   // Functions:

@@ -16,20 +16,22 @@ FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   setObjectName(objn);
   auto *lt = new QVBoxLayout();
   auto *title = new QLabel(
-      "<font size=\"6\">" + tr("Associative System") + "</font>", this);
+      "<font size=\"6\">" + QTranslator::tr("Associative System") + "</font>",
+      this);
   auto *startText = new QLabel(
       "<font size=\"3\">" +
-          tr("This is the first start of ASW. Before you start working:") +
-          "<br>" + tr("1) go to the Container Manager...") +
+          QTranslator::tr(
+              "This is the first start of ASW. Before you start working:") +
+          "<br>" + QTranslator::tr("1) go to the Container Manager...") +
           "<p><img src=\":/arts/shots/menufile.png\"></p>" +
-          tr("2) add databases...") +
+          QTranslator::tr("2) add databases...") +
           "<p><img src=\":/arts/shots/addcontainer.png\"></p>" +
-          tr("And now you've done.") + "</font>",
+          QTranslator::tr("And now you've done.") + "</font>",
       this);
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse |
                                      Qt::LinksAccessibleByMouse);
   auto *bottomLine = new QWidget(this);
-  auto *closeBtn = new AButton(tr("Close"), bottomLine);
+  auto *closeBtn = new AButton(QTranslator::tr("Close"), bottomLine);
   auto *bottomLayout = new QHBoxLayout();
   bottomLayout->setMargin(0);
   bottomLayout->setSpacing(0);

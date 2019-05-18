@@ -6,6 +6,7 @@
 #include <QScrollArea>
 #include <QSizePolicy>
 #include <QTabWidget>
+#include <QTranslator>
 #include <QWidget>
 #include "widgets/a_button.h"
 

@@ -52,7 +52,6 @@ HEADERS += \
     core/standard-templates.h \
     dialogues/containers.h \
     dialogues/containers/createcontainer.h \
-    dialogues/createcontainer.h \
     dialogues/help.h \
     dialogues/firststart.h \
     dialogues/about.h \
@@ -73,3 +72,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+TRANSLATIONS += l10n/asw_ru.ts

@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpacerItem>
+#include <QTranslator>
 #include <QWidget>
 #include "widgets/a_button.h"
 

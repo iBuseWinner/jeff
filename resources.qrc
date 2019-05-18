@@ -26,5 +26,7 @@
         <file>arts/icons/16/document-open.svg</file>
         <file>arts/icons/16/db-file.svg</file>
         <file>arts/icons/16/document-export.svg</file>
+        <file>l10n/asw_ru.ts</file>
+        <file>l10n/asw_ru.qm</file>
     </qresource>
 </RCC>
