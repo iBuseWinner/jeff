@@ -2,8 +2,9 @@
 #define HISTORY_PROCESSOR_H
 
 #include <QFileDialog>
+#include <QList>
 #include <QStringList>
-#include "core/settings.h"
+#include "core/core-methods.h"
 #include "widgets/a_message.h"
 
 /*!
@@ -14,20 +15,27 @@ class historyProcessor : public QObject {
   Q_OBJECT
  public:
   // Functions:
-  historyProcessor(settings *_settings, QObject *parent = nullptr);
+  historyProcessor(CoreMethods *_Meths, QObject *parent = nullptr);
   void save(const QString &filename);
+  void load(const QString &filename);
   void removeOne(message _message);
-  QVector<message> load(const QString &filename);
 
   /*! Adds a message to the story. */
-  void append(message _message) { mh.append(_message); }
+  void append(const message &_message) { mh.append(_message); }
   /*! Clears the history. */
   void clear() { mh.clear(); }
 
+ signals:
+  QList<message> sendMessageHistory(QList<message> _mh);
+
  private:
   // Objects:
-  settings *st = nullptr;
-  QVector<message> mh;
+  CoreMethods *Meths = nullptr;
+  QList<message> mh;
+
+  // Functions:
+  void merge(QList<message> _mh);
+  QList<message> sorting(QList<message> unsorted);
 };
 
 #endif  // HISTORY_PROCESSOR_H

@@ -17,10 +17,12 @@
  * Creates connections between modules and output collectors.
  */
 core::core(QObject *parent) : QObject(parent) {
-  connect(Settings, &settings::jsonError, this, &core::getError);
-  connect(Settings, &settings::settingsWarning, this, &core::getWarning);
-  connect(Settings->SQL, &sqlite::sqliteError, this, &core::getError);
-  connect(Settings->SQL, &sqlite::sqliteWarning, this, &core::getWarning);
+  connect(Meths, &CoreMethods::jsonError, this, &core::getError);
+  connect(Meths, &CoreMethods::settingsWarning, this, &core::getWarning);
+  connect(HistoryProcessor, &historyProcessor::sendMessageHistory, this,
+          &core::showHistory);
+  connect(Meths->SQL, &sqlite::sqliteError, this, &core::getError);
+  connect(Meths->SQL, &sqlite::sqliteWarning, this, &core::getWarning);
   connect(stdTs, &standardTemplates::showASWDialog, this, &core::getWidget);
   connect(nlp, &NLPmodule::ready, this, &core::getNLP);
 }
@@ -34,8 +36,9 @@ void core::getUser(QString userExpression) {
   // Does not respond to blank input.
   if (userExpression == "") return;
   // Displays the entered message on the screen.
-  emit show(
-      new AMessage(shadow(userExpression, eA::User, eC::Markdown, eT::Std)));
+  message sh = shadow(userExpression, eA::User, eC::Markdown, eT::Std);
+  HistoryProcessor->append(sh);
+  emit show(new AMessage(sh));
   // If a user has entered the command, there is no need to run other modules.
   if (stdTs->dialogues(userExpression)) return;
   nlp->search(userExpression);
@@ -49,17 +52,15 @@ void core::getUser(QString userExpression) {
  */
 void core::getNLP(QString resultExpression) {
   if (resultExpression == "") return;
+  message sh = shadow(resultExpression, eA::ASW, eC::Markdown, eT::Std);
+  HistoryProcessor->append(sh);
   QTimer::singleShot(
-      Settings->read(isDelayEnabledSt).toBool()
-          ? QRandomGenerator().bounded(Settings->read(minDelaySt).toInt(),
-                                       Settings->read(maxDelaySt).toInt())
+      Meths->read(isDelayEnabledSt).toBool()
+          ? QRandomGenerator().bounded(Meths->read(minDelaySt).toInt(),
+                                       Meths->read(maxDelaySt).toInt())
           : 0,
-      this, [this, resultExpression] {
-        emit show(new AMessage(
-            shadow(resultExpression, eA::ASW, eC::Markdown, eT::Std)));
-      });
-  if (Settings->read(isMonologueEnabledSt).toBool())
-    nlp->search(resultExpression);
+      this, [this, sh] { emit show(new AMessage(sh)); });
+  if (Meths->read(isMonologueEnabledSt).toBool()) nlp->search(resultExpression);
 }
 
 /*!
@@ -68,8 +69,9 @@ void core::getNLP(QString resultExpression) {
  */
 void core::getWarning(QString warningText) {
   // The warning color is yellow.
-  emit show(
-      new AMessage(shadow(warningText, eA::ASW, eC::Warning, eT::Yellow)));
+  message sh = shadow(warningText, eA::ASW, eC::Warning, eT::Yellow);
+  HistoryProcessor->append(sh);
+  emit show(new AMessage(sh));
 }
 
 /*!
@@ -78,7 +80,9 @@ void core::getWarning(QString warningText) {
  */
 void core::getError(QString errorText) {
   // The error color is red.
-  emit show(new AMessage(shadow(errorText, eA::ASW, eC::Error, eT::Red)));
+  message sh = shadow(errorText, eA::ASW, eC::Error, eT::Red);
+  HistoryProcessor->append(sh);
+  emit show(new AMessage(sh));
 }
 
 /*!
@@ -86,12 +90,21 @@ void core::getError(QString errorText) {
  * Creates AMessage {*msg}, inserts a widget into it and displays a message.
  */
 void core::getWidget(QWidget *widget) {
-  auto *msg =
-      new AMessage(shadow(widget->objectName(), eA::ASW, eC::Widget, eT::Std));
+  message sh = shadow(widget->objectName(), eA::ASW, eC::Widget, eT::Std);
+  HistoryProcessor->append(sh);
+  auto *msg = new AMessage(sh);
   widget->setParent(msg);
   widget->setFixedWidth(400);
   msg->setWidget(widget);
   emit show(msg);
+}
+
+/*!
+ * Argument: QList of messages {messageHistory}.
+ * Displays all messages from {messageHistory} on the screen.
+ */
+void core::showHistory(QList<message> messageHistory) {
+  for (auto shadow : messageHistory) emit show(new AMessage(shadow));
 }
 
 /*!
@@ -104,7 +117,7 @@ void core::getWidget(QWidget *widget) {
 message core::shadow(QString _cn, eA _a, eC _ct, eT _t) {
   message _sh;
   _sh.content = _cn;
-  _sh.datetime = curDT();
+  _sh.datetime = QDateTime::currentDateTime();
   _sh.aType = _a;
   _sh.cType = _ct;
   _sh.tType = _t;

@@ -5,7 +5,7 @@
 #include <QTreeWidgetItem>
 
 /*!
- * Class: AContainersList
+ * Class: AContainersList.
  * Container list widget.
  */
 class AContainersList : public QTreeWidget {

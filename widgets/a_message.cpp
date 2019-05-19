@@ -36,7 +36,7 @@ AMessage::AMessage(message shadow) {
  * Sets {shadow} into the AMessage.
  */
 void AMessage::setShadow(message shadow) {
-  if (sh.datetime != "") return;
+  if (shadow.datetime.isNull()) return;
   sh = shadow;
   setAuthor(sh.aType);
   setMessageType(sh.cType);

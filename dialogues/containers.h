@@ -7,19 +7,19 @@
 #include <QString>
 #include <QTranslator>
 #include <QTreeWidgetItem>
-#include "core/settings.h"
+#include "core/core-methods.h"
 #include "dialogues/containers/createcontainer.h"
 #include "widgets/a_button.h"
 #include "widgets/a_containerslist.h"
 
 /*!
- * Class: Containers
+ * Class: Containers.
  * Manages NLP module containers.
  */
 class Containers : public QWidget {
  public:
   // Functions:
-  Containers(settings *_settings, QWidget *parent = nullptr);
+  Containers(CoreMethods *_Meths, QWidget *parent = nullptr);
   void add();
   void remove();
 
@@ -27,7 +27,7 @@ class Containers : public QWidget {
   Q_DISABLE_COPY(Containers)
 
   // Objects:
-  settings *st = nullptr;
+  CoreMethods *Meths = nullptr;
   const QString objn = "containers";
   QMap<QTreeWidgetItem *, container> csm;
   CreateContainer *_cc = nullptr;
@@ -49,7 +49,7 @@ class Containers : public QWidget {
   void closeCC();
 
   /*! Loads saved containers. */
-  void load() { this->append(st->readContainerList()); }
+  void load() { append(Meths->readContainerList()); }
 };
 
 #endif  // CONTAINERS_H

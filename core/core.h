@@ -1,7 +1,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include <QDateTime>
 #include <QObject>
 #include <QTimer>
 #include "core/history-processor.h"
@@ -16,8 +15,8 @@ class core : public QObject {
   Q_OBJECT
  public:
   // Objects:
-  settings *Settings = new settings(this);
-  historyProcessor *HistoryProcessor = new historyProcessor(Settings, this);
+  CoreMethods *Meths = new CoreMethods(this);
+  historyProcessor *HistoryProcessor = new historyProcessor(Meths, this);
 
   // Functions:
   core(QObject *parent = nullptr);
@@ -27,6 +26,7 @@ class core : public QObject {
   void getError(QString errorText);
   void getWidget(QWidget *widget);
   // void getScript();
+  void showHistory(QList<message> messageHistory);
 
   /*! Creates a shadow on demand. */
   message getShadow(QString content, eA author, eC contentType, eT theme) {
@@ -40,8 +40,8 @@ class core : public QObject {
   Q_DISABLE_COPY(core)
 
   // Objects:
-  NLPmodule *nlp = new NLPmodule(Settings, this);
-  standardTemplates *stdTs = new standardTemplates(Settings, this);
+  NLPmodule *nlp = new NLPmodule(Meths, this);
+  standardTemplates *stdTs = new standardTemplates(Meths, this);
   const QString isMonologueEnabledSt = "core/ismonologueenabled";
   const QString isDelayEnabledSt = "core/isdelayenabled";
   const QString minDelaySt = "core/mindelay";
@@ -49,9 +49,6 @@ class core : public QObject {
 
   // Functions:
   message shadow(QString _cn, eA _a, eC _ct, eT _t);
-
-  /*! Returns a date and time string. */
-  QString curDT() { return QDateTime::currentDateTime().toString(Qt::ISODate); }
 };
 
 #endif

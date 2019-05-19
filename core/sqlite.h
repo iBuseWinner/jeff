@@ -19,7 +19,6 @@
 #include <QUuid>
 #include <QVariant>
 #include "core/container.h"
-#include "core/handlers.h"
 
 /*! Enum: check [what to check]. */
 enum check { All, OnlyOpen, AnyContent };
@@ -61,13 +60,21 @@ class sqlite : public QObject {
                                                   int address);
 
   /*! Class initialization. */
-  sqlite(QObject *parent = nullptr) { setParent(parent); }
-
+  sqlite(QObject *parent) { setParent(parent); }
   /*! Returns the UUID of the created container. */
   QString getUuid() {
     QString _u = uuid;
     uuid.clear();
     return _u;
+  }
+  /*! Purifies {str}. */
+  QString purify(const QString& str) {
+    return removeSymbols(str.trimmed().toLower());
+  }
+  /*! Removes punctuation. */
+  QString removeSymbols(QString str) {
+    for (auto sb : sbs) str.remove(sb);
+    return str;
   }
 
  signals:
@@ -78,6 +85,7 @@ class sqlite : public QObject {
   // Objects:
   int mna = 4;
   QString uuid = "";
+  const QString sbs = ".,:;!?-'\"";
 
   // Functions:
   QSqlDatabase prepare(const QString &path, check o = check::All);

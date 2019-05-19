@@ -9,7 +9,7 @@
 #include "widgets/a_lineedit.h"
 
 /*!
- * Class: ALine
+ * Class: ALine.
  * Widget for sending user messages.
  */
 class ALine : public ABoard {

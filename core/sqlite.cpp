@@ -194,8 +194,9 @@ QMap<QString, QString> sqlite::scanContainer(const container &_container,
   q->first();
   QMap<QString, QString> enls;
   while (q->isValid()) {
-    if (expression.contains(handlers::purify(q->value(0).toString()),
-                            Qt::CaseInsensitive))
+    // If the expression includes a value from the table, then this value is an
+    // activator.
+    if (expression.contains(purify(q->value(0).toString())))
       enls.insert(q->value(0).toString(), q->value(1).toString());
     q->next();
   }

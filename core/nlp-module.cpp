@@ -2,7 +2,7 @@
 
 /*
  * All short named variables and their explanations:
- * {st} <- settings
+ * {Meths} <- core methods
  * {ac} <- single activator
  * {acs} <- activators
  * {rg} <- single reagent
@@ -26,9 +26,9 @@
  *            QObject {*parent}.
  * Adds SQLite database, sets references to private objects.
  */
-NLPmodule::NLPmodule(settings *_settings, QObject *parent) : QObject(parent) {
+NLPmodule::NLPmodule(CoreMethods *_Meths, QObject *parent) : QObject(parent) {
   QSqlDatabase::addDatabase("QSQLITE");
-  st = _settings;
+  Meths = _Meths;
 }
 
 /*!
@@ -40,16 +40,16 @@ NLPmodule::NLPmodule(settings *_settings, QObject *parent) : QObject(parent) {
  */
 void NLPmodule::search(QString userExpression) {
   // 1)
-  userExpression = simplifier(userExpression);
+  userExpression = Meths->SQL->purify(userExpression);
   // 2)
   QList<linkMap> lms;
-  for (auto cProp : st->readContainerList()) {
+  for (auto cProp : Meths->readContainerList()) {
     QList<containerRow> crs;
     // First receives a map {els} of activators in {ue}.
     // The first argument is the activator, the second is the references to the
     // reagents.
-    QMap<QString, QString> els = st->SQL->scanContainer(cProp, userExpression);
-    bool ap = st->SQL->hasAdditionalProperties(cProp);
+    QMap<QString, QString> els = Meths->SQL->scanContainer(cProp, userExpression);
+    bool ap = Meths->SQL->hasAdditionalProperties(cProp);
     for (auto ac : els.keys()) {
       QStringList links = els.value(ac).split(',');
       for (auto link : links) {
@@ -58,7 +58,7 @@ void NLPmodule::search(QString userExpression) {
         el.ra = link.toInt();
         // Among other things, containerRow retains additional properties. For
         // each expression, they are different.
-        if (ap) el.rProps = st->SQL->scanAdditionalProperties(cProp, el.ra);
+        if (ap) el.rProps = Meths->SQL->scanAdditionalProperties(cProp, el.ra);
         crs.append(el);
       }
     }
@@ -96,7 +96,7 @@ linkMap NLPmodule::toLinkMap(QList<containerRow> crs, bool _aProp) {
   }
   linkMap lm;
   for (containerRow exl : crs) {
-    exl.ac = simplifier(exl.ac);
+    exl.ac = Meths->SQL->purify(exl.ac);
     // Possible duplicates are discarded here, the activator reagents are
     // combined.
     if (lm.al.value(exl.ac).contains(exl.ra)) continue;
@@ -123,7 +123,7 @@ globalMap NLPmodule::toGlobalMap(const QList<linkMap> &lms) {
       QStringList rgs;
       if (gm.ars.contains(ac)) rgs = gm.ars.value(ac);
       for (int link : links) {
-        QString rg = st->SQL->getExpression(lm.cProp, link).first;
+        QString rg = Meths->SQL->getExpression(lm.cProp, link).first;
         if ((!rgs.contains(rg)) && (rg != "")) rgs.append(rg);
       }
       gm.ars.insert(ac, rgs);

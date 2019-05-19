@@ -17,14 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    core/core-methods.cpp \
     core/core.cpp \
     core/history-processor.cpp \
-    core/settings.cpp \
     core/standard-templates.cpp \
     dialogues/containers/createcontainer.cpp \
     main.cpp \
     asw.cpp \
-    core/handlers.cpp \
     core/sqlite.cpp \
     dialogues/containers.cpp \
     dialogues/help.cpp \
@@ -43,11 +42,10 @@ SOURCES += \
 HEADERS += \
     asw.h \
     core/container.h \
+    core/core-methods.h \
     core/core.h \
-    core/handlers.h \
     core/history-processor.h \
     core/message.h \
-    core/settings.h \
     core/sqlite.h \
     core/standard-templates.h \
     dialogues/containers.h \

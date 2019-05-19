@@ -7,7 +7,7 @@
 #include <QWidget>
 
 /*!
- * Class: ADisplay
+ * Class: ADisplay.
  * Message widget.
  */
 class ADisplay : public QScrollArea {

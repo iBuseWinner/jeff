@@ -8,6 +8,7 @@
  * {mh} <- menu Help
  * {cm} <- container manager
  * {emh} <- export message history
+ * {imh} <- import message history
  * {cmh} <- clear message history
  * {del} <- delete
  * {sel} <- select all
@@ -22,17 +23,23 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   QMenu *mf = addMenu(tr("File"));
   QAction *cm = new QAction(tr("Container manager"), mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
+  QAction *imh = new QAction(tr("Import message history"), mf);
   cm->setShortcut(Qt::CTRL + Qt::Key_M);
-  emh->setShortcuts(QKeySequence::Save);
+  emh->setShortcut(Qt::CTRL + Qt::Key_E);
+  imh->setShortcut(Qt::CTRL + Qt::Key_I);
   cm->setIcon(QIcon(":/arts/icons/16/database-manager.svg"));
   emh->setIcon(QIcon(":/arts/icons/16/document-export.svg"));
+  imh->setIcon(QIcon(":/arts/icons/16/document-import.svg"));
   mf->addAction(cm);
+  mf->addSeparator();
   mf->addAction(emh);
+  mf->addAction(imh);
   mf->addSeparator();
   mf->addAction(QIcon(":/arts/icons/16/application-exit.svg"), tr("&Exit"),
                 &QApplication::quit, Qt::ALT + Qt::Key_F4);
   connect(cm, &QAction::triggered, this, &AMenuBar::openContainerManager);
   connect(emh, &QAction::triggered, this, &AMenuBar::exportMessageHistory);
+  connect(imh, &QAction::triggered, this, &AMenuBar::importMessageHistory);
   QMenu *me = addMenu(tr("Edit"));
   QAction *cmh = new QAction(tr("Clear message history"), me);
   QAction *del = new QAction(tr("Delete"), me);

@@ -5,7 +5,7 @@
 #include <QWidget>
 
 /*!
- * Class: ALineEdit
+ * Class: ALineEdit.
  * The text entry line.
  */
 class ALineEdit : public QLineEdit {

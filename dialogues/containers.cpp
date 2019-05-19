@@ -2,7 +2,7 @@
 
 /*
  * All short named objects and their explanations:
- * {st} <- settings
+ * {Meths} <- core methods
  * {objn} <- object name
  * {lt} <- layout
  * {addBtn} <- add container
@@ -23,8 +23,8 @@
  *            QWidget {*parent}.
  * Constructs and prepares Container Manager.
  */
-Containers::Containers(settings *_settings, QWidget *parent) : QWidget(parent) {
-  st = _settings;
+Containers::Containers(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
+  Meths = _Meths;
   setAttribute(Qt::WA_DeleteOnClose);
   setObjectName(objn);
   lt = new QGridLayout();
@@ -57,7 +57,7 @@ void Containers::add() {
                                    QTranslator::tr("ASW database") + "(*.asw.db)");
   if (p.isEmpty()) return;
   edited = true;
-  append(st->SQL->containers(p));
+  append(Meths->SQL->containers(p));
 }
 
 /*! Removes selected containers. */
@@ -115,8 +115,8 @@ void Containers::append(const QList<container> &cProps) {
 
 /*! Creates a container and adds it to the selection. */
 void Containers::create(container _cProp) {
-  st->SQL->create(_cProp);
-  _cProp.tableName = st->SQL->getUuid();
+  Meths->SQL->create(_cProp);
+  _cProp.tableName = Meths->SQL->getUuid();
   QList<container> cProps;
   cProps.append(_cProp);
   edited = true;
@@ -133,7 +133,7 @@ void Containers::sncl() {
            childIndex++)
         cProps.append(
             csm.value(cl->invisibleRootItem()->child(tli2)->child(childIndex)));
-    st->writeContainerList(cProps);
+    Meths->writeContainerList(cProps);
   }
   close();
 }

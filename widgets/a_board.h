@@ -6,7 +6,7 @@
 #include <QWidget>
 
 /*!
- * Class: ABoard
+ * Class: ABoard.
  * Shell widget. Looks like a white rectangle with rounded edges.
  */
 class ABoard : public QFrame {

@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "core-methods.h"
 
 /*
  * All short named variables and their explanations:
@@ -25,7 +25,7 @@
  * Argument: QObject {*parent}.
  * Checks settings file {s} for any errors.
  */
-settings::settings(QObject *parent) : QObject(parent) {
+CoreMethods::CoreMethods(QObject *parent) : QObject(parent) {
   switch (s->status()) {
     case QSettings::AccessError:
       emit settingsWarning(
@@ -46,14 +46,14 @@ settings::settings(QObject *parent) : QObject(parent) {
  * Compiles a list of containers used by the ASW.
  * Returns: QList of containers properties {cProps}.
  */
-QList<container> settings::readContainerList() {
+QList<container> CoreMethods::readContainerList() {
   auto *f = new QFile(settingsPath() + QDir::separator() + cfn, this);
   QJsonArray cs = readJson(f);
   QList<container> cProps;
   for (auto obj : cs) {
     // Some properties of containers are stored directly in the database itself
     // in "tables". ASW reads them too {sq->optionsLoader()}.
-    cProps.append(SQL->load(toC(obj.toObject())));
+    cProps.append(SQL->load(toContainer(obj.toObject())));
   }
   return cProps;
 }
@@ -63,11 +63,11 @@ QList<container> settings::readContainerList() {
  * Recreates message history from file.
  * Returns: QList of messages {mh}.
  */
-QList<message> settings::readMessageHistory(QFile *file) {
+QList<message> CoreMethods::readMessageHistory(QFile *file) {
   QJsonArray ms = readJson(file);
   QList<message> mh;
   for (auto obj : ms) {
-    message m = toM(obj.toObject());
+    message m = toMessage(obj.toObject());
     mh.append(m);
   }
   return mh;
@@ -78,7 +78,7 @@ QList<message> settings::readMessageHistory(QFile *file) {
  *            QVariant {data} [parameter value].
  * Sets the value of the parameter.
  */
-void settings::write(const QString &key, const QVariant &data) {
+void CoreMethods::write(const QString &key, const QVariant &data) {
   // If the file is incorrectly formatted, ASW will not be able to restore the
   // data structure, so it clears the file.
   if (!correct) {
@@ -93,10 +93,10 @@ void settings::write(const QString &key, const QVariant &data) {
  * Argument: QList of containers properties {containerList} [list for writing].
  * Writes {containerList} to a file {sf}.
  */
-void settings::writeContainerList(QList<container> containerList) {
+void CoreMethods::writeContainerList(QList<container> containerList) {
   QJsonArray cs;
   for (const auto &cProp : containerList) {
-    cs.append(toJ(cProp));
+    cs.append(toJSON(cProp));
     // Some properties of containers are stored directly in the database itself
     // in "tables". ASW writes them there.
     SQL->write(cProp);
@@ -110,10 +110,10 @@ void settings::writeContainerList(QList<container> containerList) {
  *            QFile {*savefile}.
  * Saves {messageHistory} to {savefile}.
  */
-void settings::writeMessageHistory(QVector<message> messageHistory,
-                                   QFile *savefile) {
+void CoreMethods::writeMessageHistory(QList<message> messageHistory,
+                                      QFile *savefile) {
   QJsonArray ms;
-  for (const auto &m : messageHistory) ms.append(toJ(m));
+  for (const auto &m : messageHistory) ms.append(toJSON(m));
   writeJson(savefile, ms);
 }
 
@@ -122,7 +122,7 @@ void settings::writeMessageHistory(QVector<message> messageHistory,
  * Universal JSON read function. Checks {f} for any errors.
  * Returns: QJsonArray from file.
  */
-QJsonArray settings::readJson(QFile *f) {
+QJsonArray CoreMethods::readJson(QFile *f) {
   if (!f->open(QIODevice::ReadOnly | QIODevice::Text)) return QJsonArray();
   QTextStream ts(f);
   auto *err = new QJsonParseError();
@@ -142,7 +142,7 @@ QJsonArray settings::readJson(QFile *f) {
  *            QJsonArray {arr} [array to write].
  * Checks {sf} for errors. Writes {arr} to a file {sf}.
  */
-void settings::writeJson(QFile *sf, QJsonArray arr) {
+void CoreMethods::writeJson(QFile *sf, QJsonArray arr) {
   if (!sf->open(QIODevice::WriteOnly | QIODevice::Text)) return;
   QJsonDocument jd(arr);
   QTextStream st(sf);
@@ -155,7 +155,7 @@ void settings::writeJson(QFile *sf, QJsonArray arr) {
  * Turns {cProp} into a JSON object.
  * Returns: QJsonObject - converted properties of container.
  */
-QJsonObject settings::toJ(const container &cProp) {
+QJsonObject CoreMethods::toJSON(const container &cProp) {
   return {{"container", cProp.tableName},
           {"disabled", cProp.isDisabled},
           {"path", cProp.path},
@@ -167,9 +167,9 @@ QJsonObject settings::toJ(const container &cProp) {
  * Turns {shadow} into a JSON object.
  * Returns: QJsonObject - converted message.
  */
-QJsonObject settings::toJ(const message &shadow) {
+QJsonObject CoreMethods::toJSON(const message &shadow) {
   return {{"content", shadow.content},
-          {"datetime", shadow.datetime},
+          {"datetime", shadow.datetime.toString(Qt::ISODateWithMs)},
           {"author", int(shadow.aType)},
           {"contentType", int(shadow.cType)},
           {"theme", int(shadow.tType)}};
@@ -180,7 +180,7 @@ QJsonObject settings::toJ(const message &shadow) {
  * Turns {obj} into a container.
  * Returns: container properties {cProp}.
  */
-container settings::toC(const QJsonObject &obj) {
+container CoreMethods::toContainer(const QJsonObject &obj) {
   container cProp;
   cProp.tableName = obj.value("container").toString();
   cProp.isDisabled = obj.value("disabled").toBool();
@@ -194,10 +194,11 @@ container settings::toC(const QJsonObject &obj) {
  * Turns {obj} into a message.
  * Returns: message {shadow}.
  */
-message settings::toM(const QJsonObject &obj) {
+message CoreMethods::toMessage(const QJsonObject &obj) {
   message shadow;
   shadow.content = obj.value("content").toString();
-  shadow.datetime = obj.value("datetime").toString();
+  shadow.datetime = QDateTime::fromString(obj.value("datetime").toString(),
+                                          Qt::ISODateWithMs);
   shadow.aType = eA(obj.value("author").toInt());
   shadow.cType = eC(obj.value("contentType").toInt());
   shadow.tType = eT(obj.value("theme").toInt());

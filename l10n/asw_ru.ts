@@ -12,87 +12,92 @@
 <context>
     <name>AMenuBar</name>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="22"/>
+        <location filename="../widgets/a_menubar.cpp" line="23"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="23"/>
+        <location filename="../widgets/a_menubar.cpp" line="24"/>
         <source>Container manager</source>
         <translation>Менеджер контейнеров</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="24"/>
+        <location filename="../widgets/a_menubar.cpp" line="25"/>
         <source>Export message history</source>
         <translation>Экспортировать историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="32"/>
+        <location filename="../widgets/a_menubar.cpp" line="26"/>
+        <source>Import message history</source>
+        <translation>Импортировать историю сообщений</translation>
+    </message>
+    <message>
+        <location filename="../widgets/a_menubar.cpp" line="38"/>
         <source>&amp;Exit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="36"/>
+        <location filename="../widgets/a_menubar.cpp" line="43"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="37"/>
+        <location filename="../widgets/a_menubar.cpp" line="44"/>
         <source>Clear message history</source>
         <translation>Очистить историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="38"/>
+        <location filename="../widgets/a_menubar.cpp" line="45"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="39"/>
+        <location filename="../widgets/a_menubar.cpp" line="46"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="40"/>
+        <location filename="../widgets/a_menubar.cpp" line="47"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="41"/>
+        <location filename="../widgets/a_menubar.cpp" line="48"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="42"/>
+        <location filename="../widgets/a_menubar.cpp" line="49"/>
         <source>Select all</source>
         <translation>Выбрать всё</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="69"/>
+        <location filename="../widgets/a_menubar.cpp" line="76"/>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="70"/>
+        <location filename="../widgets/a_menubar.cpp" line="77"/>
         <source>Hide menubar</source>
         <translation>Скрыть меню</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="71"/>
+        <location filename="../widgets/a_menubar.cpp" line="78"/>
         <source>Full screen</source>
         <translation>Полноэкранный режим</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="81"/>
+        <location filename="../widgets/a_menubar.cpp" line="88"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="82"/>
+        <location filename="../widgets/a_menubar.cpp" line="89"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="85"/>
+        <location filename="../widgets/a_menubar.cpp" line="92"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
@@ -315,12 +320,12 @@
         <translation>Сохранить и закрыть</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="55"/>
+        <location filename="../dialogues/containers.cpp" line="56"/>
         <source>Select database</source>
         <translation>Выбрать базу данных</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="56"/>
+        <location filename="../dialogues/containers.cpp" line="57"/>
         <source>ASW database</source>
         <translation>База данных ASW</translation>
     </message>

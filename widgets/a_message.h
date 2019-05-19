@@ -1,7 +1,6 @@
 #ifndef A_MESSAGE_H
 #define A_MESSAGE_H
 
-#include <QDateTime>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
@@ -12,7 +11,7 @@
 #include "widgets/a_board.h"
 
 /*!
- * Class: AMessage
+ * Class: AMessage.
  * Widget that displays data.
  */
 class AMessage : public QWidget {
@@ -28,7 +27,7 @@ class AMessage : public QWidget {
   enum eC returnContentType() { return sh.cType; }
   enum eT returnTheme() { return sh.tType; }
   QString returnContent() { return sh.content; }
-  QDateTime returnDateTime() { return QDateTime::fromString(sh.datetime); }
+  QDateTime returnDateTime() { return sh.datetime; }
   message returnShadow() { return sh; }
 
  private:

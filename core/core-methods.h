@@ -1,5 +1,5 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef CORE_METHODS_H
+#define CORE_METHODS_H
 
 #include <QDir>
 #include <QFile>
@@ -19,10 +19,10 @@
 #include "core/sqlite.h"
 
 /*!
- * Class: settings.
- * Contains methods for working with program settings.
+ * Class: CoreMethods.
+ * Provides methods for intra-component work.
  */
-class settings : public QObject {
+class CoreMethods : public QObject {
   Q_OBJECT
  public:
   // Objects:
@@ -31,12 +31,12 @@ class settings : public QObject {
   const QString applicationName = "ASW";
 
   // Functions:
-  settings(QObject* parent = nullptr);
+  CoreMethods(QObject* parent = nullptr);
   QList<container> readContainerList();
   QList<message> readMessageHistory(QFile* file);
   void write(const QString& key, const QVariant& data);
   void writeContainerList(QList<container> containerList);
-  void writeMessageHistory(QVector<message> messageHistory, QFile* sf);
+  void writeMessageHistory(QList<message> messageHistory, QFile* sf);
 
   /*! Returns whether the settings file exists. */
   bool exists() { return QFile::exists(s->fileName()); }
@@ -64,10 +64,10 @@ class settings : public QObject {
   // Functions:
   QJsonArray readJson(QFile* f);
   void writeJson(QFile* sf, QJsonArray arr);
-  QJsonObject toJ(const container& cProp);
-  QJsonObject toJ(const message& shadow);
-  container toC(const QJsonObject& obj);
-  message toM(const QJsonObject& obj);
+  QJsonObject toJSON(const container& cProp);
+  QJsonObject toJSON(const message& shadow);
+  container toContainer(const QJsonObject& obj);
+  message toMessage(const QJsonObject& obj);
 };
 
-#endif  // SETTINGS_H
+#endif  // CORE_METHODS_H

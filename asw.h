@@ -17,7 +17,7 @@
 #include "widgets/a_menubar.h"
 
 /*!
- * Class: ASW
+ * Class: ASW.
  * Application window class.
  */
 class ASW : public QMainWindow {
@@ -61,8 +61,11 @@ class ASW : public QMainWindow {
   void fullScreenHandler();
   void userInputHandler();
   void exportMessageHistory();
+  void importMessageHistory();
   void clear();
-  void addMessage(AMessage *msg);
+
+  /*! Adds {msg} to the screen. */
+  void addMessage(AMessage *msg) { d->addMessage(msg); }
 
   void about() { emit send("/about"); }
   void containerManager() { emit send("/cm"); }

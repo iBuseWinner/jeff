@@ -12,7 +12,7 @@
 #include "widgets/a_line.h"
 
 /*!
- * Class: AMenuBar
+ * Class: AMenuBar.
  * Provides the ability to interact with ASW using the menubar.
  */
 class AMenuBar : public QMenuBar {
@@ -31,6 +31,7 @@ class AMenuBar : public QMenuBar {
   void containersTriggered();
   // void helpTriggered();
   void exportTriggered();
+  void importTriggered();
 
  private:
   Q_DISABLE_COPY(AMenuBar)
@@ -39,6 +40,7 @@ class AMenuBar : public QMenuBar {
   void openContainerManager() { emit containersTriggered(); }
   void openAbout() { emit aboutTriggered(); }
   void exportMessageHistory() { emit exportTriggered(); }
+  void importMessageHistory() { emit importTriggered(); }
   void clearMessageHistory() { emit clearHistoryTriggered(); }
   void fScreen() { emit fullscreenModeChanged(); }
   void hideThis() { setVisible(!isVisible()); }

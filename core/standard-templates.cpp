@@ -12,7 +12,7 @@ bool standardTemplates::dialogues(const QString &expression) {
     return true;
   }
   if (expression == "/cm") {
-    emit showASWDialog(new Containers(st));
+    emit showASWDialog(new Containers(Meths));
     return true;
   }
   if (expression == "/first") {

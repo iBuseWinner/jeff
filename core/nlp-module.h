@@ -7,7 +7,7 @@
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
-#include "core/settings.h"
+#include "core/core-methods.h"
 #include "core/sqlite.h"
 #include "widgets/a_message.h"
 
@@ -52,7 +52,7 @@ struct globalMap {
 class NLPmodule : public QObject {
   Q_OBJECT
  public:
-  NLPmodule(settings *_settings, QObject *parent = nullptr);
+  NLPmodule(CoreMethods *_Meths, QObject *parent = nullptr);
   void search(QString userExpression);
 
  signals:
@@ -60,16 +60,13 @@ class NLPmodule : public QObject {
 
  private:
   // Objects:
-  settings *st = nullptr;
+  CoreMethods *Meths = nullptr;
 
   // Functions:
   linkMap toLinkMap(QList<containerRow> crs, bool _aProp);
   globalMap toGlobalMap(const QList<linkMap> &lms);
   QStringList sorting(const QString &ue, QStringList as);
   void select(QString ue, const globalMap &gm);
-
-  /*! Purifies {str}. */
-  QString simplifier(const QString &str) { return handlers::purify(str); }
 };
 
 #endif  // NLPMODULE_H

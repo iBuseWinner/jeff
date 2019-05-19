@@ -28,5 +28,6 @@
         <file>arts/icons/16/document-export.svg</file>
         <file>l10n/asw_ru.ts</file>
         <file>l10n/asw_ru.qm</file>
+        <file>arts/icons/16/document-import.svg</file>
     </qresource>
 </RCC>

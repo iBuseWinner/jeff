@@ -5,7 +5,7 @@
 #include <QToolButton>
 
 /*!
- * Class: AButton
+ * Class: AButton.
  * Button with click animation and options.
  */
 class AButton : public QToolButton {

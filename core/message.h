@@ -1,6 +1,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include <QDateTime>
 #include <QString>
 
 /*! Enum: eA [author]. */
@@ -20,7 +21,7 @@ struct message {
   /*! Content. */
   QString content = "";
   /*! Data and time of creation/change. */
-  QString datetime = "";
+  QDateTime datetime;
   /*! Message author. */
   eA aType = eA::undefA;
   /*! Type of message content. */

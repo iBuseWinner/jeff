@@ -2,7 +2,7 @@
 #define STANDARDTEMPLATES_H
 
 #include <QString>
-#include "core/settings.h"
+#include "core/core-methods.h"
 #include "dialogues/about.h"
 #include "dialogues/containers.h"
 #include "dialogues/firststart.h"
@@ -19,9 +19,9 @@ class standardTemplates : public QObject {
   bool dialogues(const QString &expression);
 
   /*! Class initialization. */
-  standardTemplates(settings *_settings, QObject *parent = nullptr)
+  standardTemplates(CoreMethods *_Meths, QObject *parent = nullptr)
       : QObject(parent) {
-    st = _settings;
+    Meths = _Meths;
   }
 
  signals:
@@ -29,7 +29,7 @@ class standardTemplates : public QObject {
 
  private:
   // Objects:
-  settings *st = nullptr;
+  CoreMethods *Meths = nullptr;
 };
 
 #endif  // STANDARDTEMPLATES_H

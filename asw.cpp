@@ -29,7 +29,7 @@
  */
 ASW::ASW() : QMainWindow() {
   setWindowIcon(QIcon(":/arts/icons/500/icon.png"));
-  setWindowTitle(cr->Settings->applicationName);
+  setWindowTitle(cr->Meths->applicationName);
   setMinimumSize(mw, mh);
   layout()->setMargin(0);
   auto *cw = new QWidget();
@@ -76,23 +76,23 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 /*! Reads the settings from the file and applies. */
 void ASW::applyingSettings() {
   // If settings file does not exist, sets default settings.
-  if ((!cr->Settings->exists()) || (cr->Settings->isIncorrect())) {
+  if ((!cr->Meths->exists()) || (cr->Meths->isIncorrect())) {
     resize(stdw, stdh);
     firstStart();
     return;
   }
-  resize(cr->Settings->read(sizeSt).toSize());
-  mb->fullScreenAction->setChecked(cr->Settings->read(isFullScreenSt).toBool());
-  mb->setVisible(!cr->Settings->read(isMenuBarHiddenSt).toBool());
+  resize(cr->Meths->read(sizeSt).toSize());
+  mb->fullScreenAction->setChecked(cr->Meths->read(isFullScreenSt).toBool());
+  mb->setVisible(!cr->Meths->read(isMenuBarHiddenSt).toBool());
 }
 
 /*! Writes changes to window settings to a file. */
 void ASW::saveWindowSettings() {
-  if (cr->Settings->isUnaccessed()) return;
-  cr->Settings->write(sizeSt, size());
-  cr->Settings->write(isMenuBarHiddenSt, mb->isHidden());
-  cr->Settings->write(isFullScreenSt, isFullScreen());
-  cr->Settings->write(isNotFirstStartSt, true);
+  if (cr->Meths->isUnaccessed()) return;
+  cr->Meths->write(sizeSt, size());
+  cr->Meths->write(isMenuBarHiddenSt, mb->isHidden());
+  cr->Meths->write(isFullScreenSt, isFullScreen());
+  cr->Meths->write(isNotFirstStartSt, true);
 }
 
 /*! Establishes communications for user interaction through the window. */
@@ -106,6 +106,7 @@ void ASW::connector() {
   connect(this, &ASW::send, cr, &core::getUser);
   connect(cr, &core::show, this, &ASW::addMessage);
   connect(mb, &AMenuBar::exportTriggered, this, &ASW::exportMessageHistory);
+  connect(mb, &AMenuBar::importTriggered, this, &ASW::importMessageHistory);
 }
 
 /*! Shows a window in full screen or in normal mode. */
@@ -130,17 +131,17 @@ void ASW::exportMessageHistory() {
   cr->HistoryProcessor->save(fn);
 }
 
+/*! */
+void ASW::importMessageHistory() {
+  QString fn = QFileDialog::getOpenFileName(
+      nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
+  if (fn == "") return;
+  d->start();
+  cr->HistoryProcessor->load(fn);
+}
+
 /*! Clears message history and display. */
 void ASW::clear() {
   cr->HistoryProcessor->clear();
   d->start();
-}
-
-/*!
- * Argument: AMessage {*msg} [message to show].
- * Adds {msg} to the screen.
- */
-void ASW::addMessage(AMessage *msg) {
-  cr->HistoryProcessor->append(msg->returnShadow());
-  d->addMessage(msg);
 }
