@@ -304,7 +304,7 @@ void sqlite::exec(QSqlQuery *q, todo o, QStringList vs) {
                      .arg(vs.at(0)));
       break;
     case todo::WriteOptions:
-      q->prepare("INSERT INTO containers VALUES :c, :t, :ro, :pv, :ch");
+      q->prepare("INSERT INTO containers VALUES (:c, :t, :ro, :pv, :ch)");
       q->bindValue(":c", vs.at(0));
       q->bindValue(":t", vs.at(1));
       q->bindValue(":ro", vs.at(2).toInt());
