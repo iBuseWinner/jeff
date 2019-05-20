@@ -55,12 +55,15 @@ void core::getNLP(QString resultExpression) {
   message sh = shadow(resultExpression, eA::ASW, eC::Markdown, eT::Std);
   HistoryProcessor->append(sh);
   QTimer::singleShot(
-      Meths->read(isDelayEnabledSt).toBool()
-          ? QRandomGenerator().bounded(Meths->read(minDelaySt).toInt(),
-                                       Meths->read(maxDelaySt).toInt())
+      Meths->read(Meths->isDelayEnabledSt).toBool()
+          ? QRandomGenerator().bounded(Meths->read(Meths->minDelaySt).toInt(),
+                                       Meths->read(Meths->maxDelaySt).toInt())
           : 0,
-      this, [this, sh] { emit show(new AMessage(sh)); });
-  if (Meths->read(isMonologueEnabledSt).toBool()) nlp->search(resultExpression);
+      this, [this, sh, resultExpression] {
+        emit show(new AMessage(sh));
+        if (Meths->read(Meths->isMonologueEnabledSt).toBool())
+          nlp->search(resultExpression);
+      });
 }
 
 /*!

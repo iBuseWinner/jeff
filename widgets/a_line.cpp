@@ -21,9 +21,3 @@ ALine::ALine(QWidget *parent) : ABoard(parent) {
   lt->addWidget(sendButton);
   setLayout(lt);
 }
-
-void ALine::keyPressEvent(QKeyEvent *event) {
-  if (event->key() == Qt::Key_Return)
-    event->modifiers() == Qt::ControlModifier ? lineEdit->insert("\n")
-                                              : sendButton->click();
-}

@@ -19,7 +19,7 @@
 class Containers : public QWidget {
  public:
   // Functions:
-  Containers(CoreMethods *_Meths, QWidget *parent = nullptr);
+  explicit Containers(CoreMethods *_Meths, QWidget *parent = nullptr);
   void add();
   void remove();
 

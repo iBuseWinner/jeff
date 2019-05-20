@@ -17,7 +17,7 @@
 class About : public QWidget {
  public:
   // Functions:
-  About(QWidget *parent = nullptr);
+  explicit About(QWidget *parent = nullptr);
 
  private:
   Q_DISABLE_COPY(About)

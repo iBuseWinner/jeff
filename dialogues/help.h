@@ -8,7 +8,7 @@
 class ASWHelp : public QWidget {
  public:
   // Functions:
-  ASWHelp(QWidget *parent = nullptr);
+  explicit ASWHelp(QWidget *parent = nullptr);
 
  private:
   Q_DISABLE_COPY(ASWHelp)

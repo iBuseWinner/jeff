@@ -42,10 +42,6 @@ class core : public QObject {
   // Objects:
   NLPmodule *nlp = new NLPmodule(Meths, this);
   standardTemplates *stdTs = new standardTemplates(Meths, this);
-  const QString isMonologueEnabledSt = "core/ismonologueenabled";
-  const QString isDelayEnabledSt = "core/isdelayenabled";
-  const QString minDelaySt = "core/mindelay";
-  const QString maxDelaySt = "core/maxdelay";
 
   // Functions:
   message shadow(QString _cn, eA _a, eC _ct, eT _t);

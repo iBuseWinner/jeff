@@ -24,7 +24,7 @@ class ASW : public QMainWindow {
   Q_OBJECT
  public:
   // Functions:
-  ASW();
+  explicit ASW();
   void greeting();
 
   /*! Saves window settings. */
@@ -49,10 +49,6 @@ class ASW : public QMainWindow {
   const int mh = 370;
   const int stdw = 800;
   const int stdh = 496;
-  const QString isMenuBarHiddenSt = "asw/menubarishidden";
-  const QString sizeSt = "asw/size";
-  const QString isFullScreenSt = "asw/isfullscreen";
-  const QString isNotFirstStartSt = "asw/isnotfirststart";
 
   // Functions:
   void applyingSettings();
@@ -71,6 +67,7 @@ class ASW : public QMainWindow {
   void containerManager() { emit send("/cm"); }
   void firstStart() { emit send("/first"); }
   // void help() { emit send("/help"); }
+  void settings() { emit send("/settings"); }
 
 };
 

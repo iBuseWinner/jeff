@@ -10,6 +10,14 @@
 /*!
  * Argument: QWidget {*parent}.
  * Constructs and prepares First Start.
+ *
+ * Layout scheme:
+ * <-------------->
+ * [    Title     ]
+ * [  Start text  ]
+ * [ Bottom  line ]
+ * {<->}{Close btn}
+ * <-------------->
  */
 FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   setAttribute(Qt::WA_DeleteOnClose);

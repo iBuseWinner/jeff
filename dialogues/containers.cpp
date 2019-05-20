@@ -19,9 +19,17 @@
  */
 
 /*!
- * Arguments: settings {_settings} [reference to Settings instance],
+ * Arguments: CoreMethods {_Meths} [reference to CoreMethods instance],
  *            QWidget {*parent}.
  * Constructs and prepares Container Manager.
+ *
+ * Layout scheme:
+ * <----------------------->
+ * [    Containers list    ]
+ * [Add button][S&C  button]
+ * {|> Create }
+ * {|> Remove }
+ * <----------------------->
  */
 Containers::Containers(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
   Meths = _Meths;

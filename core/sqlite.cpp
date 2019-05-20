@@ -71,7 +71,6 @@ QList<container> sqlite::containers(const QString &path) {
   if (db.databaseName() == QString()) return QList<container>();
   auto *q = new QSqlQuery(db);
   exec(q, todo::SelectContainers);
-  db.close();
   q->first();
   QList<container> cProps;
   while (q->isValid()) {
@@ -85,6 +84,7 @@ QList<container> sqlite::containers(const QString &path) {
     cProps.append(cProp);
     q->next();
   }
+  db.close();
   delete q;
   return cProps;
 }
@@ -190,7 +190,6 @@ QMap<QString, QString> sqlite::scanContainer(const container &_container,
   if (db.databaseName() == QString()) return QMap<QString, QString>();
   auto *q = new QSqlQuery(db);
   exec(q, todo::SelectExpressionsAndLinks, QStringList(_container.tableName));
-  db.close();
   q->first();
   QMap<QString, QString> enls;
   while (q->isValid()) {
@@ -200,6 +199,7 @@ QMap<QString, QString> sqlite::scanContainer(const container &_container,
       enls.insert(q->value(0).toString(), q->value(1).toString());
     q->next();
   }
+  db.close();
   delete q;
   return enls;
 }
@@ -232,8 +232,8 @@ QMap<QString, QString> sqlite::scanAdditionalProperties(
   vs.append(_container.tableName);
   vs.append(QString::number(address));
   exec(q, todo::SelectAdditionalProperties, vs);
-  db.close();
   QSqlRecord r = q->record();
+  db.close();
   delete q;
   int f = 3;
   QMap<QString, QString> aProps;
@@ -253,7 +253,8 @@ QMap<QString, QString> sqlite::scanAdditionalProperties(
 QSqlDatabase sqlite::prepare(const QString &path, check o) {
   if (o != check::OnlyOpen)
     if (!QFile::exists(path)) {
-      emit sqliteError("Database \"" + path + "\" doesn't exist.");
+      emit sqliteError(tr("Database") + " \"" + path + "\" " +
+                       tr("doesn't exist."));
       return QSqlDatabase();
     }
   QSqlDatabase db = QSqlDatabase::database();
@@ -265,7 +266,8 @@ QSqlDatabase sqlite::prepare(const QString &path, check o) {
   }
   if ((o != check::OnlyOpen) && (o != check::AnyContent))
     if (db.tables().isEmpty()) {
-      emit sqliteWarning("Database \"" + path + "\" is empty.");
+      emit sqliteWarning(tr("Database") + " \"" + path + "\" " +
+                         tr("is empty."));
       db.setDatabaseName("");
       return db;
     }
@@ -315,7 +317,7 @@ void sqlite::exec(QSqlQuery *q, todo o, QStringList vs) {
       q->prepare("SELECT * FROM containers");
       break;
     case todo::InsertExpression:
-      q->prepare(QString("INSERT OR REPLACE INTO \"%1\" VALUES :a, :ex, :ls")
+      q->prepare(QString("INSERT OR REPLACE INTO \"%1\" VALUES (:a, :ex, :ls)")
                      .arg(vs.at(0)));
       q->bindValue(":a", vs.at(1).toInt());
       q->bindValue(":ex", vs.at(2));

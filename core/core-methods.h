@@ -29,6 +29,16 @@ class CoreMethods : public QObject {
   sqlite* SQL = new sqlite(this);
   const QString companyName = "CCLC";
   const QString applicationName = "ASW";
+  const QString isMenuBarHiddenSt = "asw/menubarishidden";
+  const QString sizeSt = "asw/size";
+  const QString isFullScreenSt = "asw/isfullscreen";
+  const QString isNotFirstStartSt = "asw/isnotfirststart";
+  const QString isMonologueEnabledSt = "core/ismonologueenabled";
+  const QString isDelayEnabledSt = "core/isdelayenabled";
+  const QString minDelaySt = "core/mindelay";
+  const QString maxDelaySt = "core/maxdelay";
+  const QString isKeepingEnabledSt = "core/iskeepingenabled";
+  const QString isHintsEnabledSt = "core/ishintsenabled";
 
   // Functions:
   CoreMethods(QObject* parent = nullptr);
@@ -60,6 +70,7 @@ class CoreMethods : public QObject {
   const QString cfn = "containers.json";
   QSettings* s = new QSettings(QSettings::IniFormat, QSettings::UserScope,
                                companyName, applicationName, this);
+  QList<container> cProps;
 
   // Functions:
   QJsonArray readJson(QFile* f);

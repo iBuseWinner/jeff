@@ -13,6 +13,7 @@
  * {del} <- delete
  * {sel} <- select all
  * {hb} <- hide menubar
+ * {st} <- settings
  */
 
 /*!
@@ -21,7 +22,7 @@
  */
 AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   QMenu *mf = addMenu(tr("File"));
-  QAction *cm = new QAction(tr("Container manager"), mf);
+  QAction *cm = new QAction(tr("Container manager") + " (/cm)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
   QAction *imh = new QAction(tr("Import message history"), mf);
   cm->setShortcut(Qt::CTRL + Qt::Key_M);
@@ -77,16 +78,22 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   QAction *hb = new QAction(tr("Hide menubar"), mt);
   fullScreenAction = new QAction(tr("Full screen"), mt);
   fullScreenAction->setCheckable(true);
+  QAction *st = new QAction(tr("Settings...") + " (/settings)", mt);
   hb->setShortcut(Qt::CTRL + Qt::Key_H);
   fullScreenAction->setShortcut(Qt::Key_F11);
+  st->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Comma);
   hb->setIcon(QIcon(":/arts/icons/16/show-menu.svg"));
   fullScreenAction->setIcon(QIcon(":/arts/icons/16/view-fullscreen.svg"));
+  st->setIcon(QIcon(":/arts/icons/16/configure.svg"));
   mt->addAction(hb);
   mt->addAction(fullScreenAction);
+  mt->addSeparator();
+  mt->addAction(st);
   connect(hb, &QAction::triggered, this, &AMenuBar::hideThis);
   connect(fullScreenAction, &QAction::triggered, this, &AMenuBar::fScreen);
+  connect(st, &QAction::triggered, this, &AMenuBar::openSettings);
   QMenu *mh = addMenu(tr("Help"));
-  QAction *about = new QAction(tr("About"), mh);
+  QAction *about = new QAction(tr("About") + " (/about)", mh);
   about->setIcon(QIcon(":/arts/icons/16/help-about.svg"));
   mh->addAction(about);
   mh->addAction(QIcon(":/arts/icons/16/qt.svg"), tr("About Qt"),

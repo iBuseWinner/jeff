@@ -47,9 +47,9 @@ CoreMethods::CoreMethods(QObject *parent) : QObject(parent) {
  * Returns: QList of containers properties {cProps}.
  */
 QList<container> CoreMethods::readContainerList() {
+  if (!cProps.isEmpty()) return cProps;
   auto *f = new QFile(settingsPath() + QDir::separator() + cfn, this);
   QJsonArray cs = readJson(f);
-  QList<container> cProps;
   for (auto obj : cs) {
     // Some properties of containers are stored directly in the database itself
     // in "tables". ASW reads them too {sq->optionsLoader()}.
@@ -94,6 +94,7 @@ void CoreMethods::write(const QString &key, const QVariant &data) {
  * Writes {containerList} to a file {sf}.
  */
 void CoreMethods::writeContainerList(QList<container> containerList) {
+  cProps = containerList;
   QJsonArray cs;
   for (const auto &cProp : containerList) {
     cs.append(toJSON(cProp));

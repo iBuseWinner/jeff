@@ -22,9 +22,6 @@ class ALine : public ABoard {
   // Functions:
   ALine(QWidget *parent = nullptr);
 
- protected:
-  void keyPressEvent(QKeyEvent *event);
-
  private:
   Q_DISABLE_COPY(ALine)
 };

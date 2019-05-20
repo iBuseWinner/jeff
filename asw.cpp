@@ -58,10 +58,17 @@ void ASW::greeting() { emit send("Hello!"); }
  * Handles keyboard shortcuts.
  */
 void ASW::keyPressEvent(QKeyEvent *event) {
+  if ((event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) &&
+      (event->key() == Qt::Key_Comma))
+    settings();
+  if (event->key() == Qt::Key_Return)
+    event->modifiers() == Qt::ControlModifier ? ln->lineEdit->insert("\n")
+                                              : ln->sendButton->click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H) mb->setVisible(!mb->isVisible());
     if (event->key() == Qt::Key_M) containerManager();
-    if (event->key() == Qt::Key_S) exportMessageHistory();
+    if (event->key() == Qt::Key_E) exportMessageHistory();
+    if (event->key() == Qt::Key_I) importMessageHistory();
   }
   if (event->key() == Qt::Key_F11) {
     mb->fullScreenAction->setChecked(!mb->fullScreenAction->isChecked());
@@ -81,18 +88,19 @@ void ASW::applyingSettings() {
     firstStart();
     return;
   }
-  resize(cr->Meths->read(sizeSt).toSize());
-  mb->fullScreenAction->setChecked(cr->Meths->read(isFullScreenSt).toBool());
-  mb->setVisible(!cr->Meths->read(isMenuBarHiddenSt).toBool());
+  resize(cr->Meths->read(cr->Meths->sizeSt).toSize());
+  mb->fullScreenAction->setChecked(
+      cr->Meths->read(cr->Meths->isFullScreenSt).toBool());
+  mb->setVisible(!cr->Meths->read(cr->Meths->isMenuBarHiddenSt).toBool());
 }
 
 /*! Writes changes to window settings to a file. */
 void ASW::saveWindowSettings() {
   if (cr->Meths->isUnaccessed()) return;
-  cr->Meths->write(sizeSt, size());
-  cr->Meths->write(isMenuBarHiddenSt, mb->isHidden());
-  cr->Meths->write(isFullScreenSt, isFullScreen());
-  cr->Meths->write(isNotFirstStartSt, true);
+  cr->Meths->write(cr->Meths->sizeSt, size());
+  cr->Meths->write(cr->Meths->isMenuBarHiddenSt, mb->isHidden());
+  cr->Meths->write(cr->Meths->isFullScreenSt, isFullScreen());
+  cr->Meths->write(cr->Meths->isNotFirstStartSt, true);
 }
 
 /*! Establishes communications for user interaction through the window. */
@@ -102,6 +110,7 @@ void ASW::connector() {
   connect(mb, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
   connect(mb, &AMenuBar::aboutTriggered, this, &ASW::about);
   connect(mb, &AMenuBar::containersTriggered, this, &ASW::containerManager);
+  connect(mb, &AMenuBar::settingsTriggered, this, &ASW::settings);
   connect(this, &ASW::readyState, this, &ASW::greeting);
   connect(this, &ASW::send, cr, &core::getUser);
   connect(cr, &core::show, this, &ASW::addMessage);

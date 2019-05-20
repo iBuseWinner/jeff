@@ -22,6 +22,7 @@ SOURCES += \
     core/history-processor.cpp \
     core/standard-templates.cpp \
     dialogues/containers/createcontainer.cpp \
+    dialogues/settings.cpp \
     main.cpp \
     asw.cpp \
     core/sqlite.cpp \
@@ -37,7 +38,8 @@ SOURCES += \
     widgets/a_line.cpp \
     widgets/a_lineedit.cpp \
     widgets/a_menubar.cpp \
-    core/nlp-module.cpp
+    core/nlp-module.cpp \
+    widgets/settings/a_explanationlabel.cpp
 
 HEADERS += \
     asw.h \
@@ -53,6 +55,7 @@ HEADERS += \
     dialogues/help.h \
     dialogues/firststart.h \
     dialogues/about.h \
+    dialogues/settings.h \
     widgets/a_button.h \
     widgets/a_message.h \
     widgets/a_board.h \
@@ -61,7 +64,8 @@ HEADERS += \
     widgets/a_line.h \
     widgets/a_lineedit.h \
     widgets/a_menubar.h \
-    core/nlp-module.h
+    core/nlp-module.h \
+    widgets/settings/a_explanationlabel.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

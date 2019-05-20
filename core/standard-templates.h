@@ -7,6 +7,7 @@
 #include "dialogues/containers.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"
+#include "dialogues/settings.h"
 
 /*!
  * Class: standardTemplates

@@ -15,7 +15,7 @@
 class FirstStart : public QWidget {
  public:
   // Functions:
-  FirstStart(QWidget *parent = nullptr);
+  explicit FirstStart(QWidget *parent = nullptr);
 
  private:
   Q_DISABLE_COPY(FirstStart)

@@ -19,5 +19,9 @@ bool standardTemplates::dialogues(const QString &expression) {
     emit showASWDialog(new FirstStart());
     return true;
   }
+  if (expression == "/settings") {
+    emit showASWDialog(new Settings(Meths));
+    return true;
+  }
   return false;
 }

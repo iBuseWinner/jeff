@@ -28,6 +28,7 @@ class AMenuBar : public QMenuBar {
   void fullscreenModeChanged();
   void clearHistoryTriggered();
   void aboutTriggered();
+  void settingsTriggered();
   void containersTriggered();
   // void helpTriggered();
   void exportTriggered();
@@ -39,6 +40,7 @@ class AMenuBar : public QMenuBar {
   // Functions:
   void openContainerManager() { emit containersTriggered(); }
   void openAbout() { emit aboutTriggered(); }
+  void openSettings() { emit settingsTriggered(); }
   void exportMessageHistory() { emit exportTriggered(); }
   void importMessageHistory() { emit importTriggered(); }
   void clearMessageHistory() { emit clearHistoryTriggered(); }

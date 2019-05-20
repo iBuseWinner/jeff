@@ -13,7 +13,7 @@ class CreateContainer : public QWidget {
   Q_OBJECT
  public:
   // Functions:
-  CreateContainer(QWidget *parent = nullptr);
+  explicit CreateContainer(QWidget *parent = nullptr);
 
  signals:
   void cancelled();
