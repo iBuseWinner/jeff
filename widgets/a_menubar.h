@@ -20,12 +20,13 @@ class AMenuBar : public QMenuBar {
  public:
   // Objects:
   QAction *fullScreenAction = nullptr;
+  QAction *emm = nullptr;
 
   // Functions:
-  AMenuBar(ALine *line, QWidget *parent = nullptr);
+  AMenuBar(ALine *line, bool isMonologueModeEnabled = false,
+           QWidget *parent = nullptr);
 
  signals:
-  void fullscreenModeChanged();
   void clearHistoryTriggered();
   void aboutTriggered();
   void settingsTriggered();
@@ -44,7 +45,6 @@ class AMenuBar : public QMenuBar {
   void exportMessageHistory() { emit exportTriggered(); }
   void importMessageHistory() { emit importTriggered(); }
   void clearMessageHistory() { emit clearHistoryTriggered(); }
-  void fScreen() { emit fullscreenModeChanged(); }
   void hideThis() { setVisible(!isVisible()); }
 };
 

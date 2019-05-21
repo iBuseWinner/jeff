@@ -32,6 +32,7 @@ class core : public QObject {
   message getShadow(QString content, eA author, eC contentType, eT theme) {
     return shadow(content, author, contentType, theme);
   }
+  void setMonologueEnabled(bool enabled) { monologueEnabled = enabled; }
 
  signals:
   AMessage *show(AMessage *message);
@@ -42,6 +43,7 @@ class core : public QObject {
   // Objects:
   NLPmodule *nlp = new NLPmodule(Meths, this);
   standardTemplates *stdTs = new standardTemplates(Meths, this);
+  bool monologueEnabled = false;
 
   // Functions:
   message shadow(QString _cn, eA _a, eC _ct, eT _t);

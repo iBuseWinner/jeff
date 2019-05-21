@@ -41,10 +41,11 @@ class ASW : public QMainWindow {
   Q_DISABLE_COPY(ASW)
 
   // Objects:
+  core *cr = new core(this);
   ALine *ln = new ALine(this);
   ADisplay *d = new ADisplay(this);
-  AMenuBar *mb = new AMenuBar(ln, this);
-  core *cr = new core(this);
+  AMenuBar *mb = new AMenuBar(
+      ln, cr->Meths->read(cr->Meths->isMonologueModeEnabledSt).toBool(), this);
   const int mw = 600;
   const int mh = 370;
   const int stdw = 800;
@@ -59,6 +60,7 @@ class ASW : public QMainWindow {
   void exportMessageHistory();
   void importMessageHistory();
   void clear();
+  bool findASWCommand(const QString &text);
 
   /*! Adds {msg} to the screen. */
   void addMessage(AMessage *msg) { d->addMessage(msg); }
@@ -68,7 +70,6 @@ class ASW : public QMainWindow {
   void firstStart() { emit send("/first"); }
   // void help() { emit send("/help"); }
   void settings() { emit send("/settings"); }
-
 };
 
 #endif  // ASW_H

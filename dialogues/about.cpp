@@ -36,7 +36,7 @@ About::About(QWidget *parent) : QWidget(parent) {
   auto *at = new QLabel(this);
   at->setText("<font size=\"4\">" + QTranslator::tr("Associative system") +
               "</font>");
-  at->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  at->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *sp = new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
   auto *ts = new QTabWidget(this);
   auto *tab1 = new QLabel(this);

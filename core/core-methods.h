@@ -29,11 +29,13 @@ class CoreMethods : public QObject {
   sqlite* SQL = new sqlite(this);
   const QString companyName = "CCLC";
   const QString applicationName = "ASW";
+
   const QString isMenuBarHiddenSt = "asw/menubarishidden";
   const QString sizeSt = "asw/size";
   const QString isFullScreenSt = "asw/isfullscreen";
   const QString isNotFirstStartSt = "asw/isnotfirststart";
-  const QString isMonologueEnabledSt = "core/ismonologueenabled";
+
+  const QString isMonologueModeEnabledSt = "core/ismonologuemodeenabled";
   const QString isDelayEnabledSt = "core/isdelayenabled";
   const QString minDelaySt = "core/mindelay";
   const QString maxDelaySt = "core/maxdelay";

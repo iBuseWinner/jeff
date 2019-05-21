@@ -19,7 +19,7 @@ Settings::Settings(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
   auto *lt = new QVBoxLayout();
   lt->setSpacing(0);
   lt->setMargin(0);
-  monologue = new QCheckBox(QTranslator::tr("Enable monologue"), this);
+  monologue = new QCheckBox(QTranslator::tr("Enable monologue mode support"), this);
   delay = new QCheckBox(QTranslator::tr("Enable delay"), this);
   auto *minDelayText = new QLabel(QTranslator::tr("From"), this);
   minDelayText->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -42,8 +42,9 @@ Settings::Settings(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
   box1Lt->addWidget(msText);
   box1->setLayout(box1Lt);
   keepHistory = new QCheckBox(QTranslator::tr("Keep history"), this);
+  keepHistory->setEnabled(false);
   auto *monologueExplanation = new AExplanationLabel(
-      QTranslator::tr("ASW will be able to talk to himself."), this);
+      QTranslator::tr("ASW will be able to talk to himself (restart is required)."), this);
   auto *delayExplanation = new AExplanationLabel(
       QTranslator::tr("Enables ASW response delay."), this);
   auto *keepHistoryExplanation = new AExplanationLabel(
@@ -77,7 +78,7 @@ void Settings::connector() {
 
 /*! Loads settings from file. */
 void Settings::loadStates() {
-  monologue->setChecked(Meths->read(Meths->isMonologueEnabledSt).toBool());
+  monologue->setChecked(Meths->read(Meths->isMonologueModeEnabledSt).toBool());
   delay->setChecked(Meths->read(Meths->isDelayEnabledSt).toBool());
   delayChecked();
   keepHistory->setChecked(Meths->read(Meths->isKeepingEnabledSt).toBool());
@@ -89,7 +90,7 @@ void Settings::loadStates() {
 
 /*! Saves ASW settings. */
 void Settings::saveAndClose() {
-  Meths->write(Meths->isMonologueEnabledSt, monologue->isChecked());
+  Meths->write(Meths->isMonologueModeEnabledSt, monologue->isChecked());
   Meths->write(Meths->isDelayEnabledSt, delay->isChecked());
   Meths->write(Meths->isKeepingEnabledSt, keepHistory->isChecked());
   Meths->write(Meths->minDelaySt, minDelay->value());

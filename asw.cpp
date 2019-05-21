@@ -50,17 +50,15 @@ ASW::ASW() : QMainWindow() {
   emit readyState();
 }
 
-/*! Sends the initial message or greeting. */
-void ASW::greeting() { emit send("Hello!"); }
-
 /*!
  * Argument: QKeyEvent {*event} [transmitted automatically by Qt]
  * Handles keyboard shortcuts.
  */
 void ASW::keyPressEvent(QKeyEvent *event) {
-  if ((event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) &&
-      (event->key() == Qt::Key_Comma))
-    settings();
+  if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
+    if ((event->key() == Qt::Key_M)) findASWCommand("/mm");
+    if (event->key() == Qt::Key_Less) settings();
+  }
   if (event->key() == Qt::Key_Return)
     event->modifiers() == Qt::ControlModifier ? ln->lineEdit->insert("\n")
                                               : ln->sendButton->click();
@@ -91,6 +89,7 @@ void ASW::applyingSettings() {
   resize(cr->Meths->read(cr->Meths->sizeSt).toSize());
   mb->fullScreenAction->setChecked(
       cr->Meths->read(cr->Meths->isFullScreenSt).toBool());
+  emit mb->fullScreenAction->triggered();
   mb->setVisible(!cr->Meths->read(cr->Meths->isMenuBarHiddenSt).toBool());
 }
 
@@ -106,16 +105,22 @@ void ASW::saveWindowSettings() {
 /*! Establishes communications for user interaction through the window. */
 void ASW::connector() {
   connect(ln->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
-  connect(mb, &AMenuBar::fullscreenModeChanged, this, &ASW::fullScreenHandler);
+  connect(mb->fullScreenAction, &QAction::triggered, this,
+          &ASW::fullScreenHandler);
   connect(mb, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
   connect(mb, &AMenuBar::aboutTriggered, this, &ASW::about);
   connect(mb, &AMenuBar::containersTriggered, this, &ASW::containerManager);
   connect(mb, &AMenuBar::settingsTriggered, this, &ASW::settings);
-  connect(this, &ASW::readyState, this, &ASW::greeting);
+  connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
   connect(this, &ASW::send, cr, &core::getUser);
   connect(cr, &core::show, this, &ASW::addMessage);
   connect(mb, &AMenuBar::exportTriggered, this, &ASW::exportMessageHistory);
   connect(mb, &AMenuBar::importTriggered, this, &ASW::importMessageHistory);
+  if (mb->emm != nullptr)
+    connect(mb->emm, &QAction::triggered, this, [this] {
+      cr->setMonologueEnabled(mb->emm->isChecked());
+      emit send("/mm");
+    });
 }
 
 /*! Shows a window in full screen or in normal mode. */
@@ -127,8 +132,9 @@ void ASW::fullScreenHandler() {
 void ASW::userInputHandler() {
   // If the user sends a message, the display automatically scrolls to the end.
   d->setScrollEnabled(true);
-  emit send(ln->lineEdit->text());
+  QString text = ln->lineEdit->text();
   ln->lineEdit->clear();
+  if (!findASWCommand(text)) emit send(text);
 }
 
 /*! Calls the dialog, asks for the filename {fn} and saves the message history
@@ -140,7 +146,8 @@ void ASW::exportMessageHistory() {
   cr->HistoryProcessor->save(fn);
 }
 
-/*! */
+/*! Calls the dialog, asks for the filename {fn} and loads the message history
+ * from it. */
 void ASW::importMessageHistory() {
   QString fn = QFileDialog::getOpenFileName(
       nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
@@ -153,4 +160,19 @@ void ASW::importMessageHistory() {
 void ASW::clear() {
   cr->HistoryProcessor->clear();
   d->start();
+}
+
+/*!
+ * Argument: QString {text} [user input].
+ * Finds special commands in {text}.
+ * Returns: found or not.
+ */
+bool ASW::findASWCommand(const QString &text) {
+  // Enable monologue
+  if (text == "/mm") {
+    mb->emm->setChecked(!mb->emm->isChecked());
+    emit mb->emm->triggered();
+    return true;
+  }
+  return false;
 }

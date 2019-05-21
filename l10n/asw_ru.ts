@@ -12,97 +12,102 @@
 <context>
     <name>AMenuBar</name>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="24"/>
+        <location filename="../widgets/a_menubar.cpp" line="27"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="25"/>
+        <location filename="../widgets/a_menubar.cpp" line="28"/>
         <source>Container manager</source>
         <translation>Менеджер контейнеров</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="26"/>
+        <location filename="../widgets/a_menubar.cpp" line="29"/>
         <source>Export message history</source>
         <translation>Экспортировать историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="27"/>
+        <location filename="../widgets/a_menubar.cpp" line="30"/>
         <source>Import message history</source>
         <translation>Импортировать историю сообщений</translation>
     </message>
     <message>
         <location filename="../widgets/a_menubar.cpp" line="39"/>
+        <source>Enable monologue mode</source>
+        <translation>Включить режим монолога</translation>
+    </message>
+    <message>
+        <location filename="../widgets/a_menubar.cpp" line="49"/>
         <source>&amp;Exit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="44"/>
+        <location filename="../widgets/a_menubar.cpp" line="54"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="45"/>
+        <location filename="../widgets/a_menubar.cpp" line="55"/>
         <source>Clear message history</source>
         <translation>Очистить историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="46"/>
+        <location filename="../widgets/a_menubar.cpp" line="56"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="47"/>
+        <location filename="../widgets/a_menubar.cpp" line="57"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="48"/>
+        <location filename="../widgets/a_menubar.cpp" line="58"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="49"/>
+        <location filename="../widgets/a_menubar.cpp" line="59"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="50"/>
+        <location filename="../widgets/a_menubar.cpp" line="60"/>
         <source>Select all</source>
         <translation>Выбрать всё</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="77"/>
+        <location filename="../widgets/a_menubar.cpp" line="87"/>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="78"/>
+        <location filename="../widgets/a_menubar.cpp" line="88"/>
         <source>Hide menubar</source>
         <translation>Скрыть меню</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="79"/>
+        <location filename="../widgets/a_menubar.cpp" line="89"/>
         <source>Full screen</source>
         <translation>Полноэкранный режим</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="81"/>
+        <location filename="../widgets/a_menubar.cpp" line="91"/>
         <source>Settings...</source>
         <translation>Параметры...</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="95"/>
+        <location filename="../widgets/a_menubar.cpp" line="104"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="96"/>
+        <location filename="../widgets/a_menubar.cpp" line="105"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="99"/>
+        <location filename="../widgets/a_menubar.cpp" line="108"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
@@ -110,18 +115,23 @@
 <context>
     <name>ASW</name>
     <message>
-        <location filename="../asw.cpp" line="131"/>
+        <location filename="../asw.cpp" line="114"/>
+        <source>Hello!</source>
+        <translation>Привет!</translation>
+    </message>
+    <message>
+        <location filename="../asw.cpp" line="144"/>
         <source>Save history</source>
         <translation>Сохранить историю сообщений</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="131"/>
-        <location filename="../asw.cpp" line="139"/>
+        <location filename="../asw.cpp" line="144"/>
+        <location filename="../asw.cpp" line="153"/>
         <source>JSON file</source>
         <translation>Файл JSON</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="139"/>
+        <location filename="../asw.cpp" line="153"/>
         <source>Load history</source>
         <translation>Загрузить историю сообщений</translation>
     </message>
@@ -309,7 +319,7 @@
     </message>
     <message>
         <location filename="../dialogues/about.cpp" line="70"/>
-        <location filename="../dialogues/firststart.cpp" line="37"/>
+        <location filename="../dialogues/firststart.cpp" line="42"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -354,34 +364,38 @@
         <translation>База данных ASW</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="22"/>
+        <location filename="../dialogues/firststart.cpp" line="27"/>
         <source>Associative System</source>
         <translation>Ассист</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="26"/>
+        <location filename="../dialogues/firststart.cpp" line="31"/>
         <source>This is the first start of ASW. Before you start working:</source>
         <translation>Это - первый запуск Ассиста. Прежде чем начать работать:</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="28"/>
+        <location filename="../dialogues/firststart.cpp" line="33"/>
         <source>1) go to the Container Manager...</source>
         <translation>1) перейдите в Менеджер контейнеров...</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="30"/>
+        <location filename="../dialogues/firststart.cpp" line="35"/>
         <source>2) add databases...</source>
         <translation>2) добавьте базы данных...</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="32"/>
+        <location filename="../dialogues/firststart.cpp" line="37"/>
         <source>And now you&apos;ve done.</source>
         <translation>И теперь вы можете приступать к работе.</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="22"/>
         <source>Enable monologue</source>
-        <translation>Включить режим монолога</translation>
+        <translation type="vanished">Включить режим монолога</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/settings.cpp" line="22"/>
+        <source>Enable monologue mode support</source>
+        <translation>Включить поддержку режима монолога</translation>
     </message>
     <message>
         <location filename="../dialogues/settings.cpp" line="23"/>
@@ -394,32 +408,36 @@
         <translation>От</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="31"/>
+        <location filename="../dialogues/settings.cpp" line="29"/>
         <source>to</source>
         <translation>до</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="38"/>
+        <location filename="../dialogues/settings.cpp" line="34"/>
         <source>ms</source>
-        <translation type="unfinished">мс</translation>
+        <translation>мс</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="48"/>
+        <location filename="../dialogues/settings.cpp" line="44"/>
         <source>Keep history</source>
         <translation>Хранить историю</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="50"/>
-        <source>ASW will be able to talk to himself.</source>
-        <translation>Ассист сможет разговаривать сам с собой.</translation>
+        <location filename="../dialogues/settings.cpp" line="47"/>
+        <source>ASW will be able to talk to himself (restart is required).</source>
+        <translation>Ассист сможет разговаривать сам с собой (требуется перезапуск).</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="52"/>
+        <source>ASW will be able to talk to himself.</source>
+        <translation type="vanished">Ассист сможет разговаривать сам с собой.</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/settings.cpp" line="49"/>
         <source>Enables ASW response delay.</source>
         <translation>Включает задержку отправки ответа Ассиста.</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="54"/>
+        <location filename="../dialogues/settings.cpp" line="51"/>
         <source>Enables keeping the message history after exiting the application.</source>
         <translation>Позволяет сохранить историю сообщений после выхода из приложения.</translation>
     </message>
@@ -428,7 +446,7 @@
         <translation type="vanished">Хранить историю сообщений после выхода из приложения.</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="57"/>
+        <location filename="../dialogues/settings.cpp" line="54"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>

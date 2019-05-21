@@ -30,5 +30,6 @@
         <file>l10n/asw_ru.qm</file>
         <file>arts/icons/16/document-import.svg</file>
         <file>arts/icons/16/configure.svg</file>
+        <file>arts/icons/16/monologue.svg</file>
     </qresource>
 </RCC>

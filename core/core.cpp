@@ -61,8 +61,7 @@ void core::getNLP(QString resultExpression) {
           : 0,
       this, [this, sh, resultExpression] {
         emit show(new AMessage(sh));
-        if (Meths->read(Meths->isMonologueEnabledSt).toBool())
-          nlp->search(resultExpression);
+        if (monologueEnabled) nlp->search(resultExpression);
       });
 }
 

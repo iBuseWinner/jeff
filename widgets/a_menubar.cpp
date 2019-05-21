@@ -17,10 +17,13 @@
  */
 
 /*!
- * Arguments: ALine {*line} [needed for the actions of the "Edit" menu].
+ * Arguments: ALine {*line} [needed for the actions of the "Edit" menu],
+ *            bool {isMonologueModeEnabled},
+ *            QWidget {*parent}.
  * Creates an AMenuBar.
  */
-AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
+AMenuBar::AMenuBar(ALine *line, bool isMonologueModeEnabled, QWidget *parent)
+    : QMenuBar(parent) {
   QMenu *mf = addMenu(tr("File"));
   QAction *cm = new QAction(tr("Container manager") + " (/cm)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
@@ -32,6 +35,13 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   emh->setIcon(QIcon(":/arts/icons/16/document-export.svg"));
   imh->setIcon(QIcon(":/arts/icons/16/document-import.svg"));
   mf->addAction(cm);
+  if (isMonologueModeEnabled) {
+    emm = new QAction(tr("Enable monologue mode") + " (/mm)", mf);
+    emm->setCheckable(true);
+    emm->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
+    emm->setIcon(QIcon(":/arts/icons/16/monologue.svg"));
+    mf->addAction(emm);
+  }
   mf->addSeparator();
   mf->addAction(emh);
   mf->addAction(imh);
@@ -90,7 +100,6 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   mt->addSeparator();
   mt->addAction(st);
   connect(hb, &QAction::triggered, this, &AMenuBar::hideThis);
-  connect(fullScreenAction, &QAction::triggered, this, &AMenuBar::fScreen);
   connect(st, &QAction::triggered, this, &AMenuBar::openSettings);
   QMenu *mh = addMenu(tr("Help"));
   QAction *about = new QAction(tr("About") + " (/about)", mh);
