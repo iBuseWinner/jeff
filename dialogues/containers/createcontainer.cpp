@@ -10,7 +10,8 @@
  * Argument: QWidget {*parent}.
  * Constructs and prepares Create Container.
  */
-CreateContainer::CreateContainer(QWidget *parent) : QWidget(parent) {
+CreateContainer::CreateContainer(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
+  Meths = _Meths;
   auto *lt = new QGridLayout();
   titleInput = new ALineEdit(this);
   selectFileBtn = new AButton("", this);
@@ -61,6 +62,8 @@ void CreateContainer::save() {
   container cProp;
   cProp.path = m_dbpath;
   cProp.tableTitle = titleInput->text();
-  emit completed(cProp);
+  Meths->SQL->create(cProp);
+  cProp.tableName = Meths->SQL->getUuid();
+  emit add(cProp);
   close();
 }

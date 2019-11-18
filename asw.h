@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QList>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QPair>
 #include <QResizeEvent>
 #include <QWidget>
@@ -64,12 +65,7 @@ class ASW : public QMainWindow {
 
   /*! Adds {msg} to the screen. */
   void addMessage(AMessage *msg) { d->addMessage(msg); }
-
-  void about() { emit send("/about"); }
-  void containerManager() { emit send("/cm"); }
-  void firstStart() { emit send("/first"); }
   // void help() { emit send("/help"); }
-  void settings() { emit send("/settings"); }
 };
 
 #endif  // ASW_H

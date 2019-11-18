@@ -47,7 +47,6 @@ CoreMethods::CoreMethods(QObject *parent) : QObject(parent) {
  * Returns: QList of containers properties {cProps}.
  */
 QList<container> CoreMethods::readContainerList() {
-  if (!cProps.isEmpty()) return cProps;
   auto *f = new QFile(settingsPath() + QDir::separator() + cfn, this);
   QJsonArray cs = readJson(f);
   for (auto obj : cs) {

@@ -32,10 +32,6 @@ class historyProcessor : public QObject {
   // Objects:
   CoreMethods *Meths = nullptr;
   QList<message> mh;
-
-  // Functions:
-  void merge(QList<message> _mh);
-  QList<message> sorting(QList<message> unsorted);
 };
 
 #endif  // HISTORY_PROCESSOR_H

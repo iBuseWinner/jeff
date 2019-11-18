@@ -57,14 +57,14 @@ ASW::ASW() : QMainWindow() {
 void ASW::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
     if ((event->key() == Qt::Key_M)) findASWCommand("/mm");
-    if (event->key() == Qt::Key_Less) settings();
+    if (event->key() == Qt::Key_Less) emit send("/settings");
   }
   if (event->key() == Qt::Key_Return)
     event->modifiers() == Qt::ControlModifier ? ln->lineEdit->insert("\n")
                                               : ln->sendButton->click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H) mb->setVisible(!mb->isVisible());
-    if (event->key() == Qt::Key_M) containerManager();
+    if (event->key() == Qt::Key_M) emit send("/cm");
     if (event->key() == Qt::Key_E) exportMessageHistory();
     if (event->key() == Qt::Key_I) importMessageHistory();
   }
@@ -83,7 +83,7 @@ void ASW::applyingSettings() {
   // If settings file does not exist, sets default settings.
   if ((!cr->Meths->exists()) || (cr->Meths->isIncorrect())) {
     resize(stdw, stdh);
-    firstStart();
+    emit send("/first");
     return;
   }
   resize(cr->Meths->read(cr->Meths->sizeSt).toSize());
@@ -104,16 +104,15 @@ void ASW::saveWindowSettings() {
 
 /*! Establishes communications for user interaction through the window. */
 void ASW::connector() {
-  connect(ln->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
+  // mb
   connect(mb->fullScreenAction, &QAction::triggered, this,
           &ASW::fullScreenHandler);
   connect(mb, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
-  connect(mb, &AMenuBar::aboutTriggered, this, &ASW::about);
-  connect(mb, &AMenuBar::containersTriggered, this, &ASW::containerManager);
-  connect(mb, &AMenuBar::settingsTriggered, this, &ASW::settings);
-  connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
-  connect(this, &ASW::send, cr, &core::getUser);
-  connect(cr, &core::show, this, &ASW::addMessage);
+  connect(mb, &AMenuBar::aboutTriggered, this, [this] { emit send("/about"); });
+  connect(mb, &AMenuBar::containersTriggered, this,
+          [this] { emit send("/cm"); });
+  connect(mb, &AMenuBar::settingsTriggered, this,
+          [this] { emit send("/settings"); });
   connect(mb, &AMenuBar::exportTriggered, this, &ASW::exportMessageHistory);
   connect(mb, &AMenuBar::importTriggered, this, &ASW::importMessageHistory);
   if (mb->emm != nullptr)
@@ -121,6 +120,11 @@ void ASW::connector() {
       cr->setMonologueEnabled(mb->emm->isChecked());
       emit send("/mm");
     });
+  // others
+  connect(ln->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
+  connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
+  connect(this, &ASW::send, cr, &core::getUser);
+  connect(cr, &core::show, this, &ASW::addMessage);
 }
 
 /*! Shows a window in full screen or in normal mode. */
@@ -149,11 +153,17 @@ void ASW::exportMessageHistory() {
 /*! Calls the dialog, asks for the filename {fn} and loads the message history
  * from it. */
 void ASW::importMessageHistory() {
-  QString fn = QFileDialog::getOpenFileName(
-      nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
-  if (fn == "") return;
-  d->start();
-  cr->HistoryProcessor->load(fn);
+  if (QMessageBox::question(
+          this, tr("Import message history?"),
+          tr("Messages will be added to the beginning of the dialogue."),
+          QMessageBox::Ok | QMessageBox::Cancel,
+          QMessageBox::Ok) == QMessageBox::Ok) {
+    QString fn = QFileDialog::getOpenFileName(
+        nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
+    if (fn == "") return;
+    d->start();
+    cr->HistoryProcessor->load(fn);
+  }
 }
 
 /*! Clears message history and display. */

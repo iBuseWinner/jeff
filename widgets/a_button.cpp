@@ -22,14 +22,8 @@ void AButton::mousePressEvent(QMouseEvent *e) {
   currentButtonColor = pressedButtonColor;
   setStyleSheet(ss());
   QToolButton::mousePressEvent(e);
-}
-
-/*!
- * Argument: QMouseEvent {*e} [transmitted automatically by Qt].
- * Responsible for the style of the unpressed button.
- */
-void AButton::mouseReleaseEvent(QMouseEvent *e) {
-  currentButtonColor = unpressedButtonColor;
-  setStyleSheet(ss());
-  QToolButton::mouseReleaseEvent(e);
+  QTimer::singleShot(200, this, [this] {
+    currentButtonColor = unpressedButtonColor;
+    setStyleSheet(ss());
+  });
 }

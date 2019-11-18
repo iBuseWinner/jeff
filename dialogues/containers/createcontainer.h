@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QSpacerItem>
 #include <QWidget>
+#include "core/core-methods.h"
 #include "core/container.h"
 #include "widgets/a_button.h"
 #include "widgets/a_lineedit.h"
@@ -13,11 +14,11 @@ class CreateContainer : public QWidget {
   Q_OBJECT
  public:
   // Functions:
-  explicit CreateContainer(QWidget *parent = nullptr);
+  explicit CreateContainer(CoreMethods *_Meths, QWidget *parent = nullptr);
 
  signals:
   void cancelled();
-  container completed(container _container);
+  const container add(const container &cProp);
 
  protected:
   // Functions:
@@ -32,6 +33,7 @@ class CreateContainer : public QWidget {
 
   // Objects:
   QString m_dbpath = "";
+  CoreMethods *Meths = nullptr;
   ALineEdit *titleInput = nullptr;
   AButton *selectFileBtn = nullptr;
   AButton *saveBtn = nullptr;

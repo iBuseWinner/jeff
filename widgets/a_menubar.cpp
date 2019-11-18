@@ -24,6 +24,7 @@
  */
 AMenuBar::AMenuBar(ALine *line, bool isMonologueModeEnabled, QWidget *parent)
     : QMenuBar(parent) {
+  // File
   QMenu *mf = addMenu(tr("File"));
   QAction *cm = new QAction(tr("Container manager") + " (/cm)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
@@ -51,6 +52,7 @@ AMenuBar::AMenuBar(ALine *line, bool isMonologueModeEnabled, QWidget *parent)
   connect(cm, &QAction::triggered, this, &AMenuBar::openContainerManager);
   connect(emh, &QAction::triggered, this, &AMenuBar::exportMessageHistory);
   connect(imh, &QAction::triggered, this, &AMenuBar::importMessageHistory);
+  // Edit
   QMenu *me = addMenu(tr("Edit"));
   QAction *cmh = new QAction(tr("Clear message history"), me);
   QAction *del = new QAction(tr("Delete"), me);
@@ -84,6 +86,7 @@ AMenuBar::AMenuBar(ALine *line, bool isMonologueModeEnabled, QWidget *parent)
   connect(copy, &QAction::triggered, line->lineEdit, &ALineEdit::copy);
   connect(paste, &QAction::triggered, line->lineEdit, &ALineEdit::paste);
   connect(sel, &QAction::triggered, line->lineEdit, &ALineEdit::selectAll);
+  // Tools
   QMenu *mt = addMenu(tr("Tools"));
   QAction *hb = new QAction(tr("Hide menubar"), mt);
   fullScreenAction = new QAction(tr("Full screen"), mt);
@@ -101,6 +104,7 @@ AMenuBar::AMenuBar(ALine *line, bool isMonologueModeEnabled, QWidget *parent)
   mt->addAction(st);
   connect(hb, &QAction::triggered, this, &AMenuBar::hideThis);
   connect(st, &QAction::triggered, this, &AMenuBar::openSettings);
+  // Help
   QMenu *mh = addMenu(tr("Help"));
   QAction *about = new QAction(tr("About") + " (/about)", mh);
   about->setIcon(QIcon(":/arts/icons/16/help-about.svg"));

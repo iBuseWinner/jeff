@@ -58,11 +58,18 @@ Containers::Containers(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
   load();
 }
 
+/*! Loads saved containers. */
+void Containers::load() {
+  csm.clear();
+  cl->clear();
+  append(Meths->readContainerList());
+}
+
 /*! Adds a container to the widget, loads its data. */
 void Containers::add() {
-  QString p =
-      QFileDialog::getOpenFileName(nullptr, QTranslator::tr("Select database"), nullptr,
-                                   QTranslator::tr("ASW database") + "(*.asw.db)");
+  QString p = QFileDialog::getOpenFileName(
+      nullptr, QTranslator::tr("Select database"), nullptr,
+      QTranslator::tr("ASW database") + "(*.asw.db)");
   if (p.isEmpty()) return;
   edited = true;
   append(Meths->SQL->containers(p));
@@ -121,14 +128,15 @@ void Containers::append(const QList<container> &cProps) {
   }
 }
 
-/*! Creates a container and adds it to the selection. */
-void Containers::create(container _cProp) {
-  Meths->SQL->create(_cProp);
-  _cProp.tableName = Meths->SQL->getUuid();
+/*!
+ * Argument: single container {cProp}.
+ * Adds container to the selection.
+ */
+void Containers::appendSingle(const container &cProp) {
   QList<container> cProps;
-  cProps.append(_cProp);
-  edited = true;
+  cProps.append(cProp);
   append(cProps);
+  edited = true;
 }
 
 /*! Saves the selection and closes the dialog. */
@@ -149,15 +157,15 @@ void Containers::sncl() {
 /*! Opens the container creation dialog. */
 void Containers::openCC() {
   disconnect(crtAct, &QAction::triggered, this, &Containers::openCC);
-  _cc = new CreateContainer(this);
+  _cc = new CreateContainer(Meths, this);
   lt->addWidget(_cc, 2, 0, 1, 0);
-  connect(_cc, &CreateContainer::completed, this, &Containers::create);
+  connect(_cc, &CreateContainer::add, this, &Containers::appendSingle);
   connect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
 }
 
 /*! Closes the container creation dialog. */
 void Containers::closeCC() {
-  disconnect(_cc, &CreateContainer::completed, this, &Containers::create);
+  disconnect(_cc, &CreateContainer::add, this, &Containers::appendSingle);
   disconnect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
   lt->removeWidget(_cc);
   connect(crtAct, &QAction::triggered, this, &Containers::openCC);

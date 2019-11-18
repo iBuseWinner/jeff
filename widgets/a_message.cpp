@@ -165,6 +165,8 @@ void AMessage::setupMarkdown(const QString &content) {
  * Displays a warning {content}.
  */
 void AMessage::setupWarning(const QString &content) {
+  auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
+  board->setStyleSheet(board->wss);
   setupText(QString("Warning: " + content));
 }
 
@@ -173,6 +175,8 @@ void AMessage::setupWarning(const QString &content) {
  * Displays an error {content}.
  */
 void AMessage::setupError(const QString &content) {
+  auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
+  board->setStyleSheet(board->ess);
   setupText(QString("Error: " + content));
 }
 

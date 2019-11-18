@@ -286,14 +286,16 @@ void sqlite::exec(QSqlQuery *q, todo o, QStringList vs) {
   switch (o) {
     case todo::CreateMainTable:
       q->prepare(
-          "CREATE TABLE IF NOT EXISTS containers (container TEXT, title TEXT, "
-          "readOnly BOOL, private BOOL, catching BOOL)");
+          "CREATE TABLE IF NOT EXISTS containers (container TEXT NOT NULL "
+          "UNIQUE, title TEXT, readOnly INTEGER NOT NULL, private INTEGER NOT "
+          "NULL, catching INTEGER NOT NULL);");
       break;
     case todo::CreateContainerTable:
-      q->prepare(QString("CREATE TABLE IF NOT EXISTS \"%1\" (address INTEGER, "
-                         "expression TEXT, "
-                         "links TEXT)")
-                     .arg(vs.at(0)));
+      q->prepare(
+          QString(
+              "CREATE TABLE IF NOT EXISTS \"%1\" (address INTEGER NOT NULL "
+              "PRIMARY KEY AUTOINCREMENT UNIQUE, expression TEXT, links TEXT)")
+              .arg(vs.at(0)));
       break;
     case todo::WithDraw:
       q->prepare("DELETE FROM containers WHERE container=:c");

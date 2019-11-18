@@ -7,8 +7,6 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QWidget>
-#include "dialogues/about.h"
-#include "dialogues/containers.h"
 #include "widgets/a_line.h"
 
 /*!
@@ -31,6 +29,7 @@ class AMenuBar : public QMenuBar {
   void aboutTriggered();
   void settingsTriggered();
   void containersTriggered();
+  void createContainerTriggered();
   // void helpTriggered();
   void exportTriggered();
   void importTriggered();
@@ -40,6 +39,7 @@ class AMenuBar : public QMenuBar {
 
   // Functions:
   void openContainerManager() { emit containersTriggered(); }
+  void createContainer() { emit createContainerTriggered(); }
   void openAbout() { emit aboutTriggered(); }
   void openSettings() { emit settingsTriggered(); }
   void exportMessageHistory() { emit exportTriggered(); }

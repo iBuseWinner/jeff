@@ -7,7 +7,6 @@
 #include <QString>
 #include <QTranslator>
 #include <QTreeWidgetItem>
-#include "core/core-methods.h"
 #include "dialogues/containers/createcontainer.h"
 #include "widgets/a_button.h"
 #include "widgets/a_containerslist.h"
@@ -43,13 +42,11 @@ class Containers : public QWidget {
   // Functions:
   void connector();
   void append(const QList<container> &cProps);
-  void create(container _cProp);
+  void appendSingle(const container &cProp);
   void sncl();
   void openCC();
   void closeCC();
-
-  /*! Loads saved containers. */
-  void load() { append(Meths->readContainerList()); }
+  void load();
 };
 
 #endif  // CONTAINERS_H

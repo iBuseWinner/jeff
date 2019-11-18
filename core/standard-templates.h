@@ -12,6 +12,7 @@
 /*!
  * Class: standardTemplates
  * Provides some kinds of widgets by command.
+ * {Meths} <- core methods
  */
 class standardTemplates : public QObject {
   Q_OBJECT

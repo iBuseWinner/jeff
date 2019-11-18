@@ -2,6 +2,7 @@
 #define A_PUSHBUTTON_H
 
 #include <QFocusEvent>
+#include <QTimer>
 #include <QToolButton>
 
 /*!
@@ -17,7 +18,6 @@ class AButton : public QToolButton {
 
  protected:
   virtual void mousePressEvent(QMouseEvent *e) override;
-  virtual void mouseReleaseEvent(QMouseEvent *e) override;
 
  private:
   Q_DISABLE_COPY(AButton)
