@@ -1,23 +1,23 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "core/core-methods.h"
+#include "widgets/a_button.h"
+#include "widgets/settings/a_explanationlabel.h"
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QSizePolicy>
 #include <QSpinBox>
 #include <QTranslator>
 #include <QWidget>
-#include "core/core-methods.h"
-#include "widgets/a_button.h"
-#include "widgets/settings/a_explanationlabel.h"
 
 class Settings : public QWidget {
   Q_OBJECT
- public:
+public:
   // Functions:
   explicit Settings(CoreMethods *_Meths, QWidget *parent = nullptr);
 
- private:
+private:
   Q_DISABLE_COPY(Settings)
 
   // Objects:
@@ -36,8 +36,8 @@ class Settings : public QWidget {
   void loadStates();
   void saveAndClose();
   void delayChecked() { box1->setEnabled(delay->isChecked()); }
-  void minDelayValueChanged(int value) { maxDelay->setMinimum(value); }
-  void maxDelayValueChanged(int value) { minDelay->setMaximum(value); }
+  void minDelayValueChanged(int value);
+  void maxDelayValueChanged(int value);
 };
 
-#endif  // SETTINGS_H
+#endif // SETTINGS_H

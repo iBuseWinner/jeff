@@ -178,6 +178,7 @@ void NLPmodule::select(QString ue, const globalMap &gm) {
     if (!ue.contains(a)) continue;
     ue.remove(a);
     QRandomGenerator rand(quint32(QTime::currentTime().msec()));
+    if (gm.ars.value(a).isEmpty()) continue;
     re += gm.ars.value(a).at(rand.bounded(gm.ars.value(a).length())) + " ";
   }
   emit ready(re.trimmed());

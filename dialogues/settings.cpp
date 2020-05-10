@@ -19,7 +19,8 @@ Settings::Settings(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
   auto *lt = new QVBoxLayout();
   lt->setSpacing(0);
   lt->setMargin(0);
-  monologue = new QCheckBox(QTranslator::tr("Enable monologue mode support"), this);
+  monologue =
+      new QCheckBox(QTranslator::tr("Enable monologue mode support"), this);
   delay = new QCheckBox(QTranslator::tr("Enable delay"), this);
   auto *minDelayText = new QLabel(QTranslator::tr("From"), this);
   minDelayText->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -44,7 +45,9 @@ Settings::Settings(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
   keepHistory = new QCheckBox(QTranslator::tr("Keep history"), this);
   keepHistory->setEnabled(false);
   auto *monologueExplanation = new AExplanationLabel(
-      QTranslator::tr("ASW will be able to talk to himself (restart is required)."), this);
+      QTranslator::tr(
+          "ASW will be able to talk to himself (restart is required)."),
+      this);
   auto *delayExplanation = new AExplanationLabel(
       QTranslator::tr("Enables ASW response delay."), this);
   auto *keepHistoryExplanation = new AExplanationLabel(
@@ -70,9 +73,9 @@ Settings::Settings(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
 void Settings::connector() {
   connect(delay, &QCheckBox::toggled, this, &Settings::delayChecked);
   connect(minDelay, QOverload<int>::of(&QSpinBox::valueChanged), this,
-            &Settings::minDelayValueChanged);
+          &Settings::minDelayValueChanged);
   connect(maxDelay, QOverload<int>::of(&QSpinBox::valueChanged), this,
-            &Settings::maxDelayValueChanged);
+          &Settings::maxDelayValueChanged);
   connect(snclBtn, &AButton::clicked, this, &Settings::saveAndClose);
 }
 
@@ -96,4 +99,14 @@ void Settings::saveAndClose() {
   Meths->write(Meths->minDelaySt, minDelay->value());
   Meths->write(Meths->maxDelaySt, maxDelay->value());
   close();
+}
+
+void Settings::minDelayValueChanged(int value) {
+  if (minDelay->value() > maxDelay->value())
+    maxDelay->setValue(value);
+}
+
+void Settings::maxDelayValueChanged(int value) {
+  if (maxDelay->value() < minDelay->value())
+    minDelay->setValue(value);
 }
