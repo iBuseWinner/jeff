@@ -23,7 +23,6 @@ private:
   // Objects:
   Basis *basis = nullptr;
   const QString objn = "settings";
-  QCheckBox *monologue = nullptr;
   QCheckBox *delay = nullptr;
   QWidget *box1 = nullptr;
   QSpinBox *minDelay = nullptr;

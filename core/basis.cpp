@@ -62,11 +62,11 @@ QList<Source> Basis::readSourceList() {
  * Recreates message history from file.
  * Returns: QList of messages {mh}.
  */
-QList<message> Basis::readMessageHistory(QFile *file) {
+QList<Message> Basis::readMessageHistory(QFile *file) {
   QJsonArray ms = readJson(file);
-  QList<message> mh;
+  QList<Message> mh;
   for (auto obj : ms) {
-    message m = toMessage(obj.toObject());
+    Message m = toMessage(obj.toObject());
     mh.append(m);
   }
   return mh;
@@ -110,7 +110,7 @@ void Basis::writeSourceList(QList<Source> sourceList) {
  *            QFile {*savefile}.
  * Saves {messageHistory} to {savefile}.
  */
-void Basis::writeMessageHistory(QList<message> messageHistory,
+void Basis::writeMessageHistory(QList<Message> messageHistory,
                                 QFile *savefile) {
   QJsonArray ms;
   for (const auto &m : messageHistory)
@@ -170,7 +170,7 @@ QJsonObject Basis::toJSON(const Source &cProp) {
  * Turns {shadow} into a JSON object.
  * Returns: QJsonObject - converted message.
  */
-QJsonObject Basis::toJSON(const message &shadow) {
+QJsonObject Basis::toJSON(const Message &shadow) {
   return {{"content", shadow.content},
           {"datetime", shadow.datetime.toString(Qt::ISODateWithMs)},
           {"author", int(shadow.aType)},
@@ -197,13 +197,13 @@ Source Basis::toSource(const QJsonObject &obj) {
  * Turns {obj} into a message.
  * Returns: message {shadow}.
  */
-message Basis::toMessage(const QJsonObject &obj) {
-  message shadow;
+Message Basis::toMessage(const QJsonObject &obj) {
+  Message shadow;
   shadow.content = obj.value("content").toString();
   shadow.datetime = QDateTime::fromString(obj.value("datetime").toString(),
                                           Qt::ISODateWithMs);
-  shadow.aType = eA(obj.value("author").toInt());
-  shadow.cType = eC(obj.value("contentType").toInt());
-  shadow.tType = eT(obj.value("theme").toInt());
+  shadow.aType = Author(obj.value("author").toInt());
+  shadow.cType = ContentType(obj.value("contentType").toInt());
+  shadow.tType = Theme(obj.value("theme").toInt());
   return shadow;
 }

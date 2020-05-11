@@ -25,3 +25,11 @@ bool StdTemplates::dialogues(const QString &expression) {
   }
   return false;
 }
+
+bool StdTemplates::fastCommands(const QString &expression) {
+  if (expression == "/mm") {
+    emit changeMonologueMode();
+    return true;
+  }
+  return false;
+}

@@ -1,8 +1,8 @@
 #ifndef BASIS_H
 #define BASIS_H
 
-#include "core/source.h"
 #include "core/message.h"
+#include "core/source.h"
 #include "core/sqlite.h"
 #include <QDir>
 #include <QFile>
@@ -19,7 +19,7 @@
 #include <QVariant>
 
 /*!
- * Class: CoreMethods.
+ * Class: Basis.
  * Provides methods for intra-component work.
  */
 class Basis : public QObject {
@@ -45,10 +45,10 @@ public:
   // Functions:
   Basis(QObject *parent = nullptr);
   QList<Source> readSourceList();
-  QList<message> readMessageHistory(QFile *file);
+  QList<Message> readMessageHistory(QFile *file);
   void write(const QString &key, const QVariant &data);
   void writeSourceList(QList<Source> sourceList);
-  void writeMessageHistory(QList<message> messageHistory, QFile *sf);
+  void writeMessageHistory(QList<Message> messageHistory, QFile *sf);
 
   /*! Returns whether the settings file exists. */
   bool exists() { return QFile::exists(s->fileName()); }
@@ -78,9 +78,9 @@ private:
   QJsonArray readJson(QFile *f);
   void writeJson(QFile *sf, QJsonArray arr);
   QJsonObject toJSON(const Source &cProp);
-  QJsonObject toJSON(const message &shadow);
+  QJsonObject toJSON(const Message &shadow);
   Source toSource(const QJsonObject &obj);
-  message toMessage(const QJsonObject &obj);
+  Message toMessage(const QJsonObject &obj);
 };
 
 #endif // BASIS_H

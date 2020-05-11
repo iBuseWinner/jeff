@@ -39,7 +39,7 @@ void HProcessor::load(const QString &filename) {
  * Argument: message {_message}.
  * Removes {_message} from {mh}.
  */
-void HProcessor::removeOne(message _message) {
+void HProcessor::removeOne(Message _message) {
   // Qt does not provide the ability to compare structures, therefore
   // historyProcessor independently compares elements and deletes an identical
   // one.

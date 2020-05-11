@@ -55,7 +55,7 @@ public:
   QMap<QString, QString> scanSource(const Source &_source,
                                     const QString &expression);
   bool hasAdditionalProperties(const Source &_source);
-  QMap<QString, QString> scanAdditionalProperties(const Source &_container,
+  QMap<QString, QString> scanAdditionalProperties(const Source &_source,
                                                   int address);
 
   /*! Class initialization. */

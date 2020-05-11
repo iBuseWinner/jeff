@@ -1,13 +1,13 @@
 #ifndef A_MENUBAR_H
 #define A_MENUBAR_H
 
+#include "widgets/a_line.h"
 #include <QAction>
 #include <QApplication>
 #include <QJsonArray>
 #include <QMenu>
 #include <QMenuBar>
 #include <QWidget>
-#include "widgets/a_line.h"
 
 /*!
  * Class: AMenuBar.
@@ -15,16 +15,15 @@
  */
 class AMenuBar : public QMenuBar {
   Q_OBJECT
- public:
+public:
   // Objects:
   QAction *fullScreenAction = nullptr;
   QAction *emm = nullptr;
 
   // Functions:
-  AMenuBar(ALine *line, bool isMonologueModeEnabled = false,
-           QWidget *parent = nullptr);
+  AMenuBar(ALine *line, QWidget *parent = nullptr);
 
- signals:
+signals:
   void clearHistoryTriggered();
   void aboutTriggered();
   void settingsTriggered();
@@ -34,7 +33,7 @@ class AMenuBar : public QMenuBar {
   void exportTriggered();
   void importTriggered();
 
- private:
+private:
   Q_DISABLE_COPY(AMenuBar)
 
   // Functions:
@@ -48,4 +47,4 @@ class AMenuBar : public QMenuBar {
   void hideThis() { setVisible(!isVisible()); }
 };
 
-#endif  // AKIWAKE_MENUBAR_H
+#endif // AKIWAKE_MENUBAR_H

@@ -42,11 +42,12 @@ private:
   Q_DISABLE_COPY(ASW)
 
   // Objects:
-  Core *cr = new Core(this);
+  Core *core = new Core(this);
+  Basis *basis = core->basis;
+  HProcessor *historyProcessor = core->historyProcessor;
   ALine *ln = new ALine(this);
   ADisplay *d = new ADisplay(this);
-  AMenuBar *mb = new AMenuBar(
-      ln, cr->basis->read(cr->basis->isMonologueModeEnabledSt).toBool(), this);
+  AMenuBar *mb = new AMenuBar(ln, this);
   const int mw = 600;
   const int mh = 370;
   const int stdw = 800;
@@ -61,7 +62,6 @@ private:
   void exportMessageHistory();
   void importMessageHistory();
   void clear();
-  bool findASWCommand(const QString &text);
 
   /*! Adds {msg} to the screen. */
   void addMessage(AMessage *msg) { d->addMessage(msg); }

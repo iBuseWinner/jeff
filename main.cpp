@@ -31,7 +31,7 @@
  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("asw");
-  QCoreApplication::setApplicationVersion("0.2.3");
+  QCoreApplication::setApplicationVersion("0.2.4");
   QApplication asw(argc, argv);
   auto *asw_l10n = new QTranslator(&asw);
   asw_l10n->load(":/l10n/asw_" + QLocale::system().name());

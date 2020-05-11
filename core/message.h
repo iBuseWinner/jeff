@@ -4,30 +4,39 @@
 #include <QDateTime>
 #include <QString>
 
-/*! Enum: eA [author]. */
-enum eA { undefA, ASW, User };
+/*! Enum: Author. */
+enum Author { undefA, ASW, User };
 
-/*! Enum: eC [content type]. */
-enum eC { undefC, Text, Markdown, Picture, File, Warning, Error, Widget };
+/*! Enum: Content type. */
+enum ContentType {
+  undefC,
+  Text,
+  Markdown,
+  Picture,
+  File,
+  Warning,
+  Error,
+  Widget
+};
 
-/*! Enum: eT [theme]. */
-enum eT { undefT, Std, White, Dark, Red, Green, Blue, Yellow };
+/*! Enum: Theme. */
+enum Theme { undefT, Std, White, Dark, Red, Green, Blue, Yellow };
 
 /*!
- * Struct: message.
+ * Struct: Message.
  * Contains the message and its properties.
  */
-struct message {
+struct Message {
   /*! Content. */
   QString content = "";
   /*! Data and time of creation/change. */
   QDateTime datetime;
   /*! Message author. */
-  eA aType = eA::undefA;
+  Author aType = Author::undefA;
   /*! Type of message content. */
-  eC cType = eC::undefC;
+  ContentType cType = ContentType::undefC;
   /*! Message theme. */
-  eT tType = eT::Std;
+  Theme tType = Theme::Std;
 };
 
-#endif  // MESSAGE_H
+#endif // MESSAGE_H

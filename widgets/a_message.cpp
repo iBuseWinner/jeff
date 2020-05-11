@@ -20,10 +20,10 @@ AMessage::AMessage() {
 }
 
 /*!
- * Argument: message {shadow} [basis for the message].
+ * Argument: Message {shadow} [basis for the message].
  * Creates an AMessage based on {shadow}.
  */
-AMessage::AMessage(message shadow) {
+AMessage::AMessage(Message shadow) {
   QHBoxLayout *l = new QHBoxLayout();
   l->setContentsMargins(0, 0, 0, stdm);
   l->setSpacing(0);
@@ -35,7 +35,7 @@ AMessage::AMessage(message shadow) {
  * Argument: message {shadow} [basis for the message].
  * Sets {shadow} into the AMessage.
  */
-void AMessage::setShadow(message shadow) {
+void AMessage::setShadow(Message shadow) {
   if (shadow.datetime.isNull()) return;
   sh = shadow;
   setAuthor(sh.aType);
@@ -48,17 +48,17 @@ void AMessage::setShadow(message shadow) {
  * Sets {widget} into the AMessage.
  */
 void AMessage::setWidget(QWidget *widget) {
-  if (w != nullptr) return;
+  if (w) return;
   w = widget;
   connect(w, &QWidget::destroyed, this, &AMessage::close);
   lt->addWidget(w);
 }
 
 /*!
- * Argument: enum eA {aType} [author].
+ * Argument: enum Author {aType} [author].
  * Makes a message either left or right.
  */
-void AMessage::setAuthor(eA aType) {
+void AMessage::setAuthor(Author aType) {
   switch (aType) {
     case 1:
       setupASW();
@@ -71,10 +71,10 @@ void AMessage::setAuthor(eA aType) {
 }
 
 /*!
- * Argument: enum eC {cType} [content type].
+ * Argument: enum ContentType {cType} [content type].
  * Adjusts the message to the content type.
  */
-void AMessage::setMessageType(eC cType) {
+void AMessage::setMessageType(ContentType cType) {
   switch (cType) {
     case 1:
       setupText(sh.content);
@@ -188,11 +188,11 @@ void AMessage::prepareSetupWidget() {
 /*! Aligns text to the width of the window. */
 void AMessage::alignTextToWindowWidth() {
   auto *tl = static_cast<QLabel *>(w);
-  if (tl == nullptr) return;
+  if (!tl) return;
   QTextDocument td;
-  if (sh.cType == eC::Markdown)
+  if (sh.cType == ContentType::Markdown)
     td.setHtml(tl->text());
-  else if (sh.cType == eC::Text)
+  else if (sh.cType == ContentType::Text)
     td.setPlainText(tl->text());
   else
     return;

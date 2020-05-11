@@ -19,30 +19,30 @@ class AMessage : public QWidget {
  public:
   // Functions:
   AMessage();
-  AMessage(message shadow);
-  void setShadow(message shadow);
+  AMessage(Message shadow);
+  void setShadow(Message shadow);
   void setWidget(QWidget *widget);
 
-  enum eA returnAuthor() { return sh.aType; }
-  enum eC returnContentType() { return sh.cType; }
-  enum eT returnTheme() { return sh.tType; }
+  Author returnAuthor() { return sh.aType; }
+  ContentType returnContentType() { return sh.cType; }
+  Theme returnTheme() { return sh.tType; }
   QString returnContent() { return sh.content; }
   QDateTime returnDateTime() { return sh.datetime; }
-  message returnShadow() { return sh; }
+  Message returnShadow() { return sh; }
 
  private:
   Q_DISABLE_COPY(AMessage)
 
   // Objects:
-  message sh;
+  Message sh;
   QGridLayout *lt = nullptr;
   QWidget *w = nullptr;
   const int mmw = 400;
   const int stdm = 6;
 
   // Functions:
-  void setAuthor(eA aType);
-  void setMessageType(eC cType);
+  void setAuthor(Author aType);
+  void setMessageType(ContentType cType);
   // void setTheme(eT tType);
   void setupASW();
   void setupUser();

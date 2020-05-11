@@ -19,8 +19,6 @@ Settings::Settings(Basis *_basis, QWidget *parent) : QWidget(parent) {
   auto *lt = new QVBoxLayout();
   lt->setSpacing(0);
   lt->setMargin(0);
-  monologue =
-      new QCheckBox(QTranslator::tr("Enable monologue mode support"), this);
   delay = new QCheckBox(QTranslator::tr("Enable delay"), this);
   auto *minDelayText = new QLabel(QTranslator::tr("From"), this);
   minDelayText->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -44,10 +42,6 @@ Settings::Settings(Basis *_basis, QWidget *parent) : QWidget(parent) {
   box1->setLayout(box1Lt);
   keepHistory = new QCheckBox(QTranslator::tr("Keep history"), this);
   keepHistory->setEnabled(false);
-  auto *monologueExplanation = new AExplanationLabel(
-      QTranslator::tr(
-          "ASW will be able to talk to himself (restart is required)."),
-      this);
   auto *delayExplanation = new AExplanationLabel(
       QTranslator::tr("Enables ASW response delay."), this);
   auto *keepHistoryExplanation = new AExplanationLabel(
@@ -56,8 +50,6 @@ Settings::Settings(Basis *_basis, QWidget *parent) : QWidget(parent) {
       this);
   snclBtn = new AButton(QTranslator::tr("OK"), this);
   snclBtn->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
-  lt->addWidget(monologue);
-  lt->addWidget(monologueExplanation);
   lt->addWidget(delay);
   lt->addWidget(delayExplanation);
   lt->addWidget(box1);
@@ -81,7 +73,6 @@ void Settings::connector() {
 
 /*! Loads settings from file. */
 void Settings::loadStates() {
-  monologue->setChecked(basis->read(basis->isMonologueModeEnabledSt).toBool());
   delay->setChecked(basis->read(basis->isDelayEnabledSt).toBool());
   delayChecked();
   keepHistory->setChecked(basis->read(basis->isKeepingEnabledSt).toBool());
@@ -93,7 +84,6 @@ void Settings::loadStates() {
 
 /*! Saves ASW settings. */
 void Settings::saveAndClose() {
-  basis->write(basis->isMonologueModeEnabledSt, monologue->isChecked());
   basis->write(basis->isDelayEnabledSt, delay->isChecked());
   basis->write(basis->isKeepingEnabledSt, keepHistory->isChecked());
   basis->write(basis->minDelaySt, minDelay->value());

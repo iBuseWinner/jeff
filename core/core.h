@@ -1,12 +1,12 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include <QObject>
-#include <QTimer>
+#include "core/basis.h"
 #include "core/history-processor.h"
 #include "core/nlp-module.h"
 #include "core/standard-templates.h"
-#include "core/basis.h"
+#include <QObject>
+#include <QTimer>
 
 /*!
  * Class: Core.
@@ -14,7 +14,7 @@
  */
 class Core : public QObject {
   Q_OBJECT
- public:
+public:
   // Objects:
   Basis *basis = new Basis(this);
   HProcessor *historyProcessor = new HProcessor(basis, this);
@@ -27,18 +27,20 @@ class Core : public QObject {
   void getError(QString errorText);
   void getWidget(QWidget *widget);
   // void getScript();
-  void showHistory(QList<message> messageHistory);
+  void showHistory(QList<Message> messageHistory);
 
   /*! Creates a shadow on demand. */
-  message getShadow(QString content, eA author, eC contentType, eT theme) {
+  Message getShadow(QString content, Author author, ContentType contentType,
+                    Theme theme) {
     return shadow(content, author, contentType, theme);
   }
-  void setMonologueEnabled(bool enabled) { monologueEnabled = enabled; }
+  void setMonologueEnabled(bool enabled);
 
- signals:
+signals:
   AMessage *show(AMessage *message);
+  bool changeMenuBarMonologueCheckbox(bool enabled);
 
- private:
+private:
   Q_DISABLE_COPY(Core)
 
   // Objects:
@@ -47,7 +49,7 @@ class Core : public QObject {
   bool monologueEnabled = false;
 
   // Functions:
-  message shadow(QString _cn, eA _a, eC _ct, eT _t);
+  Message shadow(QString _cn, Author _a, ContentType _ct, Theme _t);
 };
 
 #endif

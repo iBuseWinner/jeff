@@ -18,31 +18,28 @@
 
 /*!
  * Arguments: ALine {*line} [needed for the actions of the "Edit" menu],
- *            bool {isMonologueModeEnabled},
  *            QWidget {*parent}.
  * Creates an AMenuBar.
  */
-AMenuBar::AMenuBar(ALine *line, bool isMonologueModeEnabled, QWidget *parent)
+AMenuBar::AMenuBar(ALine *line, QWidget *parent)
     : QMenuBar(parent) {
   // File
   QMenu *mf = addMenu(tr("File"));
-  QAction *cm = new QAction(tr("Container manager") + " (/cm)", mf);
+  QAction *cm = new QAction(tr("Source manager") + " (/sm)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
   QAction *imh = new QAction(tr("Import message history"), mf);
+  emm = new QAction(tr("Enable monologue mode") + " (/mm)", mf);
+  emm->setCheckable(true);
   cm->setShortcut(Qt::CTRL + Qt::Key_M);
   emh->setShortcut(Qt::CTRL + Qt::Key_E);
   imh->setShortcut(Qt::CTRL + Qt::Key_I);
+  emm->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
   cm->setIcon(QIcon(":/arts/icons/16/database-manager.svg"));
   emh->setIcon(QIcon(":/arts/icons/16/document-export.svg"));
   imh->setIcon(QIcon(":/arts/icons/16/document-import.svg"));
+  emm->setIcon(QIcon(":/arts/icons/16/monologue.svg"));
   mf->addAction(cm);
-  if (isMonologueModeEnabled) {
-    emm = new QAction(tr("Enable monologue mode") + " (/mm)", mf);
-    emm->setCheckable(true);
-    emm->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
-    emm->setIcon(QIcon(":/arts/icons/16/monologue.svg"));
-    mf->addAction(emm);
-  }
+  mf->addAction(emm);
   mf->addSeparator();
   mf->addAction(emh);
   mf->addAction(imh);

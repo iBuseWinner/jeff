@@ -17,7 +17,7 @@
  */
 
 /*!
- * Argument: container {_container} [container properties].
+ * Argument: Source {_source} [source properties].
  * Creates container.
  */
 void SQLite::create(const Source &_source) {
@@ -65,8 +65,8 @@ void SQLite::create(const Source &_source) {
 
 /*!
  * Argument: QString {path} [path to database].
- * Searches for database containers of activators and reagents.
- * Returns: QList of containers {cProps}.
+ * Searches for database sources of activators and reagents.
+ * Returns: QList of sources {cProps}.
  */
 QList<Source> SQLite::sources(const QString &path) {
   QSqlDatabase db = prepare(path, check::AnyContent);
@@ -117,8 +117,8 @@ Source SQLite::load(Source _source) {
 }
 
 /*!
- * Argument: container {_container} [container properties].
- * Writes container properties into the database.
+ * Argument: Source {_source} [source properties].
+ * Writes source properties into the database.
  */
 void SQLite::write(const Source &_source) {
   QSqlDatabase db = prepare(_source.path, check::AnyContent);
@@ -140,11 +140,11 @@ void SQLite::write(const Source &_source) {
 }
 
 /*!
- * Arguments: container {_container} [container properties],
+ * Arguments: Source {_source} [source properties],
  *            int {address} [address of expression],
  *            QString {expression},
  *            QString {links} [links to other expressions].
- * Inserts a new expression into the container.
+ * Inserts a new expression into the source.
  */
 void SQLite::insert(const Source &_source, int address,
                     const QString &expression, const QString &links) {
@@ -163,7 +163,7 @@ void SQLite::insert(const Source &_source, int address,
 }
 
 /*!
- * Arguments: container {_container} [container properties],
+ * Arguments: Source {_source} [source properties],
  *            int {address} [address of expression].
  * Finds an expression and links by address.
  * Returns: QPair expression-links.
@@ -190,7 +190,7 @@ QPair<QString, QString> SQLite::getExpression(const Source &_source,
 }
 
 /*!
- * Arguments: container {_container} [container properties],
+ * Arguments: Source {_source} [source properties],
  *            QString {expression}.
  * Finds all activators in the expression.
  * Returns: QMap of activators-links.
@@ -217,8 +217,8 @@ QMap<QString, QString> SQLite::scanSource(const Source &_source,
 }
 
 /*!
- * Argument: container {_container} [container properties].
- * Indicates whether the container has additional properties.
+ * Argument: Source {_source} [Source properties].
+ * Indicates whether the source has additional properties.
  * Returns: true if has.
  */
 bool SQLite::hasAdditionalProperties(const Source &_source) {
@@ -231,19 +231,19 @@ bool SQLite::hasAdditionalProperties(const Source &_source) {
 }
 
 /*!
- * Arguments: container {_container} [container properties],
+ * Arguments: Source {_source} [source properties],
  *            int {address} [address of expression].
  * Gets additional properties of the expression by {address}.
  * Returns: QMap of properties-values.
  */
 QMap<QString, QString>
-SQLite::scanAdditionalProperties(const Source &_container, int address) {
-  QSqlDatabase db = prepare(_container.path);
+SQLite::scanAdditionalProperties(const Source &_source, int address) {
+  QSqlDatabase db = prepare(_source.path);
   if (db.databaseName() == QString())
     return QMap<QString, QString>();
   auto *q = new QSqlQuery(db);
   QStringList vs;
-  vs.append(_container.tableName);
+  vs.append(_source.tableName);
   vs.append(QString::number(address));
   exec(q, todo::SelectAdditionalProperties, vs);
   QSqlRecord r = q->record();
@@ -355,5 +355,5 @@ void SQLite::exec(QSqlQuery *q, todo o, QStringList vs) {
     break;
   }
   if (!q->exec())
-    emit sqliteError(q->lastError().text() + " " + QString(int(o)));
+    emit sqliteError(q->lastError().text() + " " + QString((int)o));
 }

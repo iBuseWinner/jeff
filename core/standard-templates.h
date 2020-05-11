@@ -19,6 +19,7 @@ class StdTemplates : public QObject {
 public:
   // Functions:
   bool dialogues(const QString &expression);
+  bool fastCommands(const QString &expression);
 
   /*! Class initialization. */
   StdTemplates(Basis *_basis, QObject *parent = nullptr) : QObject(parent) {
@@ -27,6 +28,7 @@ public:
 
 signals:
   QWidget *showASWDialog(QWidget *widget);
+  void changeMonologueMode();
 
 private:
   // Objects:

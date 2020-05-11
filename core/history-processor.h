@@ -18,20 +18,20 @@ class HProcessor : public QObject {
   HProcessor(Basis *_basis, QObject *parent = nullptr);
   void save(const QString &filename);
   void load(const QString &filename);
-  void removeOne(message _message);
+  void removeOne(Message _message);
 
   /*! Adds a message to the story. */
-  void append(const message &_message) { mh.append(_message); }
+  void append(const Message &_message) { mh.append(_message); }
   /*! Clears the history. */
   void clear() { mh.clear(); }
 
  signals:
-  QList<message> sendMessageHistory(QList<message> _mh);
+  QList<Message> sendMessageHistory(QList<Message> _mh);
 
  private:
   // Objects:
   Basis *basis = nullptr;
-  QList<message> mh;
+  QList<Message> mh;
 };
 
 #endif  // HISTORY_PROCESSOR_H
