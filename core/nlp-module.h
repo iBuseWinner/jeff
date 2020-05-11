@@ -7,16 +7,16 @@
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
-#include "core/core-methods.h"
+#include "core/basis.h"
 #include "core/sqlite.h"
 #include "widgets/a_message.h"
 
 /*!
- * Struct: containerRow.
+ * Struct: SourceRow.
  * Contains information about a single row [without address] of a database
  * table.
  */
-struct containerRow {
+struct SourceRow {
   /*! Activator. */
   QString ac;
   /*! Reagent address. */
@@ -26,21 +26,21 @@ struct containerRow {
 };
 
 /*!
- * Struct: linkMap.
+ * Struct: LinkMap.
  * Contains a map with user expression reagents of a single container.
  */
-struct linkMap {
+struct LinkMap {
   /*! Activators and links to their reagents. */
   QMap<QString, QList<int>> al;
   /*! Container data. */
-  container cProp;
+  Source cProp;
 };
 
 /*!
- * Struct: globalMap.
+ * Struct: GlobalMap.
  * Contains a list with activator-reagents pairs.
  */
-struct globalMap {
+struct GlobalMap {
   /*! Activators and their reagents. */
   QMap<QString, QStringList> ars;
 };
@@ -52,7 +52,7 @@ struct globalMap {
 class NLPmodule : public QObject {
   Q_OBJECT
  public:
-  NLPmodule(CoreMethods *_Meths, QObject *parent = nullptr);
+  NLPmodule(Basis *_basis, QObject *parent = nullptr);
   void search(QString userExpression);
 
  signals:
@@ -60,13 +60,13 @@ class NLPmodule : public QObject {
 
  private:
   // Objects:
-  CoreMethods *Meths = nullptr;
+  Basis *basis = nullptr;
 
   // Functions:
-  linkMap toLinkMap(QList<containerRow> crs, bool _aProp);
-  globalMap toGlobalMap(const QList<linkMap> &lms);
+  LinkMap toLinkMap(QList<SourceRow> crs, bool _aProp);
+  GlobalMap toGlobalMap(const QList<LinkMap> &lms);
   QStringList sorting(const QString &ue, QStringList as);
-  void select(QString ue, const globalMap &gm);
+  void select(QString ue, const GlobalMap &gm);
 };
 
 #endif  // NLPMODULE_H

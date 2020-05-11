@@ -6,13 +6,13 @@
  * dialog box.
  * Returns: found or not.
  */
-bool standardTemplates::dialogues(const QString &expression) {
+bool StdTemplates::dialogues(const QString &expression) {
   if (expression == "/about") {
     emit showASWDialog(new About());
     return true;
   }
-  if (expression == "/cm") {
-    emit showASWDialog(new Containers(Meths));
+  if (expression == "/sm") {
+    emit showASWDialog(new SourcesDialog(basis));
     return true;
   }
   if (expression == "/first") {
@@ -20,7 +20,7 @@ bool standardTemplates::dialogues(const QString &expression) {
     return true;
   }
   if (expression == "/settings") {
-    emit showASWDialog(new Settings(Meths));
+    emit showASWDialog(new Settings(basis));
     return true;
   }
   return false;

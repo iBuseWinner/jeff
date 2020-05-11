@@ -1,6 +1,7 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
+#include "core/source.h"
 #include <QDebug>
 #include <QFile>
 #include <QJsonObject>
@@ -18,7 +19,6 @@
 #include <QTime>
 #include <QUuid>
 #include <QVariant>
-#include "core/container.h"
 
 /*! Enum: check [what to check]. */
 enum check { All, OnlyOpen, AnyContent };
@@ -38,29 +38,28 @@ enum todo {
 };
 
 /*!
- * Class: sqlite
+ * Class: SQLite
  * Contains methods of working with databases.
  */
-class sqlite : public QObject {
+class SQLite : public QObject {
   Q_OBJECT
- public:
+public:
   // Functions:
-  void create(const container &_container);
-  QList<container> containers(const QString &path);
-  container load(container _container);
-  void write(const container &_container);
-  void insert(const container &_container, int address,
-              const QString &expression, const QString &links);
-  QPair<QString, QString> getExpression(const container &_container,
-                                        int address);
-  QMap<QString, QString> scanContainer(const container &_container,
-                                       const QString &expression);
-  bool hasAdditionalProperties(const container &_container);
-  QMap<QString, QString> scanAdditionalProperties(const container &_container,
+  void create(const Source &_source);
+  QList<Source> sources(const QString &path);
+  Source load(Source _source);
+  void write(const Source &_source);
+  void insert(const Source &_source, int address, const QString &expression,
+              const QString &links);
+  QPair<QString, QString> getExpression(const Source &_source, int address);
+  QMap<QString, QString> scanSource(const Source &_source,
+                                    const QString &expression);
+  bool hasAdditionalProperties(const Source &_source);
+  QMap<QString, QString> scanAdditionalProperties(const Source &_container,
                                                   int address);
 
   /*! Class initialization. */
-  sqlite(QObject *parent) { setParent(parent); }
+  SQLite(QObject *parent) { setParent(parent); }
   /*! Returns the UUID of the created container. */
   QString getUuid() {
     QString _u = uuid;
@@ -68,20 +67,21 @@ class sqlite : public QObject {
     return _u;
   }
   /*! Purifies {str}. */
-  QString purify(const QString& str) {
+  QString purify(const QString &str) {
     return removeSymbols(str.trimmed().toLower());
   }
   /*! Removes punctuation. */
   QString removeSymbols(QString str) {
-    for (auto sb : sbs) str.remove(sb);
+    for (auto sb : sbs)
+      str.remove(sb);
     return str;
   }
 
- signals:
+signals:
   QString sqliteError(QString errorText);
   QString sqliteWarning(QString warningText);
 
- private:
+private:
   // Objects:
   int mna = 4;
   QString uuid = "";
@@ -92,4 +92,4 @@ class sqlite : public QObject {
   void exec(QSqlQuery *q, todo o, QStringList vs = QStringList());
 };
 
-#endif  // SQLITE_H
+#endif // SQLITE_H

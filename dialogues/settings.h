@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "core/core-methods.h"
+#include "core/basis.h"
 #include "widgets/a_button.h"
 #include "widgets/settings/a_explanationlabel.h"
 #include <QCheckBox>
@@ -15,13 +15,13 @@ class Settings : public QWidget {
   Q_OBJECT
 public:
   // Functions:
-  explicit Settings(CoreMethods *_Meths, QWidget *parent = nullptr);
+  explicit Settings(Basis *_basis, QWidget *parent = nullptr);
 
 private:
   Q_DISABLE_COPY(Settings)
 
   // Objects:
-  CoreMethods *Meths = nullptr;
+  Basis *basis = nullptr;
   const QString objn = "settings";
   QCheckBox *monologue = nullptr;
   QCheckBox *delay = nullptr;

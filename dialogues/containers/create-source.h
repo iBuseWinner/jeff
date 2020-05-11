@@ -1,26 +1,26 @@
-#ifndef CREATECONTAINER_H
-#define CREATECONTAINER_H
+#ifndef CREATESOURCEDIALOG_H
+#define CREATESOURCEDIALOG_H
 
+#include "core/basis.h"
+#include "core/source.h"
+#include "widgets/a_button.h"
+#include "widgets/a_lineedit.h"
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QSpacerItem>
 #include <QWidget>
-#include "core/core-methods.h"
-#include "core/container.h"
-#include "widgets/a_button.h"
-#include "widgets/a_lineedit.h"
 
-class CreateContainer : public QWidget {
+class CreateSourceDialog : public QWidget {
   Q_OBJECT
- public:
+public:
   // Functions:
-  explicit CreateContainer(CoreMethods *_Meths, QWidget *parent = nullptr);
+  explicit CreateSourceDialog(Basis *_basis, QWidget *parent = nullptr);
 
- signals:
+signals:
   void cancelled();
-  const container add(const container &cProp);
+  const Source add(const Source &cProp);
 
- protected:
+protected:
   // Functions:
   /*! Cancels container creation. */
   void closeEvent(QCloseEvent *e) override {
@@ -28,12 +28,12 @@ class CreateContainer : public QWidget {
     e->accept();
   }
 
- private:
-  Q_DISABLE_COPY(CreateContainer)
+private:
+  Q_DISABLE_COPY(CreateSourceDialog)
 
   // Objects:
   QString m_dbpath = "";
-  CoreMethods *Meths = nullptr;
+  Basis *basis = nullptr;
   ALineEdit *titleInput = nullptr;
   AButton *selectFileBtn = nullptr;
   AButton *saveBtn = nullptr;
@@ -46,4 +46,4 @@ class CreateContainer : public QWidget {
   void save();
 };
 
-#endif  // CREATECONTAINER_H
+#endif // CREATESOURCEDIALOG_H

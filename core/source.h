@@ -4,10 +4,10 @@
 #include <QString>
 
 /*!
- * Struct: container.
+ * Struct: Source.
  * Contains data about the container of regular expressions for the NLP-module.
  */
-struct container {
+struct Source {
   /*! Path to database. */
   QString path = "";
   /*! Table name [UUID, name of database table]. */
@@ -23,7 +23,7 @@ struct container {
   /*! Means that the search for reagents occurs exclusively in it. */
   bool isCatching = false;
   /*! Means that the input is first validated using this container. */
-  bool isPriority = false;
+  bool isPrioritised = false;
 };
 
 #endif  // CONTAINERSSTRUCT_H

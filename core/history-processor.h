@@ -4,18 +4,18 @@
 #include <QFileDialog>
 #include <QList>
 #include <QStringList>
-#include "core/core-methods.h"
+#include "core/basis.h"
 #include "widgets/a_message.h"
 
 /*!
  * Class: historyProcessor.
  * Stores, exports and loads message history.
  */
-class historyProcessor : public QObject {
+class HProcessor : public QObject {
   Q_OBJECT
  public:
   // Functions:
-  historyProcessor(CoreMethods *_Meths, QObject *parent = nullptr);
+  HProcessor(Basis *_basis, QObject *parent = nullptr);
   void save(const QString &filename);
   void load(const QString &filename);
   void removeOne(message _message);
@@ -30,7 +30,7 @@ class historyProcessor : public QObject {
 
  private:
   // Objects:
-  CoreMethods *Meths = nullptr;
+  Basis *basis = nullptr;
   QList<message> mh;
 };
 

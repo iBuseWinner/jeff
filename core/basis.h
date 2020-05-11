@@ -1,6 +1,9 @@
-#ifndef CORE_METHODS_H
-#define CORE_METHODS_H
+#ifndef BASIS_H
+#define BASIS_H
 
+#include "core/source.h"
+#include "core/message.h"
+#include "core/sqlite.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -14,19 +17,16 @@
 #include <QString>
 #include <QTextStream>
 #include <QVariant>
-#include "core/container.h"
-#include "core/message.h"
-#include "core/sqlite.h"
 
 /*!
  * Class: CoreMethods.
  * Provides methods for intra-component work.
  */
-class CoreMethods : public QObject {
+class Basis : public QObject {
   Q_OBJECT
- public:
+public:
   // Objects:
-  sqlite* SQL = new sqlite(this);
+  SQLite *sql = new SQLite(this);
   const QString companyName = "CCLC";
   const QString applicationName = "ASW";
 
@@ -43,12 +43,12 @@ class CoreMethods : public QObject {
   const QString isHintsEnabledSt = "core/ishintsenabled";
 
   // Functions:
-  CoreMethods(QObject* parent = nullptr);
-  QList<container> readContainerList();
-  QList<message> readMessageHistory(QFile* file);
-  void write(const QString& key, const QVariant& data);
-  void writeContainerList(QList<container> containerList);
-  void writeMessageHistory(QList<message> messageHistory, QFile* sf);
+  Basis(QObject *parent = nullptr);
+  QList<Source> readSourceList();
+  QList<message> readMessageHistory(QFile *file);
+  void write(const QString &key, const QVariant &data);
+  void writeSourceList(QList<Source> sourceList);
+  void writeMessageHistory(QList<message> messageHistory, QFile *sf);
 
   /*! Returns whether the settings file exists. */
   bool exists() { return QFile::exists(s->fileName()); }
@@ -57,30 +57,30 @@ class CoreMethods : public QObject {
   /*! The file is incorrect? */
   bool isIncorrect() { return !correct; }
   /*! Reads the setting. */
-  QVariant read(const QString& key) { return s->value(key); }
+  QVariant read(const QString &key) { return s->value(key); }
   /*! Returns the path to the settings. */
   QString settingsPath() { return QFileInfo(s->fileName()).absolutePath(); }
 
- signals:
+signals:
   QString jsonError(QString errorText);
   QString settingsWarning(QString warningText);
 
- private:
+private:
   // Objects:
   bool access = true;
   bool correct = true;
-  const QString cfn = "containers.json";
-  QSettings* s = new QSettings(QSettings::IniFormat, QSettings::UserScope,
+  const QString cfn = "sources.json";
+  QSettings *s = new QSettings(QSettings::IniFormat, QSettings::UserScope,
                                companyName, applicationName, this);
-  QList<container> cProps;
+  QList<Source> cProps;
 
   // Functions:
-  QJsonArray readJson(QFile* f);
-  void writeJson(QFile* sf, QJsonArray arr);
-  QJsonObject toJSON(const container& cProp);
-  QJsonObject toJSON(const message& shadow);
-  container toContainer(const QJsonObject& obj);
-  message toMessage(const QJsonObject& obj);
+  QJsonArray readJson(QFile *f);
+  void writeJson(QFile *sf, QJsonArray arr);
+  QJsonObject toJSON(const Source &cProp);
+  QJsonObject toJSON(const message &shadow);
+  Source toSource(const QJsonObject &obj);
+  message toMessage(const QJsonObject &obj);
 };
 
-#endif  // CORE_METHODS_H
+#endif // BASIS_H

@@ -2,18 +2,18 @@
 
 /*
  * All short named objects and their explanations:
- * {Meths} <- core methods
+ * {basis} <- core methods
  * {lt} <- layout
  * {snclBtn} <- save and close
  */
 
 /*!
- * Arguments: CoreMethods {_Meths} [reference to CoreMethods instance],
+ * Arguments: Basis {_basis} [reference to Basis instance],
  *            QWidget {*parent}.
  * Constructs and prepares Settings.
  */
-Settings::Settings(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
-  Meths = _Meths;
+Settings::Settings(Basis *_basis, QWidget *parent) : QWidget(parent) {
+  basis = _basis;
   setAttribute(Qt::WA_DeleteOnClose);
   setObjectName(objn);
   auto *lt = new QVBoxLayout();
@@ -81,31 +81,33 @@ void Settings::connector() {
 
 /*! Loads settings from file. */
 void Settings::loadStates() {
-  monologue->setChecked(Meths->read(Meths->isMonologueModeEnabledSt).toBool());
-  delay->setChecked(Meths->read(Meths->isDelayEnabledSt).toBool());
+  monologue->setChecked(basis->read(basis->isMonologueModeEnabledSt).toBool());
+  delay->setChecked(basis->read(basis->isDelayEnabledSt).toBool());
   delayChecked();
-  keepHistory->setChecked(Meths->read(Meths->isKeepingEnabledSt).toBool());
-  minDelay->setValue(Meths->read(Meths->minDelaySt).toInt());
+  keepHistory->setChecked(basis->read(basis->isKeepingEnabledSt).toBool());
+  minDelay->setValue(basis->read(basis->minDelaySt).toInt());
   minDelayValueChanged(minDelay->value());
-  maxDelay->setValue(Meths->read(Meths->maxDelaySt).toInt());
+  maxDelay->setValue(basis->read(basis->maxDelaySt).toInt());
   maxDelayValueChanged(maxDelay->value());
 }
 
 /*! Saves ASW settings. */
 void Settings::saveAndClose() {
-  Meths->write(Meths->isMonologueModeEnabledSt, monologue->isChecked());
-  Meths->write(Meths->isDelayEnabledSt, delay->isChecked());
-  Meths->write(Meths->isKeepingEnabledSt, keepHistory->isChecked());
-  Meths->write(Meths->minDelaySt, minDelay->value());
-  Meths->write(Meths->maxDelaySt, maxDelay->value());
+  basis->write(basis->isMonologueModeEnabledSt, monologue->isChecked());
+  basis->write(basis->isDelayEnabledSt, delay->isChecked());
+  basis->write(basis->isKeepingEnabledSt, keepHistory->isChecked());
+  basis->write(basis->minDelaySt, minDelay->value());
+  basis->write(basis->maxDelaySt, maxDelay->value());
   close();
 }
 
+/*! Changes maxDelay value, if minDelay value is bigger than that. */
 void Settings::minDelayValueChanged(int value) {
   if (minDelay->value() > maxDelay->value())
     maxDelay->setValue(value);
 }
 
+/*! Changes minDelay value, if maxDelay value is smaller than that. */
 void Settings::maxDelayValueChanged(int value) {
   if (maxDelay->value() < minDelay->value())
     minDelay->setValue(value);

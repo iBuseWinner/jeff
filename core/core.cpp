@@ -2,6 +2,7 @@
 
 /*
  * All short named objects and their explanations:
+ * {basis} <- core methods
  * {msg} <- message
  * {nlp} <- NLPmodule
  * {stdTs} <- standard templates
@@ -16,15 +17,15 @@
  * Argument: QObject {*parent}.
  * Creates connections between modules and output collectors.
  */
-core::core(QObject *parent) : QObject(parent) {
-  connect(Meths, &CoreMethods::jsonError, this, &core::getError);
-  connect(Meths, &CoreMethods::settingsWarning, this, &core::getWarning);
-  connect(HistoryProcessor, &historyProcessor::sendMessageHistory, this,
-          &core::showHistory);
-  connect(Meths->SQL, &sqlite::sqliteError, this, &core::getError);
-  connect(Meths->SQL, &sqlite::sqliteWarning, this, &core::getWarning);
-  connect(stdTs, &standardTemplates::showASWDialog, this, &core::getWidget);
-  connect(nlp, &NLPmodule::ready, this, &core::getNLP);
+Core::Core(QObject *parent) : QObject(parent) {
+  connect(basis, &Basis::jsonError, this, &Core::getError);
+  connect(basis, &Basis::settingsWarning, this, &Core::getWarning);
+  connect(historyProcessor, &HProcessor::sendMessageHistory, this,
+          &Core::showHistory);
+  connect(basis->sql, &SQLite::sqliteError, this, &Core::getError);
+  connect(basis->sql, &SQLite::sqliteWarning, this, &Core::getWarning);
+  connect(standardTemplates, &StdTemplates::showASWDialog, this, &Core::getWidget);
+  connect(nlp, &NLPmodule::ready, this, &Core::getNLP);
 }
 
 /*!
@@ -32,15 +33,15 @@ core::core(QObject *parent) : QObject(parent) {
  * Handles input {userExpression}, displays a message on the screen and launches
  * modules.
  */
-void core::getUser(QString userExpression) {
+void Core::getUser(QString userExpression) {
   // Does not respond to blank input.
-  if (userExpression == "") return;
+  if (userExpression.isEmpty()) return;
   // Displays the entered message on the screen.
   message sh = shadow(userExpression, eA::User, eC::Markdown, eT::Std);
-  HistoryProcessor->append(sh);
+  historyProcessor->append(sh);
   emit show(new AMessage(sh));
   // If a user has entered the command, there is no need to run other modules.
-  if (stdTs->dialogues(userExpression)) return;
+  if (standardTemplates->dialogues(userExpression)) return;
   nlp->search(userExpression);
 }
 
@@ -50,14 +51,14 @@ void core::getUser(QString userExpression) {
  * Processes the output of the NLP module {resultExpression} and displays a
  * message on the screen.
  */
-void core::getNLP(QString resultExpression) {
-  if (resultExpression == "") return;
+void Core::getNLP(QString resultExpression) {
+  if (resultExpression.isEmpty()) return;
   message sh = shadow(resultExpression, eA::ASW, eC::Markdown, eT::Std);
-  HistoryProcessor->append(sh);
+  historyProcessor->append(sh);
   QTimer::singleShot(
-      Meths->read(Meths->isDelayEnabledSt).toBool()
-          ? QRandomGenerator().bounded(Meths->read(Meths->minDelaySt).toInt(),
-                                       Meths->read(Meths->maxDelaySt).toInt())
+      basis->read(basis->isDelayEnabledSt).toBool()
+          ? QRandomGenerator().bounded(basis->read(basis->minDelaySt).toInt(),
+                                       basis->read(basis->maxDelaySt).toInt())
           : 0,
       this, [this, sh, resultExpression] {
         emit show(new AMessage(sh));
@@ -69,10 +70,10 @@ void core::getNLP(QString resultExpression) {
  * Argument: QString {warningText} [contains the warning text of some module].
  * Displays {warningText}.
  */
-void core::getWarning(QString warningText) {
+void Core::getWarning(QString warningText) {
   // The warning color is yellow.
   message sh = shadow(warningText, eA::ASW, eC::Warning, eT::Yellow);
-  HistoryProcessor->append(sh);
+  historyProcessor->append(sh);
   emit show(new AMessage(sh));
 }
 
@@ -80,10 +81,10 @@ void core::getWarning(QString warningText) {
  * Argument: QString {errorText} [contains the error text of some module].
  * Displays {errorText}.
  */
-void core::getError(QString errorText) {
+void Core::getError(QString errorText) {
   // The error color is red.
   message sh = shadow(errorText, eA::ASW, eC::Error, eT::Red);
-  HistoryProcessor->append(sh);
+  historyProcessor->append(sh);
   emit show(new AMessage(sh));
 }
 
@@ -91,9 +92,9 @@ void core::getError(QString errorText) {
  * Argument: QWidget {*widget} [widget that should be displayed].
  * Creates AMessage {*msg}, inserts a widget into it and displays a message.
  */
-void core::getWidget(QWidget *widget) {
+void Core::getWidget(QWidget *widget) {
   message sh = shadow(widget->objectName(), eA::ASW, eC::Widget, eT::Std);
-  HistoryProcessor->append(sh);
+  historyProcessor->append(sh);
   auto *msg = new AMessage(sh);
   widget->setParent(msg);
   widget->setFixedWidth(400);
@@ -105,7 +106,7 @@ void core::getWidget(QWidget *widget) {
  * Argument: QList of messages {messageHistory}.
  * Displays all messages from {messageHistory} on the screen.
  */
-void core::showHistory(QList<message> messageHistory) {
+void Core::showHistory(QList<message> messageHistory) {
   for (auto shadow : messageHistory) emit show(new AMessage(shadow));
 }
 
@@ -116,7 +117,7 @@ void core::showHistory(QList<message> messageHistory) {
  *            enum eT {_t} [appearance of the message].
  * Creates a shadow of a future AMessage.
  */
-message core::shadow(QString _cn, eA _a, eC _ct, eT _t) {
+message Core::shadow(QString _cn, eA _a, eC _ct, eT _t) {
   message _sh;
   _sh.content = _cn;
   _sh.datetime = QDateTime::currentDateTime();

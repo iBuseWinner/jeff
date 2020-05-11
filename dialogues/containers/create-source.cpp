@@ -1,4 +1,4 @@
-#include "createcontainer.h"
+#include "create-source.h"
 
 /*
  * All short named objects and their explanations:
@@ -8,10 +8,11 @@
 
 /*!
  * Argument: QWidget {*parent}.
- * Constructs and prepares Create Container.
+ * Constructs and prepares Create Source dialogue.
  */
-CreateContainer::CreateContainer(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
-  Meths = _Meths;
+CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
+    : QWidget(parent) {
+  basis = _basis;
   auto *lt = new QGridLayout();
   titleInput = new ALineEdit(this);
   selectFileBtn = new AButton("", this);
@@ -32,20 +33,20 @@ CreateContainer::CreateContainer(CoreMethods *_Meths, QWidget *parent) : QWidget
 }
 
 /*! Establishes communications for user interaction through the widget. */
-void CreateContainer::connector() {
-  connect(selectFileBtn, &AButton::clicked, this, &CreateContainer::select);
-  connect(saveBtn, &AButton::clicked, this, &CreateContainer::save);
+void CreateSourceDialog::connector() {
+  connect(selectFileBtn, &AButton::clicked, this, &CreateSourceDialog::select);
+  connect(saveBtn, &AButton::clicked, this, &CreateSourceDialog::save);
   connect(cancelBtn, &AButton::clicked, this, &QWidget::close);
 }
 
 /*! Turns the faceless button into a button for selecting a database. */
-void CreateContainer::selStart() {
+void CreateSourceDialog::selStart() {
   selectFileBtn->setText(tr("Select database file..."));
   selectFileBtn->setIcon(QIcon(":/arts/icons/16/document-open.svg"));
 }
 
 /*! Opens the database selection window and customizes the button. */
-void CreateContainer::select() {
+void CreateSourceDialog::select() {
   m_dbpath = QFileDialog::getSaveFileName(
       nullptr, tr("Select database..."), "", tr("ASW database") + "(*.asw.db)",
       nullptr, QFileDialog::DontConfirmOverwrite);
@@ -57,13 +58,14 @@ void CreateContainer::select() {
 }
 
 /*! Finishes configuring the future container. */
-void CreateContainer::save() {
-  if ((m_dbpath.isEmpty()) || (titleInput->text().isEmpty())) close();
-  container cProp;
+void CreateSourceDialog::save() {
+  if ((m_dbpath.isEmpty()) || (titleInput->text().isEmpty()))
+    close();
+  Source cProp;
   cProp.path = m_dbpath;
   cProp.tableTitle = titleInput->text();
-  Meths->SQL->create(cProp);
-  cProp.tableName = Meths->SQL->getUuid();
+  basis->sql->create(cProp);
+  cProp.tableName = basis->sql->getUuid();
   emit add(cProp);
   close();
 }

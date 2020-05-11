@@ -20,10 +20,11 @@
  * Argument: container {_container} [container properties].
  * Creates container.
  */
-void sqlite::create(const container &_container) {
+void SQLite::create(const Source &_source) {
   // The container is created even if the database itself does not exist.
-  QSqlDatabase db = prepare(_container.path, check::OnlyOpen);
-  if (db.databaseName() == QString()) return;
+  QSqlDatabase db = prepare(_source.path, check::OnlyOpen);
+  if (db.databaseName() == QString())
+    return;
   // Generates a table name. User-entered name may be incorrect for SQLite
   // database.
   QString c;
@@ -51,10 +52,11 @@ void sqlite::create(const container &_container) {
   exec(q, todo::CreateMainTable);
   QStringList vs;
   vs.append(uuid);
-  vs.append(_container.tableTitle);
-  vs.append(QString(_container.isReadOnly));
-  vs.append(QString(_container.isPrivate));
-  vs.append(QString(_container.isCatching));
+  vs.append(_source.tableTitle);
+  vs.append(QString(_source.isReadOnly));
+  vs.append(QString(_source.isPrivate));
+  vs.append(QString(_source.isCatching));
+  vs.append(QString(_source.isPrioritised));
   exec(q, todo::WriteOptions, vs);
   exec(q, todo::CreateContainerTable, QStringList(uuid));
   db.close();
@@ -66,21 +68,23 @@ void sqlite::create(const container &_container) {
  * Searches for database containers of activators and reagents.
  * Returns: QList of containers {cProps}.
  */
-QList<container> sqlite::containers(const QString &path) {
+QList<Source> SQLite::sources(const QString &path) {
   QSqlDatabase db = prepare(path, check::AnyContent);
-  if (db.databaseName() == QString()) return QList<container>();
+  if (db.databaseName() == QString())
+    return QList<Source>();
   auto *q = new QSqlQuery(db);
   exec(q, todo::SelectContainers);
   q->first();
-  QList<container> cProps;
+  QList<Source> cProps;
   while (q->isValid()) {
-    container cProp;
+    Source cProp;
     cProp.path = path;
     cProp.tableName = q->value(0).toString();
     cProp.tableTitle = q->value(1).toString();
     cProp.isReadOnly = q->value(2).toInt();
     cProp.isPrivate = q->value(3).toInt();
     cProp.isCatching = q->value(4).toInt();
+    cProp.isPrioritised = q->value(5).toInt();
     cProps.append(cProp);
     q->next();
   }
@@ -90,41 +94,46 @@ QList<container> sqlite::containers(const QString &path) {
 }
 
 /*!
- * Argument: container {_container} [container properties].
- * Loads container properties from the database.
- * Returns: container properties {_container}.
+ * Argument: Source {_source} [source properties].
+ * Loads source properties from the database.
+ * Returns: source properties {_source}.
  */
-container sqlite::load(container _container) {
-  QSqlDatabase db = prepare(_container.path);
-  if (db.databaseName() == QString()) return _container;
+Source SQLite::load(Source _source) {
+  QSqlDatabase db = prepare(_source.path);
+  if (db.databaseName() == QString())
+    return _source;
   auto *q = new QSqlQuery(db);
-  exec(q, todo::LoadOptions, QStringList(_container.tableName));
+  exec(q, todo::LoadOptions, QStringList(_source.tableName));
   db.close();
-  if (!q->first()) return _container;
-  _container.tableTitle = q->value(0).toString();
-  _container.isReadOnly = q->value(1).toBool();
-  _container.isPrivate = q->value(2).toBool();
-  _container.isCatching = q->value(3).toBool();
+  if (!q->first())
+    return _source;
+  _source.tableTitle = q->value(0).toString();
+  _source.isReadOnly = q->value(1).toBool();
+  _source.isPrivate = q->value(2).toBool();
+  _source.isCatching = q->value(3).toBool();
+  _source.isPrioritised = q->value(4).toBool();
   delete q;
-  return _container;
+  return _source;
 }
 
 /*!
  * Argument: container {_container} [container properties].
  * Writes container properties into the database.
  */
-void sqlite::write(const container &_container) {
-  QSqlDatabase db = prepare(_container.path, check::AnyContent);
-  if (db.databaseName() == QString()) return;
+void SQLite::write(const Source &_source) {
+  QSqlDatabase db = prepare(_source.path, check::AnyContent);
+  if (db.databaseName() == QString())
+    return;
   auto *q = new QSqlQuery(db);
   exec(q, todo::CreateMainTable);
-  exec(q, todo::WithDraw, QStringList(_container.tableName));
+  exec(q, todo::WithDraw, QStringList(_source.tableName));
   QStringList vs;
-  vs.append(_container.tableName);
-  vs.append(_container.tableTitle);
-  vs.append(QString(_container.isReadOnly));
-  vs.append(QString(_container.isPrivate));
-  vs.append(QString(_container.isCatching));
+  vs.append(_source.tableName);
+  vs.append(_source.tableTitle);
+  vs.append(QString(_source.isReadOnly));
+  vs.append(QString(_source.isPrivate));
+  vs.append(QString(_source.isCatching));
+  vs.append(QString(_source.isPrioritised));
   exec(q, todo::WriteOptions, vs);
   db.close();
   delete q;
@@ -137,13 +146,14 @@ void sqlite::write(const container &_container) {
  *            QString {links} [links to other expressions].
  * Inserts a new expression into the container.
  */
-void sqlite::insert(const container &_container, int address,
+void SQLite::insert(const Source &_source, int address,
                     const QString &expression, const QString &links) {
-  QSqlDatabase db = prepare(_container.path);
-  if (db.databaseName() == QString()) return;
+  QSqlDatabase db = prepare(_source.path);
+  if (db.databaseName() == QString())
+    return;
   auto *q = new QSqlQuery(db);
   QStringList vs;
-  vs.append(_container.tableName);
+  vs.append(_source.tableName);
   vs.append(QString::number(address));
   vs.append(expression);
   vs.append(links);
@@ -158,13 +168,14 @@ void sqlite::insert(const container &_container, int address,
  * Finds an expression and links by address.
  * Returns: QPair expression-links.
  */
-QPair<QString, QString> sqlite::getExpression(const container &_container,
+QPair<QString, QString> SQLite::getExpression(const Source &_source,
                                               int address) {
-  QSqlDatabase db = prepare(_container.path);
-  if (db.databaseName() == QString()) return QPair<QString, QString>();
+  QSqlDatabase db = prepare(_source.path);
+  if (db.databaseName() == QString())
+    return QPair<QString, QString>();
   auto *q = new QSqlQuery(db);
   QStringList vs;
-  vs.append(_container.tableName);
+  vs.append(_source.tableName);
   vs.append(QString::number(address));
   exec(q, todo::SelectExpressionAndLinksByAddress, vs);
   db.close();
@@ -184,12 +195,13 @@ QPair<QString, QString> sqlite::getExpression(const container &_container,
  * Finds all activators in the expression.
  * Returns: QMap of activators-links.
  */
-QMap<QString, QString> sqlite::scanContainer(const container &_container,
-                                             const QString &expression) {
-  QSqlDatabase db = prepare(_container.path);
-  if (db.databaseName() == QString()) return QMap<QString, QString>();
+QMap<QString, QString> SQLite::scanSource(const Source &_source,
+                                          const QString &expression) {
+  QSqlDatabase db = prepare(_source.path);
+  if (db.databaseName() == QString())
+    return QMap<QString, QString>();
   auto *q = new QSqlQuery(db);
-  exec(q, todo::SelectExpressionsAndLinks, QStringList(_container.tableName));
+  exec(q, todo::SelectExpressionsAndLinks, QStringList(_source.tableName));
   q->first();
   QMap<QString, QString> enls;
   while (q->isValid()) {
@@ -209,10 +221,11 @@ QMap<QString, QString> sqlite::scanContainer(const container &_container,
  * Indicates whether the container has additional properties.
  * Returns: true if has.
  */
-bool sqlite::hasAdditionalProperties(const container &_container) {
-  QSqlDatabase db = prepare(_container.path);
-  if (db.databaseName() == QString()) return false;
-  QSqlRecord r = db.record(_container.tableName);
+bool SQLite::hasAdditionalProperties(const Source &_source) {
+  QSqlDatabase db = prepare(_source.path);
+  if (db.databaseName() == QString())
+    return false;
+  QSqlRecord r = db.record(_source.tableName);
   db.close();
   return (!r.fieldName(3).isNull());
 }
@@ -223,10 +236,11 @@ bool sqlite::hasAdditionalProperties(const container &_container) {
  * Gets additional properties of the expression by {address}.
  * Returns: QMap of properties-values.
  */
-QMap<QString, QString> sqlite::scanAdditionalProperties(
-    const container &_container, int address) {
+QMap<QString, QString>
+SQLite::scanAdditionalProperties(const Source &_container, int address) {
   QSqlDatabase db = prepare(_container.path);
-  if (db.databaseName() == QString()) return QMap<QString, QString>();
+  if (db.databaseName() == QString())
+    return QMap<QString, QString>();
   auto *q = new QSqlQuery(db);
   QStringList vs;
   vs.append(_container.tableName);
@@ -250,7 +264,7 @@ QMap<QString, QString> sqlite::scanAdditionalProperties(
  * Prepares a database for work.
  * Returns: opened QSqlDatabase {db} with {path}.
  */
-QSqlDatabase sqlite::prepare(const QString &path, check o) {
+QSqlDatabase SQLite::prepare(const QString &path, check o) {
   if (o != check::OnlyOpen)
     if (!QFile::exists(path)) {
       emit sqliteError(tr("Database") + " \"" + path + "\" " +
@@ -280,65 +294,66 @@ QSqlDatabase sqlite::prepare(const QString &path, check o) {
  *            QStringList {vs} [values for query].
  * Performs a database query.
  */
-void sqlite::exec(QSqlQuery *q, todo o, QStringList vs) {
+void SQLite::exec(QSqlQuery *q, todo o, QStringList vs) {
   // {*q} is passed to the function to return the result of the query by
   // reference.
   switch (o) {
-    case todo::CreateMainTable:
-      q->prepare(
-          "CREATE TABLE IF NOT EXISTS containers (container TEXT NOT NULL "
-          "UNIQUE, title TEXT, readOnly INTEGER NOT NULL, private INTEGER NOT "
-          "NULL, catching INTEGER NOT NULL);");
-      break;
-    case todo::CreateContainerTable:
-      q->prepare(
-          QString(
-              "CREATE TABLE IF NOT EXISTS \"%1\" (address INTEGER NOT NULL "
-              "PRIMARY KEY AUTOINCREMENT UNIQUE, expression TEXT, links TEXT)")
-              .arg(vs.at(0)));
-      break;
-    case todo::WithDraw:
-      q->prepare("DELETE FROM containers WHERE container=:c");
-      q->bindValue(":c", vs.at(0));
-      break;
-    case todo::LoadOptions:
-      q->prepare(QString("SELECT title, readOnly, private, catching FROM "
-                         "containers WHERE "
-                         "container='%1'")
-                     .arg(vs.at(0)));
-      break;
-    case todo::WriteOptions:
-      q->prepare("INSERT INTO containers VALUES (:c, :t, :ro, :pv, :ch)");
-      q->bindValue(":c", vs.at(0));
-      q->bindValue(":t", vs.at(1));
-      q->bindValue(":ro", vs.at(2).toInt());
-      q->bindValue(":pv", vs.at(3).toInt());
-      q->bindValue(":ch", vs.at(4).toInt());
-      break;
-    case todo::SelectContainers:
-      q->prepare("SELECT * FROM containers");
-      break;
-    case todo::InsertExpression:
-      q->prepare(QString("INSERT OR REPLACE INTO \"%1\" VALUES (:a, :ex, :ls)")
-                     .arg(vs.at(0)));
-      q->bindValue(":a", vs.at(1).toInt());
-      q->bindValue(":ex", vs.at(2));
-      q->bindValue(":ls", vs.at(3));
-      break;
-    case todo::SelectExpressionsAndLinks:
-      q->prepare(QString("SELECT expression, links FROM \"%1\"").arg(vs.at(0)));
-      break;
-    case todo::SelectExpressionAndLinksByAddress:
-      q->prepare(
-          QString("SELECT expression, links FROM \"%1\" WHERE address = :a")
-              .arg(vs.at(0)));
-      q->bindValue(":a", vs.at(1).toInt());
-      break;
-    case todo::SelectAdditionalProperties:
-      q->prepare(
-          QString("SELECT * FROM \"%1\" WHERE address = :a").arg(vs.at(0)));
-      q->bindValue(":a", vs.at(1).toInt());
-      break;
+  case todo::CreateMainTable:
+    q->prepare(
+        "CREATE TABLE IF NOT EXISTS sources (source TEXT NOT NULL UNIQUE, "
+        "title TEXT, isReadOnly INTEGER NOT NULL, isPrivate INTEGER NOT NULL, "
+        "isCatching INTEGER NOT NULL, isPrioritised INTEGER NOT NULL);");
+    break;
+  case todo::CreateContainerTable:
+    q->prepare(
+        QString(
+            "CREATE TABLE IF NOT EXISTS \"%1\" (address INTEGER NOT NULL "
+            "PRIMARY KEY AUTOINCREMENT UNIQUE, expression TEXT, links TEXT)")
+            .arg(vs.at(0)));
+    break;
+  case todo::WithDraw:
+    q->prepare("DELETE FROM sources WHERE source=:c");
+    q->bindValue(":c", vs.at(0));
+    break;
+  case todo::LoadOptions:
+    q->prepare(QString("SELECT title, isReadOnly, isPrivate, isCatching, "
+                       "isPrioritised FROM sources WHERE source = '%1'")
+                   .arg(vs.at(0)));
+    break;
+  case todo::WriteOptions:
+    q->prepare("INSERT INTO sources VALUES (:c, :t, :ro, :pv, :ch, :pr)");
+    q->bindValue(":c", vs.at(0));
+    q->bindValue(":t", vs.at(1));
+    q->bindValue(":ro", vs.at(2).toInt());
+    q->bindValue(":pv", vs.at(3).toInt());
+    q->bindValue(":ch", vs.at(4).toInt());
+    q->bindValue(":pr", vs.at(5).toInt());
+    break;
+  case todo::SelectContainers:
+    q->prepare("SELECT * FROM sources");
+    break;
+  case todo::InsertExpression:
+    q->prepare(QString("INSERT OR REPLACE INTO \"%1\" VALUES (:a, :ex, :ls)")
+                   .arg(vs.at(0)));
+    q->bindValue(":a", vs.at(1).toInt());
+    q->bindValue(":ex", vs.at(2));
+    q->bindValue(":ls", vs.at(3));
+    break;
+  case todo::SelectExpressionsAndLinks:
+    q->prepare(QString("SELECT expression, links FROM \"%1\"").arg(vs.at(0)));
+    break;
+  case todo::SelectExpressionAndLinksByAddress:
+    q->prepare(
+        QString("SELECT expression, links FROM \"%1\" WHERE address = :a")
+            .arg(vs.at(0)));
+    q->bindValue(":a", vs.at(1).toInt());
+    break;
+  case todo::SelectAdditionalProperties:
+    q->prepare(
+        QString("SELECT * FROM \"%1\" WHERE address = :a").arg(vs.at(0)));
+    q->bindValue(":a", vs.at(1).toInt());
+    break;
   }
-  if (!q->exec()) emit sqliteError(q->lastError().text() + " " + QString(o));
+  if (!q->exec())
+    emit sqliteError(q->lastError().text() + " " + QString(int(o)));
 }

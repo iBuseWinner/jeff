@@ -13,25 +13,25 @@
  *            QObject {*parent}.
  * Sets references to private objects.
  */
-historyProcessor::historyProcessor(CoreMethods *_Meths, QObject *parent)
+HProcessor::HProcessor(Basis *_basis, QObject *parent)
     : QObject(parent) {
-  Meths = _Meths;
+  basis = _basis;
 }
 
 /*!
  * Argument: QString {filename} [filename to save].
  * Saves {mh} to file.
  */
-void historyProcessor::save(const QString &filename) {
-  Meths->writeMessageHistory(mh, new QFile(filename));
+void HProcessor::save(const QString &filename) {
+  basis->writeMessageHistory(mh, new QFile(filename));
 }
 
 /*!
  * Argument: QString {filename} [filename to load].
  * Loads {mh} from file.
  */
-void historyProcessor::load(const QString &filename) {
-  mh = Meths->readMessageHistory(new QFile(filename)) + mh;
+void HProcessor::load(const QString &filename) {
+  mh = basis->readMessageHistory(new QFile(filename)) + mh;
   emit sendMessageHistory(mh);
 }
 
@@ -39,7 +39,7 @@ void historyProcessor::load(const QString &filename) {
  * Argument: message {_message}.
  * Removes {_message} from {mh}.
  */
-void historyProcessor::removeOne(message _message) {
+void HProcessor::removeOne(message _message) {
   // Qt does not provide the ability to compare structures, therefore
   // historyProcessor independently compares elements and deletes an identical
   // one.

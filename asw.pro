@@ -3,21 +3,26 @@ QT       += core gui widgets sql
 TARGET = asw
 TEMPLATE = app
 
+INCLUDEPATH += /usr/include/python3.8
+
+LIBS += -lpython3.8
+
 DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
 SOURCES += \
-    core/core-methods.cpp \
+    core/basis.cpp \
     core/core.cpp \
     core/history-processor.cpp \
+    core/python-handler.cpp \
     core/standard-templates.cpp \
-    dialogues/containers/createcontainer.cpp \
+    dialogues/containers/create-source.cpp \
     dialogues/settings.cpp \
+    dialogues/sources.cpp \
     main.cpp \
     asw.cpp \
     core/sqlite.cpp \
-    dialogues/containers.cpp \
     dialogues/help.cpp \
     dialogues/firststart.cpp \
     dialogues/about.cpp \
@@ -34,19 +39,20 @@ SOURCES += \
 
 HEADERS += \
     asw.h \
-    core/container.h \
-    core/core-methods.h \
+    core/basis.h \
     core/core.h \
     core/history-processor.h \
     core/message.h \
+    core/python-handler.h \
+    core/source.h \
     core/sqlite.h \
     core/standard-templates.h \
-    dialogues/containers.h \
-    dialogues/containers/createcontainer.h \
+    dialogues/containers/create-source.h \
     dialogues/help.h \
     dialogues/firststart.h \
     dialogues/about.h \
     dialogues/settings.h \
+    dialogues/sources.h \
     widgets/a_button.h \
     widgets/a_message.h \
     widgets/a_board.h \
@@ -57,10 +63,6 @@ HEADERS += \
     widgets/a_menubar.h \
     core/nlp-module.h \
     widgets/settings/a_explanationlabel.h
-
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
     resources.qrc

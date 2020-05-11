@@ -29,7 +29,7 @@
  */
 ASW::ASW() : QMainWindow() {
   setWindowIcon(QIcon(":/arts/icons/500/icon.png"));
-  setWindowTitle(cr->Meths->applicationName);
+  setWindowTitle(cr->basis->applicationName);
   setMinimumSize(mw, mh);
   layout()->setMargin(0);
   auto *cw = new QWidget();
@@ -81,25 +81,25 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 /*! Reads the settings from the file and applies. */
 void ASW::applyingSettings() {
   // If settings file does not exist, sets default settings.
-  if ((!cr->Meths->exists()) || (cr->Meths->isIncorrect())) {
+  if ((!cr->basis->exists()) || (cr->basis->isIncorrect())) {
     resize(stdw, stdh);
     emit send("/first");
     return;
   }
-  resize(cr->Meths->read(cr->Meths->sizeSt).toSize());
+  resize(cr->basis->read(cr->basis->sizeSt).toSize());
   mb->fullScreenAction->setChecked(
-      cr->Meths->read(cr->Meths->isFullScreenSt).toBool());
+      cr->basis->read(cr->basis->isFullScreenSt).toBool());
   emit mb->fullScreenAction->triggered();
-  mb->setVisible(!cr->Meths->read(cr->Meths->isMenuBarHiddenSt).toBool());
+  mb->setVisible(!cr->basis->read(cr->basis->isMenuBarHiddenSt).toBool());
 }
 
 /*! Writes changes to window settings to a file. */
 void ASW::saveWindowSettings() {
-  if (cr->Meths->isUnaccessed()) return;
-  cr->Meths->write(cr->Meths->sizeSt, size());
-  cr->Meths->write(cr->Meths->isMenuBarHiddenSt, mb->isHidden());
-  cr->Meths->write(cr->Meths->isFullScreenSt, isFullScreen());
-  cr->Meths->write(cr->Meths->isNotFirstStartSt, true);
+  if (cr->basis->isUnaccessed()) return;
+  cr->basis->write(cr->basis->sizeSt, size());
+  cr->basis->write(cr->basis->isMenuBarHiddenSt, mb->isHidden());
+  cr->basis->write(cr->basis->isFullScreenSt, isFullScreen());
+  cr->basis->write(cr->basis->isNotFirstStartSt, true);
 }
 
 /*! Establishes communications for user interaction through the window. */
@@ -123,8 +123,8 @@ void ASW::connector() {
   // others
   connect(ln->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
   connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
-  connect(this, &ASW::send, cr, &core::getUser);
-  connect(cr, &core::show, this, &ASW::addMessage);
+  connect(this, &ASW::send, cr, &Core::getUser);
+  connect(cr, &Core::show, this, &ASW::addMessage);
 }
 
 /*! Shows a window in full screen or in normal mode. */
@@ -147,7 +147,7 @@ void ASW::exportMessageHistory() {
   QString fn = QFileDialog::getSaveFileName(
       nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
   if (fn.isEmpty()) return;
-  cr->HistoryProcessor->save(fn);
+  cr->historyProcessor->save(fn);
 }
 
 /*! Calls the dialog, asks for the filename {fn} and loads the message history
@@ -162,13 +162,13 @@ void ASW::importMessageHistory() {
         nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
     if (fn.isEmpty()) return;
     d->start();
-    cr->HistoryProcessor->load(fn);
+    cr->historyProcessor->load(fn);
   }
 }
 
 /*! Clears message history and display. */
 void ASW::clear() {
-  cr->HistoryProcessor->clear();
+  cr->historyProcessor->clear();
   d->start();
 }
 

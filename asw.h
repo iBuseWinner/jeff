@@ -1,6 +1,12 @@
 #ifndef ASW_H
 #define ASW_H
 
+#include "core/core.h"
+#include "widgets/a_board.h"
+#include "widgets/a_button.h"
+#include "widgets/a_display.h"
+#include "widgets/a_line.h"
+#include "widgets/a_menubar.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -10,12 +16,6 @@
 #include <QPair>
 #include <QResizeEvent>
 #include <QWidget>
-#include "core/core.h"
-#include "widgets/a_board.h"
-#include "widgets/a_button.h"
-#include "widgets/a_display.h"
-#include "widgets/a_line.h"
-#include "widgets/a_menubar.h"
 
 /*!
  * Class: ASW.
@@ -23,7 +23,7 @@
  */
 class ASW : public QMainWindow {
   Q_OBJECT
- public:
+public:
   // Functions:
   explicit ASW();
   void greeting();
@@ -31,22 +31,22 @@ class ASW : public QMainWindow {
   /*! Saves window settings. */
   ~ASW() override { saveWindowSettings(); }
 
- signals:
+signals:
   void readyState();
   QString send(QString t);
 
- protected:
+protected:
   void keyPressEvent(QKeyEvent *event) override;
 
- private:
+private:
   Q_DISABLE_COPY(ASW)
 
   // Objects:
-  core *cr = new core(this);
+  Core *cr = new Core(this);
   ALine *ln = new ALine(this);
   ADisplay *d = new ADisplay(this);
   AMenuBar *mb = new AMenuBar(
-      ln, cr->Meths->read(cr->Meths->isMonologueModeEnabledSt).toBool(), this);
+      ln, cr->basis->read(cr->basis->isMonologueModeEnabledSt).toBool(), this);
   const int mw = 600;
   const int mh = 370;
   const int stdw = 800;
@@ -68,4 +68,4 @@ class ASW : public QMainWindow {
   // void help() { emit send("/help"); }
 };
 
-#endif  // ASW_H
+#endif // ASW_H

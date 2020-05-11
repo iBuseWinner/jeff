@@ -1,37 +1,36 @@
 #ifndef STANDARDTEMPLATES_H
 #define STANDARDTEMPLATES_H
 
-#include <QString>
-#include "core/core-methods.h"
+#include "core/basis.h"
 #include "dialogues/about.h"
-#include "dialogues/containers.h"
+#include "dialogues/sources.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"
 #include "dialogues/settings.h"
+#include <QString>
 
 /*!
- * Class: standardTemplates
+ * Class: StdTemplates
  * Provides some kinds of widgets by command.
- * {Meths} <- core methods
+ * {basis} <- core methods
  */
-class standardTemplates : public QObject {
+class StdTemplates : public QObject {
   Q_OBJECT
- public:
+public:
   // Functions:
   bool dialogues(const QString &expression);
 
   /*! Class initialization. */
-  standardTemplates(CoreMethods *_Meths, QObject *parent = nullptr)
-      : QObject(parent) {
-    Meths = _Meths;
+  StdTemplates(Basis *_basis, QObject *parent = nullptr) : QObject(parent) {
+    basis = _basis;
   }
 
- signals:
+signals:
   QWidget *showASWDialog(QWidget *widget);
 
- private:
+private:
   // Objects:
-  CoreMethods *Meths = nullptr;
+  Basis *basis = nullptr;
 };
 
-#endif  // STANDARDTEMPLATES_H
+#endif // STANDARDTEMPLATES_H

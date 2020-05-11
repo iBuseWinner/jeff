@@ -6,20 +6,21 @@
 #include "core/history-processor.h"
 #include "core/nlp-module.h"
 #include "core/standard-templates.h"
+#include "core/basis.h"
 
 /*!
- * Class: core.
+ * Class: Core.
  * Controls I/O.
  */
-class core : public QObject {
+class Core : public QObject {
   Q_OBJECT
  public:
   // Objects:
-  CoreMethods *Meths = new CoreMethods(this);
-  historyProcessor *HistoryProcessor = new historyProcessor(Meths, this);
+  Basis *basis = new Basis(this);
+  HProcessor *historyProcessor = new HProcessor(basis, this);
 
   // Functions:
-  core(QObject *parent = nullptr);
+  Core(QObject *parent = nullptr);
   void getUser(QString userExpression);
   void getNLP(QString resultExpression);
   void getWarning(QString warningText);
@@ -38,11 +39,11 @@ class core : public QObject {
   AMessage *show(AMessage *message);
 
  private:
-  Q_DISABLE_COPY(core)
+  Q_DISABLE_COPY(Core)
 
   // Objects:
-  NLPmodule *nlp = new NLPmodule(Meths, this);
-  standardTemplates *stdTs = new standardTemplates(Meths, this);
+  NLPmodule *nlp = new NLPmodule(basis, this);
+  StdTemplates *standardTemplates = new StdTemplates(basis, this);
   bool monologueEnabled = false;
 
   // Functions:

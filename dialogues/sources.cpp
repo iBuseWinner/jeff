@@ -1,8 +1,8 @@
-#include "containers.h"
+#include "sources.h"
 
 /*
  * All short named objects and their explanations:
- * {Meths} <- core methods
+ * {basis} <- core methods
  * {objn} <- object name
  * {lt} <- layout
  * {addBtn} <- add container
@@ -19,20 +19,20 @@
  */
 
 /*!
- * Arguments: CoreMethods {_Meths} [reference to CoreMethods instance],
+ * Arguments: Basis {_basis} [reference to Basis instance],
  *            QWidget {*parent}.
- * Constructs and prepares Container Manager.
+ * Constructs and prepares Source Manager.
  *
  * Layout scheme:
  * <----------------------->
- * [    Containers list    ]
+ * [     Sources  list     ]
  * [Add button][S&C  button]
  * {|> Create }
  * {|> Remove }
  * <----------------------->
  */
-Containers::Containers(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
-  Meths = _Meths;
+SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent) : QWidget(parent) {
+  basis = _basis;
   setAttribute(Qt::WA_DeleteOnClose);
   setObjectName(objn);
   lt = new QGridLayout();
@@ -59,51 +59,51 @@ Containers::Containers(CoreMethods *_Meths, QWidget *parent) : QWidget(parent) {
 }
 
 /*! Loads saved containers. */
-void Containers::load() {
+void SourcesDialog::load() {
   csm.clear();
   cl->clear();
-  append(Meths->readContainerList());
+  append(basis->readSourceList());
 }
 
 /*! Adds a container to the widget, loads its data. */
-void Containers::add() {
+void SourcesDialog::add() {
   QString p = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
       QTranslator::tr("ASW database") + "(*.asw.db)");
   if (p.isEmpty()) return;
   edited = true;
-  append(Meths->SQL->containers(p));
+  append(basis->sql->sources(p));
 }
 
 /*! Removes selected containers. */
-void Containers::remove() {
-  if (cl->selectedItems().length() < 1) return;
+void SourcesDialog::remove() {
+  if (!cl->selectedItems().length()) return;
   edited = true;
   for (int i = 0; i < cl->selectedItems().length(); i++) {
     QTreeWidgetItem *parent;
-    if (cl->selectedItems().at(i)->parent() == nullptr)
+    if (!cl->selectedItems().at(i)->parent())
       parent = cl->invisibleRootItem();
     else
       parent = cl->selectedItems().at(i)->parent();
     parent->removeChild(cl->selectedItems().at(i));
-    if ((parent->childCount() == 0) && (parent != cl->invisibleRootItem()))
+    if (!parent->childCount() && (parent != cl->invisibleRootItem()))
       cl->invisibleRootItem()->removeChild(parent);
   }
 }
 
 /*! Establishes communications for user interaction through the dialog box. */
-void Containers::connector() {
-  connect(addBtn, &AButton::clicked, this, &Containers::add);
-  connect(crtAct, &QAction::triggered, this, &Containers::openCC);
-  connect(remAct, &QAction::triggered, this, &Containers::remove);
-  connect(snclBtn, &AButton::clicked, this, &Containers::sncl);
+void SourcesDialog::connector() {
+  connect(addBtn, &AButton::clicked, this, &SourcesDialog::add);
+  connect(crtAct, &QAction::triggered, this, &SourcesDialog::openCC);
+  connect(remAct, &QAction::triggered, this, &SourcesDialog::remove);
+  connect(snclBtn, &AButton::clicked, this, &SourcesDialog::sncl);
 }
 
 /*!
  * Argument: QList of containers {cProps}.
  * Adds containers to the selection.
  */
-void Containers::append(const QList<container> &cProps) {
+void SourcesDialog::append(const QList<Source> &cProps) {
   for (const auto &cProp : cProps) {
     QTreeWidgetItem *parent = nullptr;
     bool isInside = false;
@@ -132,41 +132,41 @@ void Containers::append(const QList<container> &cProps) {
  * Argument: single container {cProp}.
  * Adds container to the selection.
  */
-void Containers::appendSingle(const container &cProp) {
-  QList<container> cProps;
+void SourcesDialog::appendSingle(const Source &cProp) {
+  QList<Source> cProps;
   cProps.append(cProp);
   append(cProps);
   edited = true;
 }
 
 /*! Saves the selection and closes the dialog. */
-void Containers::sncl() {
+void SourcesDialog::sncl() {
   if (edited) {
-    QList<container> cProps;
+    QList<Source> cProps;
     for (int tli2 = 0; tli2 < cl->topLevelItemCount(); tli2++)
       for (int childIndex = 0;
            childIndex < cl->invisibleRootItem()->child(tli2)->childCount();
            childIndex++)
         cProps.append(
             csm.value(cl->invisibleRootItem()->child(tli2)->child(childIndex)));
-    Meths->writeContainerList(cProps);
+    basis->writeSourceList(cProps);
   }
   close();
 }
 
 /*! Opens the container creation dialog. */
-void Containers::openCC() {
-  disconnect(crtAct, &QAction::triggered, this, &Containers::openCC);
-  _cc = new CreateContainer(Meths, this);
+void SourcesDialog::openCC() {
+  disconnect(crtAct, &QAction::triggered, this, &SourcesDialog::openCC);
+  _cc = new CreateSourceDialog(basis, this);
   lt->addWidget(_cc, 2, 0, 1, 0);
-  connect(_cc, &CreateContainer::add, this, &Containers::appendSingle);
-  connect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
+  connect(_cc, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
+  connect(_cc, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCC);
 }
 
 /*! Closes the container creation dialog. */
-void Containers::closeCC() {
-  disconnect(_cc, &CreateContainer::add, this, &Containers::appendSingle);
-  disconnect(_cc, &CreateContainer::cancelled, this, &Containers::closeCC);
+void SourcesDialog::closeCC() {
+  disconnect(_cc, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
+  disconnect(_cc, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCC);
   lt->removeWidget(_cc);
-  connect(crtAct, &QAction::triggered, this, &Containers::openCC);
+  connect(crtAct, &QAction::triggered, this, &SourcesDialog::openCC);
 }
