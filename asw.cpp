@@ -146,7 +146,7 @@ void ASW::userInputHandler() {
 void ASW::exportMessageHistory() {
   QString fn = QFileDialog::getSaveFileName(
       nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
-  if (fn == "") return;
+  if (fn.isEmpty()) return;
   cr->HistoryProcessor->save(fn);
 }
 
@@ -160,7 +160,7 @@ void ASW::importMessageHistory() {
           QMessageBox::Ok) == QMessageBox::Ok) {
     QString fn = QFileDialog::getOpenFileName(
         nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
-    if (fn == "") return;
+    if (fn.isEmpty()) return;
     d->start();
     cr->HistoryProcessor->load(fn);
   }

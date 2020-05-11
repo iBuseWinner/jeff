@@ -41,7 +41,7 @@ About::About(QWidget *parent) : QWidget(parent) {
   auto *ts = new QTabWidget(this);
   auto *tab1 = new QLabel(this);
   tab1->setText(QTranslator::tr("ASW - Associative System Window") +
-                "<br><br>© 2018-2019 " + QTranslator::tr("The ASW Authors") +
+                "<br><br>© 2018-2020 " + QTranslator::tr("The ASW Authors") +
                 "<br><br><a href=\"https://github.com/kollieartwolf/asw\">" +
                 QTranslator::tr("ASW on GitHub") + "</a>");
   tab1->setOpenExternalLinks(true);
