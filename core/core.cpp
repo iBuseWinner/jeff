@@ -20,6 +20,7 @@
 Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::jsonError, this, &Core::getError);
   connect(basis, &Basis::settingsWarning, this, &Core::getWarning);
+  basis->check();
   connect(historyProcessor, &HProcessor::sendMessageHistory, this,
           &Core::showHistory);
   connect(basis->sql, &SQLite::sqliteError, this, &Core::getError);
@@ -82,7 +83,7 @@ void Core::getNLP(QString resultExpression) {
  * Argument: QString {warningText} [contains the warning text of some module].
  * Displays {warningText}.
  */
-void Core::getWarning(QString warningText) {
+void Core::getWarning(const QString &warningText) {
   // The warning color is yellow.
   Message sh =
       shadow(warningText, Author::ASW, ContentType::Warning, Theme::Yellow);
@@ -94,7 +95,7 @@ void Core::getWarning(QString warningText) {
  * Argument: QString {errorText} [contains the error text of some module].
  * Displays {errorText}.
  */
-void Core::getError(QString errorText) {
+void Core::getError(const QString &errorText) {
   // The error color is red.
   Message sh = shadow(errorText, Author::ASW, ContentType::Error, Theme::Red);
   historyProcessor->append(sh);
@@ -121,7 +122,7 @@ void Core::getWidget(QWidget *widget) {
  * Displays all messages from {messageHistory} on the screen.
  */
 void Core::showHistory(QList<Message> messageHistory) {
-  for (auto shadow : messageHistory)
+  for (const auto &shadow : messageHistory)
     emit show(new AMessage(shadow));
 }
 
@@ -132,7 +133,7 @@ void Core::showHistory(QList<Message> messageHistory) {
  *            enum eT {_t} [appearance of the message].
  * Creates a shadow of a future AMessage.
  */
-Message Core::shadow(QString _cn, Author _a, ContentType _ct, Theme _t) {
+Message Core::shadow(const QString &_cn, Author _a, ContentType _ct, Theme _t) {
   Message _sh;
   _sh.content = _cn;
   _sh.datetime = QDateTime::currentDateTime();

@@ -43,16 +43,16 @@ void NLPmodule::search(QString userExpression) {
   userExpression = basis->sql->purify(userExpression);
   // 2)
   QList<LinkMap> lms;
-  for (auto cProp : basis->readSourceList()) {
+  for (const auto &cProp : basis->readSourceList()) {
     QList<SourceRow> crs;
     // First receives a map {els} of activators in {ue}.
     // The first argument is the activator, the second is the references to the
     // reagents.
     QMap<QString, QString> els = basis->sql->scanSource(cProp, userExpression);
     bool ap = basis->sql->hasAdditionalProperties(cProp);
-    for (auto ac : els.keys()) {
+    for (const auto &ac : els.keys()) {
       QStringList links = els.value(ac).split(',');
-      for (auto link : links) {
+      for (const auto &link : qAsConst(links)) {
         SourceRow el;
         el.ac = ac;
         el.ra = link.toInt();
@@ -115,14 +115,14 @@ LinkMap NLPmodule::toLinkMap(QList<SourceRow> crs, bool _aProp) {
  */
 GlobalMap NLPmodule::toGlobalMap(const QList<LinkMap> &lms) {
   GlobalMap gm;
-  for (auto lm : lms) {
-    for (auto links : lm.al) {
+  for (const auto &lm : lms) {
+    for (const auto &links : qAsConst(lm.al)) {
       QString ac = lm.al.key(links);
       // Possible duplicates are discarded here, the activator reagents are
       // combined.
       QStringList rgs;
       if (gm.ars.contains(ac)) rgs = gm.ars.value(ac);
-      for (int link : links) {
+      for (int link : qAsConst(links)) {
         QString rg = basis->sql->getExpression(lm.cProp, link).first;
         if ((!rgs.contains(rg)) && (rg != "")) rgs.append(rg);
       }
@@ -150,7 +150,7 @@ QStringList NLPmodule::sorting(const QString &ue, QStringList as) {
   QString section = as.takeAt(int(as.length() / 2));
   QStringList earlierActivators;
   QStringList laterActivators;
-  for (QString a : as) {
+  for (const QString &a : qAsConst(as)) {
     if (ue.indexOf(a) > ue.indexOf(section))
       laterActivators.append(a);
     else
@@ -158,10 +158,10 @@ QStringList NLPmodule::sorting(const QString &ue, QStringList as) {
   }
   QStringList sorted;
   earlierActivators = sorting(ue, earlierActivators);
-  for (QString a : earlierActivators) sorted.append(a);
+  for (const QString &a : qAsConst(earlierActivators)) sorted.append(a);
   sorted.append(section);
   laterActivators = sorting(ue, laterActivators);
-  for (QString a : laterActivators) sorted.append(a);
+  for (const QString &a : qAsConst(laterActivators)) sorted.append(a);
   return sorted;
 }
 
@@ -174,7 +174,7 @@ QStringList NLPmodule::sorting(const QString &ue, QStringList as) {
 void NLPmodule::select(QString ue, const GlobalMap &gm) {
   QStringList as = sorting(ue, gm.ars.keys());
   QString re;
-  for (QString a : as) {
+  for (const QString &a : qAsConst(as)) {
     if (!ue.contains(a)) continue;
     ue.remove(a);
     QRandomGenerator rand(quint32(QTime::currentTime().msec()));

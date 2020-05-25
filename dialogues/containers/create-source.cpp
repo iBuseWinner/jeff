@@ -19,7 +19,7 @@ CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
   saveBtn = new AButton(tr("Save"), this);
   cancelBtn = new AButton(tr("Cancel"), this);
   auto *sp = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-  titleInput->setPlaceholderText(tr("Enter container's name"));
+  titleInput->setPlaceholderText(tr("Enter source name"));
   saveBtn->setIcon(QIcon(":/arts/icons/16/document-save.svg"));
   cancelBtn->setIcon(QIcon(":/arts/icons/16/window-close.svg"));
   lt->addWidget(titleInput, 0, 0, 1, 0);

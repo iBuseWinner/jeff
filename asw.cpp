@@ -1,21 +1,5 @@
 #include "asw.h"
 
-/*
- * All short named objects and their explanations:
- * {mw} <- minimal width
- * {mh} <- minimal height
- * {stdw} <- standard width
- * {stdh} <- standard height
- * {cw} <- central widget
- * {lt} <- layout
- * {d} <- display
- * {ln} <- line
- * {mb} <- menubar
- * {cr} <- core
- * {fn} <- filename
- * {msg} <- message
- */
-
 /*!
  * Constructs and prepares the ASW window.
  *
@@ -30,22 +14,21 @@
 ASW::ASW() : QMainWindow() {
   setWindowIcon(QIcon(":/arts/icons/500/icon.png"));
   setWindowTitle(basis->applicationName);
-  setMinimumSize(mw, mh);
+  setMinimumSize(minimalWidth, minimalHeight);
   layout()->setMargin(0);
-  auto *cw = new QWidget();
-  cw->setObjectName("cw");
-  cw->setStyleSheet(
+  auto *centralWidget = new QWidget();
+  centralWidget->setObjectName("cw");
+  centralWidget->setStyleSheet(
       "#cw { background-color: qlineargradient(spread:pad, x1:0, y1:0, "
       "x2:1, y2:1, stop:0 rgba(191, 29, 160, 255), stop:1 rgba(6, 255, 255, "
       "255)); }");
-  auto *lt = new QVBoxLayout();
-  lt->setSpacing(0);
-  lt->addWidget(d);
-  lt->addWidget(ln);
-  cw->setLayout(lt);
-  mb->emm->setChecked(basis->read(basis->isMonologueModeEnabledSt).toBool());
-  setCentralWidget(cw);
-  setMenuBar(mb);
+  auto *layout = new QVBoxLayout();
+  layout->setSpacing(0);
+  layout->addWidget(display);
+  layout->addWidget(line);
+  centralWidget->setLayout(layout);
+  setCentralWidget(centralWidget);
+  setMenuBar(menubar);
   connector();
   applyingSettings();
   emit readyState();
@@ -63,11 +46,11 @@ void ASW::keyPressEvent(QKeyEvent *event) {
       emit send("/settings");
   }
   if (event->key() == Qt::Key_Return)
-    event->modifiers() == Qt::ControlModifier ? ln->lineEdit->insert("\n")
-                                              : ln->sendButton->click();
+    event->modifiers() == Qt::ControlModifier ? line->lineEdit->insert("\n")
+                                              : line->sendButton->click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H)
-      mb->setVisible(!mb->isVisible());
+      menubar->setVisible(!menubar->isVisible());
     if (event->key() == Qt::Key_M)
       emit send("/sm");
     if (event->key() == Qt::Key_E)
@@ -76,9 +59,10 @@ void ASW::keyPressEvent(QKeyEvent *event) {
       importMessageHistory();
   }
   if (event->key() == Qt::Key_F11) {
-    mb->fullScreenAction->setChecked(!mb->fullScreenAction->isChecked());
+    menubar->fullScreenAction->setChecked(
+        !menubar->fullScreenAction->isChecked());
     // If the menu bar is hidden, it does not send signals.
-    if (mb->isHidden())
+    if (menubar->isHidden())
       fullScreenHandler();
   }
   if ((event->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) &&
@@ -90,14 +74,17 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 void ASW::applyingSettings() {
   // If settings file does not exist, sets default settings.
   if ((!basis->exists()) || (basis->isIncorrect())) {
-    resize(stdw, stdh);
+    resize(defaultWidth, defaultHeight);
     emit send("/first");
     return;
   }
   resize(basis->read(basis->sizeSt).toSize());
-  mb->fullScreenAction->setChecked(basis->read(basis->isFullScreenSt).toBool());
-  emit mb->fullScreenAction->triggered();
-  mb->setVisible(!basis->read(basis->isMenuBarHiddenSt).toBool());
+  menubar->fullScreenAction->setChecked(
+      basis->read(basis->isFullScreenSt).toBool());
+  emit menubar->fullScreenAction->triggered();
+  menubar->setVisible(!basis->read(basis->isMenuBarHiddenSt).toBool());
+  menubar->emm->setChecked(
+      basis->read(basis->isMonologueModeEnabledSt).toBool());
 }
 
 /*! Writes changes to window settings to a file. */
@@ -105,57 +92,61 @@ void ASW::saveWindowSettings() {
   if (basis->isUnaccessed())
     return;
   basis->write(basis->sizeSt, size());
-  basis->write(basis->isMenuBarHiddenSt, mb->isHidden());
+  basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
   basis->write(basis->isFullScreenSt, isFullScreen());
   basis->write(basis->isNotFirstStartSt, true);
-  basis->write(basis->isMonologueModeEnabledSt, mb->emm->isChecked());
+  basis->write(basis->isMonologueModeEnabledSt, menubar->emm->isChecked());
 }
 
 /*! Establishes communications for user interaction through the window. */
 void ASW::connector() {
   // mb
-  connect(mb->fullScreenAction, &QAction::triggered, this,
+  connect(menubar->fullScreenAction, &QAction::triggered, this,
           &ASW::fullScreenHandler);
-  connect(mb, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
-  connect(mb, &AMenuBar::aboutTriggered, this, [this] { emit send("/about"); });
-  connect(mb, &AMenuBar::containersTriggered, this,
+  connect(menubar, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
+  connect(menubar, &AMenuBar::aboutTriggered, this,
+          [this] { emit send("/about"); });
+  connect(menubar, &AMenuBar::containersTriggered, this,
           [this] { emit send("/sm"); });
-  connect(mb, &AMenuBar::settingsTriggered, this,
+  connect(menubar, &AMenuBar::settingsTriggered, this,
           [this] { emit send("/settings"); });
-  connect(mb, &AMenuBar::exportTriggered, this, &ASW::exportMessageHistory);
-  connect(mb, &AMenuBar::importTriggered, this, &ASW::importMessageHistory);
-  connect(mb->emm, &QAction::triggered, this, [this] { emit send("/mm"); });
+  connect(menubar, &AMenuBar::exportTriggered, this,
+          &ASW::exportMessageHistory);
+  connect(menubar, &AMenuBar::importTriggered, this,
+          &ASW::importMessageHistory);
+  connect(menubar->emm, &QAction::triggered, this,
+          [this] { emit send("/mm"); });
   // others
-  connect(ln->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
+  connect(line->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
   connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
   connect(this, &ASW::send, core, &Core::getUser);
   connect(core, &Core::show, this, &ASW::addMessage);
-  connect(core, &Core::changeMenuBarMonologueCheckbox, mb->emm,
+  connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm,
           &QAction::setChecked);
 }
 
 /*! Shows a window in full screen or in normal mode. */
 void ASW::fullScreenHandler() {
-  mb->fullScreenAction->isChecked() ? showFullScreen() : showNormal();
+  menubar->fullScreenAction->isChecked() ? showFullScreen() : showNormal();
 }
 
 /*! Sends request to core {cr}. */
 void ASW::userInputHandler() {
   // If the user sends a message, the display automatically scrolls to the end.
-  d->setScrollEnabled(true);
-  QString text = ln->lineEdit->text();
-  ln->lineEdit->clear();
+  display->setScrollEnabled(true);
+  QString text = line->lineEdit->text();
+  line->lineEdit->clear();
   emit send(text);
 }
 
 /*! Calls the dialog, asks for the filename {fn} and saves the message history
  * to it. */
 void ASW::exportMessageHistory() {
-  QString fn = QFileDialog::getSaveFileName(
+  QString filename = QFileDialog::getSaveFileName(
       nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
-  if (fn.isEmpty())
+  if (filename.isEmpty())
     return;
-  historyProcessor->save(fn);
+  historyProcessor->save(filename);
 }
 
 /*! Calls the dialog, asks for the filename {fn} and loads the message history
@@ -166,17 +157,17 @@ void ASW::importMessageHistory() {
           tr("Messages will be added to the beginning of the dialogue."),
           QMessageBox::Ok | QMessageBox::Cancel,
           QMessageBox::Ok) == QMessageBox::Ok) {
-    QString fn = QFileDialog::getOpenFileName(
+    QString filename = QFileDialog::getOpenFileName(
         nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
-    if (fn.isEmpty())
+    if (filename.isEmpty())
       return;
-    d->start();
-    historyProcessor->load(fn);
+    display->start();
+    historyProcessor->load(filename);
   }
 }
 
 /*! Clears message history and display. */
 void ASW::clear() {
   historyProcessor->clear();
-  d->start();
+  display->start();
 }

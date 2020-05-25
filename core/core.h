@@ -23,8 +23,8 @@ public:
   Core(QObject *parent = nullptr);
   void getUser(QString userExpression);
   void getNLP(QString resultExpression);
-  void getWarning(QString warningText);
-  void getError(QString errorText);
+  void getWarning(const QString &warningText);
+  void getError(const QString &errorText);
   void getWidget(QWidget *widget);
   // void getScript();
   void showHistory(QList<Message> messageHistory);
@@ -49,7 +49,7 @@ private:
   bool monologueEnabled = false;
 
   // Functions:
-  Message shadow(QString _cn, Author _a, ContentType _ct, Theme _t);
+  Message shadow(const QString &_cn, Author _a, ContentType _ct, Theme _t);
 };
 
 #endif

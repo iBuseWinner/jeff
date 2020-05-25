@@ -12,102 +12,106 @@
 <context>
     <name>AMenuBar</name>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="28"/>
+        <location filename="../widgets/a_menubar.cpp" line="27"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="29"/>
         <source>Container manager</source>
-        <translation>Менеджер контейнеров</translation>
+        <translation type="vanished">Менеджер контейнеров</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="30"/>
+        <location filename="../widgets/a_menubar.cpp" line="28"/>
+        <source>Source manager</source>
+        <translation>Менеджер источников</translation>
+    </message>
+    <message>
+        <location filename="../widgets/a_menubar.cpp" line="29"/>
         <source>Export message history</source>
         <translation>Экспортировать историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="31"/>
+        <location filename="../widgets/a_menubar.cpp" line="30"/>
         <source>Import message history</source>
         <translation>Импортировать историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="40"/>
+        <location filename="../widgets/a_menubar.cpp" line="31"/>
         <source>Enable monologue mode</source>
         <translation>Включить режим монолога</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="51"/>
+        <location filename="../widgets/a_menubar.cpp" line="47"/>
         <source>&amp;Exit</source>
         <translation>&amp;Выход</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="57"/>
+        <location filename="../widgets/a_menubar.cpp" line="53"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="58"/>
+        <location filename="../widgets/a_menubar.cpp" line="54"/>
         <source>Clear message history</source>
         <translation>Очистить историю сообщений</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="59"/>
+        <location filename="../widgets/a_menubar.cpp" line="55"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="60"/>
+        <location filename="../widgets/a_menubar.cpp" line="56"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="61"/>
+        <location filename="../widgets/a_menubar.cpp" line="57"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="62"/>
+        <location filename="../widgets/a_menubar.cpp" line="58"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="63"/>
+        <location filename="../widgets/a_menubar.cpp" line="59"/>
         <source>Select all</source>
         <translation>Выбрать всё</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="91"/>
+        <location filename="../widgets/a_menubar.cpp" line="87"/>
         <source>Tools</source>
         <translation>Инструменты</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="92"/>
+        <location filename="../widgets/a_menubar.cpp" line="88"/>
         <source>Hide menubar</source>
         <translation>Скрыть меню</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="93"/>
+        <location filename="../widgets/a_menubar.cpp" line="89"/>
         <source>Full screen</source>
         <translation>Полноэкранный режим</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="95"/>
+        <location filename="../widgets/a_menubar.cpp" line="91"/>
         <source>Settings...</source>
         <translation>Параметры...</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="109"/>
+        <location filename="../widgets/a_menubar.cpp" line="105"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="110"/>
+        <location filename="../widgets/a_menubar.cpp" line="106"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../widgets/a_menubar.cpp" line="113"/>
+        <location filename="../widgets/a_menubar.cpp" line="109"/>
         <source>About Qt</source>
         <translation>О Qt</translation>
     </message>
@@ -115,79 +119,121 @@
 <context>
     <name>ASW</name>
     <message>
-        <location filename="../asw.cpp" line="125"/>
+        <location filename="../asw.cpp" line="130"/>
         <source>Hello!</source>
         <translation>Привет!</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="148"/>
+        <location filename="../asw.cpp" line="155"/>
         <source>Save history</source>
         <translation>Сохранить историю сообщений</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="148"/>
-        <location filename="../asw.cpp" line="162"/>
+        <location filename="../asw.cpp" line="155"/>
+        <location filename="../asw.cpp" line="170"/>
         <source>JSON file</source>
         <translation>Файл JSON</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="157"/>
+        <location filename="../asw.cpp" line="165"/>
         <source>Import message history?</source>
         <translation>Импортировать историю сообщений?</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="158"/>
+        <location filename="../asw.cpp" line="166"/>
         <source>Messages will be added to the beginning of the dialogue.</source>
         <translation>Сообщения будут добавлены в начало диалога.</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="162"/>
+        <location filename="../asw.cpp" line="170"/>
         <source>Load history</source>
         <translation>Загрузить историю сообщений</translation>
     </message>
 </context>
 <context>
-    <name>CoreMethods</name>
+    <name>Basis</name>
     <message>
-        <location filename="../core/core-methods.cpp" line="32"/>
+        <location filename="../core/basis.cpp" line="32"/>
         <source>An access error occurred (e.g. trying to write to a read-only file).</source>
         <translation>Произошла ошибка доступа (например, попытка записи в файл только для чтения).</translation>
     </message>
     <message>
-        <location filename="../core/core-methods.cpp" line="38"/>
+        <location filename="../core/basis.cpp" line="38"/>
         <source>A format error occurred (e.g. loading a malformed file).</source>
         <translation>Произошла ошибка формата (например, загрузка поврежденного файла).</translation>
     </message>
 </context>
 <context>
+    <name>CoreMethods</name>
+    <message>
+        <source>An access error occurred (e.g. trying to write to a read-only file).</source>
+        <translation type="vanished">Произошла ошибка доступа (например, попытка записи в файл только для чтения).</translation>
+    </message>
+    <message>
+        <source>A format error occurred (e.g. loading a malformed file).</source>
+        <translation type="vanished">Произошла ошибка формата (например, загрузка поврежденного файла).</translation>
+    </message>
+</context>
+<context>
     <name>CreateContainer</name>
     <message>
-        <location filename="../dialogues/containers/createcontainer.cpp" line="18"/>
+        <source>Save</source>
+        <translation type="vanished">Сохранить</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Отменить</translation>
+    </message>
+    <message>
+        <source>Enter container&apos;s name</source>
+        <translation type="vanished">Введите название контейнера</translation>
+    </message>
+    <message>
+        <source>Select database file...</source>
+        <translation type="vanished">Выберите файл базы данных...</translation>
+    </message>
+    <message>
+        <source>Select database...</source>
+        <translation type="vanished">Выберите базу данных...</translation>
+    </message>
+    <message>
+        <source>ASW database</source>
+        <translation type="vanished">База данных ASW</translation>
+    </message>
+</context>
+<context>
+    <name>CreateSourceDialog</name>
+    <message>
+        <location filename="../dialogues/containers/create-source.cpp" line="19"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers/createcontainer.cpp" line="19"/>
+        <location filename="../dialogues/containers/create-source.cpp" line="20"/>
         <source>Cancel</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers/createcontainer.cpp" line="21"/>
         <source>Enter container&apos;s name</source>
-        <translation>Введите название контейнера</translation>
+        <translation type="vanished">Введите название контейнера</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers/createcontainer.cpp" line="43"/>
+        <location filename="../dialogues/containers/create-source.cpp" line="22"/>
+        <source>Enter source name</source>
+        <translation>Введите название источника</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/containers/create-source.cpp" line="44"/>
         <source>Select database file...</source>
         <translation>Выберите файл базы данных...</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers/createcontainer.cpp" line="50"/>
+        <location filename="../dialogues/containers/create-source.cpp" line="51"/>
         <source>Select database...</source>
         <translation>Выберите базу данных...</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers/createcontainer.cpp" line="50"/>
+        <location filename="../dialogues/containers/create-source.cpp" line="51"/>
         <source>ASW database</source>
         <translation>База данных ASW</translation>
     </message>
@@ -247,32 +293,32 @@
         <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="41"/>
+        <location filename="../dialogues/sources.cpp" line="41"/>
         <source>Add container</source>
         <translation>Добавить контейнер</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="42"/>
+        <location filename="../dialogues/sources.cpp" line="42"/>
         <source>Create</source>
         <translation>Создать</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="43"/>
+        <location filename="../dialogues/sources.cpp" line="43"/>
         <source>Remove</source>
         <translation>Отключить</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="44"/>
+        <location filename="../dialogues/sources.cpp" line="44"/>
         <source>Save and close</source>
         <translation>Сохранить и закрыть</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="71"/>
+        <location filename="../dialogues/sources.cpp" line="71"/>
         <source>Select database</source>
         <translation>Выбрать базу данных</translation>
     </message>
     <message>
-        <location filename="../dialogues/containers.cpp" line="72"/>
+        <location filename="../dialogues/sources.cpp" line="72"/>
         <source>ASW database</source>
         <translation>База данных ASW</translation>
     </message>
@@ -302,73 +348,86 @@
         <translation>И теперь вы можете приступать к работе.</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="22"/>
         <source>Enable monologue mode support</source>
-        <translation>Включить поддержку режима монолога</translation>
+        <translation type="vanished">Включить поддержку режима монолога</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="23"/>
+        <location filename="../dialogues/settings.cpp" line="22"/>
         <source>Enable delay</source>
         <translation>Включить задержку</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="24"/>
+        <location filename="../dialogues/settings.cpp" line="23"/>
         <source>From</source>
         <translation>От</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="29"/>
+        <location filename="../dialogues/settings.cpp" line="28"/>
         <source>to</source>
         <translation>до</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="34"/>
+        <location filename="../dialogues/settings.cpp" line="33"/>
         <source>ms</source>
         <translation>мс</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="44"/>
+        <location filename="../dialogues/settings.cpp" line="43"/>
         <source>Keep history</source>
         <translation>Хранить историю</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="47"/>
         <source>ASW will be able to talk to himself (restart is required).</source>
-        <translation>Ассист сможет разговаривать сам с собой (требуется перезапуск).</translation>
+        <translation type="vanished">Ассист сможет разговаривать сам с собой (требуется перезапуск).</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="49"/>
+        <location filename="../dialogues/settings.cpp" line="46"/>
         <source>Enables ASW response delay.</source>
         <translation>Включает задержку отправки ответа Ассиста.</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="51"/>
+        <location filename="../dialogues/settings.cpp" line="48"/>
         <source>Enables keeping the message history after exiting the application.</source>
         <translation>Позволяет сохранить историю сообщений после выхода из приложения.</translation>
     </message>
     <message>
-        <location filename="../dialogues/settings.cpp" line="54"/>
+        <location filename="../dialogues/settings.cpp" line="51"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
 </context>
 <context>
-    <name>sqlite</name>
+    <name>SQLite</name>
     <message>
-        <location filename="../core/sqlite.cpp" line="256"/>
-        <location filename="../core/sqlite.cpp" line="269"/>
+        <location filename="../core/sqlite.cpp" line="270"/>
+        <location filename="../core/sqlite.cpp" line="283"/>
         <source>Database</source>
         <translation>База данных</translation>
     </message>
     <message>
-        <location filename="../core/sqlite.cpp" line="257"/>
+        <location filename="../core/sqlite.cpp" line="271"/>
         <source>doesn&apos;t exist.</source>
         <translation>не существует.</translation>
     </message>
     <message>
-        <location filename="../core/sqlite.cpp" line="270"/>
+        <location filename="../core/sqlite.cpp" line="284"/>
         <source>is empty.</source>
         <translation>пуста.</translation>
+    </message>
+</context>
+<context>
+    <name>sqlite</name>
+    <message>
+        <source>Database</source>
+        <translation type="vanished">База данных</translation>
+    </message>
+    <message>
+        <source>doesn&apos;t exist.</source>
+        <translation type="vanished">не существует.</translation>
+    </message>
+    <message>
+        <source>is empty.</source>
+        <translation type="vanished">пуста.</translation>
     </message>
 </context>
 </TS>

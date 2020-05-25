@@ -45,13 +45,13 @@ private:
   Core *core = new Core(this);
   Basis *basis = core->basis;
   HProcessor *historyProcessor = core->historyProcessor;
-  ALine *ln = new ALine(this);
-  ADisplay *d = new ADisplay(this);
-  AMenuBar *mb = new AMenuBar(ln, this);
-  const int mw = 600;
-  const int mh = 370;
-  const int stdw = 800;
-  const int stdh = 496;
+  ALine *line = new ALine(this);
+  ADisplay *display = new ADisplay(this);
+  AMenuBar *menubar = new AMenuBar(line, this);
+  const int minimalWidth = 600;
+  const int minimalHeight = 370;
+  const int defaultWidth = 800;
+  const int defaultHeight = 496;
 
   // Functions:
   void applyingSettings();
@@ -64,7 +64,7 @@ private:
   void clear();
 
   /*! Adds {msg} to the screen. */
-  void addMessage(AMessage *msg) { d->addMessage(msg); }
+  void addMessage(AMessage *message) { display->addMessage(message); }
   // void help() { emit send("/help"); }
 };
 
