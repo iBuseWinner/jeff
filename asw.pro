@@ -17,7 +17,7 @@ SOURCES += \
     core/history-processor.cpp \
     core/python-handler.cpp \
     core/standard-templates.cpp \
-    dialogues/containers/create-source.cpp \
+    dialogues/sources/create-source.cpp \
     dialogues/settings.cpp \
     dialogues/sources.cpp \
     main.cpp \
@@ -47,7 +47,7 @@ HEADERS += \
     core/source.h \
     core/sqlite.h \
     core/standard-templates.h \
-    dialogues/containers/create-source.h \
+    dialogues/sources/create-source.h \
     dialogues/help.h \
     dialogues/firststart.h \
     dialogues/about.h \
