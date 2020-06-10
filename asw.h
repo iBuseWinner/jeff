@@ -46,7 +46,7 @@ private:
   Basis *basis = core->basis;
   HProcessor *historyProcessor = core->historyProcessor;
   ALine *line = new ALine(this);
-  ADisplay *display = new ADisplay(this);
+  ADisplay *display = new ADisplay(50, this);
   AMenuBar *menubar = new AMenuBar(line, this);
   const int minimalWidth = 600;
   const int minimalHeight = 370;

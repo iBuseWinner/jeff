@@ -7,7 +7,7 @@
 #include <QString>
 #include <QTranslator>
 #include <QTreeWidgetItem>
-#include "dialogues/containers/create-source.h"
+#include "dialogues/sources/create-source.h"
 #include "widgets/a_button.h"
 #include "widgets/a_containerslist.h"
 

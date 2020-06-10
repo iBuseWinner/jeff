@@ -12,28 +12,30 @@
  */
 class ADisplay : public QScrollArea {
   Q_OBJECT
- public:
+public:
   // Functions:
-  explicit ADisplay(QWidget *parent = nullptr);
+  explicit ADisplay(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
-
-  /*! Adds a message to the display. */
-  void addMessage(QWidget *message) { lt->addWidget(message); }
+  void addMessage(QWidget *message);
 
   /*! Sets the scroll state. */
   void setScrollEnabled(bool _scrollEnabled) { scrollEnabled = _scrollEnabled; }
 
- private:
+private:
   Q_DISABLE_COPY(ADisplay)
 
   // Objects:
-  QVBoxLayout *lt = nullptr;
+  QVBoxLayout *vertical_box_layout = nullptr;
   bool scrollEnabled = true;
+  QList<QWidget *> all_messages;
+  short message_counter = 0;
+  short max_message_amount = 0;
 
   // Functions:
   void connector();
   void scrollDown(int min, int max);
   void scrollTumbler(int v);
+  void showWidgets(int v = 0);
 };
 
-#endif  // A_DISPLAY_H
+#endif // A_DISPLAY_H

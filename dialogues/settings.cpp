@@ -2,8 +2,6 @@
 
 /*
  * All short named objects and their explanations:
- * {basis} <- core methods
- * {lt} <- layout
  * {snclBtn} <- save and close
  */
 
@@ -12,13 +10,13 @@
  *            QWidget {*parent}.
  * Constructs and prepares Settings.
  */
-Settings::Settings(Basis *_basis, QWidget *parent) : QWidget(parent) {
-  basis = _basis;
+Settings::Settings(Basis *_basis, QWidget *parent)
+    : QWidget(parent), basis(_basis) {
   setAttribute(Qt::WA_DeleteOnClose);
   setObjectName(objn);
-  auto *lt = new QVBoxLayout();
-  lt->setSpacing(0);
-  lt->setMargin(0);
+  auto *vert_box_lt = new QVBoxLayout();
+  vert_box_lt->setSpacing(0);
+  vert_box_lt->setMargin(0);
   delay = new QCheckBox(QTranslator::tr("Enable delay"), this);
   auto *minDelayText = new QLabel(QTranslator::tr("From"), this);
   minDelayText->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
@@ -48,15 +46,15 @@ Settings::Settings(Basis *_basis, QWidget *parent) : QWidget(parent) {
       QTranslator::tr(
           "Enables keeping the message history after exiting the application."),
       this);
-  snclBtn = new AButton(QTranslator::tr("OK"), this);
-  snclBtn->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
-  lt->addWidget(delay);
-  lt->addWidget(delayExplanation);
-  lt->addWidget(box1);
-  lt->addWidget(keepHistory);
-  lt->addWidget(keepHistoryExplanation);
-  lt->addWidget(snclBtn);
-  setLayout(lt);
+  save_and_close = new AButton(QTranslator::tr("OK"), this);
+  save_and_close->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
+  vert_box_lt->addWidget(delay);
+  vert_box_lt->addWidget(delayExplanation);
+  vert_box_lt->addWidget(box1);
+  vert_box_lt->addWidget(keepHistory);
+  vert_box_lt->addWidget(keepHistoryExplanation);
+  vert_box_lt->addWidget(save_and_close);
+  setLayout(vert_box_lt);
   connector();
   loadStates();
 }
@@ -68,7 +66,7 @@ void Settings::connector() {
           &Settings::minDelayValueChanged);
   connect(maxDelay, QOverload<int>::of(&QSpinBox::valueChanged), this,
           &Settings::maxDelayValueChanged);
-  connect(snclBtn, &AButton::clicked, this, &Settings::saveAndClose);
+  connect(save_and_close, &AButton::clicked, this, &Settings::saveAndClose);
 }
 
 /*! Loads settings from file. */

@@ -1,33 +1,27 @@
 #include "create-source.h"
 
-/*
- * All short named objects and their explanations:
- * {lt} <- layout
- * {sp} <- spacer
- */
-
 /*!
  * Argument: QWidget {*parent}.
  * Constructs and prepares Create Source dialogue.
  */
 CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
-    : QWidget(parent) {
-  basis = _basis;
-  auto *lt = new QGridLayout();
+    : QWidget(parent), basis(_basis) {
+  auto *grid_layout = new QGridLayout();
   titleInput = new ALineEdit(this);
   selectFileBtn = new AButton("", this);
   saveBtn = new AButton(tr("Save"), this);
   cancelBtn = new AButton(tr("Cancel"), this);
-  auto *sp = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  auto *spacer =
+      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   titleInput->setPlaceholderText(tr("Enter source name"));
   saveBtn->setIcon(QIcon(":/arts/icons/16/document-save.svg"));
   cancelBtn->setIcon(QIcon(":/arts/icons/16/window-close.svg"));
-  lt->addWidget(titleInput, 0, 0, 1, 0);
-  lt->addWidget(selectFileBtn, 1, 0, 1, 0);
-  lt->addItem(sp, 2, 0);
-  lt->addWidget(saveBtn, 2, 1);
-  lt->addWidget(cancelBtn, 2, 2);
-  setLayout(lt);
+  grid_layout->addWidget(titleInput, 0, 0, 1, 0);
+  grid_layout->addWidget(selectFileBtn, 1, 0, 1, 0);
+  grid_layout->addItem(spacer, 2, 0);
+  grid_layout->addWidget(saveBtn, 2, 1);
+  grid_layout->addWidget(cancelBtn, 2, 2);
+  setLayout(grid_layout);
   connector();
   selStart();
 }

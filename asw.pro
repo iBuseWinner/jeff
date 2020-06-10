@@ -20,6 +20,7 @@ SOURCES += \
     dialogues/sources/create-source.cpp \
     dialogues/settings.cpp \
     dialogues/sources.cpp \
+    dialogues/sources/edit-source.cpp \
     main.cpp \
     asw.cpp \
     core/sqlite.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
     dialogues/firststart.cpp \
     dialogues/about.cpp \
     widgets/a_button.cpp \
+    widgets/a_expressionlist.cpp \
     widgets/a_message.cpp \
     widgets/a_board.cpp \
     widgets/a_containerslist.cpp \
@@ -35,7 +37,7 @@ SOURCES += \
     widgets/a_lineedit.cpp \
     widgets/a_menubar.cpp \
     core/nlp-module.cpp \
-    widgets/settings/a_explanationlabel.cpp
+    widgets/a_explanationlabel.cpp
 
 HEADERS += \
     asw.h \
@@ -53,7 +55,9 @@ HEADERS += \
     dialogues/about.h \
     dialogues/settings.h \
     dialogues/sources.h \
+    dialogues/sources/edit-source.h \
     widgets/a_button.h \
+    widgets/a_expressionlist.h \
     widgets/a_message.h \
     widgets/a_board.h \
     widgets/a_containerslist.h \
@@ -62,7 +66,7 @@ HEADERS += \
     widgets/a_lineedit.h \
     widgets/a_menubar.h \
     core/nlp-module.h \
-    widgets/settings/a_explanationlabel.h
+    widgets/a_explanationlabel.h
 
 RESOURCES += \
     resources.qrc

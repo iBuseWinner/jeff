@@ -3,7 +3,7 @@
 
 #include "core/basis.h"
 #include "widgets/a_button.h"
-#include "widgets/settings/a_explanationlabel.h"
+#include "widgets/a_explanationlabel.h"
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QSizePolicy>
@@ -28,7 +28,7 @@ private:
   QSpinBox *minDelay = nullptr;
   QSpinBox *maxDelay = nullptr;
   QCheckBox *keepHistory = nullptr;
-  AButton *snclBtn = nullptr;
+  AButton *save_and_close = nullptr;
 
   // Functions:
   void connector();
