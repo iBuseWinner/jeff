@@ -1,5 +1,4 @@
 #include "a_display.h"
-#include <QDebug>
 
 /*
  * All short named objects and their explanations:
