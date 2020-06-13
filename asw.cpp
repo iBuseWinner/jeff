@@ -31,7 +31,6 @@ ASW::ASW() : QMainWindow() {
   setMenuBar(menubar);
   connector();
   applyingSettings();
-  emit readyState();
 }
 
 /*!
@@ -120,7 +119,7 @@ void ASW::connector() {
   connect(line->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
   connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
   connect(this, &ASW::send, core, &Core::getUser);
-  connect(core, &Core::show, this, &ASW::addMessage);
+  connect(core, &Core::show, display, &ADisplay::addMessage);
   connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm,
           &QAction::setChecked);
 }

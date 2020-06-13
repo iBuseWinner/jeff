@@ -24,6 +24,10 @@ struct Source {
   bool isCatching = false;
   /*! Means that the input is first validated using this container. */
   bool isPrioritised = false;
+
+  friend bool operator==(Source s1, Source s2) {
+    return s1.tableName == s2.tableName and s1.path == s2.path;
+  }
 };
 
 #endif  // CONTAINERSSTRUCT_H

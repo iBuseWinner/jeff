@@ -43,9 +43,9 @@ public:
   const QString isHintsEnabledSt = "core/ishintsenabled";
 
   // Functions:
-  Basis(QObject *parent = nullptr) { setParent(parent); };
+  Basis(QObject *parent = nullptr) : QObject(parent) { readSourceList(); };
+  void readSourceList();
   void check();
-  QList<Source> readSourceList();
   QList<Message> readMessageHistory(QFile *file);
   void write(const QString &key, const QVariant &data);
   void writeSourceList(QList<Source> sourceList);
@@ -60,7 +60,11 @@ public:
   /*! Reads the setting. */
   QVariant read(const QString &key) { return settings->value(key); }
   /*! Returns the path to the settings. */
-  QString settingsPath() { return QFileInfo(settings->fileName()).absolutePath(); }
+  QString settingsPath() {
+    return QFileInfo(settings->fileName()).absolutePath();
+  }
+  /*! Returns list of sources. */
+  QList<Source> getSources() { return cProps; }
 
 signals:
   QString jsonError(QString errorText);
@@ -71,8 +75,9 @@ private:
   bool access = true;
   bool correct = true;
   const QString cfn = "sources.json";
-  QSettings *settings = new QSettings(QSettings::IniFormat, QSettings::UserScope,
-                               companyName, applicationName, this);
+  QSettings *settings =
+      new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
+                    applicationName, this);
   QList<Source> cProps;
 
   // Functions:

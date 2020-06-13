@@ -62,7 +62,8 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent) : QWidget(parent) {
 void SourcesDialog::load() {
   csm.clear();
   cl->clear();
-  append(basis->readSourceList());
+  basis->readSourceList();
+  append(basis->getSources());
 }
 
 /*! Adds a container to the widget, loads its data. */

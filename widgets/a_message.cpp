@@ -1,22 +1,12 @@
 #include "a_message.h"
 
-/*
- * All short named objects and their explanations:
- * {pl} <- parent layout
- * {sh} <- shadow
- * {lt} <- layout
- * {stdm} <- standard margin
- * {w} <- widget
- * {ws} <- pair QSpacerItem-ABoard
- * {tl} <- text line
- */
-
 /*! Creates an AMessage. */
 AMessage::AMessage() {
-  QHBoxLayout *pl = new QHBoxLayout();
-  pl->setContentsMargins(0, 0, 0, stdm);
-  pl->setSpacing(0);
-  setLayout(pl);
+  setAttribute(Qt::WA_DeleteOnClose);
+  QHBoxLayout *hbox_layout = new QHBoxLayout();
+  hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
+  hbox_layout->setSpacing(0);
+  setLayout(hbox_layout);
 }
 
 /*!
@@ -24,34 +14,37 @@ AMessage::AMessage() {
  * Creates an AMessage based on {shadow}.
  */
 AMessage::AMessage(Message shadow) {
-  QHBoxLayout *l = new QHBoxLayout();
-  l->setContentsMargins(0, 0, 0, stdm);
-  l->setSpacing(0);
-  setLayout(l);
+  setAttribute(Qt::WA_DeleteOnClose);
+  QHBoxLayout *hbox_layout = new QHBoxLayout();
+  hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
+  hbox_layout->setSpacing(0);
+  setLayout(hbox_layout);
   setShadow(shadow);
 }
 
 /*!
- * Argument: message {shadow} [basis for the message].
- * Sets {shadow} into the AMessage.
+ * Argument: Message {_message} [basis for the message].
+ * Sets {_message} into the AMessage.
  */
-void AMessage::setShadow(Message shadow) {
-  if (shadow.datetime.isNull()) return;
-  sh = shadow;
-  setAuthor(sh.aType);
-  setMessageType(sh.cType);
+void AMessage::setShadow(Message _message) {
+  if (_message.datetime.isNull())
+    return;
+  message = _message;
+  setAuthor(message.aType);
+  setMessageType(message.cType);
   // setTheme(sh.tType);
 }
 
 /*!
- * Argument: QWidget {*widget} [widget to be showed].
- * Sets {widget} into the AMessage.
+ * Argument: QWidget {*_widget} [widget to be showed].
+ * Sets {_widget} into the AMessage.
  */
-void AMessage::setWidget(QWidget *widget) {
-  if (w) return;
-  w = widget;
-  connect(w, &QWidget::destroyed, this, &AMessage::close);
-  lt->addWidget(w);
+void AMessage::setWidget(QWidget *_widget) {
+  if (widget)
+    return;
+  widget = _widget;
+  connect(widget, &QWidget::destroyed, this, &AMessage::close);
+  gridLayout->addWidget(widget);
 }
 
 /*!
@@ -60,13 +53,13 @@ void AMessage::setWidget(QWidget *widget) {
  */
 void AMessage::setAuthor(Author aType) {
   switch (aType) {
-    case 1:
-      setupASW();
-      break;
-    case 2:
-      setupUser();
-      break;
-    default:;
+  case 1:
+    setupASW();
+    break;
+  case 2:
+    setupUser();
+    break;
+  default:;
   }
 }
 
@@ -76,28 +69,28 @@ void AMessage::setAuthor(Author aType) {
  */
 void AMessage::setMessageType(ContentType cType) {
   switch (cType) {
-    case 1:
-      setupText(sh.content);
-      break;
-    case 2:
-      setupMarkdown(sh.content);
-      break;
-    // case 3:
-    //  setupPicture(sh.content);
-    //  break;
-    // case 4:
-    //  setupFile(sh.content);
-    //  break;
-    case 5:
-      setupWarning(sh.content);
-      break;
-    case 6:
-      setupError(sh.content);
-      break;
-    case 7:
-      prepareSetupWidget();
-      return;
-    default:;
+  case 1:
+    setupText(message.content);
+    break;
+  case 2:
+    setupMarkdown(message.content);
+    break;
+  // case 3:
+  //  setupPicture(sh.content);
+  //  break;
+  // case 4:
+  //  setupFile(sh.content);
+  //  break;
+  case 5:
+    setupWarning(message.content);
+    break;
+  case 6:
+    setupError(message.content);
+    break;
+  case 7:
+    prepareSetupWidget();
+    return;
+  default:;
   }
   alignTextToWindowWidth();
 }
@@ -110,14 +103,14 @@ void AMessage::setMessageType(ContentType cType) {
 
 /*! Customizes layout of message from ASW. */
 void AMessage::setupASW() {
-  QPair<QSpacerItem *, ABoard *> ws = mkLt();
+  QPair<QSpacerItem *, ABoard *> ws = makeLayout();
   layout()->addWidget(ws.second);
   layout()->addItem(ws.first);
 }
 
 /*! Customizes layout of message from user. */
 void AMessage::setupUser() {
-  QPair<QSpacerItem *, ABoard *> ws = mkLt();
+  QPair<QSpacerItem *, ABoard *> ws = makeLayout();
   layout()->addItem(ws.first);
   layout()->addWidget(ws.second);
 }
@@ -127,14 +120,14 @@ void AMessage::setupUser() {
  * Displays plain text.
  */
 void AMessage::setupText(const QString &content) {
-  auto *tl = new QLabel(content, this);
-  w = tl;
-  tl->setObjectName("text");
-  tl->setTextFormat(Qt::PlainText);
-  tl->setTextInteractionFlags(Qt::TextSelectableByMouse |
-                              Qt::TextSelectableByKeyboard);
-  tl->setFocusPolicy(Qt::NoFocus);
-  lt->addWidget(w);
+  auto *label = new QLabel(content, this);
+  widget = label;
+  label->setObjectName("text");
+  label->setTextFormat(Qt::PlainText);
+  label->setTextInteractionFlags(Qt::TextSelectableByMouse |
+                                 Qt::TextSelectableByKeyboard);
+  label->setFocusPolicy(Qt::NoFocus);
+  gridLayout->addWidget(widget);
 }
 
 /*!
@@ -143,9 +136,9 @@ void AMessage::setupText(const QString &content) {
  */
 void AMessage::setupMarkdown(const QString &content) {
   setupText(content);
-  auto *tl = static_cast<QLabel *>(w);  // test
-  tl->setTextFormat(Qt::RichText);
-  tl->setText(tl->text().replace("\n", "<br>"));
+  auto *label = static_cast<QLabel *>(widget);
+  label->setTextFormat(Qt::RichText);
+  label->setText(label->text().replace("\n", "<br>"));
 }
 
 /*!
@@ -182,25 +175,27 @@ void AMessage::setupError(const QString &content) {
 
 /*! Prepares AMessage for widget installation. */
 void AMessage::prepareSetupWidget() {
-  lt->parentWidget()->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+  gridLayout->parentWidget()->setSizePolicy(QSizePolicy::Preferred,
+                                            QSizePolicy::Fixed);
 }
 
 /*! Aligns text to the width of the window. */
 void AMessage::alignTextToWindowWidth() {
-  auto *tl = static_cast<QLabel *>(w);
-  if (!tl) return;
-  QTextDocument td;
-  if (sh.cType == ContentType::Markdown)
-    td.setHtml(tl->text());
-  else if (sh.cType == ContentType::Text)
-    td.setPlainText(tl->text());
+  auto *label = qobject_cast<QLabel *>(widget);
+  if (!label)
+    return;
+  QTextDocument textDocument;
+  if (message.cType == ContentType::Markdown)
+    textDocument.setHtml(label->text());
+  else if (message.cType == ContentType::Text)
+    textDocument.setPlainText(label->text());
   else
     return;
-  if (td.idealWidth() < mmw)
-    tl->setWordWrap(false);
+  if (textDocument.idealWidth() < maximalWidgetWidth)
+    label->setWordWrap(false);
   else {
-    tl->setWordWrap(true);
-    tl->setFixedWidth(mmw);
+    label->setWordWrap(true);
+    label->setFixedWidth(maximalWidgetWidth);
   }
 }
 
@@ -208,13 +203,13 @@ void AMessage::alignTextToWindowWidth() {
  * Creates a spacer and an ABoard to adjust the layout.
  * Returns: QSpacerItem-ABoard pair.
  */
-QPair<QSpacerItem *, ABoard *> AMessage::mkLt() {
-  auto *s = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-                            QSizePolicy::Minimum);
-  auto *b = new ABoard(this);
-  lt = new QGridLayout();
-  lt->setSpacing(0);
-  lt->setMargin(stdm);
-  b->setLayout(lt);
-  return QPair<QSpacerItem *, ABoard *>(s, b);
+QPair<QSpacerItem *, ABoard *> AMessage::makeLayout() {
+  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
+                                 QSizePolicy::Minimum);
+  auto *board = new ABoard(this);
+  gridLayout = new QGridLayout();
+  gridLayout->setSpacing(0);
+  gridLayout->setMargin(standardMargin);
+  board->setLayout(gridLayout);
+  return QPair<QSpacerItem *, ABoard *>(spacer, board);
 }

@@ -9,7 +9,7 @@ LIBS += -lpython3.8
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-CONFIG += c++11
+CONFIG += c++20
 
 SOURCES += \
     core/basis.cpp \

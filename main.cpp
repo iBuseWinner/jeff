@@ -1,12 +1,5 @@
-#include <QTranslator>
 #include "asw.h"
-
-/*
- * All short named objects and their explanations:
- * {asw} <- Associative System Window
- * {asw_l10n} <- ASW localization
- * {w} <- window
- */
+#include <QTranslator>
 
 /*
  * The associative system program.
@@ -19,8 +12,8 @@
  * function may have abbreviated names;
  *    3) all short named objects and variables must be explained in the file
  * with class function declarations;
- *    4) it is recommended throughout the code for objects and variables serving
- * the same purpose to give the same names.
+ *    4) it is recommended serving for objects and variables the same purpose
+ * throughout the code to give the same names.
  */
 
 /*!
@@ -31,12 +24,13 @@
  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("asw");
-  QCoreApplication::setApplicationVersion("0.2.4");
+  QCoreApplication::setApplicationVersion("0.3.1");
   QApplication asw(argc, argv);
   auto *asw_l10n = new QTranslator(&asw);
   asw_l10n->load(":/l10n/asw_" + QLocale::system().name());
   asw.installTranslator(asw_l10n);
-  class ASW w;
-  w.show();
+  class ASW asWindow;
+  emit asWindow.readyState();
+  asWindow.show();
   return QApplication::exec();
 }

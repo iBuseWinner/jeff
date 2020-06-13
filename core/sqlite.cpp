@@ -1,4 +1,6 @@
 #include "sqlite.h"
+#include <QElapsedTimer>
+#include <QDebug>
 
 /*
  * All short named objects and their explanations:
@@ -197,6 +199,8 @@ QPair<QString, QString> SQLite::getExpression(const Source &_source,
  */
 QMap<QString, QString> SQLite::scanSource(const Source &_source,
                                           const QString &expression) {
+  QElapsedTimer timer;
+  timer.start();
   QSqlDatabase db = prepare(_source.path);
   if (db.databaseName() == QString())
     return QMap<QString, QString>();
@@ -213,6 +217,7 @@ QMap<QString, QString> SQLite::scanSource(const Source &_source,
   }
   db.close();
   delete q;
+  qDebug() << "SQLite::scanSource:" << timer.nsecsElapsed();
   return enls;
 }
 

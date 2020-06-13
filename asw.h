@@ -46,7 +46,7 @@ private:
   Basis *basis = core->basis;
   HProcessor *historyProcessor = core->historyProcessor;
   ALine *line = new ALine(this);
-  ADisplay *display = new ADisplay(50, this);
+  ADisplay *display = new ADisplay(25, this);
   AMenuBar *menubar = new AMenuBar(line, this);
   const int minimalWidth = 600;
   const int minimalHeight = 370;
@@ -62,9 +62,6 @@ private:
   void exportMessageHistory();
   void importMessageHistory();
   void clear();
-
-  /*! Adds {msg} to the screen. */
-  void addMessage(AMessage *message) { display->addMessage(message); }
   // void help() { emit send("/help"); }
 };
 

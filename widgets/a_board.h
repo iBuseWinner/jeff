@@ -27,8 +27,8 @@ class ABoard : public QFrame {
   Q_DISABLE_COPY(ABoard)
 
   // Objects:
-  const QString objn = "a_board";
-  const QString ss =
+  const QString object_name = "a_board";
+  const QString style_sheet =
       "#a_board {border-width: 4px; border-style: solid; border-color: white; "
       "border-radius: 6px; background-color: white;} * { color: black; }";
 };

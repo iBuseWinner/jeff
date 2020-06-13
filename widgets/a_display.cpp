@@ -1,4 +1,6 @@
 #include "a_display.h"
+#include <QElapsedTimer>
+#include <QDebug>
 
 /*
  * All short named objects and their explanations:
@@ -27,7 +29,10 @@ ADisplay::ADisplay(short _max_message_amount, QWidget *parent)
 
 /*! Adds a message to the display. */
 void ADisplay::addMessage(QWidget *message) {
+  QElapsedTimer timer;
+  timer.start();
   message_counter++;
+  message->setParent(this);
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   // если скролл примерно ниже середины, и число отображаемых сообщений больше
@@ -42,10 +47,14 @@ void ADisplay::addMessage(QWidget *message) {
       vertical_box_layout->removeWidget(
           all_messages.at(all_messages.length() - message_counter--));
     }
+  qDebug() << "ADisplay::addMessage:" << timer.nsecsElapsed();
 }
 
 /*! Sets the widget to its initial state. */
 void ADisplay::start() {
+  for (QWidget *widget : qAsConst(all_messages))
+    widget->close();
+  all_messages.clear();
   if (vertical_box_layout)
     delete vertical_box_layout;
   QWidget *box = new QWidget(this);
@@ -59,7 +68,6 @@ void ADisplay::start() {
   vertical_box_layout->addItem(sp);
   box->setLayout(vertical_box_layout);
   setWidget(box);
-  all_messages = QList<QWidget *>();
 }
 
 /*! Establishes communications for user interaction through the widget. */

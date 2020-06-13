@@ -25,15 +25,16 @@ void Basis::check() {
  * Compiles a list of containers used by the ASW.
  * Returns: QList of containers properties {cProps}.
  */
-QList<Source> Basis::readSourceList() {
+void Basis::readSourceList() {
   auto *f = new QFile(settingsPath() + QDir::separator() + cfn, this);
   QJsonArray cs = readJson(f);
-  for (auto obj : qAsConst(cs)) {
+  for (const QJsonValue &obj : qAsConst(cs)) {
     // Some properties of containers are stored directly in the database itself
     // in "tables". ASW reads them too {sq->optionsLoader()}.
-    cProps.append(sql->load(toSource(obj.toObject())));
+    Source k = sql->load(toSource(obj.toObject()));
+    if (not cProps.contains(k))
+      cProps.append(k);
   }
-  return cProps;
 }
 
 /*!
@@ -44,7 +45,7 @@ QList<Source> Basis::readSourceList() {
 QList<Message> Basis::readMessageHistory(QFile *file) {
   QJsonArray ms = readJson(file);
   QList<Message> mh;
-  for (auto obj : qAsConst(ms)) {
+  for (const QJsonValue &obj : qAsConst(ms)) {
     Message m = toMessage(obj.toObject());
     mh.append(m);
   }

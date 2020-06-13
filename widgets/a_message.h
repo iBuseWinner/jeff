@@ -20,25 +20,25 @@ class AMessage : public QWidget {
   // Functions:
   AMessage();
   AMessage(Message shadow);
-  void setShadow(Message shadow);
-  void setWidget(QWidget *widget);
+  void setShadow(Message _message);
+  void setWidget(QWidget *_widget);
 
-  Author returnAuthor() { return sh.aType; }
-  ContentType returnContentType() { return sh.cType; }
-  Theme returnTheme() { return sh.tType; }
-  QString returnContent() { return sh.content; }
-  QDateTime returnDateTime() { return sh.datetime; }
-  Message returnShadow() { return sh; }
+  Author returnAuthor() { return message.aType; }
+  ContentType returnContentType() { return message.cType; }
+  Theme returnTheme() { return message.tType; }
+  QString returnContent() { return message.content; }
+  QDateTime returnDateTime() { return message.datetime; }
+  Message returnShadow() { return message; }
 
  private:
   Q_DISABLE_COPY(AMessage)
 
   // Objects:
-  Message sh;
-  QGridLayout *lt = nullptr;
-  QWidget *w = nullptr;
-  const int mmw = 400;
-  const int stdm = 6;
+  Message message;
+  QGridLayout *gridLayout = nullptr;
+  QWidget *widget = nullptr;
+  static const ushort maximalWidgetWidth = 400;
+  static const ushort standardMargin = 6;
 
   // Functions:
   void setAuthor(Author aType);
@@ -54,7 +54,7 @@ class AMessage : public QWidget {
   void setupError(const QString &content);
   void prepareSetupWidget();
   void alignTextToWindowWidth();
-  QPair<QSpacerItem *, ABoard *> mkLt();
+  QPair<QSpacerItem *, ABoard *> makeLayout();
 };
 
 #endif  // A_MESSAGE_H
