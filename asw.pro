@@ -1,4 +1,4 @@
-QT       += core gui widgets sql
+QT += core gui widgets sql
 
 TARGET = asw
 TEMPLATE = app
@@ -7,7 +7,13 @@ INCLUDEPATH += /usr/include/python3.8
 
 LIBS += -lpython3.8
 
-DEFINES += QT_DEPRECATED_WARNINGS
+DEFINES += QT_DEPRECATED_WARNINGS # \
+    # ADISPLAY_DEBUG \
+    # ADISPLAY_ADDMSG_DEBUG \
+    # NLPMODULE_DEBUG \
+    # NLPMODULE_SEARCH_DEBUG \
+    # SQLITE_DEBUG \
+    # SQLITE_SCANSOURCE_DEBUG
 
 CONFIG += c++20
 

@@ -1,6 +1,8 @@
 #include "a_display.h"
-#include <QElapsedTimer>
+#ifdef ADISPLAY_DEBUG
 #include <QDebug>
+#include <QElapsedTimer>
+#endif
 
 /*
  * All short named objects and their explanations:
@@ -29,8 +31,11 @@ ADisplay::ADisplay(short _max_message_amount, QWidget *parent)
 
 /*! Adds a message to the display. */
 void ADisplay::addMessage(QWidget *message) {
+#ifdef ADISPLAY_ADDMSG_DEBUG
   QElapsedTimer timer;
   timer.start();
+#endif
+  messages_mutex.lock();
   message_counter++;
   message->setParent(this);
   all_messages.append(message);
@@ -47,14 +52,19 @@ void ADisplay::addMessage(QWidget *message) {
       vertical_box_layout->removeWidget(
           all_messages.at(all_messages.length() - message_counter--));
     }
+  messages_mutex.unlock();
+#ifdef ADISPLAY_ADDMSG_DEBUG
   qDebug() << "ADisplay::addMessage:" << timer.nsecsElapsed();
+#endif
 }
 
 /*! Sets the widget to its initial state. */
 void ADisplay::start() {
+  messages_mutex.lock();
   for (QWidget *widget : qAsConst(all_messages))
     widget->close();
   all_messages.clear();
+  messages_mutex.unlock();
   if (vertical_box_layout)
     delete vertical_box_layout;
   QWidget *box = new QWidget(this);

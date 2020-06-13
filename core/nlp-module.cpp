@@ -1,6 +1,8 @@
 #include "nlp-module.h"
-#include <QElapsedTimer>
+#ifdef NLPMODULE_DEBUG
 #include <QDebug>
+#include <QElapsedTimer>
+#endif
 
 /*
  * All short named variables and their explanations:
@@ -41,8 +43,10 @@ NLPmodule::NLPmodule(Basis *_basis, QObject *parent)
  *   3) selects the results and sends them to the core.
  */
 void NLPmodule::search(QString userExpression) {
+#ifdef NLPMODULE_SEARCH_DEBUG
   QElapsedTimer timer;
   timer.start();
+#endif
   // 1)
   userExpression = basis->sql->purify(userExpression);
   // 2)
@@ -84,7 +88,9 @@ void NLPmodule::search(QString userExpression) {
   // Thus, information from databases is finally transformed into a structured
   // data set.
   select(userExpression, toGlobalMap(lms));
+#ifdef NLPMODULE_SEARCH_DEBUG
   qDebug() << "NLPmodule::search:" << timer.nsecsElapsed();
+#endif
 }
 
 /*!

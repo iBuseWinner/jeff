@@ -1,6 +1,7 @@
 #ifndef A_DISPLAY_H
 #define A_DISPLAY_H
 
+#include <QMutex>
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QVBoxLayout>
@@ -27,6 +28,7 @@ private:
   // Objects:
   QVBoxLayout *vertical_box_layout = nullptr;
   bool scrollEnabled = true;
+  QMutex messages_mutex;
   QList<QWidget *> all_messages;
   short message_counter = 0;
   short max_message_amount = 0;
