@@ -36,8 +36,8 @@ private:
   // Functions:
   void connector();
   void scrollDown(int min, int max);
-  void scrollTumbler(int v);
-  void showWidgets(int v = 0);
+  void scrollTumbler(int value);
+  void showWidgets(int value = 0);
 };
 
 #endif // A_DISPLAY_H

@@ -4,14 +4,6 @@
 #include <QElapsedTimer>
 #endif
 
-/*
- * All short named objects and their explanations:
- * {sp} <- spacer
- * {v} <- value
- * {min} <- minimum
- * {max} <- maximum
- */
-
 /*!
  * Argument: QWidget {*parent}.
  * Creates an ADisplay.
@@ -60,13 +52,31 @@ void ADisplay::addMessage(QWidget *message) {
 
 /*! Sets the widget to its initial state. */
 void ADisplay::start() {
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: we are here.";
+#endif
   messages_mutex.lock();
-  for (QWidget *widget : qAsConst(all_messages))
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: mutex locked.";
+#endif
+  for (auto *widget : qAsConst(all_messages)) // keyword 'auto' is necessary
     widget->close();
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: widgets closed.";
+#endif
   all_messages.clear();
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: widgets cleared.";
+#endif
   messages_mutex.unlock();
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: mutex unlocked.";
+#endif
   if (vertical_box_layout)
     delete vertical_box_layout;
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: vertical_box_layout deleted.";
+#endif
   QWidget *box = new QWidget(this);
   box->setObjectName("box");
   box->setAttribute(Qt::WA_DeleteOnClose);
@@ -78,6 +88,9 @@ void ADisplay::start() {
   vertical_box_layout->addItem(sp);
   box->setLayout(vertical_box_layout);
   setWidget(box);
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: we are ready.";
+#endif
 }
 
 /*! Establishes communications for user interaction through the widget. */
@@ -106,15 +119,15 @@ void ADisplay::scrollDown(int min, int max) {
  * Argument: int {v} [current position of the vertical scroll bar].
  * Enables or disables automatic scrolling.
  */
-void ADisplay::scrollTumbler(int v) {
-  if (not scrollEnabled and (v == verticalScrollBar()->maximum()))
+void ADisplay::scrollTumbler(int value) {
+  if (not scrollEnabled and (value == verticalScrollBar()->maximum()))
     scrollEnabled = true;
-  if (scrollEnabled and (v != verticalScrollBar()->maximum()))
+  if (scrollEnabled and (value != verticalScrollBar()->maximum()))
     scrollEnabled = false;
 }
 
-void ADisplay::showWidgets(int v) {
-  if ((v == verticalScrollBar()->minimum()) and
+void ADisplay::showWidgets(int value) {
+  if ((value == verticalScrollBar()->minimum()) and
       (message_counter < all_messages.length())) {
     // добавляем по половине от максимума
     short portion = max_message_amount / 2;
