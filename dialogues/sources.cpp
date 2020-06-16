@@ -31,8 +31,8 @@
  * {|> Remove }
  * <----------------------->
  */
-SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent) : QWidget(parent) {
-  basis = _basis;
+SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent)
+    : QWidget(parent), basis(_basis) {
   setAttribute(Qt::WA_DeleteOnClose);
   setObjectName(objn);
   lt = new QGridLayout();
@@ -71,14 +71,16 @@ void SourcesDialog::add() {
   QString p = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
       QTranslator::tr("ASW database") + "(*.asw.db)");
-  if (p.isEmpty()) return;
+  if (p.isEmpty())
+    return;
   edited = true;
   append(basis->sql->sources(p));
 }
 
 /*! Removes selected containers. */
 void SourcesDialog::remove() {
-  if (!cl->selectedItems().length()) return;
+  if (!cl->selectedItems().length())
+    return;
   edited = true;
   for (int i = 0; i < cl->selectedItems().length(); i++) {
     QTreeWidgetItem *parent;
@@ -114,7 +116,8 @@ void SourcesDialog::append(const QList<Source> &cProps) {
         parent = cl->invisibleRootItem()->takeChild(tli2);
         break;
       }
-    if (!isInside) parent = new QTreeWidgetItem(QStringList(cProp.path));
+    if (!isInside)
+      parent = new QTreeWidgetItem(QStringList(cProp.path));
     cl->addTopLevelItem(parent);
     bool notContains = true;
     for (int childIndex = 0; childIndex < parent->childCount(); childIndex++)
@@ -167,7 +170,8 @@ void SourcesDialog::openCC() {
 /*! Closes the container creation dialog. */
 void SourcesDialog::closeCC() {
   disconnect(_cc, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
-  disconnect(_cc, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCC);
+  disconnect(_cc, &CreateSourceDialog::cancelled, this,
+             &SourcesDialog::closeCC);
   lt->removeWidget(_cc);
   connect(crtAct, &QAction::triggered, this, &SourcesDialog::openCC);
 }

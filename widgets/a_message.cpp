@@ -1,8 +1,8 @@
 #include "a_message.h"
+#include <QDebug>
 
 /*! Creates an AMessage. */
 AMessage::AMessage() {
-  setAttribute(Qt::WA_DeleteOnClose);
   QHBoxLayout *hbox_layout = new QHBoxLayout();
   hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
   hbox_layout->setSpacing(0);
@@ -43,7 +43,7 @@ void AMessage::setWidget(QWidget *_widget) {
   if (widget)
     return;
   widget = _widget;
-  connect(widget, &QWidget::destroyed, this, &AMessage::close);
+  connect(widget, &QWidget::destroyed, this, [this] { emit closed(); });
   gridLayout->addWidget(widget);
 }
 

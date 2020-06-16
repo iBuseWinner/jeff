@@ -1,6 +1,7 @@
 #ifndef A_DISPLAY_H
 #define A_DISPLAY_H
 
+#include "widgets/a_message.h"
 #include <QMutex>
 #include <QScrollArea>
 #include <QScrollBar>
@@ -17,7 +18,7 @@ public:
   // Functions:
   explicit ADisplay(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
-  void addMessage(QWidget *message);
+  void addMessage(AMessage *message);
 
   /*! Sets the scroll state. */
   void setScrollEnabled(bool _scrollEnabled) { scrollEnabled = _scrollEnabled; }
@@ -38,6 +39,7 @@ private:
   void scrollDown(int min, int max);
   void scrollTumbler(int value);
   void showWidgets(int value = 0);
+  void removeMessage(AMessage *message);
 };
 
 #endif // A_DISPLAY_H

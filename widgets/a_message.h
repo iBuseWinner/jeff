@@ -1,14 +1,14 @@
 #ifndef A_MESSAGE_H
 #define A_MESSAGE_H
 
+#include "core/message.h"
+#include "widgets/a_board.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextDocument>
-#include "core/message.h"
-#include "widgets/a_board.h"
 
 /*!
  * Class: AMessage.
@@ -16,7 +16,7 @@
  */
 class AMessage : public QWidget {
   Q_OBJECT
- public:
+public:
   // Functions:
   AMessage();
   AMessage(Message shadow);
@@ -30,7 +30,10 @@ class AMessage : public QWidget {
   QDateTime returnDateTime() { return message.datetime; }
   Message returnShadow() { return message; }
 
- private:
+signals:
+  void closed();
+
+private:
   Q_DISABLE_COPY(AMessage)
 
   // Objects:
@@ -57,4 +60,4 @@ class AMessage : public QWidget {
   QPair<QSpacerItem *, ABoard *> makeLayout();
 };
 
-#endif  // A_MESSAGE_H
+#endif // A_MESSAGE_H

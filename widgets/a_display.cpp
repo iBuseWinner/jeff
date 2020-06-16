@@ -22,7 +22,7 @@ ADisplay::ADisplay(short _max_message_amount, QWidget *parent)
 }
 
 /*! Adds a message to the display. */
-void ADisplay::addMessage(QWidget *message) {
+void ADisplay::addMessage(AMessage *message) {
 #ifdef ADISPLAY_ADDMSG_DEBUG
   QElapsedTimer timer;
   timer.start();
@@ -30,6 +30,8 @@ void ADisplay::addMessage(QWidget *message) {
   messages_mutex.lock();
   message_counter++;
   message->setParent(this);
+  connect(message, &AMessage::closed, this,
+          [this, message] { removeMessage(message); });
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   // если скролл примерно ниже середины, и число отображаемых сообщений больше
@@ -40,9 +42,9 @@ void ADisplay::addMessage(QWidget *message) {
       (message_counter > max_message_amount))
     // удаляем все лишние сообщения
     while (message_counter > max_message_amount) {
-      all_messages.at(all_messages.length() - message_counter)->hide();
+      all_messages[all_messages.length() - message_counter]->hide();
       vertical_box_layout->removeWidget(
-          all_messages.at(all_messages.length() - message_counter--));
+          all_messages[all_messages.length() - message_counter--]);
     }
   messages_mutex.unlock();
 #ifdef ADISPLAY_ADDMSG_DEBUG
@@ -111,7 +113,7 @@ void ADisplay::scrollDown(int min, int max) {
 }
 
 /*!
- * Argument: int {v} [current position of the vertical scroll bar].
+ * Argument: int {value} [current position of the vertical scroll bar].
  * Enables or disables automatic scrolling.
  */
 void ADisplay::scrollTumbler(int value) {
@@ -137,4 +139,23 @@ void ADisplay::showWidgets(int value) {
     }
     verticalScrollBar()->setValue(1);
   }
+}
+
+void ADisplay::removeMessage(AMessage *message) {
+  messages_mutex.lock();
+  message->close();
+  vertical_box_layout->removeWidget(message);
+#ifdef ADISPLAY_DEBUG
+  if (not
+#endif
+      all_messages.removeOne(message)
+#ifdef ADISPLAY_DEBUG
+  )
+    qDebug() << "message has not been removed from list!";
+#else
+      ;
+#endif
+  disconnect(message);
+  message_counter--;
+  messages_mutex.unlock();
 }
