@@ -51,15 +51,17 @@ void CreateSourceDialog::select() {
     selStart();
 }
 
-/*! Finishes configuring the future container. */
+/*! Finishes configuring the future source. */
 void CreateSourceDialog::save() {
   if ((m_dbpath.isEmpty()) || (titleInput->text().isEmpty()))
     close();
   Source cProp;
   cProp.path = m_dbpath;
   cProp.tableTitle = titleInput->text();
-  basis->sql->create(cProp);
-  cProp.tableName = basis->sql->getUuid();
+  QString *table_name = new QString;
+  basis->sql->create(cProp, table_name);
+  cProp.tableName = *table_name;
+  delete table_name;
   emit add(cProp);
   close();
 }

@@ -26,16 +26,6 @@
  */
 
 /*!
- * Arguments: settings {*_basis} [reference to Basis instance],
- *            QObject {*parent}.
- * Adds SQLite database, sets references to private objects.
- */
-NLPmodule::NLPmodule(Basis *_basis, QObject *parent)
-    : QObject(parent), basis(_basis) {
-  QSqlDatabase::addDatabase("QSQLITE");
-}
-
-/*!
  * Argument: QString {ue} [user input expression].
  * Runs regular expression searches in databases in several stages:
  *   1) purifies expression {ue};

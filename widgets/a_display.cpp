@@ -59,18 +59,9 @@ void ADisplay::start() {
 #ifdef ADISPLAY_START_DEBUG
   qDebug() << "ADisplay::start: mutex locked.";
 #endif
-  for (auto *widget : qAsConst(all_messages)) // keyword 'auto' is necessary
-    widget->close();
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: widgets closed.";
-#endif
   all_messages.clear();
 #ifdef ADISPLAY_START_DEBUG
   qDebug() << "ADisplay::start: widgets cleared.";
-#endif
-  messages_mutex.unlock();
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: mutex unlocked.";
 #endif
   if (vertical_box_layout)
     delete vertical_box_layout;
@@ -88,6 +79,10 @@ void ADisplay::start() {
   vertical_box_layout->addItem(sp);
   box->setLayout(vertical_box_layout);
   setWidget(box);
+  messages_mutex.unlock();
+#ifdef ADISPLAY_START_DEBUG
+  qDebug() << "ADisplay::start: mutex unlocked.";
+#endif
 #ifdef ADISPLAY_START_DEBUG
   qDebug() << "ADisplay::start: we are ready.";
 #endif

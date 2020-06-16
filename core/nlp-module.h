@@ -1,15 +1,15 @@
 #ifndef NLPMODULE_H
 #define NLPMODULE_H
 
+#include "core/basis.h"
+#include "core/sqlite.h"
+#include "widgets/a_message.h"
 #include <QMap>
 #include <QObject>
 #include <QPair>
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
-#include "core/basis.h"
-#include "core/sqlite.h"
-#include "widgets/a_message.h"
 
 /*!
  * Struct: SourceRow.
@@ -51,14 +51,15 @@ struct GlobalMap {
  */
 class NLPmodule : public QObject {
   Q_OBJECT
- public:
-  NLPmodule(Basis *_basis, QObject *parent = nullptr);
+public:
+  NLPmodule(Basis *_basis, QObject *parent = nullptr)
+      : QObject(parent), basis(_basis) {}
   void search(QString userExpression);
 
- signals:
+signals:
   QString ready(QString resultExpression);
 
- private:
+private:
   // Objects:
   Basis *basis = nullptr;
 
@@ -69,4 +70,4 @@ class NLPmodule : public QObject {
   void select(QString ue, const GlobalMap &gm);
 };
 
-#endif  // NLPMODULE_H
+#endif // NLPMODULE_H

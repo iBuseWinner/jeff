@@ -26,11 +26,11 @@ enum check { All, OnlyOpen, AnyContent };
 /*! Enum: todo [what to do with db]. */
 enum todo {
   CreateMainTable,
-  CreateContainerTable,
+  CreateSourceTable,
   WithDraw,
   LoadOptions,
   WriteOptions,
-  SelectContainers,
+  SelectSources,
   InsertExpression,
   SelectExpressionsAndLinks,
   SelectExpressionAndLinksByAddress,
@@ -45,7 +45,11 @@ class SQLite : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  void create(const Source &_source);
+#ifdef SQLITE_AUTO_TESTS
+  virtual
+#endif
+      bool
+      create(const Source &_source, QString *uuid);
   QList<Source> sources(const QString &path);
   Source load(Source _source);
   void write(const Source &_source);
@@ -59,12 +63,8 @@ public:
                                                   int address);
 
   /*! Class initialization. */
-  SQLite(QObject *parent) { setParent(parent); }
-  /*! Returns the UUID of the created container. */
-  QString getUuid() {
-    QString _u = uuid;
-    uuid.clear();
-    return _u;
+  SQLite(QObject *parent = nullptr) : QObject(parent) {
+    QSqlDatabase::addDatabase("QSQLITE");
   }
   /*! Purifies {str}. */
   QString purify(const QString &str) {
@@ -72,8 +72,8 @@ public:
   }
   /*! Removes punctuation. */
   QString removeSymbols(QString str) {
-    for (auto sb : sbs)
-      str.remove(sb);
+    for (auto symbol : punctuation_symbols)
+      str.remove(symbol);
     return str;
   }
 
@@ -83,13 +83,12 @@ signals:
 
 private:
   // Objects:
-  int mna = 4;
-  QString uuid = "";
-  const QString sbs = ".,:;!?-'\"";
+  static const int maximum_number_of_attempts = 4;
+  inline static const QString punctuation_symbols = ".,:;!?-'\"";
 
   // Functions:
   QSqlDatabase prepare(const QString &path, check o = check::All);
-  void exec(QSqlQuery *q, todo o, QStringList vs = QStringList());
+  bool exec(QSqlQuery *query, todo option, QStringList values = QStringList());
 };
 
 #endif // SQLITE_H

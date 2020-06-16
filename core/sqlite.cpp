@@ -1,7 +1,7 @@
 #include "sqlite.h"
 #ifdef SQLITE_DEBUG
-#include <QElapsedTimer>
 #include <QDebug>
+#include <QElapsedTimer>
 #endif
 
 /*
@@ -10,33 +10,40 @@
  * {q} <- query
  * {r} <- record
  * {o} <- option
- * {cProp} <- container properties
- * {cProps} <- containers properties
- * {c} <- container
  * {cntr} <- counter
- * {mna} <- maximum number of attempts
  * {rand} <- randomizer
- * {uuid} <- universally unique identifier
  * {vs} <- values
  */
 
 /*!
  * Argument: Source {_source} [source properties].
- * Creates container.
+ * Creates source.
  */
-void SQLite::create(const Source &_source) {
+bool SQLite::create(const Source &_source, QString *uuid) {
+#ifdef SQLITE_AUTO_TESTS
+  qDebug() << "\tDatabase path:" << _source.path;
+#elif SQLITE_DEBUG
+  qDebug() << "Database path:" << _source.path;
+#endif
   // The container is created even if the database itself does not exist.
   QSqlDatabase db = prepare(_source.path, check::OnlyOpen);
-  if (db.databaseName() == QString())
-    return;
+  if (db.databaseName().isEmpty()) {
+#ifdef SQLITE_AUTO_TESTS
+    qDebug() << "\tDatabase name is empty.";
+#elif SQLITE_DEBUG
+    qDebug() << "Database name is empty.";
+#endif
+    return false;
+  }
   // Generates a table name. User-entered name may be incorrect for SQLite
   // database.
-  QString c;
+  QString uuid_to_verify;
   int cntr = 0;
   QStringList tables = db.tables();
   QRandomGenerator rand(quint32(QTime::currentTime().msec()));
   do {
-    c = QUuid(uint(rand.generate()), ushort(rand.generate()),
+    uuid_to_verify =
+        QUuid(uint(rand.generate()), ushort(rand.generate()),
               ushort(rand.generate()), uchar(rand.bounded(0, 256)),
               uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)),
               uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)),
@@ -44,27 +51,52 @@ void SQLite::create(const Source &_source) {
               uchar(rand.bounded(0, 256)))
             .toString();
     cntr++;
-  } while ((tables.contains(c)) && (cntr < mna));
-  if (tables.contains(c)) {
+  } while ((tables.contains(uuid_to_verify)) &&
+           (cntr < maximum_number_of_attempts));
+  if (tables.contains(uuid_to_verify)) {
     emit sqliteError(
         "Could not create container, number of attempts exceeded " +
-        QString(mna) + ".");
-    return;
+        QString(maximum_number_of_attempts) + ".");
+#ifdef SQLITE_AUTO_TESTS
+    qDebug() << "\tCould not create container, number of attempts exceeded " +
+                    QString(maximum_number_of_attempts) + ".";
+#elif SQLITE_DEBUG
+    qDebug() << "Could not create container, number of attempts exceeded " +
+                    QString(maximum_number_of_attempts) + ".";
+#endif
+    return false;
   }
-  uuid = c;
+  *uuid = uuid_to_verify;
   auto *q = new QSqlQuery(db);
-  exec(q, todo::CreateMainTable);
+  if (not exec(q, todo::CreateMainTable)) {
+    emit sqliteError("Could not create main table.");
+#ifdef SQLITE_AUTO_TESTS
+    qDebug() << "\tCould not create main table.";
+#elif SQLITE_DEBUG
+    qDebug() << "Could not create main table.";
+#endif
+    return false;
+  }
   QStringList vs;
-  vs.append(uuid);
+  vs.append(*uuid);
   vs.append(_source.tableTitle);
   vs.append(QString(_source.isReadOnly));
   vs.append(QString(_source.isPrivate));
   vs.append(QString(_source.isCatching));
   vs.append(QString(_source.isPrioritised));
-  exec(q, todo::WriteOptions, vs);
-  exec(q, todo::CreateContainerTable, QStringList(uuid));
+  if (not(exec(q, todo::WriteOptions, vs) and
+          exec(q, todo::CreateSourceTable, QStringList(*uuid)))) {
+    emit sqliteError("Could not write options and create source table.");
+#ifdef SQLITE_AUTO_TESTS
+    qDebug() << "\tCould not write options and create source table.";
+#elif SQLITE_DEBUG
+    qDebug() << "Could not write options and create source table.";
+#endif
+    return false;
+  }
   db.close();
   delete q;
+  return true;
 }
 
 /*!
@@ -77,7 +109,7 @@ QList<Source> SQLite::sources(const QString &path) {
   if (db.databaseName() == QString())
     return QList<Source>();
   auto *q = new QSqlQuery(db);
-  exec(q, todo::SelectContainers);
+  exec(q, todo::SelectSources);
   q->first();
   QList<Source> cProps;
   while (q->isValid()) {
@@ -247,8 +279,8 @@ bool SQLite::hasAdditionalProperties(const Source &_source) {
  * Gets additional properties of the expression by {address}.
  * Returns: QMap of properties-values.
  */
-QMap<QString, QString>
-SQLite::scanAdditionalProperties(const Source &_source, int address) {
+QMap<QString, QString> SQLite::scanAdditionalProperties(const Source &_source,
+                                                        int address) {
   QSqlDatabase db = prepare(_source.path);
   if (db.databaseName() == QString())
     return QMap<QString, QString>();
@@ -276,16 +308,25 @@ SQLite::scanAdditionalProperties(const Source &_source, int address) {
  * Returns: opened QSqlDatabase {db} with {path}.
  */
 QSqlDatabase SQLite::prepare(const QString &path, check o) {
+#ifdef SQLITE_AUTO_TESTS
+  qDebug() << "\tSQLite::prepare: entered in.";
+#endif
   if (o != check::OnlyOpen)
     if (!QFile::exists(path)) {
       emit sqliteError(tr("Database") + " \"" + path + "\" " +
                        tr("doesn't exist."));
+#ifdef SQLITE_AUTO_TESTS
+      qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
+#endif
       return QSqlDatabase();
     }
   QSqlDatabase db = QSqlDatabase::database();
   db.setDatabaseName(path);
   if (!db.open()) {
     emit sqliteError(db.lastError().text());
+#ifdef SQLITE_AUTO_TESTS
+    qDebug() << "\tSQLite::prepare: error:" << db.lastError().text();
+#endif
     db.setDatabaseName("");
     return db;
   }
@@ -293,6 +334,9 @@ QSqlDatabase SQLite::prepare(const QString &path, check o) {
     if (db.tables().isEmpty()) {
       emit sqliteWarning(tr("Database") + " \"" + path + "\" " +
                          tr("is empty."));
+#ifdef SQLITE_AUTO_TESTS
+      qDebug() << "\tSQLite::prepare: error: Database is empty.";
+#endif
       db.setDatabaseName("");
       return db;
     }
@@ -305,66 +349,69 @@ QSqlDatabase SQLite::prepare(const QString &path, check o) {
  *            QStringList {vs} [values for query].
  * Performs a database query.
  */
-void SQLite::exec(QSqlQuery *q, todo o, QStringList vs) {
-  // {*q} is passed to the function to return the result of the query by
-  // reference.
-  switch (o) {
+bool SQLite::exec(QSqlQuery *query, todo option, QStringList values) {
+  switch (option) {
   case todo::CreateMainTable:
-    q->prepare(
+    query->prepare(
         "CREATE TABLE IF NOT EXISTS sources (source TEXT NOT NULL UNIQUE, "
         "title TEXT, isReadOnly INTEGER NOT NULL, isPrivate INTEGER NOT NULL, "
         "isCatching INTEGER NOT NULL, isPrioritised INTEGER NOT NULL);");
     break;
-  case todo::CreateContainerTable:
-    q->prepare(
+  case todo::CreateSourceTable:
+    query->prepare(
         QString(
             "CREATE TABLE IF NOT EXISTS \"%1\" (address INTEGER NOT NULL "
             "PRIMARY KEY AUTOINCREMENT UNIQUE, expression TEXT, links TEXT)")
-            .arg(vs.at(0)));
+            .arg(values[0]));
     break;
   case todo::WithDraw:
-    q->prepare("DELETE FROM sources WHERE source=:c");
-    q->bindValue(":c", vs.at(0));
+    query->prepare("DELETE FROM sources WHERE source=:c");
+    query->bindValue(":c", values[0]);
     break;
   case todo::LoadOptions:
-    q->prepare(QString("SELECT title, isReadOnly, isPrivate, isCatching, "
-                       "isPrioritised FROM sources WHERE source = '%1'")
-                   .arg(vs.at(0)));
+    query->prepare(QString("SELECT title, isReadOnly, isPrivate, isCatching, "
+                           "isPrioritised FROM sources WHERE source = '%1'")
+                       .arg(values[0]));
     break;
   case todo::WriteOptions:
-    q->prepare("INSERT INTO sources VALUES (:c, :t, :ro, :pv, :ch, :pr)");
-    q->bindValue(":c", vs.at(0));
-    q->bindValue(":t", vs.at(1));
-    q->bindValue(":ro", vs.at(2).toInt());
-    q->bindValue(":pv", vs.at(3).toInt());
-    q->bindValue(":ch", vs.at(4).toInt());
-    q->bindValue(":pr", vs.at(5).toInt());
+    query->prepare("INSERT INTO sources VALUES (:c, :t, :ro, :pv, :ch, :pr)");
+    query->bindValue(":c", values[0]);
+    query->bindValue(":t", values[1]);
+    query->bindValue(":ro", values[2].toInt());
+    query->bindValue(":pv", values[3].toInt());
+    query->bindValue(":ch", values[4].toInt());
+    query->bindValue(":pr", values[5].toInt());
     break;
-  case todo::SelectContainers:
-    q->prepare("SELECT * FROM sources");
+  case todo::SelectSources:
+    query->prepare("SELECT * FROM sources");
     break;
   case todo::InsertExpression:
-    q->prepare(QString("INSERT OR REPLACE INTO \"%1\" VALUES (:a, :ex, :ls)")
-                   .arg(vs.at(0)));
-    q->bindValue(":a", vs.at(1).toInt());
-    q->bindValue(":ex", vs.at(2));
-    q->bindValue(":ls", vs.at(3));
+    query->prepare(
+        QString("INSERT OR REPLACE INTO \"%1\" VALUES (:a, :ex, :ls)")
+            .arg(values[0]));
+    query->bindValue(":a", values[1].toInt());
+    query->bindValue(":ex", values[2]);
+    query->bindValue(":ls", values[3]);
     break;
   case todo::SelectExpressionsAndLinks:
-    q->prepare(QString("SELECT expression, links FROM \"%1\"").arg(vs.at(0)));
+    query->prepare(
+        QString("SELECT expression, links FROM \"%1\"").arg(values[0]));
     break;
   case todo::SelectExpressionAndLinksByAddress:
-    q->prepare(
+    query->prepare(
         QString("SELECT expression, links FROM \"%1\" WHERE address = :a")
-            .arg(vs.at(0)));
-    q->bindValue(":a", vs.at(1).toInt());
+            .arg(values[0]));
+    query->bindValue(":a", values[1].toInt());
     break;
   case todo::SelectAdditionalProperties:
-    q->prepare(
-        QString("SELECT * FROM \"%1\" WHERE address = :a").arg(vs.at(0)));
-    q->bindValue(":a", vs.at(1).toInt());
+    query->prepare(
+        QString("SELECT * FROM \"%1\" WHERE address = :a").arg(values[0]));
+    query->bindValue(":a", values[1].toInt());
     break;
   }
-  if (!q->exec())
-    emit sqliteError(q->lastError().text() + " " + QString((int)o));
+  if (not query->exec()) {
+    emit sqliteError(query->lastError().text() + " " + QString(int(option)));
+    return false;
+  }
+  return true;
 }
