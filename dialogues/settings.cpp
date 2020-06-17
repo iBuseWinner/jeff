@@ -5,9 +5,9 @@
  *            QWidget {*parent}.
  * Constructs and prepares Settings.
  */
-Settings::Settings(Basis *_basis, QWidget *parent)
-    : QWidget(parent), basis(_basis) {
-  setAttribute(Qt::WA_DeleteOnClose);
+Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
+    : QWidget(parent), basis(_basis), _m_handler(m_handler) {
+  _m_handler->setPrisoner(this);
   setObjectName(objn);
   auto *vert_box_lt = new QVBoxLayout();
   vert_box_lt->setSpacing(0);
@@ -81,7 +81,7 @@ void Settings::saveAndClose() {
   basis->write(basis->isKeepingEnabledSt, keepHistory->isChecked());
   basis->write(basis->minDelaySt, minDelay->value());
   basis->write(basis->maxDelaySt, maxDelay->value());
-  close();
+  _m_handler->closePrisoner();
 }
 
 /*! Changes maxDelay value, if minDelay value is bigger than that. */

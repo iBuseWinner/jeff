@@ -72,7 +72,6 @@ void ADisplay::start() {
 #endif
   QWidget *box = new QWidget(this);
   box->setObjectName("box");
-  box->setAttribute(Qt::WA_DeleteOnClose);
   setStyleSheet("#display, #box { background-color: rgba(255, 255, 255, 0); }");
   auto *sp = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
   vertical_box_layout = new QVBoxLayout(this);

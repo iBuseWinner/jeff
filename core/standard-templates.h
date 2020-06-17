@@ -5,6 +5,7 @@
 #include "dialogues/about.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"
+#include "dialogues/modal-handler.h"
 #include "dialogues/settings.h"
 #include "dialogues/sources.h"
 #include <QString>
@@ -25,7 +26,7 @@ public:
       : QObject(parent), basis(_basis) {}
 
 signals:
-  QWidget *showASWDialog(QWidget *widget);
+  ModalHandler *showModalWidget(ModalHandler *handler);
   void changeMonologueMode();
 
 private:

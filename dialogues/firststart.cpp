@@ -17,8 +17,9 @@
  * {<->}{Close btn}
  * <-------------->
  */
-FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
-  setAttribute(Qt::WA_DeleteOnClose);
+FirstStart::FirstStart(QWidget *parent, ModalHandler *m_handler)
+    : QWidget(parent), _m_handler(m_handler) {
+  _m_handler->setPrisoner(this);
   setObjectName(objn);
   auto *layout = new QVBoxLayout();
   auto *title = new QLabel(
@@ -46,7 +47,8 @@ FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   bottomLayout->addItem(spacer);
   bottomLayout->addWidget(closeBtn);
   bottomLine->setLayout(bottomLayout);
-  connect(closeBtn, &AButton::clicked, this, &QWidget::close);
+  connect(closeBtn, &AButton::clicked, this,
+          [this] { _m_handler->closePrisoner(); });
   layout->addWidget(title);
   layout->addWidget(startText);
   layout->addWidget(bottomLine);

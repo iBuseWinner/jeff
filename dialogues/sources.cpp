@@ -18,9 +18,10 @@
  * {|> Remove }
  * <----------------------->
  */
-SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent)
-    : QWidget(parent), basis(_basis) {
-  setAttribute(Qt::WA_DeleteOnClose);
+SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
+                             ModalHandler *m_handler)
+    : QWidget(parent), basis(_basis), _m_handler(m_handler) {
+  _m_handler->setPrisoner(this);
   setObjectName(objn);
   grid_layout = new QGridLayout();
   grid_layout->setSpacing(0);
@@ -145,7 +146,7 @@ void SourcesDialog::sncl() {
             source_list->invisibleRootItem()->child(tli2)->child(childIndex)));
     basis->writeSourceList(sources);
   }
-  close();
+  _m_handler->closePrisoner();
 }
 
 /*! Opens the source creation dialog. */

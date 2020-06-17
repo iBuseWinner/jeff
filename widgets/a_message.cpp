@@ -10,40 +10,40 @@ AMessage::AMessage() {
 }
 
 /*!
- * Argument: Message {shadow} [basis for the message].
- * Creates an AMessage based on {shadow}.
+ * Argument: Message {message} [basis for the message].
+ * Creates an AMessage based on {message}.
  */
-AMessage::AMessage(Message shadow) {
-  setAttribute(Qt::WA_DeleteOnClose);
+AMessage::AMessage(Message message) {
   QHBoxLayout *hbox_layout = new QHBoxLayout();
   hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
   hbox_layout->setSpacing(0);
   setLayout(hbox_layout);
-  setShadow(shadow);
+  setMessage(message);
 }
 
 /*!
  * Argument: Message {_message} [basis for the message].
  * Sets {_message} into the AMessage.
  */
-void AMessage::setShadow(Message _message) {
+void AMessage::setMessage(Message _message) {
   if (_message.datetime.isNull())
     return;
   message = _message;
   setAuthor(message.aType);
   setMessageType(message.cType);
-  // setTheme(sh.tType);
+  // setTheme(message.tType);
 }
 
 /*!
- * Argument: QWidget {*_widget} [widget to be showed].
+ * Argument: ModalHandler {*m_handler} [handler with widget to be showed].
  * Sets {_widget} into the AMessage.
  */
-void AMessage::setWidget(QWidget *_widget) {
+void AMessage::setWidget(ModalHandler *m_handler) {
   if (widget)
     return;
-  widget = _widget;
-  connect(widget, &QWidget::destroyed, this, [this] { emit closed(); });
+  widget = m_handler->getPrisoner();
+  connect(m_handler, &ModalHandler::prisonerClosed, this,
+          [this] { emit closed(); });
   gridLayout->addWidget(widget);
 }
 
@@ -76,10 +76,10 @@ void AMessage::setMessageType(ContentType cType) {
     setupMarkdown(message.content);
     break;
   // case 3:
-  //  setupPicture(sh.content);
+  //  setupPicture(message.content);
   //  break;
   // case 4:
-  //  setupFile(sh.content);
+  //  setupFile(message.content);
   //  break;
   case 5:
     setupWarning(message.content);
@@ -96,10 +96,10 @@ void AMessage::setMessageType(ContentType cType) {
 }
 
 /*!
- * Argument: enum eT {tType} [theme].
+ * Argument: enum Theme {tType} [theme].
  * Sets the message colors.
  */
-// void AMessage::setTheme(eT tType) {}
+// void AMessage::setTheme(Theme tType) {}
 
 /*! Customizes layout of message from ASW. */
 void AMessage::setupASW() {
@@ -191,11 +191,11 @@ void AMessage::alignTextToWindowWidth() {
     textDocument.setPlainText(label->text());
   else
     return;
-  if (textDocument.idealWidth() < maximalWidgetWidth)
+  if (textDocument.idealWidth() < maximalMessageWidth)
     label->setWordWrap(false);
   else {
     label->setWordWrap(true);
-    label->setFixedWidth(maximalWidgetWidth);
+    label->setFixedWidth(maximalMessageWidth);
   }
 }
 

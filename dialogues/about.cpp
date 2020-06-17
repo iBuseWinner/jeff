@@ -17,8 +17,9 @@
  * {<->}[Close btn]
  * <-------------->
  */
-About::About(QWidget *parent) : QWidget(parent) {
-  setAttribute(Qt::WA_DeleteOnClose);
+About::About(QWidget *parent, ModalHandler *m_handler)
+    : QWidget(parent), _m_handler(m_handler) {
+  _m_handler->setPrisoner(this);
   setObjectName(objn);
   setFixedSize(fixed_width, fixed_height);
   auto *layout = new QGridLayout();
@@ -79,7 +80,8 @@ About::About(QWidget *parent) : QWidget(parent) {
   bottomLayout->addItem(bottomSpacer);
   bottomLayout->addWidget(closeBtn);
   bottomLine->setLayout(bottomLayout);
-  connect(closeBtn, &AButton::clicked, this, &QWidget::close);
+  connect(closeBtn, &AButton::clicked, this,
+          [this] { _m_handler->closePrisoner(); });
   scroll_area_1->setWidget(tab1);
   scroll_area_2->setWidget(tab2);
   tabs->addTab(scroll_area_1, QTranslator::tr("About"));

@@ -10,7 +10,7 @@
 
 /*!
  * Class: ADisplay.
- * Message widget.
+ * Widget that displays messages.
  */
 class ADisplay : public QScrollArea {
   Q_OBJECT

@@ -8,19 +8,31 @@
  */
 bool StdTemplates::dialogues(const QString &expression) {
   if (expression == "/about") {
-    emit showASWDialog(new About());
+    auto *modal_handler = new ModalHandler(this);
+    auto *about = new About(nullptr, modal_handler);
+    Q_UNUSED(about)
+    emit showModalWidget(modal_handler);
     return true;
   }
   if (expression == "/sm") {
-    emit showASWDialog(new SourcesDialog(basis));
+    auto *modal_handler = new ModalHandler(this);
+    auto *sources = new SourcesDialog(basis, nullptr, modal_handler);
+    Q_UNUSED(sources)
+    emit showModalWidget(modal_handler);
     return true;
   }
   if (expression == "/first") {
-    emit showASWDialog(new FirstStart());
+    auto *modal_handler = new ModalHandler(this);
+    auto *first_start = new FirstStart(nullptr, modal_handler);
+    Q_UNUSED(first_start)
+    emit showModalWidget(modal_handler);
     return true;
   }
   if (expression == "/settings") {
-    emit showASWDialog(new Settings(basis));
+    auto *modal_handler = new ModalHandler(this);
+    auto *settings = new Settings(basis, nullptr, modal_handler);
+    Q_UNUSED(settings)
+    emit showModalWidget(modal_handler);
     return true;
   }
   return false;

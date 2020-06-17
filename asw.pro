@@ -57,6 +57,7 @@ HEADERS += \
     core/source.h \
     core/sqlite.h \
     core/standard-templates.h \
+    dialogues/modal-handler.h \
     dialogues/sources/create-source.h \
     dialogues/help.h \
     dialogues/firststart.h \

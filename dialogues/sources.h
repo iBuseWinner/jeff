@@ -2,6 +2,7 @@
 #define SOURCESDIALOG_H
 
 #include "dialogues/sources/create-source.h"
+#include "dialogues/modal-handler.h"
 #include "widgets/a_button.h"
 #include "widgets/a_sourcelist.h"
 #include <QDialog>
@@ -18,7 +19,7 @@
 class SourcesDialog : public QWidget {
 public:
   // Functions:
-  explicit SourcesDialog(Basis *_basis, QWidget *parent = nullptr);
+  explicit SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
   void add();
   void remove();
 
@@ -27,6 +28,7 @@ private:
 
   // Objects:
   Basis *basis = nullptr;
+  ModalHandler *_m_handler = nullptr;
   inline static const QString objn = "sources";
   QMap<QTreeWidgetItem *, Source> source_widgets;
   CreateSourceDialog *create_source_dialog = nullptr;

@@ -2,6 +2,7 @@
 #define A_MESSAGE_H
 
 #include "core/message.h"
+#include "dialogues/modal-handler.h"
 #include "widgets/a_board.h"
 #include <QHBoxLayout>
 #include <QLabel>
@@ -17,18 +18,20 @@
 class AMessage : public QWidget {
   Q_OBJECT
 public:
+  // Objects:
+  static const ushort maximalMessageWidth = 400;
+
   // Functions:
   AMessage();
-  AMessage(Message shadow);
-  void setShadow(Message _message);
-  void setWidget(QWidget *_widget);
-
+  AMessage(Message message);
+  void setMessage(Message _message);
+  void setWidget(ModalHandler *m_handler);
   Author returnAuthor() { return message.aType; }
   ContentType returnContentType() { return message.cType; }
   Theme returnTheme() { return message.tType; }
   QString returnContent() { return message.content; }
   QDateTime returnDateTime() { return message.datetime; }
-  Message returnShadow() { return message; }
+  Message returnMessage() { return message; }
 
 signals:
   void closed();
@@ -39,8 +42,8 @@ private:
   // Objects:
   Message message;
   QGridLayout *gridLayout = nullptr;
+
   QWidget *widget = nullptr;
-  static const ushort maximalWidgetWidth = 400;
   static const ushort standardMargin = 6;
 
   // Functions:

@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include "core/basis.h"
+#include "dialogues/modal-handler.h"
 #include "widgets/a_button.h"
 #include "widgets/a_explanationlabel.h"
 #include <QCheckBox>
@@ -19,13 +20,15 @@ class Settings : public QWidget {
   Q_OBJECT
 public:
   // Functions:
-  explicit Settings(Basis *_basis, QWidget *parent = nullptr);
+  explicit Settings(Basis *_basis, QWidget *parent = nullptr,
+                    ModalHandler *m_handler = nullptr);
 
 private:
   Q_DISABLE_COPY(Settings)
 
   // Objects:
   Basis *basis = nullptr;
+  ModalHandler *_m_handler = nullptr;
   inline static const QString objn = "settings";
   QCheckBox *delay = nullptr;
   QWidget *box1 = nullptr;

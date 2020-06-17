@@ -20,7 +20,7 @@ Core::Core(QObject *parent) : QObject(parent) {
           &Core::showHistory);
   connect(basis->sql, &SQLite::sqliteError, this, &Core::getError);
   connect(basis->sql, &SQLite::sqliteWarning, this, &Core::getWarning);
-  connect(standardTemplates, &StdTemplates::showASWDialog, this,
+  connect(standardTemplates, &StdTemplates::showModalWidget, this,
           &Core::getWidget);
   connect(nlp, &NLPmodule::ready, this, &Core::getNLP);
   connect(standardTemplates, &StdTemplates::changeMonologueMode, this,
@@ -99,18 +99,19 @@ void Core::getError(const QString &errorText) {
 }
 
 /*!
- * Argument: QWidget {*widget} [widget that should be displayed].
+ * Argument: ModalHandler {*m_handler}
+ *               [handler with widget which should be displayed].
  * Creates AMessage {*message_widget}, inserts a widget into it and displays a
  * message.
  */
-void Core::getWidget(QWidget *widget) {
-  Message message = formMessage(widget->objectName(), Author::ASW,
-                                ContentType::Widget, Theme::Std);
+void Core::getWidget(ModalHandler *m_handler) {
+  Message message = formMessage(m_handler->getPrisoner()->objectName(),
+                                Author::ASW, ContentType::Widget, Theme::Std);
   historyProcessor->append(message);
   auto *message_widget = new AMessage(message);
-  widget->setParent(message_widget);
-  widget->setFixedWidth(400);
-  message_widget->setWidget(widget);
+  m_handler->getPrisoner()->setParent(message_widget);
+  m_handler->getPrisoner()->setFixedWidth(AMessage::maximalMessageWidth);
+  message_widget->setWidget(m_handler);
   emit show(message_widget);
 }
 

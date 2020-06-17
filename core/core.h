@@ -5,6 +5,7 @@
 #include "core/history-processor.h"
 #include "core/nlp-module.h"
 #include "core/standard-templates.h"
+#include "dialogues/modal-handler.h"
 #include <QObject>
 #include <QTimer>
 
@@ -25,7 +26,7 @@ public:
   void getNLP(QString resultExpression);
   void getWarning(const QString &warningText);
   void getError(const QString &errorText);
-  void getWidget(QWidget *widget);
+  void getWidget(ModalHandler *m_handler);
   // void getScript();
   void showHistory(QList<Message> message_history);
 
