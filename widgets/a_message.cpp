@@ -159,7 +159,7 @@ void AMessage::setupMarkdown(const QString &content) {
  */
 void AMessage::setupWarning(const QString &content) {
   auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
-  board->setStyleSheet(board->wss);
+  board->setStyleSheet(board->warning_style);
   setupText(QString("Warning: " + content));
 }
 
@@ -169,7 +169,7 @@ void AMessage::setupWarning(const QString &content) {
  */
 void AMessage::setupError(const QString &content) {
   auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
-  board->setStyleSheet(board->ess);
+  board->setStyleSheet(board->error_style);
   setupText(QString("Error: " + content));
 }
 

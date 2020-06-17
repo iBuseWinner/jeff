@@ -1,5 +1,5 @@
-#ifndef AEXPRESSIONLIST_H
-#define AEXPRESSIONLIST_H
+#ifndef A_EXPRESSIONLIST_H
+#define A_EXPRESSIONLIST_H
 
 #include <QListWidget>
 

@@ -40,7 +40,7 @@ private:
   Message message;
   QGridLayout *gridLayout = nullptr;
   QWidget *widget = nullptr;
-  static const ushort maximalWidgetWidth = 800;
+  static const ushort maximalWidgetWidth = 400;
   static const ushort standardMargin = 6;
 
   // Functions:
