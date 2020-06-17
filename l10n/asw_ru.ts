@@ -107,33 +107,33 @@
 <context>
     <name>ASW</name>
     <message>
-        <location filename="../asw.cpp" line="120"/>
+        <location filename="../asw.cpp" line="121"/>
         <source>Hello!</source>
         <translation>Привет!</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="145"/>
+        <location filename="../asw.cpp" line="146"/>
         <source>Save history</source>
         <translation>Сохранить историю сообщений</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="145"/>
-        <location filename="../asw.cpp" line="160"/>
+        <location filename="../asw.cpp" line="146"/>
+        <location filename="../asw.cpp" line="161"/>
         <source>JSON file</source>
         <translation>Файл JSON</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="155"/>
+        <location filename="../asw.cpp" line="156"/>
         <source>Import message history?</source>
         <translation>Импортировать историю сообщений?</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="156"/>
+        <location filename="../asw.cpp" line="157"/>
         <source>Messages will be added to the beginning of the dialogue.</source>
         <translation>Сообщения будут добавлены в начало диалога.</translation>
     </message>
     <message>
-        <location filename="../asw.cpp" line="160"/>
+        <location filename="../asw.cpp" line="161"/>
         <source>Load history</source>
         <translation>Загрузить историю сообщений</translation>
     </message>
@@ -214,53 +214,56 @@
     <name>QTranslator</name>
     <message>
         <location filename="../dialogues/about.cpp" line="29"/>
+        <location filename="../dialogues/about.cpp" line="41"/>
+        <location filename="../dialogues/firststart.cpp" line="25"/>
         <source>Associative system</source>
         <translation>Ассоциативная система</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="36"/>
-        <source>ASW - Associative System Window</source>
-        <translation>ASW - Ассоциативная система &quot;Ассист&quot;</translation>
-    </message>
-    <message>
-        <location filename="../dialogues/about.cpp" line="37"/>
+        <location filename="../dialogues/about.cpp" line="42"/>
         <source>The ASW Authors</source>
         <translation>Авторы ASW</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="39"/>
-        <source>ASW on GitHub</source>
-        <translation>ASW на GitHub</translation>
+        <location filename="../dialogues/about.cpp" line="48"/>
+        <source>License</source>
+        <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="44"/>
+        <location filename="../dialogues/about.cpp" line="33"/>
+        <location filename="../dialogues/about.cpp" line="49"/>
+        <source>version</source>
+        <translation>версия</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/about.cpp" line="54"/>
         <source>Shamshin Victor</source>
         <translation>Шамшин Виктор</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="45"/>
-        <location filename="../dialogues/about.cpp" line="50"/>
+        <location filename="../dialogues/about.cpp" line="55"/>
+        <location filename="../dialogues/about.cpp" line="60"/>
         <source>Developer</source>
         <translation>Разработчик</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="49"/>
+        <location filename="../dialogues/about.cpp" line="59"/>
         <source>Titov Klimenty</source>
         <translation>Титов Климентий</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="63"/>
+        <location filename="../dialogues/about.cpp" line="73"/>
         <location filename="../dialogues/firststart.cpp" line="40"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="75"/>
+        <location filename="../dialogues/about.cpp" line="85"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="76"/>
+        <location filename="../dialogues/about.cpp" line="86"/>
         <source>Authors</source>
         <translation>Авторы</translation>
     </message>
@@ -293,11 +296,6 @@
         <location filename="../dialogues/sources.cpp" line="60"/>
         <source>ASW database</source>
         <translation>База данных ASW</translation>
-    </message>
-    <message>
-        <location filename="../dialogues/firststart.cpp" line="25"/>
-        <source>Associative System</source>
-        <translation>Ассист</translation>
     </message>
     <message>
         <location filename="../dialogues/firststart.cpp" line="29"/>

@@ -151,7 +151,7 @@ void ADisplay::removeMessage(AMessage *message) {
       all_messages.removeOne(message)
 #ifdef ADISPLAY_DEBUG
   )
-    qDebug() << "message has not been removed from list!";
+    qDebug() << "Message has not been removed from list!";
 #else
       ;
 #endif

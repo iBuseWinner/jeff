@@ -2,6 +2,7 @@
 #define ABOUT_H
 
 #include "widgets/a_button.h"
+#include <QCoreApplication>
 #include <QGridLayout>
 #include <QLabel>
 #include <QScrollArea>

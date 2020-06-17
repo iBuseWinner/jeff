@@ -22,7 +22,7 @@ FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   setObjectName(objn);
   auto *layout = new QVBoxLayout();
   auto *title = new QLabel(
-      "<font size=\"6\">" + QTranslator::tr("Associative System") + "</font>",
+      "<font size=\"6\">" + QTranslator::tr("Associative system") + "</font>",
       this);
   auto *startText = new QLabel(
       "<font size=\"3\">" +

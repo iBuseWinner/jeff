@@ -27,20 +27,21 @@ class Basis : public QObject {
 public:
   // Objects:
   SQLite *sql = new SQLite(this);
-  const QString companyName = "CCLC";
-  const QString applicationName = "ASW";
+  inline static const QString companyName = "CCLC";
+  inline static const QString applicationName = "ASW";
 
-  const QString isMenuBarHiddenSt = "asw/menubarishidden";
-  const QString sizeSt = "asw/size";
-  const QString isFullScreenSt = "asw/isfullscreen";
-  const QString isNotFirstStartSt = "asw/isnotfirststart";
+  inline static const QString isMenuBarHiddenSt = "asw/menubarishidden";
+  inline static const QString sizeSt = "asw/size";
+  inline static const QString isFullScreenSt = "asw/isfullscreen";
+  inline static const QString isNotFirstStartSt = "asw/isnotfirststart";
 
-  const QString isMonologueModeEnabledSt = "core/ismonologuemodeenabled";
-  const QString isDelayEnabledSt = "core/isdelayenabled";
-  const QString minDelaySt = "core/mindelay";
-  const QString maxDelaySt = "core/maxdelay";
-  const QString isKeepingEnabledSt = "core/iskeepingenabled";
-  const QString isHintsEnabledSt = "core/ishintsenabled";
+  inline static const QString isMonologueModeEnabledSt =
+      "core/ismonologuemodeenabled";
+  inline static const QString isDelayEnabledSt = "core/isdelayenabled";
+  inline static const QString minDelaySt = "core/mindelay";
+  inline static const QString maxDelaySt = "core/maxdelay";
+  inline static const QString isKeepingEnabledSt = "core/iskeepingenabled";
+  inline static const QString isHintsEnabledSt = "core/ishintsenabled";
 
   // Functions:
   Basis(QObject *parent = nullptr) : QObject(parent) { readSourceList(); }

@@ -1,4 +1,5 @@
 #include "asw.h"
+
 /*!
  * Constructs and prepares the ASW window.
  *
