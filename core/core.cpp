@@ -2,11 +2,6 @@
 
 /*
  * All short named objects and their explanations:
- * {basis} <- core methods
- * {msg} <- message
- * {nlp} <- NLPmodule
- * {stdTs} <- standard templates
- * {_sh} <- shadow
  * {_cn} <- content
  * {_a} <- author
  * {_ct} <- content type
@@ -43,10 +38,10 @@ void Core::getUser(QString userExpression) {
   if (userExpression.isEmpty())
     return;
   // Displays the entered message on the screen.
-  Message sh =
-      shadow(userExpression, Author::User, ContentType::Markdown, Theme::Std);
-  historyProcessor->append(sh);
-  emit show(new AMessage(sh));
+  Message message = formMessage(userExpression, Author::User,
+                                ContentType::Markdown, Theme::Std);
+  historyProcessor->append(message);
+  emit show(new AMessage(message));
   // If a user has entered the command, there is no need to run other modules.
   if (standardTemplates->dialogues(userExpression))
     return;
@@ -64,16 +59,16 @@ void Core::getUser(QString userExpression) {
 void Core::getNLP(QString resultExpression) {
   if (resultExpression.isEmpty())
     return;
-  Message sh =
-      shadow(resultExpression, Author::ASW, ContentType::Markdown, Theme::Std);
-  historyProcessor->append(sh);
+  Message message = formMessage(resultExpression, Author::ASW,
+                                ContentType::Markdown, Theme::Std);
+  historyProcessor->append(message);
   QTimer::singleShot(
       basis->read(basis->isDelayEnabledSt).toBool()
           ? QRandomGenerator().bounded(basis->read(basis->minDelaySt).toInt(),
                                        basis->read(basis->maxDelaySt).toInt())
           : 0,
-      this, [this, sh, resultExpression] {
-        emit show(new AMessage(sh));
+      this, [this, message, resultExpression] {
+        emit show(new AMessage(message));
         if (monologueEnabled)
           nlp->search(resultExpression);
       });
@@ -85,10 +80,10 @@ void Core::getNLP(QString resultExpression) {
  */
 void Core::getWarning(const QString &warningText) {
   // The warning color is yellow.
-  Message sh =
-      shadow(warningText, Author::ASW, ContentType::Warning, Theme::Yellow);
-  historyProcessor->append(sh);
-  emit show(new AMessage(sh));
+  Message message = formMessage(warningText, Author::ASW, ContentType::Warning,
+                                Theme::Yellow);
+  historyProcessor->append(message);
+  emit show(new AMessage(message));
 }
 
 /*!
@@ -97,33 +92,35 @@ void Core::getWarning(const QString &warningText) {
  */
 void Core::getError(const QString &errorText) {
   // The error color is red.
-  Message sh = shadow(errorText, Author::ASW, ContentType::Error, Theme::Red);
-  historyProcessor->append(sh);
-  emit show(new AMessage(sh));
+  Message message =
+      formMessage(errorText, Author::ASW, ContentType::Error, Theme::Red);
+  historyProcessor->append(message);
+  emit show(new AMessage(message));
 }
 
 /*!
  * Argument: QWidget {*widget} [widget that should be displayed].
- * Creates AMessage {*msg}, inserts a widget into it and displays a message.
+ * Creates AMessage {*message_widget}, inserts a widget into it and displays a
+ * message.
  */
 void Core::getWidget(QWidget *widget) {
-  Message sh = shadow(widget->objectName(), Author::ASW, ContentType::Widget,
-                      Theme::Std);
-  historyProcessor->append(sh);
-  auto *msg = new AMessage(sh);
-  widget->setParent(msg);
+  Message message = formMessage(widget->objectName(), Author::ASW,
+                                ContentType::Widget, Theme::Std);
+  historyProcessor->append(message);
+  auto *message_widget = new AMessage(message);
+  widget->setParent(message_widget);
   widget->setFixedWidth(400);
-  msg->setWidget(widget);
-  emit show(msg);
+  message_widget->setWidget(widget);
+  emit show(message_widget);
 }
 
 /*!
- * Argument: QList of messages {messageHistory}.
- * Displays all messages from {messageHistory} on the screen.
+ * Argument: QList of messages {message_history}.
+ * Displays all messages from {message_history} on the screen.
  */
-void Core::showHistory(QList<Message> messageHistory) {
-  for (const auto &shadow : messageHistory)
-    emit show(new AMessage(shadow));
+void Core::showHistory(QList<Message> message_history) {
+  for (const auto &message : message_history)
+    emit show(new AMessage(message));
 }
 
 /*!
@@ -133,14 +130,15 @@ void Core::showHistory(QList<Message> messageHistory) {
  *            enum eT {_t} [appearance of the message].
  * Creates a shadow of a future AMessage.
  */
-Message Core::shadow(const QString &_cn, Author _a, ContentType _ct, Theme _t) {
-  Message _sh;
-  _sh.content = _cn;
-  _sh.datetime = QDateTime::currentDateTime();
-  _sh.aType = _a;
-  _sh.cType = _ct;
-  _sh.tType = _t;
-  return _sh;
+Message Core::formMessage(const QString &_cn, Author _a, ContentType _ct,
+                          Theme _t) {
+  Message _message;
+  _message.content = _cn;
+  _message.datetime = QDateTime::currentDateTime();
+  _message.aType = _a;
+  _message.cType = _ct;
+  _message.tType = _t;
+  return _message;
 }
 
 void Core::setMonologueEnabled(bool enabled) {

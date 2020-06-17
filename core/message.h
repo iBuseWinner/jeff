@@ -37,6 +37,11 @@ struct Message {
   ContentType cType = ContentType::undefC;
   /*! Message theme. */
   Theme tType = Theme::Std;
+
+  friend bool operator==(Message m1, Message m2) {
+    return m1.aType == m2.aType and m1.cType == m2.cType and
+           m1.content == m2.content and m1.datetime == m2.datetime;
+  }
 };
 
 #endif // MESSAGE_H

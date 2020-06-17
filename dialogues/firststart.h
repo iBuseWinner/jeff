@@ -9,7 +9,7 @@
 #include "widgets/a_button.h"
 
 /*!
- * Class: FirstStart
+ * Class: FirstStart.
  * Shows a quick start guide.
  */
 class FirstStart : public QWidget {
@@ -21,7 +21,7 @@ class FirstStart : public QWidget {
   Q_DISABLE_COPY(FirstStart)
 
   // Objects:
-  const QString objn = "firststart";
+  inline static const QString objn = "firststart";
 };
 
 #endif  // FIRSTSTART_H

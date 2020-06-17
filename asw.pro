@@ -38,13 +38,13 @@ SOURCES += \
     widgets/a_expressionlist.cpp \
     widgets/a_message.cpp \
     widgets/a_board.cpp \
-    widgets/a_containerslist.cpp \
     widgets/a_display.cpp \
     widgets/a_line.cpp \
     widgets/a_lineedit.cpp \
     widgets/a_menubar.cpp \
     core/nlp-module.cpp \
-    widgets/a_explanationlabel.cpp
+    widgets/a_explanationlabel.cpp \
+    widgets/a_sourcelist.cpp
 
 HEADERS += \
     asw.h \
@@ -52,6 +52,7 @@ HEADERS += \
     core/core.h \
     core/history-processor.h \
     core/message.h \
+    core/nlp-structures.h \
     core/python-handler.h \
     core/source.h \
     core/sqlite.h \
@@ -67,13 +68,13 @@ HEADERS += \
     widgets/a_expressionlist.h \
     widgets/a_message.h \
     widgets/a_board.h \
-    widgets/a_containerslist.h \
     widgets/a_display.h \
     widgets/a_line.h \
     widgets/a_lineedit.h \
     widgets/a_menubar.h \
     core/nlp-module.h \
-    widgets/a_explanationlabel.h
+    widgets/a_explanationlabel.h \
+    widgets/a_sourcelist.h
 
 RESOURCES += \
     resources.qrc

@@ -5,7 +5,7 @@
 
 /*!
  * Struct: Source.
- * Contains data about the container of regular expressions for the NLP-module.
+ * Contains data about the source of regular expressions for the NLP-module.
  */
 struct Source {
   /*! Path to database. */

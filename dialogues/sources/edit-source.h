@@ -8,6 +8,10 @@
 #include <QObject>
 #include <QWidget>
 
+/*!
+ * Class: EditSourceDialog.
+ * Edits databases and allows users to change the reaction of ASW.
+ */
 class EditSourceDialog : public QWidget {
   Q_OBJECT
 public:

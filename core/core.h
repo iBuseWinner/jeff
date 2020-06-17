@@ -27,12 +27,12 @@ public:
   void getError(const QString &errorText);
   void getWidget(QWidget *widget);
   // void getScript();
-  void showHistory(QList<Message> messageHistory);
+  void showHistory(QList<Message> message_history);
 
   /*! Creates a shadow on demand. */
-  Message getShadow(QString content, Author author, ContentType contentType,
-                    Theme theme) {
-    return shadow(content, author, contentType, theme);
+  Message getMessage(QString content, Author author, ContentType contentType,
+                     Theme theme) {
+    return formMessage(content, author, contentType, theme);
   }
   void setMonologueEnabled(bool enabled);
 
@@ -49,7 +49,7 @@ private:
   bool monologueEnabled = false;
 
   // Functions:
-  Message shadow(const QString &_cn, Author _a, ContentType _ct, Theme _t);
+  Message formMessage(const QString &_cn, Author _a, ContentType _ct, Theme _t);
 };
 
 #endif

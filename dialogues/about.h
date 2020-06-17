@@ -1,6 +1,7 @@
 #ifndef ABOUT_H
 #define ABOUT_H
 
+#include "widgets/a_button.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QScrollArea>
@@ -8,24 +9,23 @@
 #include <QTabWidget>
 #include <QTranslator>
 #include <QWidget>
-#include "widgets/a_button.h"
 
 /*!
- * Class: About
+ * Class: About.
  * Contains information about the program and the authors.
  */
 class About : public QWidget {
- public:
+public:
   // Functions:
   explicit About(QWidget *parent = nullptr);
 
- private:
+private:
   Q_DISABLE_COPY(About)
 
   // Objects:
-  const QString objn = "about";
-  const int fw = 320;
-  const int fh = 230;
+  inline static const QString objn = "about";
+  static const int fixed_width = 320;
+  static const int fixed_height = 230;
 };
 
-#endif  // ABOUT_H
+#endif // ABOUT_H

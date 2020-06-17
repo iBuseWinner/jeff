@@ -11,6 +11,10 @@
 #include <QTranslator>
 #include <QWidget>
 
+/*!
+ * Class: Settings.
+ * Manages the program settings.
+ */
 class Settings : public QWidget {
   Q_OBJECT
 public:
@@ -22,7 +26,7 @@ private:
 
   // Objects:
   Basis *basis = nullptr;
-  const QString objn = "settings";
+  inline static const QString objn = "settings";
   QCheckBox *delay = nullptr;
   QWidget *box1 = nullptr;
   QSpinBox *minDelay = nullptr;

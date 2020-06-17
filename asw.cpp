@@ -1,5 +1,4 @@
 #include "asw.h"
-
 /*!
  * Constructs and prepares the ASW window.
  *
@@ -49,7 +48,7 @@ void ASW::keyPressEvent(QKeyEvent *event) {
                                               : line->sendButton->click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H)
-      menubar->setVisible(!menubar->isVisible());
+      menubar->setVisible(not menubar->isVisible());
     if (event->key() == Qt::Key_M)
       emit send("/sm");
     if (event->key() == Qt::Key_E)
@@ -59,7 +58,7 @@ void ASW::keyPressEvent(QKeyEvent *event) {
   }
   if (event->key() == Qt::Key_F11) {
     menubar->fullScreenAction->setChecked(
-        !menubar->fullScreenAction->isChecked());
+        not menubar->fullScreenAction->isChecked());
     // If the menu bar is hidden, it does not send signals.
     if (menubar->isHidden())
       fullScreenHandler();
@@ -72,16 +71,17 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 /*! Reads the settings from the file and applies. */
 void ASW::applyingSettings() {
   // If settings file does not exist, sets default settings.
-  if ((!basis->exists()) || (basis->isIncorrect())) {
+  if (not basis->exists() or basis->isIncorrect()) {
     resize(defaultWidth, defaultHeight);
     emit send("/first");
+    saveWindowSettings();
     return;
   }
   resize(basis->read(basis->sizeSt).toSize());
   menubar->fullScreenAction->setChecked(
       basis->read(basis->isFullScreenSt).toBool());
   emit menubar->fullScreenAction->triggered();
-  menubar->setVisible(!basis->read(basis->isMenuBarHiddenSt).toBool());
+  menubar->setVisible(not basis->read(basis->isMenuBarHiddenSt).toBool());
   menubar->emm->setChecked(
       basis->read(basis->isMonologueModeEnabledSt).toBool());
 }
@@ -99,7 +99,7 @@ void ASW::saveWindowSettings() {
 
 /*! Establishes communications for user interaction through the window. */
 void ASW::connector() {
-  // mb
+  // menubar
   connect(menubar->fullScreenAction, &QAction::triggered, this,
           &ASW::fullScreenHandler);
   connect(menubar, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
@@ -129,7 +129,7 @@ void ASW::fullScreenHandler() {
   menubar->fullScreenAction->isChecked() ? showFullScreen() : showNormal();
 }
 
-/*! Sends request to core {cr}. */
+/*! Sends request to core. */
 void ASW::userInputHandler() {
   // If the user sends a message, the display automatically scrolls to the end.
   display->setScrollEnabled(true);
@@ -138,8 +138,8 @@ void ASW::userInputHandler() {
   emit send(text);
 }
 
-/*! Calls the dialog, asks for the filename {fn} and saves the message history
- * to it. */
+/*! Calls the dialog, asks for the filename {filename} and saves the message
+ * history to it. */
 void ASW::exportMessageHistory() {
   QString filename = QFileDialog::getSaveFileName(
       nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
@@ -148,8 +148,8 @@ void ASW::exportMessageHistory() {
   historyProcessor->save(filename);
 }
 
-/*! Calls the dialog, asks for the filename {fn} and loads the message history
- * from it. */
+/*! Calls the dialog, asks for the filename {filename} and loads the message
+ * history from it. */
 void ASW::importMessageHistory() {
   if (QMessageBox::question(
           this, tr("Import message history?"),

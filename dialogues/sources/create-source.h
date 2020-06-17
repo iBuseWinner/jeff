@@ -10,6 +10,10 @@
 #include <QSpacerItem>
 #include <QWidget>
 
+/*!
+ * Class: CreateSourceDialog.
+ * Creates sources in databases.
+ */
 class CreateSourceDialog : public QWidget {
   Q_OBJECT
 public:
@@ -23,9 +27,9 @@ signals:
 protected:
   // Functions:
   /*! Cancels container creation. */
-  void closeEvent(QCloseEvent *e) override {
+  void closeEvent(QCloseEvent *event) override {
     emit cancelled();
-    e->accept();
+    event->accept();
   }
 
 private:

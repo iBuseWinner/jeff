@@ -43,13 +43,13 @@ public:
   const QString isHintsEnabledSt = "core/ishintsenabled";
 
   // Functions:
-  Basis(QObject *parent = nullptr) : QObject(parent) { readSourceList(); };
+  Basis(QObject *parent = nullptr) : QObject(parent) { readSourceList(); }
   void readSourceList();
   void check();
   QList<Message> readMessageHistory(QFile *file);
   void write(const QString &key, const QVariant &data);
   void writeSourceList(QList<Source> sourceList);
-  void writeMessageHistory(QList<Message> messageHistory, QFile *file);
+  void writeMessageHistory(QList<Message> message_history, QFile *file);
 
   /*! Returns whether the settings file exists. */
   bool exists() { return QFile::exists(settings->fileName()); }
@@ -64,7 +64,7 @@ public:
     return QFileInfo(settings->fileName()).absolutePath();
   }
   /*! Returns list of sources. */
-  QList<Source> getSources() { return cProps; }
+  QList<Source> getSources() { return sources; }
 
 signals:
   QString jsonError(QString errorText);
@@ -74,15 +74,15 @@ private:
   // Objects:
   bool access = true;
   bool correct = true;
-  const QString cfn = "sources.json";
+  inline static const QString sourcesStoreFilename = "sources.json";
   QSettings *settings =
       new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
                     applicationName, this);
-  QList<Source> cProps;
+  QList<Source> sources;
 
   // Functions:
   QJsonArray readJson(QFile *file);
-  void writeJson(QFile *file, QJsonArray jsonArray);
+  void writeJson(QFile *savefile, QJsonArray jsonArray);
   QJsonObject toJSON(const Source &source);
   QJsonObject toJSON(const Message &message);
   Source toSource(const QJsonObject &jsonObject);

@@ -22,34 +22,34 @@ void Basis::check() {
 }
 
 /*!
- * Compiles a list of containers used by the ASW.
- * Returns: QList of containers properties {cProps}.
+ * Compiles a list of sources used by the ASW.
  */
 void Basis::readSourceList() {
-  auto *f = new QFile(settingsPath() + QDir::separator() + cfn, this);
-  QJsonArray cs = readJson(f);
-  for (const QJsonValue &obj : qAsConst(cs)) {
-    // Some properties of containers are stored directly in the database itself
-    // in "tables". ASW reads them too {sq->optionsLoader()}.
-    Source k = sql->load(toSource(obj.toObject()));
-    if (not cProps.contains(k))
-      cProps.append(k);
+  auto *store = new QFile(
+      settingsPath() + QDir::separator() + sourcesStoreFilename, this);
+  QJsonArray sources_json = readJson(store);
+  for (const QJsonValue &source_json : qAsConst(sources_json)) {
+    // Some properties of sources are stored directly in the database itself
+    // in "tables". ASW reads them too {sql->optionsLoader()}.
+    Source source = sql->load(toSource(source_json.toObject()));
+    if (not sources.contains(source))
+      sources.append(source);
   }
 }
 
 /*!
  * Argument: QFile {*file} [file to read].
  * Recreates message history from file.
- * Returns: QList of messages {mh}.
+ * Returns: QList of messages {message_history}.
  */
 QList<Message> Basis::readMessageHistory(QFile *file) {
-  QJsonArray ms = readJson(file);
-  QList<Message> mh;
-  for (const QJsonValue &obj : qAsConst(ms)) {
-    Message m = toMessage(obj.toObject());
-    mh.append(m);
+  QJsonArray messages_json = readJson(file);
+  QList<Message> message_history;
+  for (const QJsonValue &obj : qAsConst(messages_json)) {
+    Message message = toMessage(obj.toObject());
+    message_history.append(message);
   }
-  return mh;
+  return message_history;
 }
 
 /*!
@@ -60,7 +60,7 @@ QList<Message> Basis::readMessageHistory(QFile *file) {
 void Basis::write(const QString &key, const QVariant &data) {
   // If the file is incorrectly formatted, ASW will not be able to restore the
   // data structure, so it clears the file.
-  if (!correct) {
+  if (not correct) {
     settings->clear();
     settings->sync();
     correct = true;
@@ -69,32 +69,33 @@ void Basis::write(const QString &key, const QVariant &data) {
 }
 
 /*!
- * Argument: QList of containers properties {containerList} [list for writing].
- * Writes {containerList} to a file {sf}.
+ * Argument: QList of sources properties {sourceList} [list for writing].
+ * Writes {sourceList} to a file {savefile}.
  */
 void Basis::writeSourceList(QList<Source> sourceList) {
-  cProps = sourceList;
+  sources = sourceList;
   QJsonArray cs;
-  for (const auto &cProp : qAsConst(sourceList)) {
-    cs.append(toJSON(cProp));
+  for (const auto &source : qAsConst(sourceList)) {
+    cs.append(toJSON(source));
     // Some properties of containers are stored directly in the database itself
     // in "tables". ASW writes them there.
-    sql->write(cProp);
+    sql->write(source);
   }
-  auto *sf = new QFile(settingsPath() + QDir::separator() + cfn);
-  writeJson(sf, cs);
+  auto *savefile =
+      new QFile(settingsPath() + QDir::separator() + sourcesStoreFilename);
+  writeJson(savefile, cs);
 }
 
 /*!
- * Arguments: QList of messages {messageHistory} [history to save],
+ * Arguments: QList of messages {message_history} [history to save],
  *            QFile {*file}.
- * Saves {messageHistory} to {file}.
+ * Saves {message_history} to {file}.
  */
-void Basis::writeMessageHistory(QList<Message> messageHistory, QFile *file) {
-  QJsonArray jsonMessageHistory;
-  for (const auto &message : qAsConst(messageHistory))
-    jsonMessageHistory.append(toJSON(message));
-  writeJson(file, jsonMessageHistory);
+void Basis::writeMessageHistory(QList<Message> message_history, QFile *file) {
+  QJsonArray message_history_json;
+  for (const auto &message : qAsConst(message_history))
+    message_history_json.append(toJSON(message));
+  writeJson(file, message_history_json);
 }
 
 /*!
@@ -103,11 +104,11 @@ void Basis::writeMessageHistory(QList<Message> messageHistory, QFile *file) {
  * Returns: QJsonArray from file.
  */
 QJsonArray Basis::readJson(QFile *file) {
-  if (!file->open(QIODevice::ReadOnly | QIODevice::Text))
+  if (not file->open(QIODevice::ReadOnly | QIODevice::Text))
     return QJsonArray();
   QTextStream textStream(file);
   auto *errors = new QJsonParseError();
-  QJsonDocument jd =
+  QJsonDocument document =
       QJsonDocument::fromJson(textStream.readAll().toUtf8(), errors);
   if (errors->error != QJsonParseError::NoError) {
     emit jsonError(errors->errorString());
@@ -116,21 +117,21 @@ QJsonArray Basis::readJson(QFile *file) {
   }
   delete errors;
   file->close();
-  return jd.array();
+  return document.array();
 }
 
 /*!
- * Arguments: QFile {*sf} [savefile],
+ * Arguments: QFile {*savefile} [savefile],
  *            QJsonArray {arr} [array to write].
- * Checks {sf} for errors. Writes {arr} to a file {sf}.
+ * Checks {savefile} for errors. Writes {jsonArray} to a file {savefile}.
  */
-void Basis::writeJson(QFile *file, QJsonArray jsonArray) {
-  if (!file->open(QIODevice::WriteOnly | QIODevice::Text))
+void Basis::writeJson(QFile *savefile, QJsonArray jsonArray) {
+  if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text))
     return;
   QJsonDocument jsonDocument(jsonArray);
-  QTextStream textStream(file);
+  QTextStream textStream(savefile);
   textStream << jsonDocument.toJson(QJsonDocument::Indented);
-  file->close();
+  savefile->close();
 }
 
 /*!

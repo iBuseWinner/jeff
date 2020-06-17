@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>arts/shots/menufile.png</file>
-        <file>arts/shots/addcontainer.png</file>
         <file>arts/icons/500/icon.png</file>
         <file>arts/littleasw.png</file>
         <file>arts/icons/16/send.svg</file>
@@ -31,5 +30,6 @@
         <file>arts/icons/16/document-import.svg</file>
         <file>arts/icons/16/configure.svg</file>
         <file>arts/icons/16/monologue.svg</file>
+        <file>arts/shots/addsource.png</file>
     </qresource>
 </RCC>

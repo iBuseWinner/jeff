@@ -1,37 +1,39 @@
 #ifndef HISTORY_PROCESSOR_H
 #define HISTORY_PROCESSOR_H
 
+#include "core/basis.h"
+#include "widgets/a_message.h"
 #include <QFileDialog>
 #include <QList>
 #include <QStringList>
-#include "core/basis.h"
-#include "widgets/a_message.h"
 
 /*!
- * Class: historyProcessor.
+ * Class: HProcessor.
  * Stores, exports and loads message history.
  */
 class HProcessor : public QObject {
   Q_OBJECT
- public:
+public:
   // Functions:
-  HProcessor(Basis *_basis, QObject *parent = nullptr);
+  HProcessor(Basis *_basis, QObject *parent = nullptr)
+      : QObject(parent), basis(_basis) {}
   void save(const QString &filename);
   void load(const QString &filename);
-  void removeOne(Message _message);
 
   /*! Adds a message to the story. */
-  void append(const Message &_message) { mh.append(_message); }
+  void append(const Message &_message) { message_history.append(_message); }
   /*! Clears the history. */
-  void clear() { mh.clear(); }
+  void clear() { message_history.clear(); }
+  /*! Removes message from history. */
+  void removeOne(Message _message) { message_history.removeOne(_message); }
 
- signals:
-  QList<Message> sendMessageHistory(QList<Message> _mh);
+signals:
+  QList<Message> sendMessageHistory(QList<Message> _message_history);
 
- private:
+private:
   // Objects:
   Basis *basis = nullptr;
-  QList<Message> mh;
+  QList<Message> message_history;
 };
 
-#endif  // HISTORY_PROCESSOR_H
+#endif // HISTORY_PROCESSOR_H

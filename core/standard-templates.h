@@ -3,16 +3,15 @@
 
 #include "core/basis.h"
 #include "dialogues/about.h"
-#include "dialogues/sources.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"
 #include "dialogues/settings.h"
+#include "dialogues/sources.h"
 #include <QString>
 
 /*!
- * Class: StdTemplates
+ * Class: StdTemplates.
  * Provides some kinds of widgets by command.
- * {basis} <- core methods
  */
 class StdTemplates : public QObject {
   Q_OBJECT
@@ -22,9 +21,8 @@ public:
   bool fastCommands(const QString &expression);
 
   /*! Class initialization. */
-  StdTemplates(Basis *_basis, QObject *parent = nullptr) : QObject(parent) {
-    basis = _basis;
-  }
+  StdTemplates(Basis *_basis, QObject *parent = nullptr)
+      : QObject(parent), basis(_basis) {}
 
 signals:
   QWidget *showASWDialog(QWidget *widget);

@@ -53,15 +53,15 @@ void CreateSourceDialog::select() {
 
 /*! Finishes configuring the future source. */
 void CreateSourceDialog::save() {
-  if ((m_dbpath.isEmpty()) || (titleInput->text().isEmpty()))
+  if ((m_dbpath.isEmpty()) or (titleInput->text().isEmpty()))
     close();
-  Source cProp;
-  cProp.path = m_dbpath;
-  cProp.tableTitle = titleInput->text();
+  Source source;
+  source.path = m_dbpath;
+  source.tableTitle = titleInput->text();
   QString *table_name = new QString;
-  basis->sql->create(cProp, table_name);
-  cProp.tableName = *table_name;
+  basis->sql->create(source, table_name);
+  source.tableName = *table_name;
   delete table_name;
-  emit add(cProp);
+  emit add(source);
   close();
 }

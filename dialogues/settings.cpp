@@ -1,10 +1,5 @@
 #include "settings.h"
 
-/*
- * All short named objects and their explanations:
- * {snclBtn} <- save and close
- */
-
 /*!
  * Arguments: Basis {_basis} [reference to Basis instance],
  *            QWidget {*parent}.

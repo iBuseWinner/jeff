@@ -5,15 +5,15 @@
 #include <QObject>
 
 /*!
- * Class: pythonHandler
+ * Class: PythonHandler.
  * Contains methods of working with Python scripts.
  */
-class pythonHandler : public QObject
+class PythonHandler : public QObject
 {
   Q_OBJECT
 public:
   /*! Class initialization. */
-  pythonHandler(QObject *parent);
+  PythonHandler(QObject *parent);
 };
 
 #endif // PYTHONHANDLER_H

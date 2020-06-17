@@ -2,8 +2,6 @@
 
 /*
  * All short named objects and their explanations:
- * {lt} <- layout
- * {sp} <- spacer
  * {objn} <- object name
  */
 
@@ -22,7 +20,7 @@
 FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   setAttribute(Qt::WA_DeleteOnClose);
   setObjectName(objn);
-  auto *lt = new QVBoxLayout();
+  auto *layout = new QVBoxLayout();
   auto *title = new QLabel(
       "<font size=\"6\">" + QTranslator::tr("Associative System") + "</font>",
       this);
@@ -30,10 +28,10 @@ FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
       "<font size=\"3\">" +
           QTranslator::tr(
               "This is the first start of ASW. Before you start working:") +
-          "<br>" + QTranslator::tr("1) go to the Container Manager...") +
+          "<br>" + QTranslator::tr("1) go to the Source Manager...") +
           "<p><img src=\":/arts/shots/menufile.png\"></p>" +
           QTranslator::tr("2) add databases...") +
-          "<p><img src=\":/arts/shots/addcontainer.png\"></p>" +
+          "<p><img src=\":/arts/shots/addsource.png\"></p>" +
           QTranslator::tr("And now you've done.") + "</font>",
       this);
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse |
@@ -43,13 +41,14 @@ FirstStart::FirstStart(QWidget *parent) : QWidget(parent) {
   auto *bottomLayout = new QHBoxLayout();
   bottomLayout->setMargin(0);
   bottomLayout->setSpacing(0);
-  auto *sp = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-  bottomLayout->addItem(sp);
+  auto *spacer =
+      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  bottomLayout->addItem(spacer);
   bottomLayout->addWidget(closeBtn);
   bottomLine->setLayout(bottomLayout);
   connect(closeBtn, &AButton::clicked, this, &QWidget::close);
-  lt->addWidget(title);
-  lt->addWidget(startText);
-  lt->addWidget(bottomLine);
-  setLayout(lt);
+  layout->addWidget(title);
+  layout->addWidget(startText);
+  layout->addWidget(bottomLine);
+  setLayout(layout);
 }

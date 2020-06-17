@@ -1,52 +1,52 @@
 #ifndef SOURCESDIALOG_H
 #define SOURCESDIALOG_H
 
+#include "dialogues/sources/create-source.h"
+#include "widgets/a_button.h"
+#include "widgets/a_sourcelist.h"
 #include <QDialog>
 #include <QFileDialog>
 #include <QMenu>
 #include <QString>
 #include <QTranslator>
 #include <QTreeWidgetItem>
-#include "dialogues/sources/create-source.h"
-#include "widgets/a_button.h"
-#include "widgets/a_containerslist.h"
 
 /*!
  * Class: Sources.
- * Manages NLP module containers.
+ * Manages NLP module's sources.
  */
 class SourcesDialog : public QWidget {
- public:
+public:
   // Functions:
   explicit SourcesDialog(Basis *_basis, QWidget *parent = nullptr);
   void add();
   void remove();
 
- private:
+private:
   Q_DISABLE_COPY(SourcesDialog)
 
   // Objects:
   Basis *basis = nullptr;
-  const QString objn = "containers";
-  QMap<QTreeWidgetItem *, Source> csm;
-  CreateSourceDialog *_cc = nullptr;
-  AContainersList *cl = nullptr;
-  QGridLayout *lt = nullptr;
-  AButton *addBtn = nullptr;
-  QAction *crtAct = nullptr;
-  QAction *remAct = nullptr;
-  AButton *snclBtn = nullptr;
+  inline static const QString objn = "sources";
+  QMap<QTreeWidgetItem *, Source> source_widgets;
+  CreateSourceDialog *create_source_dialog = nullptr;
+  ASourceList *source_list = nullptr;
+  QGridLayout *grid_layout = nullptr;
+  AButton *add_source = nullptr;
+  QAction *create_source = nullptr;
+  QAction *remove_source = nullptr;
+  AButton *save_and_close = nullptr;
   QAction *cancel = nullptr;
   bool edited = false;
 
   // Functions:
   void connector();
-  void append(const QList<Source> &cProps);
-  void appendSingle(const Source &cProp);
+  void append(const QList<Source> &sources);
+  void appendSingle(const Source &source);
   void sncl();
-  void openCC();
-  void closeCC();
+  void openCS();
+  void closeCS();
   void load();
 };
 
-#endif  // SOURCESDIALOG_H
+#endif // SOURCESDIALOG_H
