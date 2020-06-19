@@ -111,12 +111,12 @@ void SourcesDialog::append(const QList<Source> &sources) {
     source_list->addTopLevelItem(parent);
     bool notContains = true;
     for (int childIndex = 0; childIndex < parent->childCount(); childIndex++)
-      if (parent->child(childIndex)->text(0) == source.tableTitle) {
+      if (parent->child(childIndex)->text(0) == source.table_title) {
         notContains = false;
         break;
       }
     if (notContains) {
-      auto *cell = new QTreeWidgetItem(parent, QStringList(source.tableTitle));
+      auto *cell = new QTreeWidgetItem(parent, QStringList(source.table_title));
       source_widgets.insert(cell, source);
     }
   }

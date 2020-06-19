@@ -26,9 +26,9 @@ public:
   AMessage(Message message);
   void setMessage(Message _message);
   void setWidget(ModalHandler *m_handler);
-  Author returnAuthor() { return message.aType; }
-  ContentType returnContentType() { return message.cType; }
-  Theme returnTheme() { return message.tType; }
+  Author returnAuthor() { return message.author; }
+  ContentType returnContentType() { return message.content_type; }
+  Theme returnTheme() { return message.theme; }
   QString returnContent() { return message.content; }
   QDateTime returnDateTime() { return message.datetime; }
   Message returnMessage() { return message; }

@@ -28,8 +28,8 @@ void AMessage::setMessage(Message _message) {
   if (_message.datetime.isNull())
     return;
   message = _message;
-  setAuthor(message.aType);
-  setMessageType(message.cType);
+  setAuthor(message.author);
+  setMessageType(message.content_type);
   // setTheme(message.tType);
 }
 
@@ -181,12 +181,12 @@ void AMessage::prepareSetupWidget() {
 /*! Aligns text to the width of the window. */
 void AMessage::alignTextToWindowWidth() {
   auto *label = qobject_cast<QLabel *>(widget);
-  if (!label)
+  if (not label)
     return;
   QTextDocument textDocument;
-  if (message.cType == ContentType::Markdown)
+  if (message.content_type == ContentType::Markdown)
     textDocument.setHtml(label->text());
-  else if (message.cType == ContentType::Text)
+  else if (message.content_type == ContentType::Text)
     textDocument.setPlainText(label->text());
   else
     return;

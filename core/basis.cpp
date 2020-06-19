@@ -147,10 +147,10 @@ void Basis::write_json(QFile *savefile, QJsonArray json_array) {
  * @returns converted properties of @a source
  */
 QJsonObject Basis::to_json(const Source &source) {
-  return {{"container", source.tableName},
-          {"disabled", source.isDisabled},
+  return {{"container", source.table_name},
+          {"disabled", source.is_disabled},
           {"path", source.path},
-          {"title", source.tableTitle}};
+          {"title", source.table_title}};
 }
 
 /*!
@@ -162,9 +162,9 @@ QJsonObject Basis::to_json(const Source &source) {
 QJsonObject Basis::to_json(const Message &message) {
   return {{"content", message.content},
           {"datetime", message.datetime.toString(Qt::ISODateWithMs)},
-          {"author", int(message.aType)},
-          {"contentType", int(message.cType)},
-          {"theme", int(message.tType)}};
+          {"author", int(message.author)},
+          {"contentType", int(message.content_type)},
+          {"theme", int(message.theme)}};
 }
 
 /*!
@@ -176,10 +176,10 @@ QJsonObject Basis::to_json(const Message &message) {
  */
 Source Basis::to_source(const QJsonObject &json_object) {
   Source source;
-  source.tableName = json_object["container"].toString();
-  source.isDisabled = json_object["disabled"].toBool();
+  source.table_name = json_object["container"].toString();
+  source.is_disabled = json_object["disabled"].toBool();
   source.path = json_object["path"].toString();
-  source.tableTitle = json_object["title"].toString();
+  source.table_title = json_object["title"].toString();
   return source;
 }
 
@@ -195,8 +195,8 @@ Message Basis::to_message(const QJsonObject &json_object) {
   message.content = json_object["content"].toString();
   message.datetime = QDateTime::fromString(
       json_object["datetime"].toString(), Qt::ISODateWithMs);
-  message.aType = Author(json_object["author"].toInt());
-  message.cType = ContentType(json_object["contentType"].toInt());
-  message.tType = Theme(json_object["theme"].toInt());
+  message.author = Author(json_object["author"].toInt());
+  message.content_type = ContentType(json_object["contentType"].toInt());
+  message.theme = Theme(json_object["theme"].toInt());
   return message;
 }

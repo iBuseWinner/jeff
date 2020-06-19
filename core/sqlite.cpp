@@ -68,11 +68,11 @@ bool SQLite::create(const Source &source, QString *uuid) {
   }
   QStringList vs;
   vs.append(*uuid);
-  vs.append(source.tableTitle);
-  vs.append(QString(source.isReadOnly));
-  vs.append(QString(source.isPrivate));
-  vs.append(QString(source.isCatching));
-  vs.append(QString(source.isPrioritised));
+  vs.append(source.table_title);
+  vs.append(QString(source.is_read_only));
+  vs.append(QString(source.is_private));
+  vs.append(QString(source.is_catching));
+  vs.append(QString(source.is_prioritised));
   if (not(exec(query, todo::WriteOptions, vs) and
           exec(query, todo::CreateSourceTable, QStringList(*uuid)))) {
     emit sqliteError("Could not write options and create source table.");
@@ -104,12 +104,12 @@ QList<Source> SQLite::sources(const QString &path) {
   while (query->isValid()) {
     Source source;
     source.path = path;
-    source.tableName = query->value(0).toString();
-    source.tableTitle = query->value(1).toString();
-    source.isReadOnly = query->value(2).toInt();
-    source.isPrivate = query->value(3).toInt();
-    source.isCatching = query->value(4).toInt();
-    source.isPrioritised = query->value(5).toInt();
+    source.table_name = query->value(0).toString();
+    source.table_title = query->value(1).toString();
+    source.is_read_only = query->value(2).toInt();
+    source.is_private = query->value(3).toInt();
+    source.is_catching = query->value(4).toInt();
+    source.is_prioritised = query->value(5).toInt();
     sources.append(source);
     query->next();
   }
@@ -128,15 +128,15 @@ Source SQLite::load(Source source) {
   if (db.databaseName() == QString())
     return source;
   auto *query = new QSqlQuery(db);
-  exec(query, todo::LoadOptions, QStringList(source.tableName));
+  exec(query, todo::LoadOptions, QStringList(source.table_name));
   db.close();
   if (not query->first())
     return source;
-  source.tableTitle = query->value(0).toString();
-  source.isReadOnly = query->value(1).toBool();
-  source.isPrivate = query->value(2).toBool();
-  source.isCatching = query->value(3).toBool();
-  source.isPrioritised = query->value(4).toBool();
+  source.table_title = query->value(0).toString();
+  source.is_read_only = query->value(1).toBool();
+  source.is_private = query->value(2).toBool();
+  source.is_catching = query->value(3).toBool();
+  source.is_prioritised = query->value(4).toBool();
   delete query;
   return source;
 }
@@ -151,14 +151,14 @@ void SQLite::write(const Source &source) {
     return;
   auto *query = new QSqlQuery(db);
   exec(query, todo::CreateMainTable);
-  exec(query, todo::WithDraw, QStringList(source.tableName));
+  exec(query, todo::WithDraw, QStringList(source.table_name));
   QStringList values;
-  values.append(source.tableName);
-  values.append(source.tableTitle);
-  values.append(QString(source.isReadOnly));
-  values.append(QString(source.isPrivate));
-  values.append(QString(source.isCatching));
-  values.append(QString(source.isPrioritised));
+  values.append(source.table_name);
+  values.append(source.table_title);
+  values.append(QString(source.is_read_only));
+  values.append(QString(source.is_private));
+  values.append(QString(source.is_catching));
+  values.append(QString(source.is_prioritised));
   exec(query, todo::WriteOptions, values);
   db.close();
   delete query;
@@ -178,7 +178,7 @@ void SQLite::insert(const Source &source, int address,
     return;
   auto *query = new QSqlQuery(db);
   QStringList values;
-  values.append(source.tableName);
+  values.append(source.table_name);
   values.append(QString::number(address));
   values.append(expression);
   values.append(links);
@@ -200,7 +200,7 @@ QPair<QString, QString> SQLite::getExpression(const Source &source,
     return QPair<QString, QString>();
   auto *query = new QSqlQuery(db);
   QStringList values;
-  values.append(source.tableName);
+  values.append(source.table_name);
   values.append(QString::number(address));
   exec(query, todo::SelectExpressionAndLinksByAddress, values);
   db.close();
@@ -230,7 +230,7 @@ QMap<QString, QString> SQLite::scanSource(const Source &source,
   if (db.databaseName().isEmpty())
     return QMap<QString, QString>();
   auto *query = new QSqlQuery(db);
-  exec(query, todo::SelectExpressionsAndLinks, QStringList(source.tableName));
+  exec(query, todo::SelectExpressionsAndLinks, QStringList(source.table_name));
   query->first();
   QMap<QString, QString> expression_links;
   while (query->isValid()) {
@@ -258,7 +258,7 @@ bool SQLite::hasAdditionalProperties(const Source &source) {
   QSqlDatabase db = prepare(source.path);
   if (db.databaseName().isEmpty())
     return false;
-  QSqlRecord record = db.record(source.tableName);
+  QSqlRecord record = db.record(source.table_name);
   db.close();
   return (not record.fieldName(3).isNull());
 }
@@ -276,7 +276,7 @@ QMap<QString, QString> SQLite::scanAdditionalProperties(const Source &source,
     return QMap<QString, QString>();
   auto *query = new QSqlQuery(db);
   QStringList values;
-  values.append(source.tableName);
+  values.append(source.table_name);
   values.append(QString::number(address));
   exec(query, todo::SelectAdditionalProperties, values);
   QSqlRecord record = query->record();

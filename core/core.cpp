@@ -140,9 +140,9 @@ Message Core::get_message(const QString &content, Author author,
   Message message;
   message.content = content;
   message.datetime = QDateTime::currentDateTime();
-  message.aType = author;
-  message.cType = content_type;
-  message.tType = theme;
+  message.author = author;
+  message.content_type = content_type;
+  message.theme = theme;
   return message;
 }
 

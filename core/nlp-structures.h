@@ -7,9 +7,9 @@
 #include <QString>
 
 /*!
- * Struct: SourceRow.
- * Contains information about a single row (without address) of a database
- * table.
+ * @struct SourceRow
+ * @brief Contains information about a single row (without address) of a
+ * database table.
  */
 struct SourceRow {
   /*! Activator. */
@@ -21,8 +21,8 @@ struct SourceRow {
 };
 
 /*!
- * Struct: LinkMap.
- * Contains a map with user expression reagents of a single source.
+ * @struct LinkMap
+ * @brief Contains a map with user expression reagents of a single source.
  */
 struct LinkMap {
   /*! Activators and links to their reagents. */
@@ -32,8 +32,8 @@ struct LinkMap {
 };
 
 /*!
- * Struct: GlobalMap.
- * Contains a list with activator-reagents pairs.
+ * @struct GlobalMap
+ * @brief Contains a list with activator-reagents pairs.
  */
 struct GlobalMap {
   /*! Activators and their reagents. */
