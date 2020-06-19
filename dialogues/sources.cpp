@@ -50,8 +50,8 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
 void SourcesDialog::load() {
   source_widgets.clear();
   source_list->clear();
-  basis->readSourceList();
-  append(basis->getSources());
+  basis->read_source_list();
+  append(basis->get_sources());
 }
 
 /*! Adds a source to the widget, loads its data. */
@@ -144,7 +144,7 @@ void SourcesDialog::sncl() {
            childIndex++)
         sources.append(source_widgets.value(
             source_list->invisibleRootItem()->child(tli2)->child(childIndex)));
-    basis->writeSourceList(sources);
+    basis->write_source_list(sources);
   }
   _m_handler->closePrisoner();
 }

@@ -1,109 +1,113 @@
 #include "basis.h"
 
 /*!
- * Argument: QObject {*parent}.
- * Checks settings file for any errors.
+ * @fn Basis::check_settings_file
+ * @brief Checks the settings file for any errors.
  */
-void Basis::check() {
-  switch (settings->status()) {
-  case QSettings::AccessError:
-    emit settingsWarning(
+void Basis::check_settings_file() {
+  if (not accessible())
+    emit settings_warning(
         tr("An access error occurred (e.g. trying to write to a read-only "
            "file)."));
-    access = false;
-    break;
-  case QSettings::FormatError:
-    emit settingsWarning(
+  else if (not correct())
+    emit settings_warning(
         tr("A format error occurred (e.g. loading a malformed file)."));
-    correct = false;
-    break;
-  default:;
-  }
 }
 
 /*!
- * Compiles a list of sources used by the ASW.
+ * @fn Basis::read_source_list
+ * @brief Reads the store and loads a list of connected sources.
  */
-void Basis::readSourceList() {
+void Basis::read_source_list() {
   auto *store = new QFile(
-      settingsPath() + QDir::separator() + sourcesStoreFilename, this);
-  QJsonArray sources_json = readJson(store);
+      get_settings_path() + QDir::separator() + sourcesStoreFilename, this);
+  QJsonArray sources_json = read_json(store);
   for (const QJsonValue &source_json : qAsConst(sources_json)) {
-    // Some properties of sources are stored directly in the database itself
-    // in "tables". ASW reads them too {sql->optionsLoader()}.
-    Source source = sql->load(toSource(source_json.toObject()));
-    if (not sources.contains(source))
-      sources.append(source);
+    /*!
+     * Some properties of sources are stored directly in the database itself
+     * in tables. Basis reads them too.
+     * @sa SQLite::load
+     */
+    Source source = sql->load(to_source(source_json.toObject()));
+    if (not _sources.contains(source))
+      _sources.append(source);
   }
 }
 
 /*!
- * Argument: QFile {*file} [file to read].
- * Recreates message history from file.
- * Returns: QList of messages {message_history}.
+ * @fn Basis::read_message_history
+ * @brief Recreates message history from file.
+ * @param file QFile to read message history from
+ * @returns list of messages from file
  */
-QList<Message> Basis::readMessageHistory(QFile *file) {
-  QJsonArray messages_json = readJson(file);
+QList<Message> Basis::read_message_history(QFile *file) {
+  QJsonArray messages_json = read_json(file);
   QList<Message> message_history;
   for (const QJsonValue &obj : qAsConst(messages_json)) {
-    Message message = toMessage(obj.toObject());
+    Message message = to_message(obj.toObject());
     message_history.append(message);
   }
   return message_history;
 }
 
 /*!
- * Arguments: QString {key} [parameter name],
- *            QVariant {data} [parameter value].
- * Sets the value of the parameter.
+ * @fn Basis::write
+ * @brief Sets the value of the parameter.
+ * @param key parameter name
+ * @param data parameter value
  */
 void Basis::write(const QString &key, const QVariant &data) {
-  // If the file is incorrectly formatted, ASW will not be able to restore the
-  // data structure, so it clears the file.
-  if (not correct) {
-    settings->clear();
-    settings->sync();
-    correct = true;
+  if (not correct()) {
+    /*!
+     * If the file is incorrectly formatted, Basis will not be able to restore
+     * the data structure, so it clears the file.
+     */
+    _settings->clear();
+    _settings->sync();
   }
-  settings->setValue(key, data);
+  _settings->setValue(key, data);
 }
 
 /*!
- * Argument: QList of sources properties {sourceList} [list for writing].
- * Writes {sourceList} to a file {savefile}.
+ * @fn Basis::write_source_list
+ * @brief Writes @a sourceList to @a savefile.
+ * @param source_list list of sources' properties
  */
-void Basis::writeSourceList(QList<Source> sourceList) {
-  sources = sourceList;
+void Basis::write_source_list(QList<Source> source_list) {
+  _sources = source_list;
   QJsonArray cs;
-  for (const auto &source : qAsConst(sourceList)) {
-    cs.append(toJSON(source));
+  for (const auto &source : qAsConst(source_list)) {
+    cs.append(to_json(source));
     // Some properties of containers are stored directly in the database itself
     // in "tables". ASW writes them there.
     sql->write(source);
   }
   auto *savefile =
-      new QFile(settingsPath() + QDir::separator() + sourcesStoreFilename);
-  writeJson(savefile, cs);
+      new QFile(get_settings_path() + QDir::separator() + sourcesStoreFilename);
+  write_json(savefile, cs);
 }
 
 /*!
- * Arguments: QList of messages {message_history} [history to save],
- *            QFile {*file}.
- * Saves {message_history} to {file}.
+ * @fn Basis::write_message_history
+ * @brief Saves @a message_history to @a file.
+ * @param message_history list of messages
+ * @param file file to save there
  */
-void Basis::writeMessageHistory(QList<Message> message_history, QFile *file) {
+void Basis::write_message_history(QList<Message> message_history, QFile *file) {
   QJsonArray message_history_json;
   for (const auto &message : qAsConst(message_history))
-    message_history_json.append(toJSON(message));
-  writeJson(file, message_history_json);
+    message_history_json.append(to_json(message));
+  write_json(file, message_history_json);
 }
 
 /*!
- * Argument: QFile {*file} [file to read].
- * Universal JSON read function. Checks {file} for any errors.
- * Returns: QJsonArray from file.
+ * @fn Basis::read_json
+ * @brief Universal JSON read function.
+ * @details Additionally checks the file for errors.
+ * @param file file to read
+ * @returns QJsonArray read from file
  */
-QJsonArray Basis::readJson(QFile *file) {
+QJsonArray Basis::read_json(QFile *file) {
   if (not file->open(QIODevice::ReadOnly | QIODevice::Text))
     return QJsonArray();
   QTextStream textStream(file);
@@ -111,7 +115,7 @@ QJsonArray Basis::readJson(QFile *file) {
   QJsonDocument document =
       QJsonDocument::fromJson(textStream.readAll().toUtf8(), errors);
   if (errors->error != QJsonParseError::NoError) {
-    emit jsonError(errors->errorString());
+    emit json_error(errors->errorString());
     delete errors;
     return QJsonArray();
   }
@@ -121,25 +125,28 @@ QJsonArray Basis::readJson(QFile *file) {
 }
 
 /*!
- * Arguments: QFile {*savefile} [savefile],
- *            QJsonArray {arr} [array to write].
- * Checks {savefile} for errors. Writes {jsonArray} to a file {savefile}.
+ * @fn Basis::write_json
+ * @brief Writes @a jsonArray to @a savefile.
+ * @details Additionally checks the file for access.
+ * @param savefile file to save there
+ * @param json_array array to write in @a savefile
  */
-void Basis::writeJson(QFile *savefile, QJsonArray jsonArray) {
+void Basis::write_json(QFile *savefile, QJsonArray json_array) {
   if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text))
     return;
-  QJsonDocument jsonDocument(jsonArray);
+  QJsonDocument jsonDocument(json_array);
   QTextStream textStream(savefile);
   textStream << jsonDocument.toJson(QJsonDocument::Indented);
   savefile->close();
 }
 
 /*!
- * Argument: container {cProp} [container properties].
- * Turns {cProp} into a JSON object.
- * Returns: QJsonObject - converted properties of container.
+ * @fn Basis::to_json
+ * @brief Turns @a source into a JSON object.
+ * @param source source parameters
+ * @returns converted properties of @a source
  */
-QJsonObject Basis::toJSON(const Source &source) {
+QJsonObject Basis::to_json(const Source &source) {
   return {{"container", source.tableName},
           {"disabled", source.isDisabled},
           {"path", source.path},
@@ -147,11 +154,12 @@ QJsonObject Basis::toJSON(const Source &source) {
 }
 
 /*!
- * Argument: message {shadow}.
- * Turns {shadow} into a JSON object.
- * Returns: QJsonObject - converted message.
+ * @fn Basis::to_json
+ * @brief Turns @a message into a JSON object.
+ * @param message message data
+ * @returns converted properties of @a message
  */
-QJsonObject Basis::toJSON(const Message &message) {
+QJsonObject Basis::to_json(const Message &message) {
   return {{"content", message.content},
           {"datetime", message.datetime.toString(Qt::ISODateWithMs)},
           {"author", int(message.aType)},
@@ -160,31 +168,35 @@ QJsonObject Basis::toJSON(const Message &message) {
 }
 
 /*!
- * Argument: QJsonObject {obj} [JSON container properties].
- * Turns {obj} into a container.
- * Returns: container properties {cProp}.
+ * @fn Basis::to_source
+ * @brief Turns @a json_object into a source.
+ * @param json_object source in JSON
+ * @returns source properties
+ * @sa Source
  */
-Source Basis::toSource(const QJsonObject &jsonObject) {
+Source Basis::to_source(const QJsonObject &json_object) {
   Source source;
-  source.tableName = jsonObject.value("container").toString();
-  source.isDisabled = jsonObject.value("disabled").toBool();
-  source.path = jsonObject.value("path").toString();
-  source.tableTitle = jsonObject.value("title").toString();
+  source.tableName = json_object["container"].toString();
+  source.isDisabled = json_object["disabled"].toBool();
+  source.path = json_object["path"].toString();
+  source.tableTitle = json_object["title"].toString();
   return source;
 }
 
 /*!
- * Argument: QJsonObject {obj} [JSON message].
- * Turns {obj} into a message.
- * Returns: message {shadow}.
+ * @fn Basis::to_message
+ * @brief Turns @a json_object into a message.
+ * @param json_object message in JSON
+ * @returns message
+ * @sa Message
  */
-Message Basis::toMessage(const QJsonObject &jsonObject) {
-  Message shadow;
-  shadow.content = jsonObject.value("content").toString();
-  shadow.datetime = QDateTime::fromString(
-      jsonObject.value("datetime").toString(), Qt::ISODateWithMs);
-  shadow.aType = Author(jsonObject.value("author").toInt());
-  shadow.cType = ContentType(jsonObject.value("contentType").toInt());
-  shadow.tType = Theme(jsonObject.value("theme").toInt());
-  return shadow;
+Message Basis::to_message(const QJsonObject &json_object) {
+  Message message;
+  message.content = json_object["content"].toString();
+  message.datetime = QDateTime::fromString(
+      json_object["datetime"].toString(), Qt::ISODateWithMs);
+  message.aType = Author(json_object["author"].toInt());
+  message.cType = ContentType(json_object["contentType"].toInt());
+  message.tType = Theme(json_object["theme"].toInt());
+  return message;
 }

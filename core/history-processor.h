@@ -8,32 +8,35 @@
 #include <QStringList>
 
 /*!
- * Class: HProcessor.
- * Stores, exports and loads message history.
+ * @class HProcessor
+ * @brief Stores, exports and loads message history.
+ * @sa Message, Basis
  */
 class HProcessor : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  HProcessor(Basis *_basis, QObject *parent = nullptr)
-      : QObject(parent), basis(_basis) {}
+  /*! The constructor. */
+  HProcessor(Basis *basis, QObject *parent = nullptr)
+      : QObject(parent), _basis(basis) {}
+  /*! Adds a message to the story. */
+  void append(const Message &message) { _message_history.append(message); }
+  /*! Clears the history. */
+  void clear() { _message_history.clear(); }
+  /*! Removes message from history. */
+  void remove_one(Message message) { _message_history.removeOne(message); }
+
+  // Functions described in `history-processor.cpp`:
   void save(const QString &filename);
   void load(const QString &filename);
 
-  /*! Adds a message to the story. */
-  void append(const Message &_message) { message_history.append(_message); }
-  /*! Clears the history. */
-  void clear() { message_history.clear(); }
-  /*! Removes message from history. */
-  void removeOne(Message _message) { message_history.removeOne(_message); }
-
 signals:
-  QList<Message> sendMessageHistory(QList<Message> _message_history);
+  QList<Message> send_message_history(QList<Message> message_history);
 
 private:
   // Objects:
-  Basis *basis = nullptr;
-  QList<Message> message_history;
+  Basis *_basis = nullptr;
+  QList<Message> _message_history;
 };
 
 #endif // HISTORY_PROCESSOR_H

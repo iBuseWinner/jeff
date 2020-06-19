@@ -149,12 +149,12 @@
 <context>
     <name>Basis</name>
     <message>
-        <location filename="../core/basis.cpp" line="11"/>
+        <location filename="../core/basis.cpp" line="10"/>
         <source>An access error occurred (e.g. trying to write to a read-only file).</source>
         <translation>Произошла ошибка доступа (например, попытка записи в файл только для чтения).</translation>
     </message>
     <message>
-        <location filename="../core/basis.cpp" line="17"/>
+        <location filename="../core/basis.cpp" line="14"/>
         <source>A format error occurred (e.g. loading a malformed file).</source>
         <translation>Произошла ошибка формата (например, загрузка поврежденного файла).</translation>
     </message>
@@ -213,107 +213,107 @@
 <context>
     <name>QTranslator</name>
     <message>
-        <location filename="../dialogues/about.cpp" line="29"/>
-        <location filename="../dialogues/about.cpp" line="41"/>
-        <location filename="../dialogues/firststart.cpp" line="25"/>
+        <location filename="../dialogues/about.cpp" line="30"/>
+        <location filename="../dialogues/about.cpp" line="42"/>
+        <location filename="../dialogues/firststart.cpp" line="26"/>
         <source>Associative system</source>
         <translation>Ассоциативная система</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="42"/>
+        <location filename="../dialogues/about.cpp" line="43"/>
         <source>The ASW Authors</source>
         <translation>Авторы ASW</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="48"/>
+        <location filename="../dialogues/about.cpp" line="49"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="33"/>
-        <location filename="../dialogues/about.cpp" line="49"/>
+        <location filename="../dialogues/about.cpp" line="34"/>
+        <location filename="../dialogues/about.cpp" line="50"/>
         <source>version</source>
         <translation>версия</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="54"/>
+        <location filename="../dialogues/about.cpp" line="55"/>
         <source>Shamshin Victor</source>
         <translation>Шамшин Виктор</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="55"/>
-        <location filename="../dialogues/about.cpp" line="60"/>
+        <location filename="../dialogues/about.cpp" line="56"/>
+        <location filename="../dialogues/about.cpp" line="61"/>
         <source>Developer</source>
         <translation>Разработчик</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="59"/>
+        <location filename="../dialogues/about.cpp" line="60"/>
         <source>Titov Klimenty</source>
         <translation>Титов Климентий</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="73"/>
-        <location filename="../dialogues/firststart.cpp" line="40"/>
+        <location filename="../dialogues/about.cpp" line="74"/>
+        <location filename="../dialogues/firststart.cpp" line="41"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="85"/>
+        <location filename="../dialogues/about.cpp" line="87"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="86"/>
+        <location filename="../dialogues/about.cpp" line="88"/>
         <source>Authors</source>
         <translation>Авторы</translation>
     </message>
     <message>
-        <location filename="../dialogues/sources.cpp" line="28"/>
+        <location filename="../dialogues/sources.cpp" line="29"/>
         <source>Add source</source>
         <translation>Добавить источник</translation>
     </message>
     <message>
-        <location filename="../dialogues/sources.cpp" line="29"/>
+        <location filename="../dialogues/sources.cpp" line="30"/>
         <source>Create</source>
         <translation>Создать</translation>
     </message>
     <message>
-        <location filename="../dialogues/sources.cpp" line="30"/>
+        <location filename="../dialogues/sources.cpp" line="31"/>
         <source>Remove</source>
         <translation>Отключить</translation>
     </message>
     <message>
-        <location filename="../dialogues/sources.cpp" line="31"/>
+        <location filename="../dialogues/sources.cpp" line="32"/>
         <source>Save and close</source>
         <translation>Сохранить и закрыть</translation>
     </message>
     <message>
-        <location filename="../dialogues/sources.cpp" line="59"/>
+        <location filename="../dialogues/sources.cpp" line="60"/>
         <source>Select database</source>
         <translation>Выбрать базу данных</translation>
     </message>
     <message>
-        <location filename="../dialogues/sources.cpp" line="60"/>
+        <location filename="../dialogues/sources.cpp" line="61"/>
         <source>ASW database</source>
         <translation>База данных ASW</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="29"/>
+        <location filename="../dialogues/firststart.cpp" line="30"/>
         <source>This is the first start of ASW. Before you start working:</source>
         <translation>Это - первый запуск Ассиста. Прежде чем начать работать:</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="31"/>
+        <location filename="../dialogues/firststart.cpp" line="32"/>
         <source>1) go to the Source Manager...</source>
         <translation>1) перейдите в Менеджер источников...</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="33"/>
+        <location filename="../dialogues/firststart.cpp" line="34"/>
         <source>2) add databases...</source>
         <translation>2) добавьте базы данных...</translation>
     </message>
     <message>
-        <location filename="../dialogues/firststart.cpp" line="35"/>
+        <location filename="../dialogues/firststart.cpp" line="36"/>
         <source>And now you&apos;ve done.</source>
         <translation>И теперь вы можете приступать к работе.</translation>
     </message>

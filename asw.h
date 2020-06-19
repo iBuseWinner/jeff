@@ -44,7 +44,7 @@ private:
   // Objects:
   Core *core = new Core(this);
   Basis *basis = core->basis;
-  HProcessor *historyProcessor = core->historyProcessor;
+  HProcessor *historyProcessor = core->history_processor;
   ALine *line = new ALine(this);
   ADisplay *display = new ADisplay(25, this);
   AMenuBar *menubar = new AMenuBar(line, this);

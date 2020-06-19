@@ -1,5 +1,4 @@
 #include "a_message.h"
-#include <QDebug>
 
 /*! Creates an AMessage. */
 AMessage::AMessage() {

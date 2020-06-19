@@ -3,21 +3,41 @@
 
 #include <QObject>
 
+/*!
+ * @class ModalHandler
+ * @brief The class that is responsible for the state of the prisoner.
+ * @details Allows a prisoner, regardless of class, to tell AMessage that he is
+ * closed. In this case, AMessage will be expected to be hidden from ADisplay.
+ * @sa AMessage, ADisplay
+ */
 class ModalHandler : public QObject {
   Q_OBJECT
 public:
+  /*!
+   * @brief The constructor.
+   * @param[in,out] parent QObject parent
+   * @param[in,out] prisoner widget whose state is controlled by ModalHandler
+   */
   ModalHandler(QObject *parent = nullptr, QWidget *prisoner = nullptr)
       : QObject(parent), _prisoner(prisoner) {}
-  void closePrisoner() { emit prisonerClosed(_prisoner); }
+  /*! Closes the @a _prisoner. */
+  void closePrisoner() { emit prisonerClosed(); }
+  /*! Sets a @a _prisoner for ModalHandler. */
   void setPrisoner(QWidget *prisoner) { _prisoner = prisoner; }
+  /*! @returns the @a _prisoner. */
   QWidget *getPrisoner() { return _prisoner; }
 
 signals:
-  QWidget *prisonerClosed(QWidget *prisoner);
+  /*!
+   * @brief Says the @a _prisoner is closed.
+   * @attention At this point, the custom widget on ADisplay becomes zero size
+   * and displays as an empty message. It must be removed with ADisplay.
+   */
+  void prisonerClosed();
 
 private:
   Q_DISABLE_COPY(ModalHandler)
-  QWidget *_prisoner = nullptr;
+  QWidget *_prisoner = nullptr; /*!< Prisoner. */
 };
 
 #endif // MODALHANDLER_H

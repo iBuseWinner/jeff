@@ -20,7 +20,7 @@ void NLPmodule::search(QString user_expression) {
   user_expression = basis->sql->purify(user_expression);
   // 2)
   QList<LinkMap> link_map_list;
-  QList<Source> sources = basis->getSources();
+  QList<Source> sources = basis->get_sources();
   for (const Source &source : sources) {
     QList<SourceRow> source_row_list;
     // First receives a map {activator_links} of activators in

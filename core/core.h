@@ -10,32 +10,31 @@
 #include <QTimer>
 
 /*!
- * Class: Core.
- * Controls I/O.
+ * @class Core
+ * @brief Controls I/O.
+ * @details Manages objects associated with receiving messages from different
+ * sources.
+ * @sa Basis, HProcessor, NLPmodule, StdTemplates, AMessage
  */
 class Core : public QObject {
   Q_OBJECT
 public:
   // Objects:
   Basis *basis = new Basis(this);
-  HProcessor *historyProcessor = new HProcessor(basis, this);
+  HProcessor *history_processor = new HProcessor(basis, this);
 
-  // Functions:
+  // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
-  void getUser(QString userExpression);
-  void getNLP(QString resultExpression);
-  void getWarning(const QString &warningText);
-  void getError(const QString &errorText);
-  void getWidget(ModalHandler *m_handler);
-  // void getScript();
-  void showHistory(QList<Message> message_history);
-
-  /*! Creates a shadow on demand. */
-  Message getMessage(QString content, Author author, ContentType contentType,
-                     Theme theme) {
-    return formMessage(content, author, contentType, theme);
-  }
-  void setMonologueEnabled(bool enabled);
+  void got_message_from_user(const QString &user_expression);
+  void got_message_from_nlp(const QString &result_expression);
+  void got_warning(const QString &warning_text);
+  void got_error(const QString &error_text);
+  void got_modal(ModalHandler *m_handler);
+  // void got_script();
+  void show_history(QList<Message> message_history);
+  void set_monologue_enabled(const bool enabled);
+  Message get_message(const QString &content, Author author,
+                      ContentType content_type, Theme theme);
 
 signals:
   AMessage *show(AMessage *message);
@@ -45,12 +44,9 @@ private:
   Q_DISABLE_COPY(Core)
 
   // Objects:
-  NLPmodule *nlp = new NLPmodule(basis, this);
-  StdTemplates *standardTemplates = new StdTemplates(basis, this);
-  bool monologueEnabled = false;
-
-  // Functions:
-  Message formMessage(const QString &_cn, Author _a, ContentType _ct, Theme _t);
+  NLPmodule *_nlp = new NLPmodule(basis, this);
+  StdTemplates *_standard_templates = new StdTemplates(basis, this);
+  bool _monologue_enabled = false;
 };
 
 #endif

@@ -1,113 +1,114 @@
 #include "core.h"
 
-/*
- * All short named objects and their explanations:
- * {_cn} <- content
- * {_a} <- author
- * {_ct} <- content type
- * {_t} <- theme
- */
-
 /*!
- * Argument: QObject {*parent}.
- * Creates connections between modules and output collectors.
+ * @fn Core::Core
+ * @brief The constructor.
+ * @details Creates connections between modules and output collectors.
+ * @param parent QObject parent
  */
 Core::Core(QObject *parent) : QObject(parent) {
-  connect(basis, &Basis::jsonError, this, &Core::getError);
-  connect(basis, &Basis::settingsWarning, this, &Core::getWarning);
-  basis->check();
-  connect(historyProcessor, &HProcessor::sendMessageHistory, this,
-          &Core::showHistory);
-  connect(basis->sql, &SQLite::sqliteError, this, &Core::getError);
-  connect(basis->sql, &SQLite::sqliteWarning, this, &Core::getWarning);
-  connect(standardTemplates, &StdTemplates::showModalWidget, this,
-          &Core::getWidget);
-  connect(nlp, &NLPmodule::ready, this, &Core::getNLP);
-  connect(standardTemplates, &StdTemplates::changeMonologueMode, this,
-          [this] { setMonologueEnabled(!monologueEnabled); });
-  setMonologueEnabled(basis->read(basis->isMonologueModeEnabledSt).toBool());
+  connect(basis, &Basis::json_error, this, &Core::got_error);
+  connect(basis, &Basis::settings_warning, this, &Core::got_warning);
+  basis->check_settings_file();
+  connect(history_processor, &HProcessor::send_message_history, this,
+          &Core::show_history);
+  connect(basis->sql, &SQLite::sqliteError, this, &Core::got_error);
+  connect(basis->sql, &SQLite::sqliteWarning, this, &Core::got_warning);
+  connect(_standard_templates, &StdTemplates::showModalWidget, this,
+          &Core::got_modal);
+  connect(_nlp, &NLPmodule::ready, this, &Core::got_message_from_nlp);
+  connect(_standard_templates, &StdTemplates::changeMonologueMode, this,
+          [this] { set_monologue_enabled(not _monologue_enabled); });
+  set_monologue_enabled((*basis)[basis->isMonologueModeEnabledSt].toBool());
 }
 
 /*!
- * Argument: QString {userExpression} [contains user input].
- * Handles input {userExpression}, displays a message on the screen and launches
- * modules.
+ * @fn Core::got_message_from_user
+ * @brief Handles input @a user_expression, displays a message on the screen and
+ * launches modules.
+ * @param user_expression contains user input
  */
-void Core::getUser(QString userExpression) {
-  // Does not respond to blank input.
-  if (userExpression.isEmpty())
+void Core::got_message_from_user(const QString &user_expression) {
+  /*! Does not respond to blank input. */
+  if (user_expression.isEmpty())
     return;
-  // Displays the entered message on the screen.
-  Message message = formMessage(userExpression, Author::User,
+  /*! Displays the entered message on the screen. */
+  Message message = get_message(user_expression, Author::User,
                                 ContentType::Markdown, Theme::Std);
-  historyProcessor->append(message);
+  history_processor->append(message);
   emit show(new AMessage(message));
-  // If a user has entered the command, there is no need to run other modules.
-  if (standardTemplates->dialogues(userExpression))
+  /*! If a user has entered the command, there is no need to run other modules.
+   */
+  if (_standard_templates->dialogues(user_expression))
     return;
-  if (standardTemplates->fastCommands(userExpression))
+  if (_standard_templates->fastCommands(user_expression))
     return;
-  nlp->search(userExpression);
+  _nlp->search(user_expression);
 }
 
 /*!
- * Argument: QString {resultExpression} [contains the response of the NLP module
- * to input].
- * Processes the output of the NLP module {resultExpression} and displays a
- * message on the screen.
+ * @fn Core::got_message_from_nlp
+ * @brief Processes the output of the NLP module @a result_expression and
+ * displays a message on the screen.
+ * @param result_expression contains the response of the NLP module to user
+ * input
  */
-void Core::getNLP(QString resultExpression) {
-  if (resultExpression.isEmpty())
+void Core::got_message_from_nlp(const QString &result_expression) {
+  if (result_expression.isEmpty())
     return;
-  Message message = formMessage(resultExpression, Author::ASW,
+  Message message = get_message(result_expression, Author::ASW,
                                 ContentType::Markdown, Theme::Std);
-  historyProcessor->append(message);
+  history_processor->append(message);
+  /*! Delay is triggered if enabled. */
   QTimer::singleShot(
-      basis->read(basis->isDelayEnabledSt).toBool()
-          ? QRandomGenerator().bounded(basis->read(basis->minDelaySt).toInt(),
-                                       basis->read(basis->maxDelaySt).toInt())
+      (*basis)[basis->isDelayEnabledSt].toBool()
+          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
+                                       (*basis)[basis->maxDelaySt].toInt())
           : 0,
-      this, [this, message, resultExpression] {
+      this, [this, message, result_expression] {
         emit show(new AMessage(message));
-        if (monologueEnabled)
-          nlp->search(resultExpression);
+        if (_monologue_enabled)
+          _nlp->search(result_expression);
       });
 }
 
 /*!
- * Argument: QString {warningText} [contains the warning text of some module].
- * Displays {warningText}.
+ * @fn Core::got_warning
+ * @brief Displays @a warning_text.
+ * @param warning_text contains the warning text from some module
  */
-void Core::getWarning(const QString &warningText) {
-  // The warning color is yellow.
-  Message message = formMessage(warningText, Author::ASW, ContentType::Warning,
+void Core::got_warning(const QString &warning_text) {
+  /*! The warning color is yellow. */
+  Message message = get_message(warning_text, Author::ASW, ContentType::Warning,
                                 Theme::Yellow);
-  historyProcessor->append(message);
+  history_processor->append(message);
   emit show(new AMessage(message));
 }
 
 /*!
- * Argument: QString {errorText} [contains the error text of some module].
- * Displays {errorText}.
+ * @fn Core::got_error
+ * @brief Displays @a errorText.
+ * @param error_text contains the error text from some module
  */
-void Core::getError(const QString &errorText) {
-  // The error color is red.
+void Core::got_error(const QString &error_text) {
+  /*! The error color is red. */
   Message message =
-      formMessage(errorText, Author::ASW, ContentType::Error, Theme::Red);
-  historyProcessor->append(message);
+      get_message(error_text, Author::ASW, ContentType::Error, Theme::Red);
+  history_processor->append(message);
   emit show(new AMessage(message));
 }
 
 /*!
- * Argument: ModalHandler {*m_handler}
- *               [handler with widget which should be displayed].
- * Creates AMessage {*message_widget}, inserts a widget into it and displays a
- * message.
+ * @fn Core::got_modal
+ * @brief Creates AMessage @a message_widget, inserts a widget into it and
+ * displays a message.
+ * @param m_handler handler with widget which should be displayed
+ * @sa ModalHandler
  */
-void Core::getWidget(ModalHandler *m_handler) {
-  Message message = formMessage(m_handler->getPrisoner()->objectName(),
+void Core::got_modal(ModalHandler *m_handler) {
+  Message message = get_message(m_handler->getPrisoner()->objectName(),
                                 Author::ASW, ContentType::Widget, Theme::Std);
-  historyProcessor->append(message);
+  history_processor->append(message);
   auto *message_widget = new AMessage(message);
   m_handler->getPrisoner()->setParent(message_widget);
   m_handler->getPrisoner()->setFixedWidth(AMessage::maximalMessageWidth);
@@ -116,33 +117,41 @@ void Core::getWidget(ModalHandler *m_handler) {
 }
 
 /*!
- * Argument: QList of messages {message_history}.
- * Displays all messages from {message_history} on the screen.
+ * @fn Core::show_history
+ * @brief Displays all messages from @a message_histor} on the screen.
+ * @param message_history
  */
-void Core::showHistory(QList<Message> message_history) {
+void Core::show_history(QList<Message> message_history) {
   for (const auto &message : message_history)
     emit show(new AMessage(message));
 }
 
 /*!
- * Arguments: QString {_cn} [shadow content],
- *            enum eA {_a} [who is author],
- *            enum eC {_ct} [content type],
- *            enum eT {_t} [appearance of the message].
- * Creates a shadow of a future AMessage.
+ * @fn Core::get_message
+ * @brief Creates @a message.
+ * @param content content of message
+ * @param author who is author - user or asw?
+ * @param content_type type of given content
+ * @param theme appearance of the message
+ * @returns Message with given parameters.
  */
-Message Core::formMessage(const QString &_cn, Author _a, ContentType _ct,
-                          Theme _t) {
-  Message _message;
-  _message.content = _cn;
-  _message.datetime = QDateTime::currentDateTime();
-  _message.aType = _a;
-  _message.cType = _ct;
-  _message.tType = _t;
-  return _message;
+Message Core::get_message(const QString &content, Author author,
+                          ContentType content_type, Theme theme) {
+  Message message;
+  message.content = content;
+  message.datetime = QDateTime::currentDateTime();
+  message.aType = author;
+  message.cType = content_type;
+  message.tType = theme;
+  return message;
 }
 
-void Core::setMonologueEnabled(bool enabled) {
-  monologueEnabled = enabled;
+/*!
+ * @fn Core::set_monologue_enabled
+ * @brief Sets the status of the monologue mode.
+ * @param enabled boolean value of monologue mode state
+ */
+void Core::set_monologue_enabled(const bool enabled) {
+  _monologue_enabled = enabled;
   emit changeMenuBarMonologueCheckbox(enabled);
 }

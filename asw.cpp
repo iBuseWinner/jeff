@@ -72,24 +72,24 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 /*! Reads the settings from the file and applies. */
 void ASW::applyingSettings() {
   // If settings file does not exist, sets default settings.
-  if (not basis->exists() or basis->isIncorrect()) {
+  if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
     emit send("/first");
     saveWindowSettings();
     return;
   }
-  resize(basis->read(basis->sizeSt).toSize());
+  resize((*basis)[basis->sizeSt].toSize());
   menubar->fullScreenAction->setChecked(
-      basis->read(basis->isFullScreenSt).toBool());
+      (*basis)[basis->isFullScreenSt].toBool());
   emit menubar->fullScreenAction->triggered();
-  menubar->setVisible(not basis->read(basis->isMenuBarHiddenSt).toBool());
+  menubar->setVisible(not (*basis)[basis->isMenuBarHiddenSt].toBool());
   menubar->emm->setChecked(
-      basis->read(basis->isMonologueModeEnabledSt).toBool());
+      (*basis)[basis->isMonologueModeEnabledSt].toBool());
 }
 
 /*! Writes changes to window settings to a file. */
 void ASW::saveWindowSettings() {
-  if (basis->isUnaccessed())
+  if (not basis->accessible())
     return;
   basis->write(basis->sizeSt, size());
   basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
@@ -119,7 +119,7 @@ void ASW::connector() {
   // others
   connect(line->sendButton, &AButton::clicked, this, &ASW::userInputHandler);
   connect(this, &ASW::readyState, this, [this] { emit send(tr("Hello!")); });
-  connect(this, &ASW::send, core, &Core::getUser);
+  connect(this, &ASW::send, core, &Core::got_message_from_user);
   connect(core, &Core::show, display, &ADisplay::addMessage);
   connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm,
           &QAction::setChecked);

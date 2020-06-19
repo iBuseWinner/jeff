@@ -2,7 +2,6 @@
 #define A_SOURCELIST_H
 
 #include <QTreeWidget>
-#include <QTreeWidgetItem>
 
 /*!
  * Class: ASourceList.

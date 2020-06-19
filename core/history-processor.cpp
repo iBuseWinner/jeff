@@ -1,20 +1,21 @@
 #include "history-processor.h"
-#include <QDebug>
 
 /*!
- * Argument: QString {filename} [filename to save].
- * Saves {message_history} to file.
+ * @fn HProcessor::save
+ * @brief Saves @a _message_history to file.
+ * @param filename filename to save there
  */
 void HProcessor::save(const QString &filename) {
-  basis->writeMessageHistory(message_history, new QFile(filename));
+  _basis->write_message_history(_message_history, new QFile(filename));
 }
 
 /*!
- * Argument: QString {filename} [filename to load].
- * Loads {message_history} from file.
+ * @fn HProcessor::load
+ * @brief Loads @a _message_history from file.
+ * @param filename filename to read from
  */
 void HProcessor::load(const QString &filename) {
-  message_history =
-      basis->readMessageHistory(new QFile(filename)) + message_history;
-  emit sendMessageHistory(message_history);
+  _message_history =
+      _basis->read_message_history(new QFile(filename)) + _message_history;
+  emit send_message_history(_message_history);
 }
