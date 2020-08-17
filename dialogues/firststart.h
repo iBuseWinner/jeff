@@ -10,12 +10,13 @@
 #include <QWidget>
 
 /*!
- * Class: FirstStart.
- * Shows a quick start guide.
+ * @class FirstStart
+ * @brief Shows a quick start guide.
+ * @sa ModalHandler
  */
 class FirstStart : public QWidget {
 public:
-  // Functions:
+  // Functions described in 'firststart.cpp':
   explicit FirstStart(QWidget *parent = nullptr,
                       ModalHandler *m_handler = nullptr);
 
@@ -24,7 +25,9 @@ private:
 
   // Objects:
   ModalHandler *_m_handler = nullptr;
-  inline static const QString objn = "firststart";
+
+  // Constants:
+  inline static const QString object_name = "firststart";
 };
 
 #endif // FIRSTSTART_H

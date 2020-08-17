@@ -1,9 +1,10 @@
 #include "a_button.h"
 
 /*!
- * Arguments: QString {text} [button text],
- *            QWidget {parent}.
- * Creates an AButton.
+ * @fn AButton::AButton
+ * @brief The constructor.
+ * @param[in] text button text
+ * @param[in,out] parent QObject parent
  */
 AButton::AButton(const QString &text, QWidget *parent) : QToolButton(parent) {
   setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -15,8 +16,9 @@ AButton::AButton(const QString &text, QWidget *parent) : QToolButton(parent) {
 }
 
 /*!
- * Argument: QMouseEvent {*e} [transmitted automatically by Qt].
- * Responsible for the style of the pressed button.
+ * @fn AButton::mousePressEvent
+ * @brief Responsible for the style of the pressed button.
+ * @param[in,out] e mouse event
  */
 void AButton::mousePressEvent(QMouseEvent *e) {
   currentButtonColor = pressedButtonColor;

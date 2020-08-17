@@ -37,7 +37,15 @@ public:
                       ContentType content_type, Theme theme);
 
 signals:
+  /*!
+   * @brief Sends a message to ADisplay.
+   * @sa AMessage, ADisplay
+   */
   AMessage *show(AMessage *message);
+
+  /*!
+   * @brief Sets the monologue mode.
+   */
   bool changeMenuBarMonologueCheckbox(bool enabled);
 
 private:
@@ -45,7 +53,7 @@ private:
 
   // Objects:
   NLPmodule *_nlp = new NLPmodule(basis, this);
-  StdTemplates *_standard_templates = new StdTemplates(basis, this);
+  StandardTemplates *_standard_templates = new StandardTemplates(basis, this);
   bool _monologue_enabled = false;
 };
 

@@ -1,14 +1,16 @@
 #include "settings.h"
 
 /*!
- * Arguments: Basis {_basis} [reference to Basis instance],
- *            QWidget {*parent}.
- * Constructs and prepares Settings.
+ * @fn Settings::Settings
+ * @brief The constructor.
+ * @param[in,out] _basis reference to the Basis instance
+ * @param[in,out] parent QObject parent
+ * @param[in,out] m_handler reference to the ModalHandler instance
  */
 Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName(objn);
+  setObjectName(object_name);
   auto *vert_box_lt = new QVBoxLayout();
   vert_box_lt->setSpacing(0);
   vert_box_lt->setMargin(0);
@@ -54,7 +56,10 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
   loadStates();
 }
 
-/*! Establishes communications for user interaction through the dialog box. */
+/*!
+ * @fn Settings::connector
+ * @brief Establishes communications for user interaction through the dialog box.
+ */
 void Settings::connector() {
   connect(delay, &QCheckBox::toggled, this, &Settings::delayChecked);
   connect(minDelay, QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -64,7 +69,10 @@ void Settings::connector() {
   connect(save_and_close, &AButton::clicked, this, &Settings::saveAndClose);
 }
 
-/*! Loads settings from file. */
+/*!
+ * @fn Settings::loadStates
+ * @brief Loads settings from file.
+ */
 void Settings::loadStates() {
   delay->setChecked(basis->read(basis->isDelayEnabledSt).toBool());
   delayChecked();
@@ -75,7 +83,10 @@ void Settings::loadStates() {
   maxDelayValueChanged(maxDelay->value());
 }
 
-/*! Saves ASW settings. */
+/*!
+ * @fn Settings::saveAndClose
+ * @brief Saves ASW' settings.
+ */
 void Settings::saveAndClose() {
   basis->write(basis->isDelayEnabledSt, delay->isChecked());
   basis->write(basis->isKeepingEnabledSt, keepHistory->isChecked());
@@ -84,13 +95,21 @@ void Settings::saveAndClose() {
   _m_handler->closePrisoner();
 }
 
-/*! Changes maxDelay value, if minDelay value is bigger than that. */
+/*!
+ * @fn Settings::minDelayValueChanged
+ * @brief Changes maxDelay value, if minDelay value is bigger than that.
+ * @param[in] value minDelay value
+ */
 void Settings::minDelayValueChanged(int value) {
   if (minDelay->value() > maxDelay->value())
     maxDelay->setValue(value);
 }
 
-/*! Changes minDelay value, if maxDelay value is smaller than that. */
+/*!
+ * @fn Settings::maxDelayValueChanged
+ * @brief Changes minDelay value, if maxDelay value is smaller than that.
+ * @param[in] value maxDelay value
+ */
 void Settings::maxDelayValueChanged(int value) {
   if (maxDelay->value() < minDelay->value())
     minDelay->setValue(value);

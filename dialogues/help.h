@@ -6,12 +6,12 @@
 #include <QWidget>
 
 /*!
- * Class: Help.
- * Tells users how to use this program.
+ * @class Help
+ * @brief Tells users how to use this program.
  */
 class Help : public QWidget {
 public:
-  // Functions:
+  // Functions described in 'help.cpp':
   explicit Help(QWidget *parent = nullptr);
 
 private:

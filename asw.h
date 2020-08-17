@@ -18,24 +18,38 @@
 #include <QWidget>
 
 /*!
- * Class: ASW.
- * Application window class.
+ * @mainclass ASW
+ * @brief Application window class.
  */
 class ASW : public QMainWindow {
   Q_OBJECT
 public:
   // Functions:
+  /*!
+   * @fn ASW::~ASW
+   * @brief Saves window settings.
+   */
+  ~ASW() override { saveWindowSettings(); }
+
+  // Functions described in 'asw.cpp':
   explicit ASW();
   void greeting();
 
-  /*! Saves window settings. */
-  ~ASW() override { saveWindowSettings(); }
-
 signals:
+  /*!
+   * @brief Indicates that the window is complete and ready for user
+   * interaction.
+   */
   void readyState();
-  QString send(QString t);
+
+  /*!
+   * @brief Sends a request to Core.
+   * @sa Core
+   */
+  QString send(QString user_expression);
 
 protected:
+  // Functions described in 'asw.cpp':
   void keyPressEvent(QKeyEvent *event) override;
 
 private:
@@ -48,12 +62,14 @@ private:
   ALine *line = new ALine(this);
   ADisplay *display = new ADisplay(25, this);
   AMenuBar *menubar = new AMenuBar(line, this);
-  const int minimalWidth = 600;
-  const int minimalHeight = 370;
-  const int defaultWidth = 800;
-  const int defaultHeight = 496;
 
-  // Functions:
+  // Constants:
+  static const int minimalWidth = 600;
+  static const int minimalHeight = 370;
+  static const int defaultWidth = 800;
+  static const int defaultHeight = 496;
+
+  // Functions described in 'asw.cpp':
   void applyingSettings();
   void saveWindowSettings();
   void connector();

@@ -3,10 +3,16 @@
 
 #include <QLabel>
 
-class AExplanationLabel : public QLabel
-{
+/*!
+ * @class AExplanationLabel
+ * @brief Label explaining settings.
+ */
+class AExplanationLabel : public QLabel {
+  Q_OBJECT
 public:
-  AExplanationLabel(const QString &text = "", QWidget *parent = nullptr);
+  // Functions described in 'a_explanationlabel.cpp':
+  explicit AExplanationLabel(const QString &text = "",
+                             QWidget *parent = nullptr);
 };
 
 #endif // A_EXPLANATIONLABEL_H

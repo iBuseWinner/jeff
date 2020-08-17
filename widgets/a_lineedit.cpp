@@ -1,10 +1,11 @@
 #include "a_lineedit.h"
 
 /*!
- * Argument: QWidget {*parent}.
- * Creates an ALineEdit.
+ * @fn ALineEdit::ALineEdit
+ * @brief The constructor.
+ * @param[in,out] parent QObject parent
  */
 ALineEdit::ALineEdit(QWidget *parent) : QLineEdit(parent) {
-  setStyleSheet("color: rgb(0, 0, 0);");
+  setStyleSheet(style_sheet);
   setFrame(false);
 }

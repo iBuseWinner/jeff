@@ -30,9 +30,9 @@ void NLPmodule::search(QString user_expression) {
      * user_expression. The first argument is the activator, the second is the
      * references to the reagents @a links. */
     QMap<QString, QString> activator_links =
-        _basis->sql->scanSource(source, user_expression);
+        _basis->sql->scan_source(source, user_expression);
     bool has_additional_properties =
-        _basis->sql->hasAdditionalProperties(source);
+        _basis->sql->has_additional_properties(source);
     for (const QString &activator : activator_links.keys()) {
       QStringList links = activator_links[activator].split(',');
       for (const QString &link : qAsConst(links)) {
@@ -42,8 +42,9 @@ void NLPmodule::search(QString user_expression) {
         /*! Among other things, @a SourceRow retains additional properties. For
          * each expression, they are different. */
         if (has_additional_properties)
-          source_row.reagent_properties = _basis->sql->scanAdditionalProperties(
-              source, source_row.reagent_address);
+          source_row.reagent_properties =
+              _basis->sql->scan_additional_properties(
+                  source, source_row.reagent_address);
         source_row_list.append(source_row);
       }
     }
@@ -111,18 +112,19 @@ GlobalMap NLPmodule::to_global_map(const QList<LinkMap> &link_map_list) {
   GlobalMap global_map;
   for (const LinkMap &link_map : link_map_list) {
     for (const QList<int> &links : qAsConst(link_map.activator_links)) {
-      QString ac = link_map.activator_links.key(links);
+      QString activator = link_map.activator_links.key(links);
       /*! Possible duplicates are discarded here, the activator reagents are
        * combined. */
       QStringList reagents;
-      if (global_map.activator_reagents.contains(ac))
-        reagents = global_map.activator_reagents[ac];
+      if (global_map.activator_reagents.contains(activator))
+        reagents = global_map.activator_reagents[activator];
       for (int link : qAsConst(links)) {
-        QString rg = _basis->sql->getExpression(link_map.source, link).first;
-        if ((not reagents.contains(rg)) and (not rg.isEmpty()))
-          reagents.append(rg);
+        QString reagent =
+            _basis->sql->get_expression(link_map.source, link).first;
+        if ((not reagents.contains(reagent)) and (not reagent.isEmpty()))
+          reagents.append(reagent);
       }
-      global_map.activator_reagents.insert(ac, reagents);
+      global_map.activator_reagents.insert(activator, reagents);
     }
   }
   return global_map;

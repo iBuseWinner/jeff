@@ -1,5 +1,5 @@
-#ifndef CONTAINERSSTRUCT_H
-#define CONTAINERSSTRUCT_H
+#ifndef SOURCESTRUCT_H
+#define SOURCESTRUCT_H
 
 #include <QString>
 
@@ -26,9 +26,11 @@ struct Source {
   /*! Means that the input is first validated using this container. */
   bool is_prioritised = false;
 
+  /*! Compares two sources. They are identical if they have the same table name
+   * and are in the same database. */
   friend bool operator==(Source s1, Source s2) {
     return s1.table_name == s2.table_name and s1.path == s2.path;
   }
 };
 
-#endif // CONTAINERSSTRUCT_H
+#endif // SOURCESTRUCT_H

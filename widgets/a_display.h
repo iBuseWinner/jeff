@@ -9,19 +9,25 @@
 #include <QWidget>
 
 /*!
- * Class: ADisplay.
- * Widget that displays messages.
+ * @class ADisplay
+ * @brief Widget that displays messages.
+ * @sa AMessage
  */
 class ADisplay : public QScrollArea {
   Q_OBJECT
 public:
   // Functions:
+  /*!
+   * @fn ADisplay::setScrollEnabled
+   * @brief Sets the scroll state.
+   * @param[in] _scrollEnabled boolean value of whether scroll is enabled or not
+   */
+  void setScrollEnabled(bool _scrollEnabled) { scrollEnabled = _scrollEnabled; }
+
+  // Functions described in 'a_display.cpp':
   explicit ADisplay(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
   void addMessage(AMessage *message);
-
-  /*! Sets the scroll state. */
-  void setScrollEnabled(bool _scrollEnabled) { scrollEnabled = _scrollEnabled; }
 
 private:
   Q_DISABLE_COPY(ADisplay)
@@ -34,7 +40,13 @@ private:
   short message_counter = 0;
   short max_message_amount = 0;
 
-  // Functions:
+  // Constants:
+  inline static const QString object_name = "display";
+  inline static const QString box_object_name = "box";
+  inline static const QString box_style_sheet =
+      "#display, #box { background-color: rgba(255, 255, 255, 0); }";
+
+  // Functions described in 'a_display.cpp':
   void connector();
   void scrollDown(int min, int max);
   void scrollTumbler(int value);

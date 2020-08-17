@@ -1,8 +1,8 @@
 #ifndef SOURCESDIALOG_H
 #define SOURCESDIALOG_H
 
-#include "dialogues/sources/create-source.h"
 #include "dialogues/modal-handler.h"
+#include "dialogues/sources/create-source.h"
 #include "widgets/a_button.h"
 #include "widgets/a_sourcelist.h"
 #include <QDialog>
@@ -13,13 +13,14 @@
 #include <QTreeWidgetItem>
 
 /*!
- * Class: Sources.
- * Manages NLP module's sources.
+ * @class SourcesDialog
+ * @brief Manages NLP module's sources.
  */
 class SourcesDialog : public QWidget {
 public:
-  // Functions:
-  explicit SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  // Functions described in 'sources.cpp':
+  explicit SourcesDialog(Basis *_basis, QWidget *parent = nullptr,
+                         ModalHandler *m_handler = nullptr);
   void add();
   void remove();
 
@@ -29,7 +30,6 @@ private:
   // Objects:
   Basis *basis = nullptr;
   ModalHandler *_m_handler = nullptr;
-  inline static const QString objn = "sources";
   QMap<QTreeWidgetItem *, Source> source_widgets;
   CreateSourceDialog *create_source_dialog = nullptr;
   ASourceList *source_list = nullptr;
@@ -41,7 +41,10 @@ private:
   QAction *cancel = nullptr;
   bool edited = false;
 
-  // Functions:
+  // Constants:
+  inline static const QString object_name = "sources";
+
+  // Functions described in 'sources.cpp':
   void connector();
   void append(const QList<Source> &sources);
   void appendSingle(const Source &source);

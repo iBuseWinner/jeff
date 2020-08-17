@@ -1,8 +1,9 @@
 #include "a_board.h"
 
 /*!
- * Argument: QWidget {*parent}.
- * Creates an ABoard.
+ * @fn ABoard::ABoard
+ * @brief The constructor.
+ * @param[in,out] parent QObject parent
  */
 ABoard::ABoard(QWidget *parent) : QFrame(parent) {
   setFrameShape(QFrame::StyledPanel);

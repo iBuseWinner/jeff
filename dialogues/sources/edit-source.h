@@ -9,12 +9,14 @@
 #include <QWidget>
 
 /*!
- * Class: EditSourceDialog.
- * Edits databases and allows users to change the reaction of ASW.
+ * @class EditSourceDialog
+ * @brief Edits databases and allows users to change the reaction of ASW.
+ * @sa Basis, AExpressionList
  */
 class EditSourceDialog : public QWidget {
   Q_OBJECT
 public:
+  // Functions described in 'edit-source.cpp':
   explicit EditSourceDialog(Basis *_basis, QWidget *parent = nullptr);
 
 private:

@@ -3,7 +3,7 @@
 /*!
  * @fn HProcessor::save
  * @brief Saves @a _message_history to file.
- * @param filename filename to save there
+ * @param[in] filename filename to save there
  */
 void HProcessor::save(const QString &filename) {
   _basis->write_message_history(_message_history, new QFile(filename));
@@ -12,7 +12,7 @@ void HProcessor::save(const QString &filename) {
 /*!
  * @fn HProcessor::load
  * @brief Loads @a _message_history from file.
- * @param filename filename to read from
+ * @param[in] filename filename to read from
  */
 void HProcessor::load(const QString &filename) {
   _message_history =

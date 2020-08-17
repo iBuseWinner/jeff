@@ -11,22 +11,35 @@
 #include <QString>
 
 /*!
- * Class: StdTemplates.
- * Provides some kinds of widgets by command.
+ * @class StandardTemplates
+ * @brief Provides some kinds of widgets by command.
  */
-class StdTemplates : public QObject {
+class StandardTemplates : public QObject {
   Q_OBJECT
 public:
   // Functions:
+  /*!
+   * @fn StandardTemplates::StandardTemplates
+   * @brief The constructor.
+   * @param[in,out] _basis reference to the Basis instance
+   * @param[in,out] parent QObject parent
+   */
+  StandardTemplates(Basis *_basis, QObject *parent = nullptr)
+      : QObject(parent), basis(_basis) {}
+
+  // Functions described in 'standard-templates.cpp':
   bool dialogues(const QString &expression);
   bool fastCommands(const QString &expression);
 
-  /*! Class initialization. */
-  StdTemplates(Basis *_basis, QObject *parent = nullptr)
-      : QObject(parent), basis(_basis) {}
-
 signals:
+  /*!
+   * @brief Sends a ModalHandler when the widget needs to be shown on the screen.
+   */
   ModalHandler *showModalWidget(ModalHandler *handler);
+
+  /*!
+   * @brief Sends a signal to turn on/off monologue mode.
+   */
   void changeMonologueMode();
 
 private:

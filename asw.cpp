@@ -1,9 +1,9 @@
 #include "asw.h"
 
 /*!
- * Constructs and prepares the ASW window.
- *
- * Layout scheme:
+ * @fn ASW::ASW
+ * @brief The constructor.
+ * @details Layout scheme:
  * <--------------->
  * [    Display    ]
  * {  Scroll area  }
@@ -16,7 +16,7 @@ ASW::ASW() : QMainWindow() {
   setWindowTitle(basis->applicationName);
   setMinimumSize(minimalWidth, minimalHeight);
   layout()->setMargin(0);
-  auto *centralWidget = new QWidget();
+  auto *centralWidget = new QWidget(this);
   centralWidget->setObjectName("cw");
   centralWidget->setStyleSheet(
       "#cw { background-color: qlineargradient(spread:pad, x1:0, y1:0, "
@@ -34,8 +34,9 @@ ASW::ASW() : QMainWindow() {
 }
 
 /*!
- * Argument: QKeyEvent {*event} [transmitted automatically by Qt]
- * Handles keyboard shortcuts.
+ * @fn ASW::keyPressEvent
+ * @brief Handles keyboard shortcuts.
+ * @param[in,out] event key event
  */
 void ASW::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
@@ -60,7 +61,7 @@ void ASW::keyPressEvent(QKeyEvent *event) {
   if (event->key() == Qt::Key_F11) {
     menubar->fullScreenAction->setChecked(
         not menubar->fullScreenAction->isChecked());
-    // If the menu bar is hidden, it does not send signals.
+    /*! If the menu bar is hidden, it does not send signals. */
     if (menubar->isHidden())
       fullScreenHandler();
   }
@@ -69,9 +70,12 @@ void ASW::keyPressEvent(QKeyEvent *event) {
     clear();
 }
 
-/*! Reads the settings from the file and applies. */
+/*!
+ * @fn ASW::applyingSettings
+ * @brief Reads the settings from the file and applies them.
+ */
 void ASW::applyingSettings() {
-  // If settings file does not exist, sets default settings.
+  /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
     emit send("/first");
@@ -82,12 +86,14 @@ void ASW::applyingSettings() {
   menubar->fullScreenAction->setChecked(
       (*basis)[basis->isFullScreenSt].toBool());
   emit menubar->fullScreenAction->triggered();
-  menubar->setVisible(not (*basis)[basis->isMenuBarHiddenSt].toBool());
-  menubar->emm->setChecked(
-      (*basis)[basis->isMonologueModeEnabledSt].toBool());
+  menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
+  menubar->emm->setChecked((*basis)[basis->isMonologueModeEnabledSt].toBool());
 }
 
-/*! Writes changes to window settings to a file. */
+/*!
+ * @fn ASW::saveWindowSettings
+ * @brief Writes changes to window settings to a file.
+ */
 void ASW::saveWindowSettings() {
   if (not basis->accessible())
     return;
@@ -98,7 +104,10 @@ void ASW::saveWindowSettings() {
   basis->write(basis->isMonologueModeEnabledSt, menubar->emm->isChecked());
 }
 
-/*! Establishes communications for user interaction through the window. */
+/*!
+ * @fn ASW::connector
+ * @brief Establishes communications for user interaction through the window.
+ */
 void ASW::connector() {
   // menubar
   connect(menubar->fullScreenAction, &QAction::triggered, this,
@@ -106,7 +115,7 @@ void ASW::connector() {
   connect(menubar, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
   connect(menubar, &AMenuBar::aboutTriggered, this,
           [this] { emit send("/about"); });
-  connect(menubar, &AMenuBar::containersTriggered, this,
+  connect(menubar, &AMenuBar::sourcesTriggered, this,
           [this] { emit send("/sm"); });
   connect(menubar, &AMenuBar::settingsTriggered, this,
           [this] { emit send("/settings"); });
@@ -125,12 +134,19 @@ void ASW::connector() {
           &QAction::setChecked);
 }
 
-/*! Shows a window in full screen or in normal mode. */
+/*!
+ * @fn ASW::fullScreenHandler
+ * @brief Shows a window in full screen or in normal mode.
+ */
 void ASW::fullScreenHandler() {
   menubar->fullScreenAction->isChecked() ? showFullScreen() : showNormal();
 }
 
-/*! Sends request to core. */
+/*!
+ * @fn ASW::userInputHandler
+ * @brief Sends a request to Core.
+ * @sa Core
+ */
 void ASW::userInputHandler() {
   // If the user sends a message, the display automatically scrolls to the end.
   display->setScrollEnabled(true);
@@ -139,8 +155,11 @@ void ASW::userInputHandler() {
   emit send(text);
 }
 
-/*! Calls the dialog, asks for the filename {filename} and saves the message
- * history to it. */
+/*!
+ * @fn ASW::exportMessageHistory
+ * @brief Calls the dialog, asks for @a filename and saves the message history
+ * to it.
+ */
 void ASW::exportMessageHistory() {
   QString filename = QFileDialog::getSaveFileName(
       nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
@@ -149,8 +168,11 @@ void ASW::exportMessageHistory() {
   historyProcessor->save(filename);
 }
 
-/*! Calls the dialog, asks for the filename {filename} and loads the message
- * history from it. */
+/*!
+ * @fn ASW::importMessageHistory
+ * @brief Calls the dialog, asks for @a filename and loads the message history
+ * from it.
+ */
 void ASW::importMessageHistory() {
   if (QMessageBox::question(
           this, tr("Import message history?"),
@@ -166,7 +188,10 @@ void ASW::importMessageHistory() {
   }
 }
 
-/*! Clears message history and display. */
+/*!
+ * @fn ASW::clear
+ * @brief Clears message history and display.
+ */
 void ASW::clear() {
   historyProcessor->clear();
   display->start();

@@ -1,6 +1,10 @@
 #include "a_message.h"
 
-/*! Creates an AMessage. */
+/*!
+ * @fn AMessage::AMessage
+ * @brief The constructor.
+ * @param[in,out] parent QObject parent
+ */
 AMessage::AMessage() {
   QHBoxLayout *hbox_layout = new QHBoxLayout();
   hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
@@ -9,8 +13,9 @@ AMessage::AMessage() {
 }
 
 /*!
- * Argument: Message {message} [basis for the message].
- * Creates an AMessage based on {message}.
+ * @fn AMessage::AMessage
+ * @brief Creates an AMessage based on @a message.
+ * @param[in] message message data
  */
 AMessage::AMessage(Message message) {
   QHBoxLayout *hbox_layout = new QHBoxLayout();
@@ -21,8 +26,9 @@ AMessage::AMessage(Message message) {
 }
 
 /*!
- * Argument: Message {_message} [basis for the message].
- * Sets {_message} into the AMessage.
+ * @fn AMessage::setMessage
+ * @brief Sets @a _message into the AMessage.
+ * @param[in] _message message data
  */
 void AMessage::setMessage(Message _message) {
   if (_message.datetime.isNull())
@@ -34,8 +40,9 @@ void AMessage::setMessage(Message _message) {
 }
 
 /*!
- * Argument: ModalHandler {*m_handler} [handler with widget to be showed].
- * Sets {_widget} into the AMessage.
+ * @fn AMessage::setWidget
+ * @brief Sets {@code m_handler->getPrisoner()} into the AMessage.
+ * @param[in,out] m_handler reference to the ModalHandler instance
  */
 void AMessage::setWidget(ModalHandler *m_handler) {
   if (widget)
@@ -47,8 +54,9 @@ void AMessage::setWidget(ModalHandler *m_handler) {
 }
 
 /*!
- * Argument: enum Author {aType} [author].
- * Makes a message either left or right.
+ * @fn AMessage::setAuthor
+ * @brief Makes a message either left or right.
+ * @param[in] aType author of the message
  */
 void AMessage::setAuthor(Author aType) {
   switch (aType) {
@@ -63,8 +71,10 @@ void AMessage::setAuthor(Author aType) {
 }
 
 /*!
- * Argument: enum ContentType {cType} [content type].
- * Adjusts the message to the content type.
+ * @fn AMessage::setMessageType
+ * @brief Adjusts the message to the content type.
+ * @param[in] cType content type
+ * @sa ContentType
  */
 void AMessage::setMessageType(ContentType cType) {
   switch (cType) {
@@ -95,19 +105,27 @@ void AMessage::setMessageType(ContentType cType) {
 }
 
 /*!
- * Argument: enum Theme {tType} [theme].
- * Sets the message colors.
+ * @fn AMessage::setTheme
+ * @brief Sets the message colors.
+ * @details [constructing]
+ * @param[in] tType theme
  */
 // void AMessage::setTheme(Theme tType) {}
 
-/*! Customizes layout of message from ASW. */
+/*!
+ * @fn AMessage::setupASW
+ * @brief Customizes layout of message from ASW.
+ */
 void AMessage::setupASW() {
   QPair<QSpacerItem *, ABoard *> ws = makeLayout();
   layout()->addWidget(ws.second);
   layout()->addItem(ws.first);
 }
 
-/*! Customizes layout of message from user. */
+/*!
+ * @fn AMessage::setupUser
+ * @brief Customizes layout of message from user.
+ */
 void AMessage::setupUser() {
   QPair<QSpacerItem *, ABoard *> ws = makeLayout();
   layout()->addItem(ws.first);
@@ -115,8 +133,9 @@ void AMessage::setupUser() {
 }
 
 /*!
- * Argument: QString {content}.
- * Displays plain text.
+ * @fn AMessage::setupText
+ * @brief Displays plain text.
+ * @param[in] content text of the message
  */
 void AMessage::setupText(const QString &content) {
   auto *label = new QLabel(content, this);
@@ -130,8 +149,9 @@ void AMessage::setupText(const QString &content) {
 }
 
 /*!
- * Argument: QString {content}.
- * Displays markdown text.
+ * @fn AMessage::setupMarkdown
+ * @brief Displays markdown text.
+ * @param[in] content text of the message
  */
 void AMessage::setupMarkdown(const QString &content) {
   setupText(content);
@@ -141,20 +161,25 @@ void AMessage::setupMarkdown(const QString &content) {
 }
 
 /*!
- * Argument: QString {content}.
- * Displays a picture with the path {content}.
+ * @fn AMessage::setupPicture
+ * @brief Displays a picture with the path @a content.
+ * @details [constructing]
+ * @param[in] content path to a picture
  */
 // void AMessage::setupPicture(QString path) {}
 
 /*!
- * Argument: QString {content}.
- * Displays a file with the path {content}.
+ * @fn AMessage::setupFile
+ * @brief Displays a file with the path @a content.
+ * @details [constructing]
+ * @param[in] content path to a file
  */
 // void AMessage::setupFile(QString path) {}
 
 /*!
- * Argument: QString {content}.
- * Displays a warning {content}.
+ * @fn AMessage::setupWarning
+ * @brief Displays a warning @a content.
+ * \param content text of a warning
  */
 void AMessage::setupWarning(const QString &content) {
   auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
@@ -163,8 +188,9 @@ void AMessage::setupWarning(const QString &content) {
 }
 
 /*!
- * Argument: QString {content}.
- * Displays an error {content}.
+ * @fn AMessage::setupError
+ * @brief Displays an error @a content.
+ * \param content text of an error
  */
 void AMessage::setupError(const QString &content) {
   auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
@@ -172,13 +198,19 @@ void AMessage::setupError(const QString &content) {
   setupText(QString("Error: " + content));
 }
 
-/*! Prepares AMessage for widget installation. */
+/*!
+ * @fn AMessage::prepareSetupWidget
+ * @brief Prepares AMessage for widget installation.
+ */
 void AMessage::prepareSetupWidget() {
   gridLayout->parentWidget()->setSizePolicy(QSizePolicy::Preferred,
                                             QSizePolicy::Fixed);
 }
 
-/*! Aligns text to the width of the window. */
+/*!
+ * @fn AMessage::alignTextToWindowWidth
+ * @brief Aligns text to the width of the window.
+ */
 void AMessage::alignTextToWindowWidth() {
   auto *label = qobject_cast<QLabel *>(widget);
   if (not label)
@@ -199,8 +231,9 @@ void AMessage::alignTextToWindowWidth() {
 }
 
 /*!
- * Creates a spacer and an ABoard to adjust the layout.
- * Returns: QSpacerItem-ABoard pair.
+ * @fn AMessage::makeLayout
+ * @brief Creates a spacer and an ABoard to adjust the layout.
+ * @returns QSpacerItem-ABoard pair
  */
 QPair<QSpacerItem *, ABoard *> AMessage::makeLayout() {
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,

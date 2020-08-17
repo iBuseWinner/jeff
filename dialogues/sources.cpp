@@ -1,28 +1,30 @@
 #include "sources.h"
 
-/*
- * All short named objects and their explanations:
- * {tli2} <- top-level item index
+/*!
+ * @details All short named objects and their explanations:
+ * @a tli2 <- top-level item index <- @a SourcesDialog::append,
+ *                                    @a SourcesDialog::sncl
  */
 
 /*!
- * Arguments: Basis {_basis} [reference to Basis instance],
- *            QWidget {*parent}.
- * Constructs and prepares Source Manager.
- *
- * Layout scheme:
+ * @fn SourcesDialog::SourcesDialog
+ * @brief The constructor.
+ * @details Layout scheme:
  * <----------------------->
  * [     Sources  list     ]
  * [Add button][S&C  button]
  * {|> Create }
  * {|> Remove }
  * <----------------------->
+ * @param[in,out] _basis reference to the Basis instance
+ * @param[in,out] parent QObject parent
+ * @param[in,out] m_handler reference to the ModalHandler instance
  */
 SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
                              ModalHandler *m_handler)
     : QWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName(objn);
+  setObjectName(object_name);
   grid_layout = new QGridLayout();
   grid_layout->setSpacing(0);
   grid_layout->setMargin(0);
@@ -46,7 +48,10 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
   load();
 }
 
-/*! Loads saved sources. */
+/*!
+ * @fn SourcesDialog::load
+ * @brief Loads saved sources.
+ */
 void SourcesDialog::load() {
   source_widgets.clear();
   source_list->clear();
@@ -54,7 +59,10 @@ void SourcesDialog::load() {
   append(basis->get_sources());
 }
 
-/*! Adds a source to the widget, loads its data. */
+/*!
+ * @fn SourcesDialog::add
+ * @brief Adds a source to the widget, loads its data.
+ */
 void SourcesDialog::add() {
   QString filename = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
@@ -65,7 +73,10 @@ void SourcesDialog::add() {
   append(basis->sql->sources(filename));
 }
 
-/*! Removes selected sources. */
+/*!
+ * @fn SourcesDialog::remove
+ * @brief Removes selected sources.
+ */
 void SourcesDialog::remove() {
   if (not source_list->selectedItems().length())
     return;
@@ -83,7 +94,11 @@ void SourcesDialog::remove() {
   }
 }
 
-/*! Establishes communications for user interaction through the dialog box. */
+/*!
+ * @fn SourcesDialog::connector
+ * @brief Establishes communications for user interaction through the dialog
+ * box.
+ */
 void SourcesDialog::connector() {
   connect(add_source, &AButton::clicked, this, &SourcesDialog::add);
   connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
@@ -92,8 +107,9 @@ void SourcesDialog::connector() {
 }
 
 /*!
- * Argument: QList of sources {sources}.
- * Adds sources to the selection.
+ * @fn SourcesDialog::append
+ * @brief Adds sources to the selection.
+ * @param[in] sources sources to be added
  */
 void SourcesDialog::append(const QList<Source> &sources) {
   for (const auto &source : sources) {
@@ -123,8 +139,9 @@ void SourcesDialog::append(const QList<Source> &sources) {
 }
 
 /*!
- * Argument: single source {source}.
- * Adds source to the selection.
+ * @fn SourcesDialog::appendSingle
+ * @brief Adds source to the selection.
+ * @param[in] source source data
  */
 void SourcesDialog::appendSingle(const Source &source) {
   QList<Source> sources;
@@ -133,7 +150,10 @@ void SourcesDialog::appendSingle(const Source &source) {
   edited = true;
 }
 
-/*! Saves the selection and closes the dialog. */
+/*!
+ * @fn SourcesDialog::sncl
+ * @brief Saves the selection and closes the dialog.
+ */
 void SourcesDialog::sncl() {
   if (edited) {
     QList<Source> sources;
@@ -149,7 +169,10 @@ void SourcesDialog::sncl() {
   _m_handler->closePrisoner();
 }
 
-/*! Opens the source creation dialog. */
+/*!
+ * @fn SourcesDialog::openCS
+ * @brief Opens the source creation dialog.
+ */
 void SourcesDialog::openCS() {
   disconnect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
   create_source_dialog = new CreateSourceDialog(basis, this);
@@ -160,7 +183,10 @@ void SourcesDialog::openCS() {
           &SourcesDialog::closeCS);
 }
 
-/*! Closes the source creation dialog. */
+/*!
+ * @fn SourcesDialog::closeCS
+ * @brief Closes the source creation dialog.
+ */
 void SourcesDialog::closeCS() {
   disconnect(create_source_dialog, &CreateSourceDialog::add, this,
              &SourcesDialog::appendSingle);

@@ -5,16 +5,20 @@
 #include <QWidget>
 
 /*!
- * Class: ALineEdit.
- * The text entry line.
+ * @class ALineEdit
+ * @brief The text entry line.
  */
 class ALineEdit : public QLineEdit {
- public:
-  // Functions:
-  ALineEdit(QWidget *parent = nullptr);
+  Q_OBJECT
+public:
+  // Functions described in 'a_lineedit.cpp':
+  explicit ALineEdit(QWidget *parent = nullptr);
 
- private:
+private:
   Q_DISABLE_COPY(ALineEdit)
+
+  // Constants:
+  inline static const QString style_sheet = "color: rgb(0, 0, 0);";
 };
 
-#endif  // A_LINEEDIT_H
+#endif // A_LINEEDIT_H

@@ -1,7 +1,9 @@
 #include "help.h"
 
 /*!
- * [constructing]
+ * @fn Help::Help
+ * @brief [constructing]
+ * @param parent QObject parent
  */
 Help::Help(QWidget *parent) : QWidget(parent) {
   // auto *lt = new QGridLayout();

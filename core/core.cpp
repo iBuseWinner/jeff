@@ -4,7 +4,7 @@
  * @fn Core::Core
  * @brief The constructor.
  * @details Creates connections between modules and output collectors.
- * @param parent QObject parent
+ * @param[in,out] parent QObject parent
  */
 Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::json_error, this, &Core::got_error);
@@ -14,10 +14,10 @@ Core::Core(QObject *parent) : QObject(parent) {
           &Core::show_history);
   connect(basis->sql, &SQLite::sqliteError, this, &Core::got_error);
   connect(basis->sql, &SQLite::sqliteWarning, this, &Core::got_warning);
-  connect(_standard_templates, &StdTemplates::showModalWidget, this,
+  connect(_standard_templates, &StandardTemplates::showModalWidget, this,
           &Core::got_modal);
   connect(_nlp, &NLPmodule::ready, this, &Core::got_message_from_nlp);
-  connect(_standard_templates, &StdTemplates::changeMonologueMode, this,
+  connect(_standard_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not _monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueModeEnabledSt].toBool());
 }
@@ -26,7 +26,7 @@ Core::Core(QObject *parent) : QObject(parent) {
  * @fn Core::got_message_from_user
  * @brief Handles input @a user_expression, displays a message on the screen and
  * launches modules.
- * @param user_expression contains user input
+ * @param[in] user_expression contains user input
  */
 void Core::got_message_from_user(const QString &user_expression) {
   /*! Does not respond to blank input. */
@@ -50,7 +50,7 @@ void Core::got_message_from_user(const QString &user_expression) {
  * @fn Core::got_message_from_nlp
  * @brief Processes the output of the NLP module @a result_expression and
  * displays a message on the screen.
- * @param result_expression contains the response of the NLP module to user
+ * @param[in] result_expression contains the response of the NLP module to user
  * input
  */
 void Core::got_message_from_nlp(const QString &result_expression) {
@@ -75,7 +75,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
 /*!
  * @fn Core::got_warning
  * @brief Displays @a warning_text.
- * @param warning_text contains the warning text from some module
+ * @param[in] warning_text contains the warning text from some module
  */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
@@ -88,7 +88,7 @@ void Core::got_warning(const QString &warning_text) {
 /*!
  * @fn Core::got_error
  * @brief Displays @a errorText.
- * @param error_text contains the error text from some module
+ * @param[in] error_text contains the error text from some module
  */
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
@@ -102,7 +102,7 @@ void Core::got_error(const QString &error_text) {
  * @fn Core::got_modal
  * @brief Creates AMessage @a message_widget, inserts a widget into it and
  * displays a message.
- * @param m_handler handler with widget which should be displayed
+ * @param[in,out] m_handler handler with widget which should be displayed
  * @sa ModalHandler
  */
 void Core::got_modal(ModalHandler *m_handler) {
@@ -119,7 +119,7 @@ void Core::got_modal(ModalHandler *m_handler) {
 /*!
  * @fn Core::show_history
  * @brief Displays all messages from @a message_histor} on the screen.
- * @param message_history
+ * @param[in] message_history
  */
 void Core::show_history(QList<Message> message_history) {
   for (const auto &message : message_history)
@@ -129,10 +129,10 @@ void Core::show_history(QList<Message> message_history) {
 /*!
  * @fn Core::get_message
  * @brief Creates @a message.
- * @param content content of message
- * @param author who is author - user or asw?
- * @param content_type type of given content
- * @param theme appearance of the message
+ * @param[in] content content of message
+ * @param[in] author who is author - user or asw?
+ * @param[in] content_type type of given content
+ * @param[in] theme appearance of the message
  * @returns Message with given parameters.
  */
 Message Core::get_message(const QString &content, Author author,
@@ -149,7 +149,7 @@ Message Core::get_message(const QString &content, Author author,
 /*!
  * @fn Core::set_monologue_enabled
  * @brief Sets the status of the monologue mode.
- * @param enabled boolean value of monologue mode state
+ * @param[in] enabled boolean value of monologue mode state
  */
 void Core::set_monologue_enabled(const bool enabled) {
   _monologue_enabled = enabled;

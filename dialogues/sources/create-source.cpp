@@ -1,8 +1,10 @@
 #include "create-source.h"
 
 /*!
- * Argument: QWidget {*parent}.
- * Constructs and prepares Create Source dialogue.
+ * @fn CreateSourceDialog::CreateSourceDialog
+ * @brief The constructor.
+ * @param _basis reference to Basis instance
+ * @param parent QObject parent
  */
 CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
     : QWidget(parent), basis(_basis) {
@@ -26,20 +28,29 @@ CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
   selStart();
 }
 
-/*! Establishes communications for user interaction through the widget. */
+/*!
+ * @fn CreateSourceDialog::connector
+ * @brief Establishes communications for user interaction through the widget.
+ */
 void CreateSourceDialog::connector() {
   connect(selectFileBtn, &AButton::clicked, this, &CreateSourceDialog::select);
   connect(saveBtn, &AButton::clicked, this, &CreateSourceDialog::save);
   connect(cancelBtn, &AButton::clicked, this, &QWidget::close);
 }
 
-/*! Turns the faceless button into a button for selecting a database. */
+/*!
+ * @fn CreateSourceDialog::selStart
+ * @brief Turns the faceless button into a button for selecting a database.
+ */
 void CreateSourceDialog::selStart() {
   selectFileBtn->setText(tr("Select database file..."));
   selectFileBtn->setIcon(QIcon(":/arts/icons/16/document-open.svg"));
 }
 
-/*! Opens the database selection window and customizes the button. */
+/*!
+ * @fn CreateSourceDialog::select
+ * @brief Opens the database selection window and customizes the button.
+ */
 void CreateSourceDialog::select() {
   m_dbpath = QFileDialog::getSaveFileName(
       nullptr, tr("Select database..."), "", tr("ASW database") + "(*.asw.db)",
@@ -51,7 +62,10 @@ void CreateSourceDialog::select() {
     selStart();
 }
 
-/*! Finishes configuring the future source. */
+/*!
+ * @fn CreateSourceDialog::save
+ * @brief Finishes configuring the future source.
+ */
 void CreateSourceDialog::save() {
   if ((m_dbpath.isEmpty()) or (titleInput->text().isEmpty()))
     close();
@@ -59,7 +73,7 @@ void CreateSourceDialog::save() {
   source.path = m_dbpath;
   source.table_title = titleInput->text();
   QString *table_name = new QString;
-  basis->sql->create(source, table_name);
+  basis->sql->create_source(source, table_name);
   source.table_name = *table_name;
   delete table_name;
   emit add(source);

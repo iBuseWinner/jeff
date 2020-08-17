@@ -4,14 +4,14 @@
 #include <QTreeWidget>
 
 /*!
- * Class: ASourceList.
- * Container list widget.
+ * @class ASourceList
+ * @brief Source list widget.
  */
 class ASourceList : public QTreeWidget {
   Q_OBJECT
 public:
-  // Functions:
-  ASourceList(QWidget *parent = nullptr);
+  // Functions described in 'a_sourcelist.cpp':
+  explicit ASourceList(QWidget *parent = nullptr);
 
 private:
   Q_DISABLE_COPY(ASourceList)

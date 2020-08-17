@@ -1,5 +1,11 @@
 #include "edit-source.h"
 
+/*!
+ * @fn EditSourceDialog::EditSourceDialog
+ * @brief The constructor.
+ * \param _basis reference to the Basis instance
+ * \param parent QObject parent
+ */
 EditSourceDialog::EditSourceDialog(Basis *_basis, QWidget *parent)
     : QWidget(parent), basis(_basis) {
   auto *layout = new QGridLayout();

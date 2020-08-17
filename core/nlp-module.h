@@ -22,7 +22,12 @@ class NLPmodule : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  /*! The constructor. */
+  /*!
+   * @fn NLPmodule::NLPmodule
+   * @brief The constructor.
+   * @param[in,out] basis reference to the Basis instance
+   * @param[in,out] parent QObject parent
+   */
   NLPmodule(Basis *basis, QObject *parent = nullptr)
       : QObject(parent), _basis(basis) {}
 
@@ -30,6 +35,9 @@ public:
   void search(QString user_expression);
 
 signals:
+  /*!
+   * @brief Sends a response expression.
+   */
   QString ready(QString response_expression);
 
 private:

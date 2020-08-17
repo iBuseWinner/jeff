@@ -16,14 +16,33 @@ class HProcessor : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  /*! The constructor. */
+  /*!
+   * @fn HProcessor::HProcessor
+   * @brief The constructor.
+   * @param[in,out] basis reference to the Basis instance
+   * @param[in,out] parent QObject parent
+   */
   HProcessor(Basis *basis, QObject *parent = nullptr)
       : QObject(parent), _basis(basis) {}
-  /*! Adds a message to the story. */
+
+  /*!
+   * @fn HProcessor::append
+   * @brief Adds @a message to the story.
+   * @param[in] message message to be added
+   */
   void append(const Message &message) { _message_history.append(message); }
-  /*! Clears the history. */
+
+  /*!
+   * @fn HProcessor::clear
+   * @brief Clears the history.
+   */
   void clear() { _message_history.clear(); }
-  /*! Removes message from history. */
+
+  /*!
+   * @fn HProcessor::remove_one
+   * @brief Removes message from history.
+   * @param[in] message message to be removed
+   */
   void remove_one(Message message) { _message_history.removeOne(message); }
 
   // Functions described in `history-processor.cpp`:
@@ -31,6 +50,10 @@ public:
   void load(const QString &filename);
 
 signals:
+  /*!
+   * @brief Sends message history to ADisplay.
+   * @sa ADisplay
+   */
   QList<Message> send_message_history(QList<Message> message_history);
 
 private:

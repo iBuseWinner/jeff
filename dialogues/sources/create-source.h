@@ -11,22 +11,30 @@
 #include <QWidget>
 
 /*!
- * Class: CreateSourceDialog.
- * Creates sources in databases.
+ * @class CreateSourceDialog
+ * @brief Creates sources in databases.
+ * @sa Basis, ALineEdit, AButton
  */
 class CreateSourceDialog : public QWidget {
   Q_OBJECT
 public:
-  // Functions:
+  // Functions described in 'create-source.cpp':
   explicit CreateSourceDialog(Basis *_basis, QWidget *parent = nullptr);
 
 signals:
+  /*!
+   * @brief Sends a signal that the user did not want to create a source.
+   */
   void cancelled();
-  const Source add(const Source &cProp);
+
+  /*!
+   * @brief Sends source's data to create it.
+   */
+  const Source add(const Source &source);
 
 protected:
   // Functions:
-  /*! Cancels container creation. */
+  /*! Cancels source's creation. */
   void closeEvent(QCloseEvent *event) override {
     emit cancelled();
     event->accept();
@@ -43,7 +51,7 @@ private:
   AButton *saveBtn = nullptr;
   AButton *cancelBtn = nullptr;
 
-  // Functions:
+  // Functions described in 'create-source.cpp':
   void connector();
   void selStart();
   void select();

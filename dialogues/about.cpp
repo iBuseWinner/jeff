@@ -1,26 +1,23 @@
 #include "about.h"
 
-/*
- * All short named objects and their explanations:
- * {objn} <- object name
- */
-
 /*!
- * Argument: QWidget {*parent}.
- * Customizes the dialog box.
- *
- * Layout scheme:
+ * @fn About::About
+ * @brief The constructor.
+ * @details Layout scheme:
  * <-------------->
  * [Logo][App name]
  * [  Tab widget  ]
  * {About}{Authors}
  * {<->}[Close btn]
  * <-------------->
+ * @param parent QObject parent
+ * @param m_handler reference to the ModalHandler instance
+ * @sa ModalHandler
  */
 About::About(QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName(objn);
+  setObjectName(object_name);
   setFixedSize(fixed_width, fixed_height);
   auto *layout = new QGridLayout();
   layout->setMargin(0);

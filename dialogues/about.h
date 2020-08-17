@@ -13,12 +13,13 @@
 #include <QWidget>
 
 /*!
- * Class: About.
- * Contains information about the program and the authors.
+ * @class About
+ * @brief Contains information about the program and the authors.
+ * @sa ModalHandler
  */
 class About : public QWidget {
 public:
-  // Functions:
+  // Functions described in 'about.cpp':
   explicit About(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
 
 private:
@@ -26,7 +27,9 @@ private:
 
   // Objects:
   ModalHandler *_m_handler = nullptr;
-  inline static const QString objn = "about";
+
+  // Constants:
+  inline static const QString object_name = "about";
   static const int fixed_width = 320;
   static const int fixed_height = 230;
 };

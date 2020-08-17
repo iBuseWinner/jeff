@@ -1,44 +1,43 @@
 #include "a_menubar.h"
 
-/*
- * All short named objects and their explanations:
- * {mf} <- menu File
- * {me} <- menu Edit
- * {mt} <- menu Tools
- * {mh} <- menu Help
- * {cm} <- container manager
- * {emh} <- export message history
- * {imh} <- import message history
- * {cmh} <- clear message history
- * {del} <- delete
- * {sel} <- select all
- * {hb} <- hide menubar
- * {st} <- settings
+/*! All short named objects and their explanations:
+ * @a mf <- menu File <- @a AMenuBar::AMenuBar
+ * @a me <- menu Edit <- @a AMenuBar::AMenuBar
+ * @a mt <- menu Tools <- @a AMenuBar::AMenuBar
+ * @a mh <- menu Help <- @a AMenuBar::AMenuBar
+ * @a sm <- source manager <- @a AMenuBar::AMenuBar
+ * @a emh <- export message history <- @a AMenuBar::AMenuBar
+ * @a imh <- import message history <- @a AMenuBar::AMenuBar
+ * @a cmh <- clear message history <- @a AMenuBar::AMenuBar
+ * @a del <- delete <- @a AMenuBar::AMenuBar
+ * @a sel <- select all <- @a AMenuBar::AMenuBar
+ * @a hb <- hide menubar <- @a AMenuBar::AMenuBar
+ * @a st <- settings <- @a AMenuBar::AMenuBar
  */
 
 /*!
- * Arguments: ALine {*line} [needed for the actions of the "Edit" menu],
- *            QWidget {*parent}.
- * Creates an AMenuBar.
+ * @fn AMenuBar::AMenuBar
+ * @brief The constructor.
+ * @param[in,out] line reference to the ALine instance
+ * @param[in,out] parent QObject parent
  */
-AMenuBar::AMenuBar(ALine *line, QWidget *parent)
-    : QMenuBar(parent) {
+AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   // File
   QMenu *mf = addMenu(tr("File"));
-  QAction *cm = new QAction(tr("Source manager") + " (/sm)", mf);
+  QAction *sm = new QAction(tr("Source manager") + " (/sm)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
   QAction *imh = new QAction(tr("Import message history"), mf);
   emm = new QAction(tr("Enable monologue mode") + " (/mm)", mf);
   emm->setCheckable(true);
-  cm->setShortcut(Qt::CTRL + Qt::Key_M);
+  sm->setShortcut(Qt::CTRL + Qt::Key_M);
   emh->setShortcut(Qt::CTRL + Qt::Key_E);
   imh->setShortcut(Qt::CTRL + Qt::Key_I);
   emm->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
-  cm->setIcon(QIcon(":/arts/icons/16/database-manager.svg"));
+  sm->setIcon(QIcon(":/arts/icons/16/database-manager.svg"));
   emh->setIcon(QIcon(":/arts/icons/16/document-export.svg"));
   imh->setIcon(QIcon(":/arts/icons/16/document-import.svg"));
   emm->setIcon(QIcon(":/arts/icons/16/monologue.svg"));
-  mf->addAction(cm);
+  mf->addAction(sm);
   mf->addAction(emm);
   mf->addSeparator();
   mf->addAction(emh);
@@ -46,9 +45,9 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   mf->addSeparator();
   mf->addAction(QIcon(":/arts/icons/16/application-exit.svg"), tr("&Exit"),
                 &QApplication::quit, Qt::ALT + Qt::Key_F4);
-  connect(cm, &QAction::triggered, this, &AMenuBar::openContainerManager);
-  connect(emh, &QAction::triggered, this, &AMenuBar::exportMessageHistory);
-  connect(imh, &QAction::triggered, this, &AMenuBar::importMessageHistory);
+  connect(sm, &QAction::triggered, this, [this] { emit sourcesTriggered(); });
+  connect(emh, &QAction::triggered, this, [this] { emit exportTriggered(); });
+  connect(imh, &QAction::triggered, this, [this] { emit importTriggered(); });
   // Edit
   QMenu *me = addMenu(tr("Edit"));
   QAction *cmh = new QAction(tr("Clear message history"), me);
@@ -77,7 +76,8 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   me->addAction(paste);
   me->addSeparator();
   me->addAction(sel);
-  connect(cmh, &QAction::triggered, this, &AMenuBar::clearMessageHistory);
+  connect(cmh, &QAction::triggered, this,
+          [this] { emit clearHistoryTriggered(); });
   connect(del, &QAction::triggered, line->lineEdit, &ALineEdit::backspace);
   connect(cut, &QAction::triggered, line->lineEdit, &ALineEdit::cut);
   connect(copy, &QAction::triggered, line->lineEdit, &ALineEdit::copy);
@@ -99,8 +99,8 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   mt->addAction(fullScreenAction);
   mt->addSeparator();
   mt->addAction(st);
-  connect(hb, &QAction::triggered, this, &AMenuBar::hideThis);
-  connect(st, &QAction::triggered, this, &AMenuBar::openSettings);
+  connect(hb, &QAction::triggered, this, [this] { setVisible(!isVisible()); });
+  connect(st, &QAction::triggered, this, [this] { emit settingsTriggered(); });
   // Help
   QMenu *mh = addMenu(tr("Help"));
   QAction *about = new QAction(tr("About") + " (/about)", mh);
@@ -108,5 +108,5 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent)
   mh->addAction(about);
   mh->addAction(QIcon(":/arts/icons/16/qt.svg"), tr("About Qt"),
                 &QApplication::aboutQt);
-  connect(about, &QAction::triggered, this, &AMenuBar::openAbout);
+  connect(about, &QAction::triggered, this, [this] { emit aboutTriggered(); });
 }

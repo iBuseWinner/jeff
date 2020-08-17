@@ -115,7 +115,14 @@ public:
   void write_message_history(QList<Message> message_history, QFile *file);
 
 signals:
+  /*!
+   * @brief Reports an error while parsing JSON.
+   */
   QString json_error(QString error_text);
+
+  /*!
+   * @brief Reports a result of checking the settings file, if it is incorrect.
+   */
   QString settings_warning(QString warning_text);
 
 private:
@@ -126,7 +133,7 @@ private:
   QList<Source> _sources; /*!< List of sources for @a NLPmodule. */
 
   // Constants:
-  inline static const QString sourcesStoreFilename = "sources.json";
+  inline static const QString sources_store_filename = "sources.json";
 
   // Functions described in `basis.cpp`:
   QJsonArray read_json(QFile *file);

@@ -10,8 +10,8 @@
 #include <QWidget>
 
 /*!
- * Class: AMenuBar.
- * Provides the ability to interact with ASW using the menubar.
+ * @class AMenuBar
+ * @brief Provides the ability to interact with ASW using the menubar.
  */
 class AMenuBar : public QMenuBar {
   Q_OBJECT
@@ -20,31 +20,48 @@ public:
   QAction *fullScreenAction = nullptr;
   QAction *emm = nullptr;
 
-  // Functions:
-  AMenuBar(ALine *line, QWidget *parent = nullptr);
+  // Functions described in 'a_menubar.cpp':
+  explicit AMenuBar(ALine *line, QWidget *parent = nullptr);
 
 signals:
+  /*!
+   * @brief Informs about clicking on the "Clear history" action.
+   */
   void clearHistoryTriggered();
+
+  /*!
+   * @brief Informs about clicking on the "About" action.
+   */
   void aboutTriggered();
+
+  /*!
+   * @brief Informs about clicking on the "Settings" action.
+   */
   void settingsTriggered();
-  void containersTriggered();
-  void createContainerTriggered();
+
+  /*!
+   * @brief Informs about clicking on the "Source manager" action.
+   */
+  void sourcesTriggered();
+
+  /*!
+   * @brief Informs about clicking on the "Help" action.
+   * @details [constructing]
+   */
   // void helpTriggered();
+
+  /*!
+   * @brief Informs about clicking on the "Export message history..." action.
+   */
   void exportTriggered();
+
+  /*!
+   * @brief Informs about clicking on the "Import message history..." action.
+   */
   void importTriggered();
 
 private:
   Q_DISABLE_COPY(AMenuBar)
-
-  // Functions:
-  void openContainerManager() { emit containersTriggered(); }
-  void createContainer() { emit createContainerTriggered(); }
-  void openAbout() { emit aboutTriggered(); }
-  void openSettings() { emit settingsTriggered(); }
-  void exportMessageHistory() { emit exportTriggered(); }
-  void importMessageHistory() { emit importTriggered(); }
-  void clearMessageHistory() { emit clearHistoryTriggered(); }
-  void hideThis() { setVisible(!isVisible()); }
 };
 
-#endif // AKIWAKE_MENUBAR_H
+#endif // A_MENUBAR_H

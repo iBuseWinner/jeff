@@ -1,26 +1,23 @@
 #include "firststart.h"
 
-/*
- * All short named objects and their explanations:
- * {objn} <- object name
- */
-
 /*!
- * Argument: QWidget {*parent}.
- * Constructs and prepares First Start.
- *
- * Layout scheme:
+ * @fn FirstStart::FirstStart
+ * @brief The constructor.
+ * @details Layout scheme:
  * <-------------->
  * [    Title     ]
  * [  Start text  ]
  * [ Bottom  line ]
  * {<->}{Close btn}
  * <-------------->
+ * @param parent QObject parent
+ * @param m_handler reference to the ModalHandler instance
+ * @sa ModalHandler
  */
 FirstStart::FirstStart(QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName(objn);
+  setObjectName(object_name);
   auto *layout = new QVBoxLayout();
   auto *title = new QLabel(
       "<font size=\"6\">" + QTranslator::tr("Associative system") + "</font>",
