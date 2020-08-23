@@ -14,9 +14,9 @@
 bool SQLite::create_source(const Source &source, QString *uuid) {
   /*! Pieces of code for testing. */
 #ifdef SQLITE_AUTO_TESTS
-  qDebug() << "\tDatabase path:" << _source.path;
+  qDebug() << "\tDatabase path:" << source.path;
 #elif SQLITE_DEBUG
-  qDebug() << "Database path:" << _source.path;
+  qDebug() << "Database path:" << source.path;
 #endif
   /*! The source is created even if the database itself does not exist. */
   bool *correct = new bool(true);
@@ -261,9 +261,13 @@ QMap<QString, QString> SQLite::scan_source(const Source &source,
   while (query->isValid()) {
     /*! If the expression includes a value from the table, then this value is an
      * activator. */
-    if (expression.contains(purify(query->value(0).toString())))
+    if (expression.contains(purify(query->value(0).toString()))) {
       expression_links.insert(query->value(0).toString(),
                               query->value(1).toString());
+#ifdef SQLITE_SCANSOURCE_DEBUG
+      qDebug() << query->value(0).toString();
+#endif
+    }
     query->next();
   }
   db.close();

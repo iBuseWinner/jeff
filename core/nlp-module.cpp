@@ -132,7 +132,8 @@ GlobalMap NLPmodule::to_global_map(const QList<LinkMap> &link_map_list) {
 
 /*!
  * @fn NLPmodule::sorting
- * @brief Sorts activators depending on the place of entry.
+ * @brief Sorts activators depending on the place of entry and length of whole
+ * substring.
  * @details This is necessary in order for the NLPmodule to give answers in
  * which the reagents were in the order given in @a user_expression, for
  * example:
@@ -140,6 +141,11 @@ GlobalMap NLPmodule::to_global_map(const QList<LinkMap> &link_map_list) {
  *    ae: "Hi! Fine."
  *  - ue: "How are you? Hello!"
  *    ae: "Fine. Hi!"
+ * Also this is necessary because if we have, for example, two expressions:
+ *  `index 1 : expression "What is"       : links ...`
+ *  `index 2 : expression "What is love?" : links ...`,
+ * then we want to use 2nd expression always when we have "What is love,
+ * darling?" or something else.
  * @param user_expression user input expression
  * @param activators activators to be sorted
  * @returns sorted list of activators.
@@ -154,8 +160,12 @@ QStringList NLPmodule::sorting(const QString &user_expression,
   for (const QString &activator : qAsConst(activators)) {
     if (user_expression.indexOf(activator) > user_expression.indexOf(section))
       laterActivators.append(activator);
-    else
+    else if (user_expression.indexOf(activator) < user_expression.indexOf(section))
       earlierActivators.append(activator);
+    else if (activator.length() > section.length())
+      earlierActivators.append(activator);
+    else
+      laterActivators.append(activator);
   }
   QStringList sorted;
   earlierActivators = sorting(user_expression, earlierActivators);
@@ -178,6 +188,9 @@ QStringList NLPmodule::sorting(const QString &user_expression,
 void NLPmodule::select(QString user_expression, const GlobalMap &global_map) {
   QStringList activators =
       sorting(user_expression, global_map.activator_reagents.keys());
+#ifdef NLPMODULE_SELECT_DEBUG
+  qDebug() << activators;
+#endif
   QString response_expression;
   for (const QString &activator : qAsConst(activators)) {
     if (not user_expression.contains(activator))
