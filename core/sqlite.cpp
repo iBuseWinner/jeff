@@ -265,7 +265,8 @@ QMap<QString, QString> SQLite::scan_source(const Source &source,
       expression_links.insert(query->value(0).toString(),
                               query->value(1).toString());
 #ifdef SQLITE_SCANSOURCE_DEBUG
-      qDebug() << query->value(0).toString();
+      qDebug() << "SQLite::scan_source: expression added:"
+               << query->value(0).toString();
 #endif
     }
     query->next();

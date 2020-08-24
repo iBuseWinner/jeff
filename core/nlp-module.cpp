@@ -149,6 +149,8 @@ GlobalMap NLPmodule::to_global_map(const QList<LinkMap> &link_map_list) {
  * @param user_expression user input expression
  * @param activators activators to be sorted
  * @returns sorted list of activators.
+ * @todo change sorting algorithm because of possible error with huge amounts of
+ * data
  */
 QStringList NLPmodule::sorting(const QString &user_expression,
                                QStringList activators) {
@@ -160,7 +162,8 @@ QStringList NLPmodule::sorting(const QString &user_expression,
   for (const QString &activator : qAsConst(activators)) {
     if (user_expression.indexOf(activator) > user_expression.indexOf(section))
       laterActivators.append(activator);
-    else if (user_expression.indexOf(activator) < user_expression.indexOf(section))
+    else if (user_expression.indexOf(activator) <
+             user_expression.indexOf(section))
       earlierActivators.append(activator);
     else if (activator.length() > section.length())
       earlierActivators.append(activator);
@@ -189,7 +192,7 @@ void NLPmodule::select(QString user_expression, const GlobalMap &global_map) {
   QStringList activators =
       sorting(user_expression, global_map.activator_reagents.keys());
 #ifdef NLPMODULE_SELECT_DEBUG
-  qDebug() << activators;
+  qDebug() << "NLPmodule::select: list of activators:" << activators;
 #endif
   QString response_expression;
   for (const QString &activator : qAsConst(activators)) {
