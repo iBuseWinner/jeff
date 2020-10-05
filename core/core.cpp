@@ -17,6 +17,8 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(_standard_templates, &StandardTemplates::showModalWidget, this,
           &Core::got_modal);
   connect(_nlp, &NLPmodule::ready, this, &Core::got_message_from_nlp);
+  connect(_nlp, &NLPmodule::ready_with_options, this,
+          &Core::got_message_wo_from_nlp);
   connect(_standard_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not _monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueModeEnabledSt].toBool());
@@ -70,6 +72,20 @@ void Core::got_message_from_nlp(const QString &result_expression) {
         if (_monologue_enabled)
           _nlp->search(result_expression);
       });
+}
+
+/*!
+ * @fn Core::got_message_wo_from_nlp
+ * @brief Processes the output of the NLP module @a result_expression_wo and
+ * displays a message on the screen or do something else according to options.
+ * @param[in] result_expression_wo contains the response of the NLP module to
+ * user input
+ */
+void Core::got_message_wo_from_nlp(
+    QPair<QString, QStringList> result_expression_wo) {
+  if (result_expression_wo.first.isEmpty() and
+      result_expression_wo.second.isEmpty())
+    return;
 }
 
 /*!

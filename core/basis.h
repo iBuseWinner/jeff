@@ -138,10 +138,6 @@ private:
   // Functions described in `basis.cpp`:
   QJsonArray read_json(QFile *file);
   void write_json(QFile *savefile, QJsonArray json_array);
-  QJsonObject to_json(const Source &source);
-  QJsonObject to_json(const Message &message);
-  Source to_source(const QJsonObject &json_object);
-  Message to_message(const QJsonObject &json_object);
 };
 
 #endif // BASIS_H

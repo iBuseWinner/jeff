@@ -1,7 +1,8 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
-#include "core/source.h"
+#include "model/nlp/cache.h"
+#include "model/source.h"
 #include <QFile>
 #include <QJsonObject>
 #include <QMap>
@@ -38,9 +39,10 @@ enum ToDo {
   WriteOptions,
   SelectSources,
   InsertExpression,
-  SelectExpressionsAndLinks,
-  SelectExpressionAndLinksByAddress,
-  SelectAdditionalProperties,
+  SelectExpressionByAddress,
+  SelectAEL,         /*!< Address, expression and links. */
+  SelectELByAddress, /*!< Expression and links. */
+  SelectAPByAddress, /*!< Additional properties. */
   IfMainTableExists,
   IfMainTableCorrect,
   IfSourceTableExists,
@@ -101,23 +103,19 @@ public:
   bool write_source(const Source &source);
   bool insert_expression(const Source &source, int address,
                          const QString &expression, const QString &links);
-  QPair<QString, QString> get_expression(const Source &source, int address);
-  QMap<QString, QString> scan_source(const Source &source,
-                                     const QString &expression);
-  bool has_additional_properties(const Source &source);
-  QMap<QString, QString> scan_additional_properties(const Source &source,
-                                                    int address);
+  Expression get_expression_by_address(const Source &source, int address);
+  Cache scan_source(const Source &source, const QString &input);
 
 signals:
   /*!
    * @brief Reports an error in the database.
    */
-  QString sqliteError(QString errorText);
+  QString sqlite_error(QString error_text);
 
   /*!
    * @brief [constructing]
    */
-  QString sqliteWarning(QString warningText);
+  QString sqlite_warning(QString warning_text);
 
 private:
   // Constants:
@@ -135,6 +133,8 @@ private:
   bool validate(QSqlDatabase *db, const QString &source_table,
                 bool quiet = false);
   bool exec(QSqlQuery *query, ToDo option, QStringList values = {});
+  Options get_additional_properties(QSqlDatabase *db, const Source &source, int address);
+  QSet<int> unpack_links(const QString &links);
 };
 
 #endif // SQLITE_H

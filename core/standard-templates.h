@@ -9,6 +9,7 @@
 #include "dialogues/settings.h"
 #include "dialogues/sources.h"
 #include <QString>
+#include <QTime>
 
 /*!
  * @class StandardTemplates
@@ -30,10 +31,12 @@ public:
   // Functions described in 'standard-templates.cpp':
   bool dialogues(const QString &expression);
   bool fastCommands(const QString &expression);
+  static QPair<QString, QStringList> inlineCommands(const QString &expression);
 
 signals:
   /*!
-   * @brief Sends a ModalHandler when the widget needs to be shown on the screen.
+   * @brief Sends a ModalHandler when the widget needs to be shown on the
+   * screen.
    */
   ModalHandler *showModalWidget(ModalHandler *handler);
 
@@ -45,6 +48,9 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
+
+  // Constants:
+  inline static const QString current_time_tmpl = "<stdt::currtime>";
 };
 
 #endif // STANDARDTEMPLATES_H

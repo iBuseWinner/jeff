@@ -19,8 +19,8 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   qDebug() << "Database path:" << source.path;
 #endif
   /*! The source is created even if the database itself does not exist. */
-  bool *correct = new bool(true);
-  QSqlDatabase db = prepare(source.path, Correct, correct);
+  auto *correct = new bool(true);
+  auto db = prepare(source.path, Correct, correct);
   if (db.databaseName().isEmpty()) {
 #ifdef SQLITE_AUTO_TESTS
     qDebug() << "\tDatabase name is empty.";
@@ -32,7 +32,7 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   auto *query = new QSqlQuery(db);
   if (not *correct) {
     if (not create_base_structure(query)) {
-      emit sqliteError("Could not create main table.");
+      emit sqlite_error("Could not create main table.");
 #ifdef SQLITE_AUTO_TESTS
       qDebug() << "\tCould not create main table.";
 #elif SQLITE_DEBUG
@@ -46,7 +46,7 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
    * database. */
   QString uuid_to_verify;
   int cntr = 0;
-  QStringList tables = db.tables();
+  auto tables = db.tables();
   QRandomGenerator rand(quint32(QTime::currentTime().msec()));
   do {
     /*! Generates UUID. */
@@ -65,8 +65,8 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
                                                   * found. */
   if (tables.contains(uuid_to_verify)) { /*!< If the generation is unsuccessful,
                                           * it throws an error. */
-    emit sqliteError("Could not create source, number of attempts exceeded " +
-                     QString(maximum_number_of_attempts) + ".");
+    emit sqlite_error("Could not create source, number of attempts exceeded " +
+                      QString(maximum_number_of_attempts) + ".");
 #ifdef SQLITE_AUTO_TESTS
     qDebug() << "\tCould not create container, number of attempts exceeded " +
                     QString(maximum_number_of_attempts) + ".";
@@ -89,7 +89,7 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
                 QString(source.is_private), QString(source.is_catching),
                 QString(source.is_prioritised)}) and
           exec(query, CreateSourceTable, QStringList(*uuid)))) {
-    emit sqliteError("Could not write options and create source table.");
+    emit sqlite_error("Could not write options and create source table.");
 #ifdef SQLITE_AUTO_TESTS
     qDebug() << "\tCould not write options and create source table.";
 #elif SQLITE_DEBUG
@@ -103,10 +103,15 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   return true;
 }
 
+/*!
+ * @fn SQLite::create_base_structure
+ * @brief The following queries create a source table if it does not exist, or
+ * recreate it if it is incorrect.
+ * @param query reference to the QSqlQuery instance
+ * @returns
+ */
 bool SQLite::create_base_structure(QSqlQuery *query) {
   bool result = true;
-  /*! The following queries create a source table if it does not exist, or
-   * recreate it if it is incorrect. */
   result &= exec(query, RemoveMainTableIfExists);
   result &= exec(query, CreateMainTableIfNotExists);
   return result;
@@ -119,7 +124,7 @@ bool SQLite::create_base_structure(QSqlQuery *query) {
  * @returns list of sources @a sources
  */
 QList<Source> SQLite::sources(const QString &path) {
-  QSqlDatabase db = prepare(path, Openable);
+  auto db = prepare(path, Openable);
   if (db.databaseName().isEmpty())
     return QList<Source>();
   auto *query = new QSqlQuery(db);
@@ -150,11 +155,11 @@ QList<Source> SQLite::sources(const QString &path) {
  * @returns complete source properties
  */
 Source SQLite::load_source(Source source) {
-  QSqlDatabase db = prepare(source.path);
+  auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
     return source;
   auto *query = new QSqlQuery(db);
-  exec(query, LoadOptions, QStringList(source.table_name));
+  exec(query, LoadOptions, {source.table_name});
   db.close();
   if (not query->first())
     return source;
@@ -173,13 +178,13 @@ Source SQLite::load_source(Source source) {
  * @param[in] source source properties
  */
 bool SQLite::write_source(const Source &source) {
-  QSqlDatabase db = prepare(source.path, Openable);
+  auto db = prepare(source.path, Openable);
   if (db.databaseName().isEmpty())
     return false;
   auto *query = new QSqlQuery(db);
   exec(query, CreateMainTableIfNotExists);
   exec(query, WithDraw, QStringList(source.table_name));
-  bool result =
+  auto result =
       exec(query, WriteOptions,
            {source.table_name, source.table_title, QString(source.is_read_only),
             QString(source.is_private), QString(source.is_catching),
@@ -200,11 +205,11 @@ bool SQLite::write_source(const Source &source) {
 bool SQLite::insert_expression(const Source &source, int address,
                                const QString &expression,
                                const QString &links) {
-  QSqlDatabase db = prepare(source.path);
+  auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
     return false;
   auto *query = new QSqlQuery(db);
-  bool result =
+  auto result =
       exec(query, InsertExpression,
            {source.table_name, QString::number(address), expression, links});
   db.close();
@@ -219,23 +224,22 @@ bool SQLite::insert_expression(const Source &source, int address,
  * @param[in] address address of expression
  * @returns expression-links pair
  */
-QPair<QString, QString> SQLite::get_expression(const Source &source,
-                                               int address) {
-  QSqlDatabase db = prepare(source.path);
+Expression SQLite::get_expression_by_address(const Source &source,
+                                             int address) {
+  auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
-    return QPair<QString, QString>();
+    return Expression();
   auto *query = new QSqlQuery(db);
-  exec(query, SelectExpressionAndLinksByAddress,
-       {source.table_name, QString::number(address)});
+  exec(query, SelectELByAddress, {source.table_name, QString::number(address)});
   db.close();
   query->first();
-  QPair<QString, QString> expression_links;
+  Expression expr;
   if (query->isValid()) {
-    expression_links.first = query->value(0).toString();
-    expression_links.second = query->value(1).toString();
+    expr.activator_text = query->value(0).toString();
+    expr.reagent_text = query->value(1).toString();
   }
   delete query;
-  return expression_links;
+  return expr;
 }
 
 /*!
@@ -243,31 +247,48 @@ QPair<QString, QString> SQLite::get_expression(const Source &source,
  * @brief Finds all activators for the expression.
  * @param[in] source source properties
  * @param[in] expression expression
- * @returns activator-links map
+ * @returns selection for given input
  */
-QMap<QString, QString> SQLite::scan_source(const Source &source,
-                                           const QString &expression) {
+Cache SQLite::scan_source(const Source &source, const QString &input) {
 #ifdef SQLITE_SCANSOURCE_DEBUG
   QElapsedTimer timer;
   timer.start();
 #endif
-  QSqlDatabase db = prepare(source.path);
+  auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
-    return QMap<QString, QString>();
+    return Cache();
+  Cache selection;
   auto *query = new QSqlQuery(db);
-  exec(query, SelectExpressionsAndLinks, {source.table_name});
+  exec(query, SelectAEL, {source.table_name});
   query->first();
-  QMap<QString, QString> expression_links;
   while (query->isValid()) {
-    /*! If the expression includes a value from the table, then this value is an
-     * activator. */
-    if (expression.contains(purify(query->value(0).toString()))) {
-      expression_links.insert(query->value(0).toString(),
-                              query->value(1).toString());
+    /*! If the expression includes a value from the table... */
+    if (input.contains(purify(query->value(1).toString()))) {
+      /*! ...then this value is an activator. */
+      auto address = query->value(0).toInt();
+      auto props = get_additional_properties(&db, source, address);
+      auto links = unpack_links(query->value(2).toString());
+      auto activator_text = query->value(0).toString();
+      auto subquery = new QSqlQuery(db);
+      for (auto link : links) {
+        Expression expr;
+        expr.activator_text = activator_text;
+        exec(subquery, SelectExpressionByAddress,
+             {source.table_name, QString(link)});
+        subquery->first();
+        if (not subquery->isValid()) {
+          delete subquery;
+          continue;
+        };
+        expr.reagent_text = subquery->value(0).toString();
+        expr.properties = props;
+        selection.append(expr);
 #ifdef SQLITE_SCANSOURCE_DEBUG
-      qDebug() << "SQLite::scan_source: expression added:"
-               << query->value(0).toString();
+        qDebug() << "SQLite::scan_source: expression \"" + expr.activator_text +
+                        "\" : \"" + expr.reagent_text + "\" added";
 #endif
+      }
+      delete subquery;
     }
     query->next();
   }
@@ -276,49 +297,7 @@ QMap<QString, QString> SQLite::scan_source(const Source &source,
 #ifdef SQLITE_SCANSOURCE_DEBUG
   qDebug() << "SQLite::scan_source:" << timer.nsecsElapsed();
 #endif
-  return expression_links;
-}
-
-/*!
- * @fn SQLite::has_additional_properties
- * @brief Indicates whether the source has additional properties.
- * @param[in] source source properties
- * @returns boolean value of the presence of additional properties at the
- * source.
- */
-bool SQLite::has_additional_properties(const Source &source) {
-  QSqlDatabase db = prepare(source.path);
-  if (db.databaseName().isEmpty())
-    return false;
-  QSqlRecord record = db.record(source.table_name);
-  db.close();
-  return (not record.fieldName(3).isNull());
-}
-
-/*!
- * @fn SQLite::scan_additional_properties
- * @brief Gets additional properties of the expression by @a address.
- * @param[in] source source properties
- * @param[in] address address of expression
- * @returns key-value map of properties
- */
-QMap<QString, QString> SQLite::scan_additional_properties(const Source &source,
-                                                          int address) {
-  QSqlDatabase db = prepare(source.path);
-  if (db.databaseName().isEmpty())
-    return QMap<QString, QString>();
-  auto *query = new QSqlQuery(db);
-  exec(query, SelectAdditionalProperties,
-       {source.table_name, QString::number(address)});
-  QSqlRecord record = query->record();
-  db.close();
-  delete query;
-  QMap<QString, QString> additional_properties;
-  for (int row = init_additionals_rows; not record.isNull(row); row++) {
-    additional_properties.insert(record.fieldName(row),
-                                 record.value(row).toString());
-  }
-  return additional_properties;
+  return selection;
 }
 
 /*!
@@ -334,7 +313,7 @@ QMap<QString, QString> SQLite::scan_additional_properties(const Source &source,
  */
 QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
                              bool quiet) {
-  QSqlDatabase db = QSqlDatabase::database();
+  auto db = QSqlDatabase::database();
   switch (option) {
   case NoCheck: {
     db.setDatabaseName(path);
@@ -346,7 +325,7 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       *result = true;
     if (not QFile::exists(path)) {
       if (not quiet) {
-        emit sqliteError(tr("Database \"%1\" doesn't exist.").arg(path));
+        emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
 #ifdef SQLITE_AUTO_TESTS
         qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
 #endif
@@ -365,8 +344,8 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
     db.setDatabaseName(path);
     if (not db.open()) {
       if (not quiet) {
-        emit sqliteError(tr("Opening error. Error text: ") +
-                         db.lastError().text());
+        emit sqlite_error(tr("Opening error. Error text: ") +
+                          db.lastError().text());
 #ifdef SQLITE_AUTO_TESTS
         qDebug() << "\tSQLite::prepare: opening error:"
                  << db.lastError().text();
@@ -383,7 +362,7 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       *result = true;
     if (not QFile::exists(path)) {
       if (not quiet) {
-        emit sqliteError(tr("Database \"%1\" doesn't exist.").arg(path));
+        emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
 #ifdef SQLITE_AUTO_TESTS
         qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
 #endif
@@ -395,8 +374,8 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
     db.setDatabaseName(path);
     if (not db.open()) {
       if (not quiet) {
-        emit sqliteError(tr("Opening error. Error text: ") +
-                         db.lastError().text());
+        emit sqlite_error(tr("Opening error. Error text: ") +
+                          db.lastError().text());
 #ifdef SQLITE_AUTO_TESTS
         qDebug() << "\tSQLite::prepare: opening error:"
                  << db.lastError().text();
@@ -415,7 +394,7 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       *result = true;
     if (not QFile::exists(path)) {
       if (not quiet) {
-        emit sqliteError(tr("Database \"%1\" doesn't exist.").arg(path));
+        emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
 #ifdef SQLITE_AUTO_TESTS
         qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
 #endif
@@ -427,8 +406,8 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
     db.setDatabaseName(path);
     if (not db.open()) {
       if (not quiet) {
-        emit sqliteError(tr("Opening error. Error text: ") +
-                         db.lastError().text());
+        emit sqlite_error(tr("Opening error. Error text: ") +
+                          db.lastError().text());
 #ifdef SQLITE_AUTO_TESTS
         qDebug() << "\tSQLite::prepare: opening error:"
                  << db.lastError().text();
@@ -437,7 +416,7 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       if (result)
         *result = false;
     }
-    bool valid = validate(&db, true, quiet);
+    auto valid = validate(&db, true, quiet);
     if (result)
       *result = valid;
     break;
@@ -457,112 +436,112 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
  * @retval false error was encountered, the database is invalid
  */
 bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
-  QString db_suffix = tr("Database \"%1\".").arg(db->databaseName());
+  auto db_suffix = tr("Database \"%1\".").arg(db->databaseName());
   auto query = QSqlQuery(*db);
   exec(&query, IfMainTableExists);
   query.first();
   if (not query.isValid() and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: table with sources does not exist.") + " " +
         db_suffix);
     return false;
   }
   exec(&query, IfMainTableCorrect);
   if (not query.first() and not quiet) {
-    emit sqliteError(tr("Validation error: table with sources is empty.") +
-                     " " + db_suffix);
+    emit sqlite_error(tr("Validation error: table with sources is empty.") +
+                      " " + db_suffix);
     return false;
   }
-  bool sourceColumnValid = true;
+  auto sourceColumnValid = true;
   sourceColumnValid &= query.value(1).toString() == "source";
   sourceColumnValid &= query.value(2).toString() == "TEXT";
   sourceColumnValid &= query.value(3).toInt() == 1;
   if (not sourceColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the first column of the table with sources does "
            "not fit the description of \"source\" TEXT NOT NULL UNIQUE.") +
         " " + db_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(tr("Validation error: the table with sources contains "
-                        "only one column.") +
-                     " " + db_suffix);
+    emit sqlite_error(tr("Validation error: the table with sources contains "
+                         "only one column.") +
+                      " " + db_suffix);
     return false;
   }
-  bool titleColumnValid = true;
+  auto titleColumnValid = true;
   titleColumnValid &= query.value(1).toString() == "title";
   titleColumnValid &= query.value(2).toString() == "TEXT";
   if (not titleColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the second column of the table with sources does "
            "not fit the description of \"title\" TEXT.") +
         " " + db_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(tr("Validation error: the table with sources contains "
-                        "only two columns.") +
-                     " " + db_suffix);
+    emit sqlite_error(tr("Validation error: the table with sources contains "
+                         "only two columns.") +
+                      " " + db_suffix);
     return false;
   }
-  bool isReadOnlyColumnValid = true;
+  auto isReadOnlyColumnValid = true;
   isReadOnlyColumnValid &= query.value(1).toString() == "isReadOnly";
   isReadOnlyColumnValid &= query.value(2).toString() == "INTEGER";
   isReadOnlyColumnValid &= query.value(3).toInt() == 1;
   if (not isReadOnlyColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the third column of the table with sources does "
            "not fit the description of \"isReadOnly\" INTEGER NOT NULL.") +
         " " + db_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(tr("Validation error: the table with sources contains "
-                        "only three columns.") +
-                     " " + db_suffix);
+    emit sqlite_error(tr("Validation error: the table with sources contains "
+                         "only three columns.") +
+                      " " + db_suffix);
     return false;
   }
-  bool isPrivateColumnValid = true;
+  auto isPrivateColumnValid = true;
   isPrivateColumnValid &= query.value(1).toString() == "isPrivate";
   isPrivateColumnValid &= query.value(2).toString() == "INTEGER";
   isPrivateColumnValid &= query.value(3).toInt() == 1;
   if (not isPrivateColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the fourth column of the table with sources does "
            "not fit the description of \"isPrivate\" INTEGER NOT NULL.") +
         " " + db_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(tr("Validation error: the table with sources contains "
-                        "only four columns.") +
-                     " " + db_suffix);
+    emit sqlite_error(tr("Validation error: the table with sources contains "
+                         "only four columns.") +
+                      " " + db_suffix);
     return false;
   }
-  bool isCatchingColumnValid = true;
+  auto isCatchingColumnValid = true;
   isCatchingColumnValid &= query.value(1).toString() == "isCatching";
   isCatchingColumnValid &= query.value(2).toString() == "INTEGER";
   isCatchingColumnValid &= query.value(3).toInt() == 1;
   if (not isCatchingColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the fifth column of the table with sources does "
            "not fit the description of \"isCatching\" INTEGER NOT NULL.") +
         " " + db_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(tr("Validation error: the table with sources contains "
-                        "only five columns.") +
-                     " " + db_suffix);
+    emit sqlite_error(tr("Validation error: the table with sources contains "
+                         "only five columns.") +
+                      " " + db_suffix);
     return false;
   }
-  bool isPrioritisedColumnValid = true;
+  auto isPrioritisedColumnValid = true;
   isPrioritisedColumnValid &= query.value(1).toString() == "isPrioritised";
   isPrioritisedColumnValid &= query.value(2).toString() == "INTEGER";
   isPrioritisedColumnValid &= query.value(3).toInt() == 1;
   if (not isPrioritisedColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the sixth column of the table with sources does "
            "not fit the description of \"isPrioritised\" INTEGER NOT NULL.") +
         " " + db_suffix);
@@ -572,7 +551,7 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
     exec(&query, SelectSources);
     if (not query.first())
       return true;
-    bool eachSourceValid = true;
+    auto eachSourceValid = true;
     do
       eachSourceValid &= validate(db, query.value(0).toString());
     while (query.next());
@@ -593,63 +572,64 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
  */
 bool SQLite::validate(QSqlDatabase *db, const QString &source_table,
                       bool quiet) {
-  QString db_source_suffix = tr("Database \"%1\", source \"%2\".")
+  auto db_source_suffix = tr("Database \"%1\", source \"%2\".")
                                  .arg(db->databaseName())
                                  .arg(source_table);
   auto query = QSqlQuery(*db);
   exec(&query, IfSourceTableExists, {source_table});
   if (not query.isValid() and not quiet) {
-    emit sqliteError(tr("Validation error: source does not exist.") + " " +
-                     db_source_suffix);
+    emit sqlite_error(tr("Validation error: source does not exist.") + " " +
+                      db_source_suffix);
     return false;
   }
   exec(&query, IfSourceTableCorrect, {source_table});
   if (not query.first() and not quiet) {
-    emit sqliteError(tr("Validation error: source is empty.") + " " +
-                     db_source_suffix);
+    emit sqlite_error(tr("Validation error: source is empty.") + " " +
+                      db_source_suffix);
     return false;
   }
-  bool addressColumnValid = true;
+  auto addressColumnValid = true;
   addressColumnValid &= query.value(1).toString() == "address";
   addressColumnValid &= query.value(2).toString() == "INTEGER";
   addressColumnValid &= query.value(3).toInt() == 1;
   addressColumnValid &= query.value(5).toInt() == 1;
   if (not addressColumnValid and not quiet) {
-    emit sqliteError(tr("Validation error: the first column of the source does "
-                        "not fit the description of \"address\" INTEGER NOT "
-                        "NULL PRIMARY KEY AUTOINCREMENT UNIQUE.") +
-                     " " + db_source_suffix);
+    emit sqlite_error(
+        tr("Validation error: the first column of the source does "
+           "not fit the description of \"address\" INTEGER NOT "
+           "NULL PRIMARY KEY AUTOINCREMENT UNIQUE.") +
+        " " + db_source_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the source contains only one column.") + " " +
         db_source_suffix);
     return false;
   }
-  bool expressionColumnValid = true;
+  auto expressionColumnValid = true;
   expressionColumnValid &= query.value(1).toString() == "expression";
   expressionColumnValid &= query.value(2).toString() == "TEXT";
   if (not expressionColumnValid and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the second column of the source does not fit the "
            "description of \"expression\" TEXT.") +
         " " + db_source_suffix);
     return false;
   }
   if (not query.next() and not quiet) {
-    emit sqliteError(
+    emit sqlite_error(
         tr("Validation error: the source contains only two columns.") + " " +
         db_source_suffix);
     return false;
   }
-  bool linksColumnValid = true;
+  auto linksColumnValid = true;
   linksColumnValid &= query.value(1).toString() == "links";
   linksColumnValid &= query.value(2).toString() == "TEXT";
   if (not linksColumnValid and not quiet) {
-    emit sqliteError(tr("Validation error: the third column of the source "
-                        "does not fit the description of \"links\" TEXT.") +
-                     " " + db_source_suffix);
+    emit sqlite_error(tr("Validation error: the third column of the source "
+                         "does not fit the description of \"links\" TEXT.") +
+                      " " + db_source_suffix);
     return false;
   }
   return true;
@@ -714,17 +694,22 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
     query->bindValue(":ex", values[2]);
     query->bindValue(":ls", values[3]);
     break;
-  case SelectExpressionsAndLinks:
-    query->prepare(
-        QString("SELECT expression, links FROM \"%1\"").arg(values[0]));
+  case SelectExpressionByAddress:
+    query->prepare(QString("SELECT expression FROM \"%1\" WHERE address = :a")
+                       .arg(values[0]));
+    query->bindValue(":a", values[1].toInt());
     break;
-  case SelectExpressionAndLinksByAddress:
+  case SelectAEL:
+    query->prepare(QString("SELECT address, expression, links FROM \"%1\"")
+                       .arg(values[0]));
+    break;
+  case SelectELByAddress:
     query->prepare(
         QString("SELECT expression, links FROM \"%1\" WHERE address = :a")
             .arg(values[0]));
     query->bindValue(":a", values[1].toInt());
     break;
-  case SelectAdditionalProperties:
+  case SelectAPByAddress:
     query->prepare(
         QString("SELECT * FROM \"%1\" WHERE address = :a").arg(values[0]));
     query->bindValue(":a", values[1].toInt());
@@ -755,8 +740,43 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   case NoneToDo:;
   }
   if (not query->exec()) {
-    emit sqliteError(query->lastError().text() + " " + QString(int(option)));
+    emit sqlite_error(query->lastError().text() + " " + QString(int(option)));
     return false;
   }
   return true;
+}
+
+/*!
+ * @fn SQLite::get_additional_properties
+ * @brief Gets additional properties of the expression by @a address.
+ * @param[in,out] reference to the QSqlDatabase instance
+ * @param[in] source source properties
+ * @param[in] address address of expression
+ * @returns key-value map of properties
+ */
+Options SQLite::get_additional_properties(QSqlDatabase *db,
+                                          const Source &source, int address) {
+  Options props;
+  auto *query = new QSqlQuery(*db);
+  exec(query, SelectAPByAddress, {source.table_name, QString::number(address)});
+  auto record = query->record();
+  delete query;
+  for (auto row = init_additionals_rows; not record.isNull(row); row++) {
+    props.insert(record.fieldName(row), record.value(row).toString());
+  }
+  return props;
+}
+
+/*!
+ * @fn SQLite::unpack_links
+ * @brief
+ * @param links
+ * @returns
+ */
+QSet<int> SQLite::unpack_links(const QString &links) {
+  QSet<int> unpacked;
+  QStringList splitted = links.split(",");
+  for (auto link : splitted)
+    unpacked.insert(link.toInt());
+  return unpacked;
 }

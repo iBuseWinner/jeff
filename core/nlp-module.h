@@ -1,10 +1,12 @@
 #ifndef NLPMODULE_H
 #define NLPMODULE_H
 
-#include "core/basis.h"
-#include "core/nlp-structures.h"
-#include "core/sqlite.h"
-#include "widgets/a_message.h"
+#include "basis.h"
+#include "model/expression.h"
+#include "model/nlp/cache.h"
+#include "model/nlp/responsewo.h"
+#include "sqlite.h"
+#include "standard-templates.h"
 #include <QMap>
 #include <QObject>
 #include <QPair>
@@ -29,27 +31,46 @@ public:
    * @param[in,out] parent QObject parent
    */
   NLPmodule(Basis *basis, QObject *parent = nullptr)
-      : QObject(parent), _basis(basis) {}
+      : QObject(parent), _basis(basis) {
+    load_cache();
+  }
+
+  /*!
+   * @fn NLPmodule::~NLPmodule
+   * @brief Saves cache.
+   */
+  ~NLPmodule() { save_cache(); }
 
   // Functions described in `nlp-module.cpp`:
-  void search(QString user_expression);
+  void load_cache();
+  void save_cache();
+  void search_for_suggests(const QString &input);
 
 signals:
   /*!
-   * @brief Sends a response expression.
+   * @brief Sends a response expression to @a Core.
+   * @sa Core
    */
-  QString ready(QString response_expression);
+  QString response(QString response);
+
+  /*!
+   * @brief Sends a response expression with additional options for @a Core and
+   * others.
+   * @sa Core
+   */
+  ResponseWO response_wo(ResponseWO response_wo);
 
 private:
   // Objects:
   Basis *_basis = nullptr;
+  Cache _cache;
+
+  // Constants:
+  inline static const QString cache_path = "";
 
   // Functions described in `nlp-module.cpp`:
-  LinkMap to_link_map(QList<SourceRow> source_row_list,
-                    bool has_additional_properties);
-  GlobalMap to_global_map(const QList<LinkMap> &link_map_list);
-  QStringList sorting(const QString &user_expression, QStringList activators);
-  void select(QString user_expression, const GlobalMap &global_map);
+  Cache select_from_cache(const QString &input);
+  Cache select_from_sql(const QString &input);
 };
 
 #endif // NLPMODULE_H

@@ -10,12 +10,9 @@ LIBS += -lpython3.8
 DEFINES += QT_DEPRECATED_WARNINGS \
     # ADISPLAY_DEBUG \
     # ADISPLAY_ADDMSG_DEBUG \
-    # NLPMODULE_DEBUG \
-    # NLPMODULE_SEARCH_DEBUG \
-    # NLPMODULE_SELECT_DEBUG \
     # SQLITE_DEBUG \
     # SQLITE_SCANSOURCE_DEBUG \
-    # ADISPLAY_START_DEBUG
+    # ADISPLAY_START_DEBUG \
 
 CONFIG += c++2a
 
@@ -23,7 +20,8 @@ SOURCES += \
     core/basis.cpp \
     core/core.cpp \
     core/history-processor.cpp \
-    core/python-handler.cpp \
+    core/python-module.cpp \
+    core/scenery.cpp \
     core/standard-templates.cpp \
     dialogues/sources/create-source.cpp \
     dialogues/settings.cpp \
@@ -51,11 +49,16 @@ HEADERS += \
     asw.h \
     core/basis.h \
     core/core.h \
+    core/model/expression.h \
     core/history-processor.h \
-    core/message.h \
-    core/nlp-structures.h \
-    core/python-handler.h \
-    core/source.h \
+    core/model/message.h \
+    core/model/nlp/cache.h \
+    core/model/nlp/linked-cache.h \
+    core/model/nlp/options.h \
+    core/model/nlp/responsewo.h \
+    core/python-module.h \
+    core/model/source.h \
+    core/scenery.h \
     core/sqlite.h \
     core/standard-templates.h \
     dialogues/modal-handler.h \

@@ -33,18 +33,31 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   emh->setShortcut(Qt::CTRL + Qt::Key_E);
   imh->setShortcut(Qt::CTRL + Qt::Key_I);
   emm->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
+#ifdef Q_OS_UNIX
+  sm->setIcon(QIcon::fromTheme("network-server-database"));
+  emh->setIcon(QIcon::fromTheme("document-export.svg"));
+  imh->setIcon(QIcon::fromTheme("document-import.svg"));
+  emm->setIcon(QIcon::fromTheme("user-group-properties"));
+#else
   sm->setIcon(QIcon(":/arts/icons/16/database-manager.svg"));
   emh->setIcon(QIcon(":/arts/icons/16/document-export.svg"));
   imh->setIcon(QIcon(":/arts/icons/16/document-import.svg"));
   emm->setIcon(QIcon(":/arts/icons/16/monologue.svg"));
+#endif
   mf->addAction(sm);
   mf->addAction(emm);
   mf->addSeparator();
   mf->addAction(emh);
   mf->addAction(imh);
   mf->addSeparator();
-  mf->addAction(QIcon(":/arts/icons/16/application-exit.svg"), tr("&Exit"),
-                &QApplication::quit, Qt::ALT + Qt::Key_F4);
+  mf->addAction(
+#ifdef Q_OS_UNIX
+      QIcon::fromTheme("application-exit")
+#else
+      QIcon(":/arts/icons/16/application-exit.svg")
+#endif
+          ,
+      tr("&Exit"), &QApplication::quit, Qt::ALT + Qt::Key_F4);
   connect(sm, &QAction::triggered, this, [this] { emit sourcesTriggered(); });
   connect(emh, &QAction::triggered, this, [this] { emit exportTriggered(); });
   connect(imh, &QAction::triggered, this, [this] { emit importTriggered(); });
@@ -62,12 +75,16 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   copy->setShortcuts(QKeySequence::Copy);
   paste->setShortcuts(QKeySequence::Paste);
   sel->setShortcuts(QKeySequence::SelectAll);
+#ifdef Q_OS_UNIX
+  cmh->setIcon(QIcon::fromTheme("edit-clear-history"));
+#else
   cmh->setIcon(QIcon(":/arts/icons/16/clear-history.svg"));
   del->setIcon(QIcon(":/arts/icons/16/clear.svg"));
   cut->setIcon(QIcon(":/arts/icons/16/cut.svg"));
   copy->setIcon(QIcon(":/arts/icons/16/copy.svg"));
   paste->setIcon(QIcon(":/arts/icons/16/paste.svg"));
   sel->setIcon(QIcon(":/arts/icons/16/select-all.svg"));
+#endif
   me->addAction(cmh);
   me->addSeparator();
   me->addAction(del);

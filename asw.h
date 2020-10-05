@@ -29,10 +29,10 @@ public:
    * @fn ASW::~ASW
    * @brief Saves window settings.
    */
-  ~ASW() override { saveWindowSettings(); }
+  ~ASW() override { save_window_settings(); }
 
   // Functions described in 'asw.cpp':
-  explicit ASW();
+  ASW();
   void greeting();
 
 signals:
@@ -40,7 +40,7 @@ signals:
    * @brief Indicates that the window is complete and ready for user
    * interaction.
    */
-  void readyState();
+  void ready_state();
 
   /*!
    * @brief Sends a request to Core.
@@ -58,7 +58,7 @@ private:
   // Objects:
   Core *core = new Core(this);
   Basis *basis = core->basis;
-  HProcessor *historyProcessor = core->history_processor;
+  HProcessor *history_processor = core->history_processor;
   ALine *line = new ALine(this);
   ADisplay *display = new ADisplay(25, this);
   AMenuBar *menubar = new AMenuBar(line, this);
@@ -70,13 +70,13 @@ private:
   static const int defaultHeight = 496;
 
   // Functions described in 'asw.cpp':
-  void applyingSettings();
-  void saveWindowSettings();
-  void connector();
-  void fullScreenHandler();
-  void userInputHandler();
-  void exportMessageHistory();
-  void importMessageHistory();
+  void apply_settings();
+  void save_window_settings();
+  void connect_all();
+  void full_screen_handler();
+  void user_input_handler();
+  void export_message_history();
+  void import_message_history();
   void clear();
   // void help() { emit send("/help"); }
 };
