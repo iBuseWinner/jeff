@@ -12,12 +12,12 @@ Core::Core(QObject *parent) : QObject(parent) {
   basis->check_settings_file();
   connect(history_processor, &HProcessor::send_message_history, this,
           &Core::show_history);
-  connect(basis->sql, &SQLite::sqliteError, this, &Core::got_error);
-  connect(basis->sql, &SQLite::sqliteWarning, this, &Core::got_warning);
+  connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);
+  connect(basis->sql, &SQLite::sqlite_warning, this, &Core::got_warning);
   connect(_standard_templates, &StandardTemplates::showModalWidget, this,
           &Core::got_modal);
-  connect(_nlp, &NLPmodule::ready, this, &Core::got_message_from_nlp);
-  connect(_nlp, &NLPmodule::ready_with_options, this,
+  connect(_nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
+  connect(_nlp, &NLPmodule::response_wo, this,
           &Core::got_message_wo_from_nlp);
   connect(_standard_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not _monologue_enabled); });
@@ -45,7 +45,7 @@ void Core::got_message_from_user(const QString &user_expression) {
     return;
   if (_standard_templates->fastCommands(user_expression))
     return;
-  _nlp->search(user_expression);
+  _nlp->search_for_suggests(user_expression);
 }
 
 /*!
@@ -70,7 +70,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
       this, [this, message, result_expression] {
         emit show(new AMessage(message));
         if (_monologue_enabled)
-          _nlp->search(result_expression);
+          _nlp->search_for_suggests(result_expression);
       });
 }
 
@@ -81,8 +81,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
  * @param[in] result_expression_wo contains the response of the NLP module to
  * user input
  */
-void Core::got_message_wo_from_nlp(
-    QPair<QString, QStringList> result_expression_wo) {
+void Core::got_message_wo_from_nlp(ResponseWO result_expression_wo) {
   if (result_expression_wo.first.isEmpty() and
       result_expression_wo.second.isEmpty())
     return;

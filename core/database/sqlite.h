@@ -54,6 +54,7 @@ enum ToDo {
 /*!
  * @class SQLite
  * @brief Contains methods of working with databases.
+ * @sa Json
  */
 class SQLite : public QObject {
   Q_OBJECT

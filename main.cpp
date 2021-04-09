@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
   asw_l10n->load(":/l10n/asw_" + QLocale::system().name());
   asw.installTranslator(asw_l10n);
   class ASW asWindow;
-  emit asWindow.readyState();
+  emit asWindow.ready_state();
   asWindow.show();
   return QApplication::exec();
 }

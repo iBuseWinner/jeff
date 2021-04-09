@@ -1,5 +1,7 @@
 #include "nlp-module.h"
 
+void
+
 void NLPmodule::search_for_suggests(const QString &input) {
   QString purified_input = _basis->sql->purify(input);
   Cache selection = select_from_cache(purified_input);

@@ -1,7 +1,7 @@
 #ifndef A_MESSAGE_H
 #define A_MESSAGE_H
 
-#include "core/message.h"
+#include "core/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/a_board.h"
 #include <QHBoxLayout>

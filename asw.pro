@@ -3,9 +3,9 @@ QT += core gui widgets sql
 TARGET = asw
 TEMPLATE = app
 
-INCLUDEPATH += /usr/include/python3.8
+INCLUDEPATH += /usr/include/python3.9
 
-LIBS += -lpython3.8
+LIBS += -lpython3.9
 
 DEFINES += QT_DEPRECATED_WARNINGS \
     # ADISPLAY_DEBUG \
@@ -19,6 +19,7 @@ CONFIG += c++2a
 SOURCES += \
     core/basis.cpp \
     core/core.cpp \
+    core/database/json.cpp \
     core/history-processor.cpp \
     core/python-module.cpp \
     core/scenery.cpp \
@@ -29,7 +30,7 @@ SOURCES += \
     dialogues/sources/edit-source.cpp \
     main.cpp \
     asw.cpp \
-    core/sqlite.cpp \
+    core/database/sqlite.cpp \
     dialogues/help.cpp \
     dialogues/firststart.cpp \
     dialogues/about.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     asw.h \
     core/basis.h \
     core/core.h \
+    core/database/json.h \
     core/model/expression.h \
     core/history-processor.h \
     core/model/message.h \
@@ -59,7 +61,7 @@ HEADERS += \
     core/python-module.h \
     core/model/source.h \
     core/scenery.h \
-    core/sqlite.h \
+    core/database/sqlite.h \
     core/standard-templates.h \
     dialogues/modal-handler.h \
     dialogues/sources/create-source.h \

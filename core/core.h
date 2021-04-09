@@ -6,6 +6,7 @@
 #include "core/nlp-module.h"
 #include "core/standard-templates.h"
 #include "dialogues/modal-handler.h"
+#include "sqlite.h"
 #include <QObject>
 #include <QTimer>
 
@@ -28,7 +29,7 @@ public:
   void got_message_from_user(const QString &user_expression);
   void got_message_from_nlp(const QString &result_expression);
   void
-  got_message_wo_from_nlp(QPair<QString, QStringList> result_expression_wo);
+  got_message_wo_from_nlp(ResponseWO result_expression_wo);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);

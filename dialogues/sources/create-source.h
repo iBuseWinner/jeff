@@ -2,7 +2,7 @@
 #define CREATESOURCEDIALOG_H
 
 #include "core/basis.h"
-#include "core/source.h"
+#include "core/model/source.h"
 #include "widgets/a_button.h"
 #include "widgets/a_lineedit.h"
 #include <QFileDialog>

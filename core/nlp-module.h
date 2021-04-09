@@ -1,11 +1,11 @@
 #ifndef NLPMODULE_H
 #define NLPMODULE_H
 
-#include "basis.h"
+#include "core/basis.h"
+#include "core/database/sqlite.h"
 #include "model/expression.h"
 #include "model/nlp/cache.h"
 #include "model/nlp/responsewo.h"
-#include "sqlite.h"
 #include "standard-templates.h"
 #include <QMap>
 #include <QObject>

@@ -1,9 +1,10 @@
 #ifndef BASIS_H
 #define BASIS_H
 
-#include "core/message.h"
-#include "core/source.h"
-#include "core/sqlite.h"
+#include "core/database/json.h"
+#include "core/database/sqlite.h"
+#include "core/model/message.h"
+#include "core/model/source.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -26,13 +27,14 @@
  *   - reads and writes a list of sources, settings and message history
  *   - stores a list of sources in memory
  *   - checks the settings file for errors.
- * @sa SQLite, QSettings
+ * @sa SQLite, Json, QSettings
  */
 class Basis : public QObject {
   Q_OBJECT
 public:
   // Objects:
   SQLite *sql = new SQLite(this); /*!< SQLite handler. */
+  Json *json = new Json(this);    /*!< Json handler. */
 
   // Constants:
   inline static const QString companyName = "CCLC";
@@ -59,7 +61,7 @@ public:
    * sourcesStoreFilename file.
    * @param[in,out] parent QObject parent
    */
-  Basis(QObject *parent = nullptr) : QObject(parent) { read_source_list(); }
+  Basis(QObject *parent = nullptr) : QObject(parent) { load_sources(); }
 
   /*!
    * @fn Basis::exists
@@ -101,25 +103,36 @@ public:
   }
 
   /*!
+   * @fn Basis::load_sources
+   * @brief Loads @a _sources from file.
+   */
+  void load_sources() {
+    for (auto source : json->read_source_list(sql, get_settings_path())) {
+      if (not _sources.contains(source))
+        _sources.append(source);
+    }
+  }
+
+  /*!
    * @fn Basis::get_sources
    * @returns a list of sources @a _sources.
    */
   QList<Source> get_sources() { return _sources; }
 
+  /*!
+   * @fn Basis::set_sources
+   * @brief Saves @a sources list.
+   */
+  void set_sources(QList<Source> sources) {
+    _sources = sources;
+    json->write_source_list(sql, get_settings_path(), sources);
+  }
+
   // Functions described in `basis.cpp`:
-  void read_source_list();
   void check_settings_file();
-  QList<Message> read_message_history(QFile *file);
   void write(const QString &key, const QVariant &data);
-  void write_source_list(QList<Source> source_list);
-  void write_message_history(QList<Message> message_history, QFile *file);
 
 signals:
-  /*!
-   * @brief Reports an error while parsing JSON.
-   */
-  QString json_error(QString error_text);
-
   /*!
    * @brief Reports a result of checking the settings file, if it is incorrect.
    */
@@ -131,13 +144,6 @@ private:
       new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
                     applicationName, this); /*!< Qt settings object. */
   QList<Source> _sources; /*!< List of sources for @a NLPmodule. */
-
-  // Constants:
-  inline static const QString sources_store_filename = "sources.json";
-
-  // Functions described in `basis.cpp`:
-  QJsonArray read_json(QFile *file);
-  void write_json(QFile *savefile, QJsonArray json_array);
 };
 
 #endif // BASIS_H

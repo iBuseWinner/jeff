@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class Scenery {
+class Scenery : public QObject {
   Q_OBJECT
 public:
   Scenery();
