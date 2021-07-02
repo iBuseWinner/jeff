@@ -36,11 +36,22 @@ enum ContentType {
 enum Theme { undefT, Std, White, Dark, Red, Green, Blue, Yellow };
 
 /*!
- * @struct Message
+ * @class Message
  * @brief Contains the message and its properties.
  * @sa Author, ContentType, Theme
  */
-struct Message {
+class Message {
+public:
+  /*! Constructors. */
+  Message() {}
+  Message(const QJsonObject &json_object) {
+    content = json_object["content"].toString();
+    datetime = QDateTime::fromString(json_object["datetime"].toString(),
+        Qt::ISODateWithMs);
+    author = Author(json_object["author"].toInt());
+    content_type = ContentType(json_object["contentType"].toInt());
+    theme = Theme(json_object["theme"].toInt());
+  }
   /*! Content. */
   QString content = QString();
   /*! Data and time of creation/change. */
@@ -51,43 +62,25 @@ struct Message {
   ContentType content_type = ContentType::undefC;
   /*! Message theme. */
   Theme theme = Theme::Std;
-
   /*! Compares two messages. They are identical if the authors, content types,
    * content and posting times are the same. */
   friend bool operator==(Message m1, Message m2) {
     return m1.author == m2.author and m1.content_type == m2.content_type and
            m1.content == m2.content and m1.datetime == m2.datetime;
   }
-
   /*!
    * @fn to_json
    * @brief Turns @a message into a JSON object.
    * @param[in] message message data
    * @returns converted properties of @a message
    */
-  friend QJsonObject to_json(const Message &message) {
-    return {{"content", message.content},
-            {"datetime", message.datetime.toString(Qt::ISODateWithMs)},
-            {"author", int(message.author)},
-            {"contentType", int(message.content_type)},
-            {"theme", int(message.theme)}};
+  QJsonObject to_json() {
+    return {{"content", content},
+            {"datetime", datetime.toString(Qt::ISODateWithMs)},
+            {"author", int(author)},
+            {"contentType", int(content_type)},
+            {"theme", int(theme)}};
   }
 };
-
-/*!
- * @fn to_message
- * @brief Turns @a json_object into a message.
- * @param[in] json_object message in JSON
- * @returns message
- * @sa Message
- */
-Message to_message(const QJsonObject &json_object) {
-  return {json_object["content"].toString(),
-          QDateTime::fromString(json_object["datetime"].toString(),
-                                Qt::ISODateWithMs),
-          Author(json_object["author"].toInt()),
-          ContentType(json_object["contentType"].toInt()),
-          Theme(json_object["theme"].toInt())};
-}
 
 #endif // MESSAGE_H

@@ -7,7 +7,7 @@
  * @param[in,out] parent QObject parent
  */
 Core::Core(QObject *parent) : QObject(parent) {
-  connect(basis, &Basis::json_error, this, &Core::got_error);
+//  connect(basis, &Basis::json_error, this, &Core::got_error);
   connect(basis, &Basis::settings_warning, this, &Core::got_warning);
   basis->check_settings_file();
   connect(history_processor, &HProcessor::send_message_history, this,

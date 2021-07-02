@@ -18,7 +18,7 @@ QList<Source> Json::read_source_list(SQLite *sql, QString settingsPath) {
      * in tables. Json reads them too.
      * @sa SQLite::load
      */
-    sources.append(sql->load_source(to_source(source_json.toObject())));
+    sources.append(sql->load_source(Source(source_json.toObject())));
   return sources;
 }
 
@@ -32,8 +32,7 @@ QList<Message> Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
   QList<Message> message_history;
   for (const QJsonValue &obj : qAsConst(messages_json)) {
-    Message message = to_message(obj.toObject());
-    message_history.append(message);
+    message_history.append(Message(obj.toObject()));
   }
   return message_history;
 }
@@ -43,16 +42,17 @@ QList<Message> Json::read_message_history(QFile *file) {
  * @brief Writes @a sourceList to @a savefile.
  * @param[in] source_list list of sources' properties
  */
-void Json::write_source_list(SQLite *sql, QString settingsPath, QList<Source> source_list) {
+void Json::write_source_list(SQLite *sql, QString settingsPath,
+                             QList<Source> source_list) {
   QJsonArray cs;
-  for (const auto &source : qAsConst(source_list)) {
-    cs.append(to_json(source));
+  for (auto source : source_list) {
+    cs.append(source.to_json());
     // Some properties of sources are stored directly in the database itself
     // in "tables". ASW writes them there.
     sql->write_source(source);
   }
-  auto *savefile = new QFile(settingsPath + QDir::separator() +
-                             sources_store_filename);
+  auto *savefile =
+      new QFile(settingsPath + QDir::separator() + sources_store_filename);
   write_json(savefile, cs);
 }
 
@@ -64,8 +64,8 @@ void Json::write_source_list(SQLite *sql, QString settingsPath, QList<Source> so
  */
 void Json::write_message_history(QList<Message> message_history, QFile *file) {
   QJsonArray message_history_json;
-  for (const auto &message : qAsConst(message_history))
-    message_history_json.append(to_json(message));
+  for (auto message : message_history)
+    message_history_json.append(message.to_json());
   write_json(file, message_history_json);
 }
 

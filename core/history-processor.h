@@ -22,8 +22,9 @@ public:
    * @param[in,out] basis reference to the Basis instance
    * @param[in,out] parent QObject parent
    */
-  HProcessor(Basis *basis, QObject *parent = nullptr)
-      : QObject(parent), _basis(basis) {}
+  HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent) {
+    basis = _basis;
+  }
 
   /*!
    * @fn HProcessor::append
@@ -58,7 +59,7 @@ signals:
 
 private:
   // Objects:
-  Basis *_basis = nullptr;
+  Basis *basis = nullptr;
   QList<Message> _message_history;
 };
 

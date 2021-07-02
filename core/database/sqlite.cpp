@@ -278,6 +278,7 @@ Cache SQLite::scan_source(const Source &source, const QString &input) {
         subquery->first();
         if (not subquery->isValid()) {
           delete subquery;
+          subquery = nullptr;
           continue;
         };
         expr.reagent_text = subquery->value(0).toString();
@@ -288,7 +289,8 @@ Cache SQLite::scan_source(const Source &source, const QString &input) {
                         "\" : \"" + expr.reagent_text + "\" added";
 #endif
       }
-      delete subquery;
+      if (subquery)
+        delete subquery;
     }
     query->next();
   }

@@ -1,8 +1,8 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
-#include "model/nlp/cache.h"
-#include "model/source.h"
+#include "core/model/nlp/cache.h"
+#include "core/model/source.h"
 #include <QFile>
 #include <QJsonObject>
 #include <QMap>

@@ -55,7 +55,7 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
 void SourcesDialog::load() {
   source_widgets.clear();
   source_list->clear();
-  basis->read_source_list();
+  basis->load_sources();
   append(basis->get_sources());
 }
 
@@ -164,7 +164,7 @@ void SourcesDialog::sncl() {
            childIndex++)
         sources.append(source_widgets.value(
             source_list->invisibleRootItem()->child(tli2)->child(childIndex)));
-    basis->write_source_list(sources);
+    (new Json(this))->write_source_list(basis->sql, basis->get_settings_path(), sources);
   }
   _m_handler->closePrisoner();
 }

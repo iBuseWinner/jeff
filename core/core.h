@@ -6,7 +6,7 @@
 #include "core/nlp-module.h"
 #include "core/standard-templates.h"
 #include "dialogues/modal-handler.h"
-#include "sqlite.h"
+#include "core/database/sqlite.h"
 #include <QObject>
 #include <QTimer>
 

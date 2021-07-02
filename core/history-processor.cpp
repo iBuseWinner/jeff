@@ -6,7 +6,7 @@
  * @param[in] filename filename to save there
  */
 void HProcessor::save(const QString &filename) {
-  _basis->write_message_history(_message_history, new QFile(filename));
+  basis->json->write_message_history(_message_history, new QFile(filename));
 }
 
 /*!
@@ -16,6 +16,6 @@ void HProcessor::save(const QString &filename) {
  */
 void HProcessor::load(const QString &filename) {
   _message_history =
-      _basis->read_message_history(new QFile(filename)) + _message_history;
+      basis->json->read_message_history(new QFile(filename)) + _message_history;
   emit send_message_history(_message_history);
 }
