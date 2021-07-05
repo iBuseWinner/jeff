@@ -1,6 +1,6 @@
 QT += core gui widgets sql
 
-TARGET = asw
+TARGET = jeff-qt
 TEMPLATE = app
 
 INCLUDEPATH += /usr/include/python3.9
@@ -29,7 +29,7 @@ SOURCES += \
     dialogues/sources.cpp \
     dialogues/sources/edit-source.cpp \
     main.cpp \
-    asw.cpp \
+    jeff.cpp \
     core/database/sqlite.cpp \
     dialogues/help.cpp \
     dialogues/firststart.cpp \
@@ -47,7 +47,7 @@ SOURCES += \
     widgets/a_sourcelist.cpp
 
 HEADERS += \
-    asw.h \
+    jeff.h \
     core/basis.h \
     core/core.h \
     core/database/json.h \
@@ -86,4 +86,4 @@ HEADERS += \
 RESOURCES += \
     resources.qrc
 
-TRANSLATIONS += l10n/asw_ru.ts
+TRANSLATIONS += l10n/jeff_ru.ts

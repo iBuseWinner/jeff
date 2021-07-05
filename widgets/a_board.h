@@ -24,7 +24,6 @@ public:
                                               "background-color: #ffec4d;"
                                               "}"
                                               "* {"
-                                              "background-color: white;"
                                               "color: white;"
                                               "}";
   inline static const QString error_style = "#a_board {"
@@ -35,7 +34,6 @@ public:
                                             "background-color: #e8553a;"
                                             "}"
                                             "* {"
-                                            "background-color: white;"
                                             "color: white;"
                                             "}";
 
@@ -52,7 +50,6 @@ private:
                                             "background-color: white;"
                                             "}"
                                             "* {"
-                                            "background-color: white;"
                                             "color: black;"
                                             "}";
 };

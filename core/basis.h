@@ -38,12 +38,12 @@ public:
 
   // Constants:
   inline static const QString companyName = "CCLC";
-  inline static const QString applicationName = "ASW";
+  inline static const QString applicationName = "Jeff";
 
-  inline static const QString isMenuBarHiddenSt = "asw/menubarishidden";
-  inline static const QString sizeSt = "asw/size";
-  inline static const QString isFullScreenSt = "asw/isfullscreen";
-  inline static const QString isNotFirstStartSt = "asw/isnotfirststart";
+  inline static const QString isMenuBarHiddenSt = "jeff-qt/menubarishidden";
+  inline static const QString sizeSt = "jeff-qt/size";
+  inline static const QString isFullScreenSt = "jeff-qt/isfullscreen";
+  inline static const QString isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
   inline static const QString isMonologueModeEnabledSt =
       "core/ismonologuemodeenabled";

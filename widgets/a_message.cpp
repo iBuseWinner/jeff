@@ -61,7 +61,7 @@ void AMessage::setWidget(ModalHandler *m_handler) {
 void AMessage::setAuthor(Author aType) {
   switch (aType) {
   case 1:
-    setupASW();
+    setupJeff();
     break;
   case 2:
     setupUser();
@@ -113,10 +113,10 @@ void AMessage::setMessageType(ContentType cType) {
 // void AMessage::setTheme(Theme tType) {}
 
 /*!
- * @fn AMessage::setupASW
+ * @fn AMessage::setupJeff
  * @brief Customizes layout of message from ASW.
  */
-void AMessage::setupASW() {
+void AMessage::setupJeff() {
   QPair<QSpacerItem *, ABoard *> ws = makeLayout();
   layout()->addWidget(ws.second);
   layout()->addItem(ws.first);
@@ -184,7 +184,7 @@ void AMessage::setupMarkdown(const QString &content) {
 void AMessage::setupWarning(const QString &content) {
   auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
   board->setStyleSheet(board->warning_style);
-  setupText(QString("Warning: " + content));
+  setupText(QString(tr("Warning: ") + content));
 }
 
 /*!
@@ -195,7 +195,7 @@ void AMessage::setupWarning(const QString &content) {
 void AMessage::setupError(const QString &content) {
   auto *board = static_cast<ABoard *>(layout()->itemAt(0)->widget());
   board->setStyleSheet(board->error_style);
-  setupText(QString("Error: " + content));
+  setupText(QString(tr("Error: ") + content));
 }
 
 /*!

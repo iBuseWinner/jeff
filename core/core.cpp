@@ -58,7 +58,7 @@ void Core::got_message_from_user(const QString &user_expression) {
 void Core::got_message_from_nlp(const QString &result_expression) {
   if (result_expression.isEmpty())
     return;
-  Message message = get_message(result_expression, Author::ASW,
+  Message message = get_message(result_expression, Author::Jeff,
                                 ContentType::Markdown, Theme::Std);
   history_processor->append(message);
   /*! Delay is triggered if enabled. */
@@ -94,7 +94,7 @@ void Core::got_message_wo_from_nlp(ResponseWO result_expression_wo) {
  */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
-  Message message = get_message(warning_text, Author::ASW, ContentType::Warning,
+  Message message = get_message(warning_text, Author::Jeff, ContentType::Warning,
                                 Theme::Yellow);
   history_processor->append(message);
   emit show(new AMessage(message));
@@ -108,7 +108,7 @@ void Core::got_warning(const QString &warning_text) {
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
   Message message =
-      get_message(error_text, Author::ASW, ContentType::Error, Theme::Red);
+      get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   history_processor->append(message);
   emit show(new AMessage(message));
 }
@@ -122,7 +122,7 @@ void Core::got_error(const QString &error_text) {
  */
 void Core::got_modal(ModalHandler *m_handler) {
   Message message = get_message(m_handler->getPrisoner()->objectName(),
-                                Author::ASW, ContentType::Widget, Theme::Std);
+                                Author::Jeff, ContentType::Widget, Theme::Std);
   history_processor->append(message);
   auto *message_widget = new AMessage(message);
   m_handler->getPrisoner()->setParent(message_widget);

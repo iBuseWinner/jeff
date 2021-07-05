@@ -1,5 +1,5 @@
-#ifndef ASW_H
-#define ASW_H
+#ifndef JEFF_H
+#define JEFF_H
 
 #include "core/core.h"
 #include "widgets/a_board.h"
@@ -18,21 +18,21 @@
 #include <QWidget>
 
 /*!
- * @mainclass ASW
+ * @mainclass Jeff
  * @brief Application window class.
  */
-class ASW : public QMainWindow {
+class Jeff : public QMainWindow {
   Q_OBJECT
 public:
   // Functions:
   /*!
-   * @fn ASW::~ASW
+   * @fn Jeff::~Jeff
    * @brief Saves window settings.
    */
-  ~ASW() override { save_window_settings(); }
+  ~Jeff() override { save_window_settings(); }
 
   // Functions described in 'asw.cpp':
-  ASW();
+  Jeff();
   void greeting();
 
 signals:
@@ -49,11 +49,11 @@ signals:
   QString send(QString user_expression);
 
 protected:
-  // Functions described in 'asw.cpp':
+  // Functions described in 'jeff.cpp':
   void keyPressEvent(QKeyEvent *event) override;
 
 private:
-  Q_DISABLE_COPY(ASW)
+  Q_DISABLE_COPY(Jeff)
 
   // Objects:
   Core *core = new Core(this);
@@ -69,7 +69,7 @@ private:
   static const int defaultWidth = 800;
   static const int defaultHeight = 496;
 
-  // Functions described in 'asw.cpp':
+  // Functions described in 'jeff.cpp':
   void apply_settings();
   void save_window_settings();
   void connect_all();
@@ -81,4 +81,4 @@ private:
   // void help() { emit send("/help"); }
 };
 
-#endif // ASW_H
+#endif // JEFF_H

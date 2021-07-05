@@ -1,7 +1,7 @@
-#include "asw.h"
+#include "jeff.h"
 
 /*!
- * @fn ASW::ASW
+ * @fn Jeff::Jeff
  * @brief The constructor.
  * @details Layout scheme:
  * <--------------->
@@ -11,9 +11,9 @@
  * {Text line}{Send}
  * <--------------->
  */
-ASW::ASW() : QMainWindow() {
+Jeff::Jeff() : QMainWindow() {
   setWindowIcon(QIcon(":/arts/icons/500/icon.png"));
-  setWindowTitle(basis->applicationName);
+  setWindowTitle(tr("Jeff"));
   setMinimumSize(minimalWidth, minimalHeight);
   layout()->setMargin(0);
   auto *centralWidget = new QWidget(this);
@@ -34,11 +34,11 @@ ASW::ASW() : QMainWindow() {
 }
 
 /*!
- * @fn ASW::keyPressEvent
+ * @fn Jeff::keyPressEvent
  * @brief Handles keyboard shortcuts.
  * @param[in,out] event key event
  */
-void ASW::keyPressEvent(QKeyEvent *event) {
+void Jeff::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
     if ((event->key() == Qt::Key_M))
       emit send("/mm");
@@ -71,10 +71,10 @@ void ASW::keyPressEvent(QKeyEvent *event) {
 }
 
 /*!
- * @fn ASW::apply_settings
+ * @fn Jeff::apply_settings
  * @brief Reads the settings from the file and applies them.
  */
-void ASW::apply_settings() {
+void Jeff::apply_settings() {
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
@@ -91,10 +91,10 @@ void ASW::apply_settings() {
 }
 
 /*!
- * @fn ASW::save_window_settings
+ * @fn Jeff::save_window_settings
  * @brief Writes changes to window settings to a file.
  */
-void ASW::save_window_settings() {
+void Jeff::save_window_settings() {
   if (not basis->accessible())
     return;
   basis->write(basis->sizeSt, size());
@@ -105,14 +105,14 @@ void ASW::save_window_settings() {
 }
 
 /*!
- * @fn ASW::connect_all
+ * @fn Jeff::connect_all
  * @brief Establishes communications for user interaction through the window.
  */
-void ASW::connect_all() {
+void Jeff::connect_all() {
   // menubar
   connect(menubar->fullScreenAction, &QAction::triggered, this,
-          &ASW::full_screen_handler);
-  connect(menubar, &AMenuBar::clearHistoryTriggered, this, &ASW::clear);
+          &Jeff::full_screen_handler);
+  connect(menubar, &AMenuBar::clearHistoryTriggered, this, &Jeff::clear);
   connect(menubar, &AMenuBar::aboutTriggered, this,
           [this] { emit send("/about"); });
   connect(menubar, &AMenuBar::sourcesTriggered, this,
@@ -120,34 +120,34 @@ void ASW::connect_all() {
   connect(menubar, &AMenuBar::settingsTriggered, this,
           [this] { emit send("/settings"); });
   connect(menubar, &AMenuBar::exportTriggered, this,
-          &ASW::export_message_history);
+          &Jeff::export_message_history);
   connect(menubar, &AMenuBar::importTriggered, this,
-          &ASW::import_message_history);
+          &Jeff::import_message_history);
   connect(menubar->emm, &QAction::triggered, this,
           [this] { emit send("/mm"); });
   // others
-  connect(line->sendButton, &AButton::clicked, this, &ASW::user_input_handler);
-  connect(this, &ASW::ready_state, this, [this] { emit send(tr("Hello!")); });
-  connect(this, &ASW::send, core, &Core::got_message_from_user);
+  connect(line->sendButton, &AButton::clicked, this, &Jeff::user_input_handler);
+  connect(this, &Jeff::ready_state, this, [this] { emit send(tr("Hello!")); });
+  connect(this, &Jeff::send, core, &Core::got_message_from_user);
   connect(core, &Core::show, display, &ADisplay::addMessage);
   connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm,
           &QAction::setChecked);
 }
 
 /*!
- * @fn ASW::full_screen_handler
+ * @fn Jeff::full_screen_handler
  * @brief Shows a window in full screen or in normal mode.
  */
-void ASW::full_screen_handler() {
+void Jeff::full_screen_handler() {
   menubar->fullScreenAction->isChecked() ? showFullScreen() : showNormal();
 }
 
 /*!
- * @fn ASW::user_input_handler
+ * @fn Jeff::user_input_handler
  * @brief Sends a request to Core.
  * @sa Core
  */
-void ASW::user_input_handler() {
+void Jeff::user_input_handler() {
   // If the user sends a message, the display automatically scrolls to the end.
   display->setScrollEnabled(true);
   QString text = line->lineEdit->text();
@@ -156,11 +156,11 @@ void ASW::user_input_handler() {
 }
 
 /*!
- * @fn ASW::export_message_history
+ * @fn Jeff::export_message_history
  * @brief Calls the dialog, asks for @a filename and saves the message history
  * to it.
  */
-void ASW::export_message_history() {
+void Jeff::export_message_history() {
   QString filename = QFileDialog::getSaveFileName(
       nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
   if (filename.isEmpty())
@@ -169,11 +169,11 @@ void ASW::export_message_history() {
 }
 
 /*!
- * @fn ASW::import_message_history
+ * @fn Jeff::import_message_history
  * @brief Calls the dialog, asks for @a filename and loads the message history
  * from it.
  */
-void ASW::import_message_history() {
+void Jeff::import_message_history() {
   if (QMessageBox::question(
           this, tr("Import message history?"),
           tr("Messages will be added to the beginning of the dialogue."),
@@ -189,10 +189,10 @@ void ASW::import_message_history() {
 }
 
 /*!
- * @fn ASW::clear
+ * @fn Jeff::clear
  * @brief Clears message history and display.
  */
-void ASW::clear() {
+void Jeff::clear() {
   history_processor->clear();
   display->start();
 }

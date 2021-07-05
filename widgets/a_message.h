@@ -59,7 +59,7 @@ private:
   void setAuthor(Author aType);
   void setMessageType(ContentType cType);
   // void setTheme(eT tType);
-  void setupASW();
+  void setupJeff();
   void setupUser();
   void setupText(const QString &content);
   void setupMarkdown(const QString &content);

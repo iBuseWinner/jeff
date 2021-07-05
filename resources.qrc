@@ -25,11 +25,11 @@
         <file>arts/icons/16/document-open.svg</file>
         <file>arts/icons/16/db-file.svg</file>
         <file>arts/icons/16/document-export.svg</file>
-        <file>l10n/asw_ru.ts</file>
-        <file>l10n/asw_ru.qm</file>
         <file>arts/icons/16/document-import.svg</file>
         <file>arts/icons/16/configure.svg</file>
         <file>arts/icons/16/monologue.svg</file>
         <file>arts/shots/addsource.png</file>
+        <file>l10n/jeff_ru.qm</file>
+        <file>l10n/jeff_ru.ts</file>
     </qresource>
 </RCC>

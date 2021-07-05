@@ -39,7 +39,7 @@ signals:
 
 private:
   // Constants:
-  inline static const QString sources_store_filename = "sources.json";
+  inline static const QString sources_store_filename = "jeff_sources.json";
 
   // Functions described in `json.cpp`:
   QJsonArray read_json(QFile *file);

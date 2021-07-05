@@ -1,8 +1,8 @@
-#include "asw.h"
+#include "jeff.h"
 #include <QTranslator>
 
 /*!
- * @copyright 2018-2020 Titov Klimenty <aclo.create@gmail.com>, Shamshin Victor
+ * @copyright 2018-2021 Titov Klimenty <aclo.create@gmail.com>, Shamshin Victor
  * <androiddeveloper@yandex.ru>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  *
- * @brief The associative system program.
+ * @brief The associative system program "Jeff".
  * @note Code notes:
  *    1) public objects, variables, functions and their arguments must have
  * clear names, private objects or those objects that are used within one
@@ -33,20 +33,20 @@
 
 /*!
  * @fn main
- * @brief Start ASW.
+ * @brief Starts Jeff.
  * @param argc transmitted automatically by system
  * @param argv transmitted automatically by system
  * @returns 0 if the program was executed successfully
  */
 int main(int argc, char *argv[]) {
-  QCoreApplication::setApplicationName("asw");
-  QCoreApplication::setApplicationVersion("0.3.4");
-  QApplication asw(argc, argv);
-  auto *asw_l10n = new QTranslator(&asw);
-  asw_l10n->load(":/l10n/asw_" + QLocale::system().name());
-  asw.installTranslator(asw_l10n);
-  class ASW asWindow;
-  emit asWindow.ready_state();
-  asWindow.show();
+  QCoreApplication::setApplicationName("jeff");
+  QCoreApplication::setApplicationVersion("0.3.5");
+  QApplication jeff(argc, argv);
+  auto *jeff_locals = new QTranslator(&jeff);
+  jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());
+  jeff.installTranslator(jeff_locals);
+  class Jeff JeffWindow;
+  emit JeffWindow.ready_state();
+  JeffWindow.show();
   return QApplication::exec();
 }

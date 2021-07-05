@@ -10,7 +10,7 @@
  * @brief Enumeration of possible authors of messages.
  * @sa Message
  */
-enum Author { undefA, ASW, User };
+enum Author { undefA, Jeff, User };
 
 /*!
  * @enum ContentType
