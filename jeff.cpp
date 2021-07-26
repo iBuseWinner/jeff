@@ -12,7 +12,7 @@
  * <--------------->
  */
 Jeff::Jeff() : QMainWindow() {
-  setWindowIcon(QIcon(":/arts/icons/500/icon.png"));
+  setWindowIcon(QIcon(":/arts/icons/2000/icon.png"));
   setWindowTitle(tr("Jeff"));
   setMinimumSize(minimalWidth, minimalHeight);
   layout()->setMargin(0);

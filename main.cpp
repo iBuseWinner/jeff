@@ -40,7 +40,7 @@
  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("0.3.5");
+  QCoreApplication::setApplicationVersion("0.4.0");
   QApplication jeff(argc, argv);
   auto *jeff_locals = new QTranslator(&jeff);
   jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());

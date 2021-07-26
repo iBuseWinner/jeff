@@ -18,7 +18,8 @@ private:
   Q_DISABLE_COPY(ALineEdit)
 
   // Constants:
-  inline static const QString style_sheet = "color: rgb(0, 0, 0);";
+  inline static const QString style_sheet =
+      "background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);";
 };
 
 #endif // A_LINEEDIT_H

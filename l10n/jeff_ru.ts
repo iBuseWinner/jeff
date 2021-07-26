@@ -258,57 +258,73 @@
 <context>
     <name>QTranslator</name>
     <message>
-        <location filename="../dialogues/about.cpp" line="27"/>
-        <location filename="../dialogues/about.cpp" line="39"/>
         <location filename="../dialogues/firststart.cpp" line="23"/>
         <source>Associative system</source>
         <translation>Ассоциативная система</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="40"/>
         <source>The ASW Authors</source>
-        <translation>Авторы ASW</translation>
+        <translation type="vanished">Авторы ASW</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="46"/>
+        <location filename="../dialogues/about.cpp" line="45"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="31"/>
-        <location filename="../dialogues/about.cpp" line="47"/>
+        <location filename="../dialogues/about.cpp" line="30"/>
+        <location filename="../dialogues/about.cpp" line="46"/>
         <source>version</source>
         <translation>версия</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="52"/>
+        <location filename="../dialogues/about.cpp" line="27"/>
+        <source>Jeff</source>
+        <translation>Джефф</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/about.cpp" line="38"/>
+        <source>Jeff - chat bot and automatization tool</source>
+        <translation>Джефф - чат-бот и средство автоматизации</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/about.cpp" line="39"/>
+        <source>Jeff Authors</source>
+        <translation>Авторы Джеффа</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/about.cpp" line="51"/>
         <source>Shamshin Victor</source>
         <translation>Шамшин Виктор</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="53"/>
-        <location filename="../dialogues/about.cpp" line="58"/>
+        <location filename="../dialogues/about.cpp" line="52"/>
+        <location filename="../dialogues/about.cpp" line="57"/>
         <source>Developer</source>
         <translation>Разработчик</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="57"/>
-        <source>Titov Klimenty</source>
-        <translation>Титов Климентий</translation>
+        <location filename="../dialogues/about.cpp" line="56"/>
+        <source>Mark CDA</source>
+        <translation>Марк Сидиэй</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="71"/>
+        <source>Titov Klimenty</source>
+        <translation type="vanished">Титов Климентий</translation>
+    </message>
+    <message>
+        <location filename="../dialogues/about.cpp" line="70"/>
         <location filename="../dialogues/firststart.cpp" line="38"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="84"/>
+        <location filename="../dialogues/about.cpp" line="83"/>
         <source>About</source>
         <translation>О приложении</translation>
     </message>
     <message>
-        <location filename="../dialogues/about.cpp" line="85"/>
+        <location filename="../dialogues/about.cpp" line="84"/>
         <source>Authors</source>
         <translation>Авторы</translation>
     </message>
@@ -418,126 +434,126 @@
         <translation type="vanished">пуста.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="330"/>
-        <location filename="../core/database/sqlite.cpp" line="367"/>
-        <location filename="../core/database/sqlite.cpp" line="399"/>
+        <location filename="../core/database/sqlite.cpp" line="332"/>
+        <location filename="../core/database/sqlite.cpp" line="369"/>
+        <location filename="../core/database/sqlite.cpp" line="401"/>
         <source>Database &quot;%1&quot; doesn&apos;t exist.</source>
         <translation>Базы данных &quot;%1&quot; не существует.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="349"/>
-        <location filename="../core/database/sqlite.cpp" line="379"/>
-        <location filename="../core/database/sqlite.cpp" line="411"/>
+        <location filename="../core/database/sqlite.cpp" line="351"/>
+        <location filename="../core/database/sqlite.cpp" line="381"/>
+        <location filename="../core/database/sqlite.cpp" line="413"/>
         <source>Opening error. Error text: </source>
         <translation>Ошибка открытия. Текст ошибки: </translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="441"/>
+        <location filename="../core/database/sqlite.cpp" line="443"/>
         <source>Database &quot;%1&quot;.</source>
         <translation>База данных &quot;%1&quot;.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="447"/>
+        <location filename="../core/database/sqlite.cpp" line="449"/>
         <source>Validation error: table with sources does not exist.</source>
         <translation>Ошибка в ходе проверки: таблицы с источниками не существует.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="453"/>
+        <location filename="../core/database/sqlite.cpp" line="455"/>
         <source>Validation error: table with sources is empty.</source>
         <translation>Ошибка в ходе проверки: таблица с источниками пуста.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="463"/>
+        <location filename="../core/database/sqlite.cpp" line="465"/>
         <source>Validation error: the first column of the table with sources does not fit the description of &quot;source&quot; TEXT NOT NULL UNIQUE.</source>
         <translation>Ошибка в ходе проверки: первый столбец таблицы с источниками не соответствует описанию &quot;source&quot; TEXT NOT NULL UNIQUE.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="469"/>
+        <location filename="../core/database/sqlite.cpp" line="471"/>
         <source>Validation error: the table with sources contains only one column.</source>
         <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь один столбец.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="479"/>
+        <location filename="../core/database/sqlite.cpp" line="481"/>
         <source>Validation error: the second column of the table with sources does not fit the description of &quot;title&quot; TEXT.</source>
         <translation>Ошибка в ходе проверки: второй столбец таблицы с источниками не соответствует описанию &quot;title&quot; TEXT.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="485"/>
+        <location filename="../core/database/sqlite.cpp" line="487"/>
         <source>Validation error: the table with sources contains only two columns.</source>
         <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь два столбца.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="496"/>
+        <location filename="../core/database/sqlite.cpp" line="498"/>
         <source>Validation error: the third column of the table with sources does not fit the description of &quot;isReadOnly&quot; INTEGER NOT NULL.</source>
         <translation>Ошибка в ходе проверки: третий столбец таблицы с источниками не соответствует описанию &quot;isReadOnly&quot; INTEGER NOT NULL.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="502"/>
+        <location filename="../core/database/sqlite.cpp" line="504"/>
         <source>Validation error: the table with sources contains only three columns.</source>
         <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь три столбца.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="513"/>
+        <location filename="../core/database/sqlite.cpp" line="515"/>
         <source>Validation error: the fourth column of the table with sources does not fit the description of &quot;isPrivate&quot; INTEGER NOT NULL.</source>
         <translation>Ошибка в ходе проверки: четвёртый столбец таблицы с источниками не соответствует описанию &quot;isPrivate&quot; INTEGER NOT NULL.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="519"/>
+        <location filename="../core/database/sqlite.cpp" line="521"/>
         <source>Validation error: the table with sources contains only four columns.</source>
         <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь четыре столбца.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="530"/>
+        <location filename="../core/database/sqlite.cpp" line="532"/>
         <source>Validation error: the fifth column of the table with sources does not fit the description of &quot;isCatching&quot; INTEGER NOT NULL.</source>
         <translation>Ошибка в ходе проверки: пятый столбец таблицы с источниками не соответствует описанию &quot;isCatching&quot; INTEGER NOT NULL.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="536"/>
+        <location filename="../core/database/sqlite.cpp" line="538"/>
         <source>Validation error: the table with sources contains only five columns.</source>
         <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь пять столбцов.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="547"/>
+        <location filename="../core/database/sqlite.cpp" line="549"/>
         <source>Validation error: the sixth column of the table with sources does not fit the description of &quot;isPrioritised&quot; INTEGER NOT NULL.</source>
         <translation>Ошибка в ходе проверки: шестой столбец таблицы с источниками не соответствует описанию &quot;isPrioritised&quot; INTEGER NOT NULL.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="577"/>
+        <location filename="../core/database/sqlite.cpp" line="579"/>
         <source>Database &quot;%1&quot;, source &quot;%2&quot;.</source>
         <translation>База данных &quot;%1&quot;, источник &quot;%2&quot;.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="583"/>
+        <location filename="../core/database/sqlite.cpp" line="584"/>
         <source>Validation error: source does not exist.</source>
         <translation>Ошибка в ходе проверки: источника не существует.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="589"/>
+        <location filename="../core/database/sqlite.cpp" line="590"/>
         <source>Validation error: source is empty.</source>
         <translation>Ошибка в ходе проверки: источник пуст.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="600"/>
+        <location filename="../core/database/sqlite.cpp" line="601"/>
         <source>Validation error: the first column of the source does not fit the description of &quot;address&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE.</source>
         <translation>Ошибка в ходе проверки: первый столбец источника не соответствует описанию &quot;address&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="608"/>
+        <location filename="../core/database/sqlite.cpp" line="609"/>
         <source>Validation error: the source contains only one column.</source>
         <translation>Ошибка в ходе проверки: источник содержит лишь один столбец.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="617"/>
+        <location filename="../core/database/sqlite.cpp" line="618"/>
         <source>Validation error: the second column of the source does not fit the description of &quot;expression&quot; TEXT.</source>
         <translation>Ошибка в ходе проверки: второй столбец источника не соответствует описанию &quot;expression&quot; TEXT.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="624"/>
+        <location filename="../core/database/sqlite.cpp" line="625"/>
         <source>Validation error: the source contains only two columns.</source>
         <translation>Ошибка в ходе проверки: источник содержит лишь два столбца.</translation>
     </message>
     <message>
-        <location filename="../core/database/sqlite.cpp" line="632"/>
+        <location filename="../core/database/sqlite.cpp" line="633"/>
         <source>Validation error: the third column of the source does not fit the description of &quot;links&quot; TEXT.</source>
         <translation>Ошибка в ходе проверки: третий столбец источника не соответствует описанию &quot;links&quot; TEXT.</translation>
     </message>

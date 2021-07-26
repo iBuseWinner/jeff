@@ -1,4 +1,5 @@
 #include "sqlite.h"
+#include <iostream>
 #ifdef SQLITE_DEBUG
 #include <QDebug>
 #include <QElapsedTimer>
@@ -66,13 +67,13 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   if (tables.contains(uuid_to_verify)) { /*!< If the generation is unsuccessful,
                                           * it throws an error. */
     emit sqlite_error("Could not create source, number of attempts exceeded " +
-                      QString(maximum_number_of_attempts) + ".");
+                      QString::number(maximum_number_of_attempts) + ".");
 #ifdef SQLITE_AUTO_TESTS
     qDebug() << "\tCould not create container, number of attempts exceeded " +
-                    QString(maximum_number_of_attempts) + ".";
+                    QString::number(maximum_number_of_attempts) + ".";
 #elif SQLITE_DEBUG
     qDebug() << "Could not create container, number of attempts exceeded " +
-                    QString(maximum_number_of_attempts) + ".";
+                    QString::number(maximum_number_of_attempts) + ".";
 #endif
     delete query;
     return false;
@@ -85,9 +86,9 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
    * (the source with the @a source parameters) to the main table and create
    * the source table with the name generated in the form of UUID @a *uuid. */
   if (not(exec(query, WriteOptions,
-               {*uuid, source.table_title, QString(source.is_read_only),
-                QString(source.is_private), QString(source.is_catching),
-                QString(source.is_prioritised)}) and
+               {*uuid, source.table_title, QString::number(source.is_read_only),
+                QString::number(source.is_private), QString::number(source.is_catching),
+                QString::number(source.is_prioritised)}) and
           exec(query, CreateSourceTable, QStringList(*uuid)))) {
     emit sqlite_error("Could not write options and create source table.");
 #ifdef SQLITE_AUTO_TESTS
@@ -186,9 +187,9 @@ bool SQLite::write_source(const Source &source) {
   exec(query, WithDraw, QStringList(source.table_name));
   auto result =
       exec(query, WriteOptions,
-           {source.table_name, source.table_title, QString(source.is_read_only),
-            QString(source.is_private), QString(source.is_catching),
-            QString(source.is_prioritised)});
+           {source.table_name, source.table_title, QString::number(source.is_read_only),
+            QString::number(source.is_private), QString::number(source.is_catching),
+            QString::number(source.is_prioritised)});
   db.close();
   delete query;
   return result;
@@ -249,15 +250,15 @@ Expression SQLite::get_expression_by_address(const Source &source,
  * @param[in] expression expression
  * @returns selection for given input
  */
-Cache SQLite::scan_source(const Source &source, const QString &input) {
+LinkedCache SQLite::scan_source(const Source &source, const QString &input) {
 #ifdef SQLITE_SCANSOURCE_DEBUG
   QElapsedTimer timer;
   timer.start();
 #endif
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
-    return Cache();
-  Cache selection;
+    return LinkedCache();
+  LinkedCache selection;
   auto *query = new QSqlQuery(db);
   exec(query, SelectAEL, {source.table_name});
   query->first();
@@ -268,21 +269,22 @@ Cache SQLite::scan_source(const Source &source, const QString &input) {
       auto address = query->value(0).toInt();
       auto props = get_additional_properties(&db, source, address);
       auto links = unpack_links(query->value(2).toString());
-      auto activator_text = query->value(0).toString();
+      auto activator_text = query->value(1).toString();
       auto subquery = new QSqlQuery(db);
       for (auto link : links) {
-        Expression expr;
-        expr.activator_text = activator_text;
+        auto *expr = new Expression();
+        expr->activator_text = activator_text;
         exec(subquery, SelectExpressionByAddress,
-             {source.table_name, QString(link)});
+             {source.table_name, QString::number(link)});
         subquery->first();
         if (not subquery->isValid()) {
+          std::cout << subquery->lastError().text().toStdString() << std::endl;
           delete subquery;
           subquery = nullptr;
           continue;
         };
-        expr.reagent_text = subquery->value(0).toString();
-        expr.properties = props;
+        expr->reagent_text = subquery->value(0).toString();
+        expr->properties = props;
         selection.append(expr);
 #ifdef SQLITE_SCANSOURCE_DEBUG
         qDebug() << "SQLite::scan_source: expression \"" + expr.activator_text +
@@ -575,8 +577,7 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
 bool SQLite::validate(QSqlDatabase *db, const QString &source_table,
                       bool quiet) {
   auto db_source_suffix = tr("Database \"%1\", source \"%2\".")
-                                 .arg(db->databaseName())
-                                 .arg(source_table);
+                                 .arg(db->databaseName(), source_table);
   auto query = QSqlQuery(*db);
   exec(&query, IfSourceTableExists, {source_table});
   if (not query.isValid() and not quiet) {
@@ -742,7 +743,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   case NoneToDo:;
   }
   if (not query->exec()) {
-    emit sqlite_error(query->lastError().text() + " " + QString(int(option)));
+    emit sqlite_error(query->lastError().text() + " " + QString::number(int(option)));
     return false;
   }
   return true;

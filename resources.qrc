@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>arts/shots/menufile.png</file>
-        <file>arts/icons/500/icon.png</file>
-        <file>arts/littleasw.png</file>
         <file>arts/icons/16/send.svg</file>
         <file>arts/icons/16/dialog-ok-apply.svg</file>
         <file>arts/icons/16/document-new.svg</file>
@@ -31,5 +29,7 @@
         <file>arts/shots/addsource.png</file>
         <file>l10n/jeff_ru.qm</file>
         <file>l10n/jeff_ru.ts</file>
+        <file>arts/icons/2000/icon.png</file>
+        <file>arts/jeff.png</file>
     </qresource>
 </RCC>

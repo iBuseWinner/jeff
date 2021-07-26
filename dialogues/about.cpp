@@ -22,10 +22,10 @@ About::About(QWidget *parent, ModalHandler *m_handler)
   auto *layout = new QGridLayout();
   layout->setMargin(0);
   layout->setSpacing(0);
-  auto *logo = new QLabel("<img src=\":/arts/littleasw.png\">", this);
+  auto *logo = new QLabel(
+      "<img width=\"100\" height=\"100\" src=\":/arts/jeff.png\">", this);
   auto *title = new QLabel(this);
-  title->setText("<font size=\"4\">" + QTranslator::tr("Associative system") +
-                 "</font>");
+  title->setText("<font size=\"4\">" + QTranslator::tr("Jeff") + "</font>");
   title->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *version = new QLabel(this);
   QString version_title = QTranslator::tr("version");
@@ -35,13 +35,15 @@ About::About(QWidget *parent, ModalHandler *m_handler)
   auto *spacer =
       new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
   auto *tabs = new QTabWidget(this);
+  tabs->setStyleSheet(
+      "background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);");
   auto *tab1 = new QLabel(this);
-  tab1->setText(QTranslator::tr("Associative system") + "<br><br>© 2018-2020 " +
-                QTranslator::tr("The ASW Authors") +
+  tab1->setText(QTranslator::tr("Jeff - chat bot and automatization tool") +
+                "<br><br>© 2018-2021 " + QTranslator::tr("Jeff Authors") +
                 "<br><br><a "
-                "href=\"https://github.com/kollieartwolf/asw\">https://"
-                "github.com/kollieartwolf/asw</a><br><a "
-                "href=\"https://raw.githubusercontent.com/kollieartwolf/asw/"
+                "href=\"https://github.com/markcda/jeff\">https://"
+                "github.com/markcda/jeff</a><br><a "
+                "href=\"https://raw.githubusercontent.com/markcda/jeff/"
                 "master/LICENSE\">" +
                 QTranslator::tr("License") + ": GNU General Public License, " +
                 QTranslator::tr("version") + " 3</a>");
@@ -54,9 +56,9 @@ About::About(QWidget *parent, ModalHandler *m_handler)
       "<br><a "
       "href=\"mailto:androiddevelop@yandex.ru\">androiddevelop@yandex.ru</"
       "a><br><br><b>" +
-      QTranslator::tr("Titov Klimenty") + "</b><br>" +
-      QTranslator::tr("Developer") +
-      "<br><a href=\"mailto:aclo.create@gmail.com\">aclo.create@gmail.com</a>");
+      QTranslator::tr("Mark CDA") + "</b><br>" + QTranslator::tr("Developer") +
+      "<br><a "
+      "href=\"mailto:markcda@protonmail.com\">markcda@protonmail.com</a>");
   tab2->setOpenExternalLinks(true);
   tab2->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   auto *scroll_area_1 = new QScrollArea(this);
