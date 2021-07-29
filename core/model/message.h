@@ -83,4 +83,10 @@ public:
   }
 };
 
+/*!
+ * @typedef Messages
+ * @brief Contains a part of message history.
+ */
+typedef QList<Message> Messages;
+
 #endif // MESSAGE_H

@@ -7,7 +7,7 @@
  * @param[in,out] parent QObject parent
  */
 Core::Core(QObject *parent) : QObject(parent) {
-//  connect(basis, &Basis::json_error, this, &Core::got_error);
+  //  connect(basis, &Basis::json_error, this, &Core::got_error);
   connect(basis, &Basis::settings_warning, this, &Core::got_warning);
   basis->check_settings_file();
   connect(history_processor, &HProcessor::send_message_history, this,
@@ -17,12 +17,20 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(_standard_templates, &StandardTemplates::showModalWidget, this,
           &Core::got_modal);
   connect(_nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
-  connect(_nlp, &NLPmodule::response_wo, this,
-          &Core::got_message_wo_from_nlp);
+  connect(_nlp, &NLPmodule::response_wo, this, &Core::got_message_wo_from_nlp);
   connect(_standard_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not _monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueModeEnabledSt].toBool());
 }
+
+/*!
+ * @fn Core::~Core
+ * @brief The destructor.
+ * @details Method which tells delete NLPmodule instance first because of
+ * SYSSEGV if Basis instance will be deleted first.
+ * @sa NLPmodule, Json, Basis
+ */
+Core::~Core() { delete _nlp; }
 
 /*!
  * @fn Core::got_message_from_user
@@ -94,8 +102,8 @@ void Core::got_message_wo_from_nlp(ResponseWO result_expression_wo) {
  */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
-  Message message = get_message(warning_text, Author::Jeff, ContentType::Warning,
-                                Theme::Yellow);
+  Message message = get_message(warning_text, Author::Jeff,
+                                ContentType::Warning, Theme::Yellow);
   history_processor->append(message);
   emit show(new AMessage(message));
 }

@@ -1,8 +1,4 @@
 #include "a_display.h"
-#ifdef ADISPLAY_DEBUG
-#include <QDebug>
-#include <QElapsedTimer>
-#endif
 
 /*!
  * @fn ADisplay::ADisplay
@@ -30,10 +26,6 @@ ADisplay::ADisplay(short _max_message_amount, QWidget *parent)
  * @param[in,out] message message to be added
  */
 void ADisplay::addMessage(AMessage *message) {
-#ifdef ADISPLAY_ADDMSG_DEBUG
-  QElapsedTimer timer;
-  timer.start();
-#endif
   messages_mutex.lock();
   message_counter++;
   message->setParent(this);
@@ -54,9 +46,6 @@ void ADisplay::addMessage(AMessage *message) {
           all_messages[all_messages.length() - message_counter--]);
     }
   messages_mutex.unlock();
-#ifdef ADISPLAY_ADDMSG_DEBUG
-  qDebug() << "ADisplay::addMessage:" << timer.nsecsElapsed();
-#endif
 }
 
 /*!
@@ -65,22 +54,10 @@ void ADisplay::addMessage(AMessage *message) {
  * @details The method is also used to reset an existing state.
  */
 void ADisplay::start() {
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: we are here.";
-#endif
   messages_mutex.lock();
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: mutex locked.";
-#endif
   all_messages.clear();
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: widgets cleared.";
-#endif
   if (vertical_box_layout)
     delete vertical_box_layout;
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: vertical_box_layout deleted.";
-#endif
   QWidget *box = new QWidget(this);
   box->setObjectName(box_object_name);
   setStyleSheet(box_style_sheet);
@@ -92,12 +69,6 @@ void ADisplay::start() {
   box->setLayout(vertical_box_layout);
   setWidget(box);
   messages_mutex.unlock();
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: mutex unlocked.";
-#endif
-#ifdef ADISPLAY_START_DEBUG
-  qDebug() << "ADisplay::start: we are ready.";
-#endif
 }
 
 /*!
@@ -176,16 +147,7 @@ void ADisplay::removeMessage(AMessage *message) {
   messages_mutex.lock();
   message->close();
   vertical_box_layout->removeWidget(message);
-#ifdef ADISPLAY_DEBUG
-  if (not
-#endif
-      all_messages.removeOne(message)
-#ifdef ADISPLAY_DEBUG
-  )
-    qDebug() << "Message has not been removed from list!";
-#else
-      ;
-#endif
+  all_messages.removeOne(message);
   disconnect(message);
   message_counter--;
   messages_mutex.unlock();

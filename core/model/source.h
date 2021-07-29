@@ -54,4 +54,10 @@ public:
   }
 };
 
+/*!
+ * @typedef Sources
+ * @brief Contains list of sources.
+ */
+typedef QList<Source> Sources;
+
 #endif // SOURCE_H

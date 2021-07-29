@@ -7,6 +7,6 @@
  * @typedef Cache
  * @brief Contains cached response expressions.
  */
-typedef QList<Expression> Cache;
+typedef QList<Expression *> Cache;
 
 #endif // CACHE_H

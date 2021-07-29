@@ -26,6 +26,7 @@ public:
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
+  ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_nlp(const QString &result_expression);
   void

@@ -7,11 +7,11 @@ Json::Json(QObject *parent) : QObject(parent) {}
  * @brief Reads the store and loads a list of connected sources.
  * @returns list of sources
  */
-QList<Source> Json::read_source_list(SQLite *sql, QString settingsPath) {
+Sources Json::read_source_list(SQLite *sql, QString settingsPath) {
   auto *store = new QFile(
       settingsPath + QDir::separator() + sources_store_filename, this);
   QJsonArray sources_json = read_json(store);
-  QList<Source> sources;
+  Sources sources;
   for (const QJsonValue &source_json : qAsConst(sources_json))
     /*!
      * Some properties of sources are stored directly in the database itself
@@ -28,13 +28,27 @@ QList<Source> Json::read_source_list(SQLite *sql, QString settingsPath) {
  * @param[in,out] file QFile to read message history from
  * @returns list of messages from file
  */
-QList<Message> Json::read_message_history(QFile *file) {
+Messages Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
-  QList<Message> message_history;
-  for (const QJsonValue &obj : qAsConst(messages_json)) {
+  Messages message_history;
+  for (const QJsonValue &obj : qAsConst(messages_json))
     message_history.append(Message(obj.toObject()));
-  }
   return message_history;
+}
+
+Cache Json::read_NLP_cache(QString settingsPath) {
+  auto *store =
+      new QFile(settingsPath + QDir::separator() + cache_store_filename, this);
+  if (not store->exists()) {
+    delete store;
+    return Cache();
+  }
+  QJsonArray cache_json = read_json(store);
+  Cache cache;
+  for (const QJsonValue &obj : qAsConst(cache_json))
+    cache.append(new Expression(obj.toObject()));
+  delete store;
+  return cache;
 }
 
 /*!
@@ -43,7 +57,7 @@ QList<Message> Json::read_message_history(QFile *file) {
  * @param[in] source_list list of sources' properties
  */
 void Json::write_source_list(SQLite *sql, QString settingsPath,
-                             QList<Source> source_list) {
+                             Sources source_list) {
   QJsonArray cs;
   for (auto source : source_list) {
     cs.append(source.to_json());
@@ -62,11 +76,25 @@ void Json::write_source_list(SQLite *sql, QString settingsPath,
  * @param[in] message_history list of messages
  * @param[in,out] file file to save there
  */
-void Json::write_message_history(QList<Message> message_history, QFile *file) {
+void Json::write_message_history(Messages message_history, QFile *file) {
   QJsonArray message_history_json;
   for (auto message : message_history)
     message_history_json.append(message.to_json());
   write_json(file, message_history_json);
+}
+
+/*!
+ * @fn Json::write_cache
+ * @brief Saves @a cache to @a file.
+ * @param[in] cache list of expressions
+ */
+void Json::write_NLP_cache(Cache cache, QString settingsPath) {
+  QJsonArray cache_json;
+  for (auto expression : cache)
+    cache_json.append(expression->to_json());
+  auto *file = new QFile(settingsPath + QDir::separator() + cache_store_filename, this);
+  write_json(file, cache_json);
+  delete file;
 }
 
 /*!

@@ -1,7 +1,7 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
-#include "core/model/nlp/linked-cache.h"
+#include "core/model/nlp/cache.h"
 #include "core/model/source.h"
 #include <QFile>
 #include <QJsonObject>
@@ -105,7 +105,7 @@ public:
   bool insert_expression(const Source &source, int address,
                          const QString &expression, const QString &links);
   Expression get_expression_by_address(const Source &source, int address);
-  LinkedCache scan_source(const Source &source, const QString &input);
+  Cache scan_source(const Source &source, const QString &input);
 
 signals:
   /*!

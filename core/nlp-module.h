@@ -5,7 +5,6 @@
 #include "core/database/sqlite.h"
 #include "model/expression.h"
 #include "model/nlp/cache.h"
-#include "model/nlp/linked-cache.h"
 #include "model/nlp/responsewo.h"
 #include "standard-templates.h"
 #include <QMap>
@@ -33,8 +32,9 @@ public:
    */
   NLPmodule(Basis *basis, QObject *parent = nullptr)
       : QObject(parent), _basis(basis) {
-    load_cache();
     _gen = new QRandomGenerator(QTime::currentTime().msec());
+    _settings_path = _basis->get_settings_path();
+    load_cache();
   }
 
   /*!
@@ -65,15 +65,16 @@ signals:
 private:
   // Objects:
   Basis *_basis = nullptr;
-  LinkedCache _cache;
+  Cache _cache;
   QRandomGenerator *_gen = nullptr;
+  QString _settings_path;
 
   // Constants:
   inline static const QString cache_path = "";
 
   // Functions described in `nlp-module.cpp`:
-  LinkedCache select_from_cache(const QString &input);
-  LinkedCache select_from_sql(const QString &input);
+  Cache select_from_cache(const QString &input);
+  Cache select_from_sql(const QString &input);
 };
 
 #endif // NLPMODULE_H

@@ -4,6 +4,7 @@
 #include "core/database/sqlite.h"
 #include "core/model/message.h"
 #include "core/model/source.h"
+#include "core/model/nlp/cache.h"
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>
@@ -25,11 +26,13 @@ public:
   Json(QObject *parent = nullptr);
 
   // Functions described in `json.cpp`:
-  QList<Source> read_source_list(SQLite *sql, QString settingsPath);
-  QList<Message> read_message_history(QFile *file);
+  Sources read_source_list(SQLite *sql, QString settingsPath);
+  Messages read_message_history(QFile *file);
+  Cache read_NLP_cache(QString settingsPath);
   void write_source_list(SQLite *sql, QString settingsPath,
-                         QList<Source> source_list);
-  void write_message_history(QList<Message> message_history, QFile *file);
+                         Sources source_list);
+  void write_message_history(Messages message_history, QFile *file);
+  void write_NLP_cache(Cache cache, QString settingsPath);
 
 signals:
   /*!
@@ -40,6 +43,7 @@ signals:
 private:
   // Constants:
   inline static const QString sources_store_filename = "jeff_sources.json";
+  inline static const QString cache_store_filename = "nlp_module_cache.json";
 
   // Functions described in `json.cpp`:
   QJsonArray read_json(QFile *file);

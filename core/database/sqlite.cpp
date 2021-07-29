@@ -1,9 +1,4 @@
 #include "sqlite.h"
-#include <iostream>
-#ifdef SQLITE_DEBUG
-#include <QDebug>
-#include <QElapsedTimer>
-#endif
 
 /*!
  * @fn SQLite::create_source
@@ -13,32 +8,15 @@
  * @returns boolean value of source creation success
  */
 bool SQLite::create_source(const Source &source, QString *uuid) {
-  /*! Pieces of code for testing. */
-#ifdef SQLITE_AUTO_TESTS
-  qDebug() << "\tDatabase path:" << source.path;
-#elif SQLITE_DEBUG
-  qDebug() << "Database path:" << source.path;
-#endif
   /*! The source is created even if the database itself does not exist. */
   auto *correct = new bool(true);
   auto db = prepare(source.path, Correct, correct);
-  if (db.databaseName().isEmpty()) {
-#ifdef SQLITE_AUTO_TESTS
-    qDebug() << "\tDatabase name is empty.";
-#elif SQLITE_DEBUG
-    qDebug() << "Database name is empty.";
-#endif
+  if (db.databaseName().isEmpty())
     return false;
-  }
   auto *query = new QSqlQuery(db);
   if (not *correct) {
     if (not create_base_structure(query)) {
       emit sqlite_error("Could not create main table.");
-#ifdef SQLITE_AUTO_TESTS
-      qDebug() << "\tCould not create main table.";
-#elif SQLITE_DEBUG
-      qDebug() << "Could not create main table.";
-#endif
       delete query;
       return false;
     }
@@ -68,13 +46,6 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
                                           * it throws an error. */
     emit sqlite_error("Could not create source, number of attempts exceeded " +
                       QString::number(maximum_number_of_attempts) + ".");
-#ifdef SQLITE_AUTO_TESTS
-    qDebug() << "\tCould not create container, number of attempts exceeded " +
-                    QString::number(maximum_number_of_attempts) + ".";
-#elif SQLITE_DEBUG
-    qDebug() << "Could not create container, number of attempts exceeded " +
-                    QString::number(maximum_number_of_attempts) + ".";
-#endif
     delete query;
     return false;
   }
@@ -91,11 +62,6 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
                 QString::number(source.is_prioritised)}) and
           exec(query, CreateSourceTable, QStringList(*uuid)))) {
     emit sqlite_error("Could not write options and create source table.");
-#ifdef SQLITE_AUTO_TESTS
-    qDebug() << "\tCould not write options and create source table.";
-#elif SQLITE_DEBUG
-    qDebug() << "Could not write options and create source table.";
-#endif
     delete query;
     return false;
   }
@@ -250,15 +216,11 @@ Expression SQLite::get_expression_by_address(const Source &source,
  * @param[in] expression expression
  * @returns selection for given input
  */
-LinkedCache SQLite::scan_source(const Source &source, const QString &input) {
-#ifdef SQLITE_SCANSOURCE_DEBUG
-  QElapsedTimer timer;
-  timer.start();
-#endif
+Cache SQLite::scan_source(const Source &source, const QString &input) {
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
-    return LinkedCache();
-  LinkedCache selection;
+    return Cache();
+  Cache selection;
   auto *query = new QSqlQuery(db);
   exec(query, SelectAEL, {source.table_name});
   query->first();
@@ -278,7 +240,6 @@ LinkedCache SQLite::scan_source(const Source &source, const QString &input) {
              {source.table_name, QString::number(link)});
         subquery->first();
         if (not subquery->isValid()) {
-          std::cout << subquery->lastError().text().toStdString() << std::endl;
           delete subquery;
           subquery = nullptr;
           continue;
@@ -286,10 +247,6 @@ LinkedCache SQLite::scan_source(const Source &source, const QString &input) {
         expr->reagent_text = subquery->value(0).toString();
         expr->properties = props;
         selection.append(expr);
-#ifdef SQLITE_SCANSOURCE_DEBUG
-        qDebug() << "SQLite::scan_source: expression \"" + expr.activator_text +
-                        "\" : \"" + expr.reagent_text + "\" added";
-#endif
       }
       if (subquery)
         delete subquery;
@@ -298,9 +255,6 @@ LinkedCache SQLite::scan_source(const Source &source, const QString &input) {
   }
   db.close();
   delete query;
-#ifdef SQLITE_SCANSOURCE_DEBUG
-  qDebug() << "SQLite::scan_source:" << timer.nsecsElapsed();
-#endif
   return selection;
 }
 
@@ -330,9 +284,6 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
     if (not QFile::exists(path)) {
       if (not quiet) {
         emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
-#ifdef SQLITE_AUTO_TESTS
-        qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
-#endif
       }
       if (result)
         *result = false;
@@ -347,14 +298,9 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       *result = true;
     db.setDatabaseName(path);
     if (not db.open()) {
-      if (not quiet) {
+      if (not quiet)
         emit sqlite_error(tr("Opening error. Error text: ") +
                           db.lastError().text());
-#ifdef SQLITE_AUTO_TESTS
-        qDebug() << "\tSQLite::prepare: opening error:"
-                 << db.lastError().text();
-#endif
-      }
       if (result)
         *result = false;
     }
@@ -367,9 +313,6 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
     if (not QFile::exists(path)) {
       if (not quiet) {
         emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
-#ifdef SQLITE_AUTO_TESTS
-        qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
-#endif
       }
       if (result)
         *result = false;
@@ -380,10 +323,6 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       if (not quiet) {
         emit sqlite_error(tr("Opening error. Error text: ") +
                           db.lastError().text());
-#ifdef SQLITE_AUTO_TESTS
-        qDebug() << "\tSQLite::prepare: opening error:"
-                 << db.lastError().text();
-#endif
       }
       if (result)
         *result = false;
@@ -399,9 +338,6 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
     if (not QFile::exists(path)) {
       if (not quiet) {
         emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
-#ifdef SQLITE_AUTO_TESTS
-        qDebug() << "\tSQLite::prepare: error: Database doesn't exist.";
-#endif
       }
       if (result)
         *result = false;
@@ -412,10 +348,6 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
       if (not quiet) {
         emit sqlite_error(tr("Opening error. Error text: ") +
                           db.lastError().text());
-#ifdef SQLITE_AUTO_TESTS
-        qDebug() << "\tSQLite::prepare: opening error:"
-                 << db.lastError().text();
-#endif
       }
       if (result)
         *result = false;

@@ -2,7 +2,7 @@
 
 void NLPmodule::search_for_suggests(const QString &input) {
   QString purified_input = _basis->sql->purify(input);
-  LinkedCache selection = select_from_cache(purified_input);
+  Cache selection = select_from_cache(purified_input);
   if (selection.isEmpty())
     selection = select_from_sql(purified_input);
   if (selection.isEmpty())
@@ -55,22 +55,26 @@ void NLPmodule::search_for_suggests(const QString &input) {
     emit response(output);
 }
 
-LinkedCache NLPmodule::select_from_cache(const QString &input) {
-  LinkedCache selection;
+Cache NLPmodule::select_from_cache(const QString &input) {
+  Cache selection;
   for (auto expr : _cache)
     if (input.contains(_basis->sql->purify(expr->activator_text)))
       selection.append(expr);
   return selection;
 }
 
-LinkedCache NLPmodule::select_from_sql(const QString &input) {
-  LinkedCache selection;
+Cache NLPmodule::select_from_sql(const QString &input) {
+  Cache selection;
   QList<Source> sources = _basis->get_sources();
   for (const auto &source : sources)
     selection.append(_basis->sql->scan_source(source, input));
   return selection;
 }
 
-void NLPmodule::load_cache() {}
+void NLPmodule::load_cache() {
+  _cache = _basis->json->read_NLP_cache(_settings_path);
+}
 
-void NLPmodule::save_cache() {}
+void NLPmodule::save_cache() {
+  _basis->json->write_NLP_cache(_cache, _settings_path);
+}

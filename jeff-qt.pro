@@ -7,13 +7,6 @@ INCLUDEPATH += /usr/include/python3.9
 
 LIBS += -lpython3.9
 
-DEFINES += QT_DEPRECATED_WARNINGS \
-    # ADISPLAY_DEBUG \
-    # ADISPLAY_ADDMSG_DEBUG \
-    # SQLITE_DEBUG \
-    # SQLITE_SCANSOURCE_DEBUG \
-    # ADISPLAY_START_DEBUG \
-
 CONFIG += c++2a
 
 SOURCES += \
@@ -55,7 +48,6 @@ HEADERS += \
     core/history-processor.h \
     core/model/message.h \
     core/model/nlp/cache.h \
-    core/model/nlp/linked-cache.h \
     core/model/nlp/options.h \
     core/model/nlp/responsewo.h \
     core/python-module.h \
