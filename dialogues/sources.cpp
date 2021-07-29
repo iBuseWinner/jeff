@@ -66,7 +66,7 @@ void SourcesDialog::load() {
 void SourcesDialog::add() {
   QString filename = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
-      QTranslator::tr("ASW database") + "(*.asw.db)");
+      QTranslator::tr("Jeff's database") + "(*.asw.db, *.j.db)");
   if (filename.isEmpty())
     return;
   edited = true;
