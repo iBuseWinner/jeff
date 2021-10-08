@@ -1,11 +1,11 @@
-#include "a_sourcelist.h"
+#include "sourcelist.h"
 
 /*!
- * @fn ASourceList::ASourceList
+ * @fn SourceList::SourceList
  * @brief The constructor.
  * @param[in,out] parent QObject parent
  */
-ASourceList::ASourceList(QWidget *parent) : QTreeWidget(parent) {
+SourceList::SourceList(QWidget *parent) : QTreeWidget(parent) {
   setHeaderLabel(tr("Sources"));
   setAnimated(false);
 }

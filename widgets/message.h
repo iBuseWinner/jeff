@@ -1,9 +1,9 @@
-#ifndef A_MESSAGE_H
-#define A_MESSAGE_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include "core/model/message.h"
 #include "dialogues/modal-handler.h"
-#include "widgets/a_board.h"
+#include "widgets/board.h"
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
@@ -12,12 +12,12 @@
 #include <QTextDocument>
 
 /*!
- * @class AMessage
+ * @class Message
  * @brief Widget that displays single piece of data.
  * @details Any text entered from the keyboard or NLPmodule/PythonHandler,
  * widget, picture, audio, file, etc. can be used as a message.
  */
-class AMessage : public QWidget {
+class Message : public QWidget {
   Q_OBJECT
 public:
   // Constants:
@@ -29,33 +29,33 @@ public:
   Theme returnTheme() { return message.theme; }
   QString returnContent() { return message.content; }
   QDateTime returnDateTime() { return message.datetime; }
-  Message returnMessage() { return message; }
+  MessageData returnMessage() { return message; }
 
-  // Functions described in 'a_message':
-  explicit AMessage();
-  explicit AMessage(Message message);
-  void setMessage(Message _message);
+  // Functions described in 'message.cpp':
+  explicit Message();
+  explicit Message(MessageData message);
+  void setMessage(MessageData _message);
   void setWidget(ModalHandler *m_handler);
 
 signals:
   /*!
    * @brief When the message is closed, it can inform ModalHandler, and then it
-   * will delete the message from ADisplay.
+   * will delete the message from Display.
    */
   void closed();
 
 private:
-  Q_DISABLE_COPY(AMessage)
+  Q_DISABLE_COPY(Message)
 
   // Objects:
-  Message message;
+  MessageData message;
   QGridLayout *gridLayout = nullptr;
   QWidget *widget = nullptr;
 
   // Constants:
   static const ushort standardMargin = 6;
 
-  // Functions described in 'a_message.cpp':
+  // Functions described in 'message.cpp':
   void setAuthor(Author aType);
   void setMessageType(ContentType cType);
   // void setTheme(eT tType);
@@ -69,7 +69,7 @@ private:
   void setupError(const QString &content);
   void prepareSetupWidget();
   void alignTextToWindowWidth();
-  QPair<QSpacerItem *, ABoard *> makeLayout();
+  QPair<QSpacerItem *, Board *> makeLayout();
 };
 
-#endif // A_MESSAGE_H
+#endif

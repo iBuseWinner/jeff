@@ -37,13 +37,13 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
   box1->setLayout(box1Lt);
   keepHistory = new QCheckBox(QTranslator::tr("Keep history"), this);
   keepHistory->setEnabled(false);
-  auto *delayExplanation = new AExplanationLabel(
-      QTranslator::tr("Enables ASW response delay."), this);
-  auto *keepHistoryExplanation = new AExplanationLabel(
+  auto *delayExplanation = new ExplanationLabel(
+      QTranslator::tr("Enables Jeff's response delay."), this);
+  auto *keepHistoryExplanation = new ExplanationLabel(
       QTranslator::tr(
           "Enables keeping the message history after exiting the application."),
       this);
-  save_and_close = new AButton(QTranslator::tr("OK"), this);
+  save_and_close = new Button(QTranslator::tr("OK"), this);
   save_and_close->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
   vert_box_lt->addWidget(delay);
   vert_box_lt->addWidget(delayExplanation);
@@ -66,7 +66,7 @@ void Settings::connector() {
           &Settings::minDelayValueChanged);
   connect(maxDelay, QOverload<int>::of(&QSpinBox::valueChanged), this,
           &Settings::maxDelayValueChanged);
-  connect(save_and_close, &AButton::clicked, this, &Settings::saveAndClose);
+  connect(save_and_close, &Button::clicked, this, &Settings::saveAndClose);
 }
 
 /*!
@@ -85,7 +85,7 @@ void Settings::loadStates() {
 
 /*!
  * @fn Settings::saveAndClose
- * @brief Saves ASW' settings.
+ * @brief Saves Jeff's settings.
  */
 void Settings::saveAndClose() {
   basis->write(basis->isDelayEnabledSt, delay->isChecked());

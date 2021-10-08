@@ -1,27 +1,27 @@
-#include "a_menubar.h"
+#include "menubar.h"
 
 /*! All short named objects and their explanations:
- * @a mf <- menu File <- @a AMenuBar::AMenuBar
- * @a me <- menu Edit <- @a AMenuBar::AMenuBar
- * @a mt <- menu Tools <- @a AMenuBar::AMenuBar
- * @a mh <- menu Help <- @a AMenuBar::AMenuBar
- * @a sm <- source manager <- @a AMenuBar::AMenuBar
- * @a emh <- export message history <- @a AMenuBar::AMenuBar
- * @a imh <- import message history <- @a AMenuBar::AMenuBar
- * @a cmh <- clear message history <- @a AMenuBar::AMenuBar
- * @a del <- delete <- @a AMenuBar::AMenuBar
- * @a sel <- select all <- @a AMenuBar::AMenuBar
- * @a hb <- hide menubar <- @a AMenuBar::AMenuBar
- * @a st <- settings <- @a AMenuBar::AMenuBar
+ * @a mf <- menu File <- @a MenuBar::MenuBar
+ * @a me <- menu Edit <- @a MenuBar::MenuBar
+ * @a mt <- menu Tools <- @a MenuBar::MenuBar
+ * @a mh <- menu Help <- @a MenuBar::MenuBar
+ * @a sm <- source manager <- @a MenuBar::MenuBar
+ * @a emh <- export message history <- @a MenuBar::MenuBar
+ * @a imh <- import message history <- @a MenuBar::MenuBar
+ * @a cmh <- clear message history <- @a MenuBar::MenuBar
+ * @a del <- delete <- @a MenuBar::MenuBar
+ * @a sel <- select all <- @a MenuBar::MenuBar
+ * @a hb <- hide menubar <- @a MenuBar::MenuBar
+ * @a st <- settings <- @a MenuBar::MenuBar
  */
 
 /*!
- * @fn AMenuBar::AMenuBar
+ * @fn MenuBar::MenuBar
  * @brief The constructor.
- * @param[in,out] line reference to the ALine instance
+ * @param[in,out] line reference to the Line instance
  * @param[in,out] parent QObject parent
  */
-AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
+MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   // File
   QMenu *mf = addMenu(tr("File"));
   QAction *sm = new QAction(tr("Source manager") + " (/sm)", mf);
@@ -95,11 +95,11 @@ AMenuBar::AMenuBar(ALine *line, QWidget *parent) : QMenuBar(parent) {
   me->addAction(sel);
   connect(cmh, &QAction::triggered, this,
           [this] { emit clearHistoryTriggered(); });
-  connect(del, &QAction::triggered, line->lineEdit, &ALineEdit::backspace);
-  connect(cut, &QAction::triggered, line->lineEdit, &ALineEdit::cut);
-  connect(copy, &QAction::triggered, line->lineEdit, &ALineEdit::copy);
-  connect(paste, &QAction::triggered, line->lineEdit, &ALineEdit::paste);
-  connect(sel, &QAction::triggered, line->lineEdit, &ALineEdit::selectAll);
+  connect(del, &QAction::triggered, line->lineEdit, &LineEdit::backspace);
+  connect(cut, &QAction::triggered, line->lineEdit, &LineEdit::cut);
+  connect(copy, &QAction::triggered, line->lineEdit, &LineEdit::copy);
+  connect(paste, &QAction::triggered, line->lineEdit, &LineEdit::paste);
+  connect(sel, &QAction::triggered, line->lineEdit, &LineEdit::selectAll);
   // Tools
   QMenu *mt = addMenu(tr("Tools"));
   QAction *hb = new QAction(tr("Hide menubar"), mt);

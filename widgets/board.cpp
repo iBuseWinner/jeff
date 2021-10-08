@@ -1,11 +1,11 @@
-#include "a_board.h"
+#include "board.h"
 
 /*!
- * @fn ABoard::ABoard
+ * @fn Board::Board
  * @brief The constructor.
  * @param[in,out] parent QObject parent
  */
-ABoard::ABoard(QWidget *parent) : QFrame(parent) {
+Board::Board(QWidget *parent) : QFrame(parent) {
   setFrameShape(QFrame::StyledPanel);
   setFrameShadow(QFrame::Raised);
   setObjectName(object_name);

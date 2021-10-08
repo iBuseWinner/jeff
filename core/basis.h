@@ -34,24 +34,24 @@ class Basis : public QObject {
 public:
   // Objects:
   SQLite *sql = new SQLite(this); /*!< SQLite handler. */
-  Json *json = new Json(this);    /*!< Json handler. */
+  Json *json = nullptr;           /*!< Json handler. */
 
   // Constants:
-  inline static const QString companyName = "CCLC";
-  inline static const QString applicationName = "Jeff";
+  const char *companyName = "CCLC";
+  const char *applicationName = "Jeff";
 
-  inline static const QString isMenuBarHiddenSt = "jeff-qt/menubarishidden";
-  inline static const QString sizeSt = "jeff-qt/size";
-  inline static const QString isFullScreenSt = "jeff-qt/isfullscreen";
-  inline static const QString isNotFirstStartSt = "jeff-qt/isnotfirststart";
+  const char *isMenuBarHiddenSt = "jeff-qt/menubarishidden";
+  const char *sizeSt = "jeff-qt/size";
+  const char *isFullScreenSt = "jeff-qt/isfullscreen";
+  const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  inline static const QString isMonologueModeEnabledSt =
-      "core/ismonologuemodeenabled";
-  inline static const QString isDelayEnabledSt = "core/isdelayenabled";
-  inline static const QString minDelaySt = "core/mindelay";
-  inline static const QString maxDelaySt = "core/maxdelay";
-  inline static const QString isKeepingEnabledSt = "core/iskeepingenabled";
-  inline static const QString isHintsEnabledSt = "core/ishintsenabled";
+  const char *isMonologueModeEnabledSt = "core/ismonologuemodeenabled";
+  const char *isDelayEnabledSt = "core/isdelayenabled";
+  const char *minDelaySt = "core/mindelay";
+  const char *maxDelaySt = "core/maxdelay";
+  const char *isKeepingEnabledSt = "core/iskeepingenabled";
+  const char *isHintsEnabledSt = "core/ishintsenabled";
+  const char *isInaccurateSearchEnabledSt = "core/isinnacuratesearchenabled";
 
   // Functions:
   /*!
@@ -61,7 +61,10 @@ public:
    * sourcesStoreFilename file.
    * @param[in,out] parent QObject parent
    */
-  Basis(QObject *parent = nullptr) : QObject(parent) { load_sources(); }
+  Basis(QObject *parent = nullptr) : QObject(parent) {
+    json = new Json(get_settings_path(), this);
+    load_sources();
+  }
 
   /*!
    * @fn Basis::exists
@@ -92,6 +95,7 @@ public:
    */
   QVariant read(const QString &key) { return _settings->value(key); }
   QVariant operator[](const QString &key) { return _settings->value(key); }
+  QVariant operator[](const char *key) { return _settings->value(key); }
 
   /*!
    * @fn Basis::get_settings_path
@@ -107,25 +111,27 @@ public:
    * @brief Loads @a _sources from file.
    */
   void load_sources() {
-    for (auto source : json->read_source_list(sql, get_settings_path())) {
-      if (not _sources.contains(source))
-        _sources.append(source);
-    }
+    if (not _sources.isEmpty())
+      _sources.clear();
+    Sources tmp = json->read_source_list(sql);
+    for (int i = 0; i < tmp.length(); i++)
+      if (not _sources.contains(tmp[i]))
+        _sources.append(tmp[i]);
   }
 
   /*!
    * @fn Basis::get_sources
    * @returns a list of sources @a _sources.
    */
-  QList<Source> get_sources() { return _sources; }
+  Sources get_sources() { return _sources; }
 
   /*!
    * @fn Basis::set_sources
    * @brief Saves @a sources list.
    */
-  void set_sources(QList<Source> sources) {
+  void set_sources(Sources sources) {
     _sources = sources;
-    json->write_source_list(sql, get_settings_path(), sources);
+    json->write_source_list(sql, sources);
   }
 
   // Functions described in `basis.cpp`:
@@ -143,7 +149,7 @@ private:
   QSettings *_settings =
       new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
                     applicationName, this); /*!< Qt settings object. */
-  QList<Source> _sources; /*!< List of sources for @a NLPmodule. */
+  Sources _sources; /*!< List of sources for @a NLPmodule. */
 };
 
 #endif // BASIS_H

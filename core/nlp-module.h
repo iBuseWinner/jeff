@@ -3,16 +3,20 @@
 
 #include "core/basis.h"
 #include "core/database/sqlite.h"
-#include "model/expression.h"
-#include "model/nlp/cache.h"
-#include "model/nlp/responsewo.h"
-#include "standard-templates.h"
+#include "core/model/expression.h"
+#include "core/model/nlp/cache.h"
+#include "core/model/nlp/responsewo.h"
+#include "core/model/nlp/stringssearch.h"
+#include "core/standard-templates.h"
+#include <QList>
 #include <QMap>
 #include <QObject>
 #include <QPair>
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
+#include <future>
+#include <iostream>
 
 /*!
  * @class NLPmodule
@@ -33,7 +37,6 @@ public:
   NLPmodule(Basis *basis, QObject *parent = nullptr)
       : QObject(parent), _basis(basis) {
     _gen = new QRandomGenerator(QTime::currentTime().msec());
-    _settings_path = _basis->get_settings_path();
     load_cache();
   }
 
@@ -41,7 +44,11 @@ public:
    * @fn NLPmodule::~NLPmodule
    * @brief Saves cache.
    */
-  ~NLPmodule() { save_cache(); }
+  ~NLPmodule() {
+    save_cache();
+    for (auto *expr : _cache)
+      delete expr;
+  }
 
   // Functions described in `nlp-module.cpp`:
   void load_cache();
@@ -67,14 +74,17 @@ private:
   Basis *_basis = nullptr;
   Cache _cache;
   QRandomGenerator *_gen = nullptr;
-  QString _settings_path;
 
   // Constants:
   inline static const QString cache_path = "";
 
   // Functions described in `nlp-module.cpp`:
   Cache select_from_cache(const QString &input);
-  Cache select_from_sql(const QString &input);
+  Cache select_from_db(const QString &input);
+  
+  QMap<int, Expression *> select_candidates(Cache selection, QString input);
+  QPair<QString, QString> compose_answer(QString input,
+                                         QMap<int, Expression *> candidates);
 };
 
-#endif // NLPMODULE_H
+#endif

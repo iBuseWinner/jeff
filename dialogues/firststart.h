@@ -2,7 +2,7 @@
 #define FIRSTSTART_H
 
 #include "dialogues/modal-handler.h"
-#include "widgets/a_button.h"
+#include "widgets/button.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpacerItem>
@@ -30,4 +30,4 @@ private:
   inline static const QString object_name = "firststart";
 };
 
-#endif // FIRSTSTART_H
+#endif

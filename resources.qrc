@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>l10n/jeff_ru.qm</file>
         <file>arts/shots/menufile.png</file>
         <file>arts/icons/16/send.svg</file>
         <file>arts/icons/16/dialog-ok-apply.svg</file>
@@ -27,8 +28,6 @@
         <file>arts/icons/16/configure.svg</file>
         <file>arts/icons/16/monologue.svg</file>
         <file>arts/shots/addsource.png</file>
-        <file>l10n/jeff_ru.qm</file>
-        <file>l10n/jeff_ru.ts</file>
         <file>arts/icons/2000/icon.png</file>
         <file>arts/jeff.png</file>
     </qresource>

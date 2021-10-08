@@ -46,11 +46,11 @@ public:
    * @param[in] source source parameters
    * @returns converted properties of @a source
    */
-  QJsonObject to_json() {
-    return {{"container", table_name},
-            {"disabled", is_disabled},
-            {"path", path},
-            {"title", table_title}};
+  static QJsonObject to_json(const Source &s) {
+    return {{"container", s.table_name},
+            {"disabled", s.is_disabled},
+            {"path", s.path},
+            {"title", s.table_title}};
   }
 };
 
@@ -60,4 +60,4 @@ public:
  */
 typedef QList<Source> Sources;
 
-#endif // SOURCE_H
+#endif

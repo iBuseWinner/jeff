@@ -3,15 +3,15 @@
 /*!
  * @fn EditSourceDialog::EditSourceDialog
  * @brief The constructor.
- * \param _basis reference to the Basis instance
- * \param parent QObject parent
+ * @param _basis reference to the Basis instance
+ * @param parent QObject parent
  */
 EditSourceDialog::EditSourceDialog(Basis *_basis, QWidget *parent)
     : QWidget(parent), basis(_basis) {
   auto *layout = new QGridLayout();
-  activators = new AExpressionList(this);
-  curr = new AExpressionList(this);
-  reagents = new AExpressionList(this);
+  activators = new ExpressionList(this);
+  curr = new ExpressionList(this);
+  reagents = new ExpressionList(this);
   auto *activators_label = new QLabel(tr("Activators"), this);
   auto *curr_label = new QLabel(tr("Expressions"), this);
   auto *reagents_label = new QLabel(tr("Reagents"), this);

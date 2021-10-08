@@ -90,14 +90,14 @@ bool SQLite::create_base_structure(QSqlQuery *query) {
  * @param[in] path path to database
  * @returns list of sources @a sources
  */
-QList<Source> SQLite::sources(const QString &path) {
+Sources SQLite::sources(const QString &path) {
   auto db = prepare(path, Openable);
   if (db.databaseName().isEmpty())
-    return QList<Source>();
+    return Sources();
   auto *query = new QSqlQuery(db);
   exec(query, SelectSources);
   query->first();
-  QList<Source> sources;
+  Sources sources;
   while (query->isValid()) {
     Source source;
     source.path = path;
@@ -224,10 +224,16 @@ Cache SQLite::scan_source(const Source &source, const QString &input) {
   auto *query = new QSqlQuery(db);
   exec(query, SelectAEL, {source.table_name});
   query->first();
+  std::cout << "--------" << std::endl;
+  std::cout << "\tfn scan_source" << std::endl;
+  std::cout << "\tGot source.table_name() = \"" << source.table_name.toStdString() << "\" and input = \"" << input.toStdString() << "\"" << std::endl;
   while (query->isValid()) {
     /*! If the expression includes a value from the table... */
-    if (input.contains(purify(query->value(1).toString()))) {
+    auto x = StringSearch::contains(input, query->value(1).toString());
+    std::cout << "\tFor query->value(1).toString() = \"" << query->value(1).toString().toStdString() << "\" calculated x.first = " << x.first << " and x.second = " << x.second << std::endl;
+    if (not (x.first == 0 and x.second == 0)) {
       /*! ...then this value is an activator. */
+      std::cout << "\tGot an activator." << std::endl;
       auto address = query->value(0).toInt();
       auto props = get_additional_properties(&db, source, address);
       auto links = unpack_links(query->value(2).toString());

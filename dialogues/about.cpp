@@ -70,7 +70,7 @@ About::About(QWidget *parent, ModalHandler *m_handler)
   scroll_area_2->setFrameStyle(QFrame::NoFrame);
   scroll_area_2->setFrameShadow(QFrame::Plain);
   auto *bottomLine = new QWidget(this);
-  auto *closeBtn = new AButton(QTranslator::tr("Close"), bottomLine);
+  auto *closeBtn = new Button(QTranslator::tr("Close"), bottomLine);
   auto *bottomLayout = new QHBoxLayout();
   bottomLayout->setMargin(0);
   bottomLayout->setSpacing(0);
@@ -79,7 +79,7 @@ About::About(QWidget *parent, ModalHandler *m_handler)
   bottomLayout->addItem(bottomSpacer);
   bottomLayout->addWidget(closeBtn);
   bottomLine->setLayout(bottomLayout);
-  connect(closeBtn, &AButton::clicked, this,
+  connect(closeBtn, &Button::clicked, this,
           [this] { _m_handler->closePrisoner(); });
   scroll_area_1->setWidget(tab1);
   scroll_area_2->setWidget(tab2);

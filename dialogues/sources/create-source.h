@@ -3,8 +3,8 @@
 
 #include "core/basis.h"
 #include "core/model/source.h"
-#include "widgets/a_button.h"
-#include "widgets/a_lineedit.h"
+#include "widgets/button.h"
+#include "widgets/lineedit.h"
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QSpacerItem>
@@ -13,7 +13,7 @@
 /*!
  * @class CreateSourceDialog
  * @brief Creates sources in databases.
- * @sa Basis, ALineEdit, AButton
+ * @sa Basis, LineEdit, Button
  */
 class CreateSourceDialog : public QWidget {
   Q_OBJECT
@@ -46,10 +46,10 @@ private:
   // Objects:
   QString m_dbpath = "";
   Basis *basis = nullptr;
-  ALineEdit *titleInput = nullptr;
-  AButton *selectFileBtn = nullptr;
-  AButton *saveBtn = nullptr;
-  AButton *cancelBtn = nullptr;
+  LineEdit *titleInput = nullptr;
+  Button *selectFileBtn = nullptr;
+  Button *saveBtn = nullptr;
+  Button *cancelBtn = nullptr;
 
   // Functions described in 'create-source.cpp':
   void connector();
@@ -58,4 +58,4 @@ private:
   void save();
 };
 
-#endif // CREATESOURCEDIALOG_H
+#endif

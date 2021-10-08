@@ -41,6 +41,12 @@ public:
             {"properties", pack_props(properties)},
             {"use_cases", use_cases}};
   }
+  
+  int weight() {
+    if (properties.contains("weight"))
+      return properties.value("weight").toInt();
+    else return 0;
+  }
 
 private:
   /*! Properties' parser. */
@@ -59,4 +65,4 @@ private:
   }
 };
 
-#endif // EXPRESSION_H
+#endif

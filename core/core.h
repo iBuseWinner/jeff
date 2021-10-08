@@ -15,7 +15,7 @@
  * @brief Controls I/O.
  * @details Manages objects associated with receiving messages from different
  * sources.
- * @sa Basis, HProcessor, NLPmodule, StdTemplates, AMessage
+ * @sa Basis, HProcessor, NLPmodule, StdTemplates, Message
  */
 class Core : public QObject {
   Q_OBJECT
@@ -35,17 +35,17 @@ public:
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);
   // void got_script();
-  void show_history(QList<Message> message_history);
+  void show_history(Messages message_history);
   void set_monologue_enabled(const bool enabled);
-  Message get_message(const QString &content, Author author,
+  MessageData get_message(const QString &content, Author author,
                       ContentType content_type, Theme theme);
 
 signals:
   /*!
-   * @brief Sends a message to ADisplay.
-   * @sa AMessage, ADisplay
+   * @brief Sends a message to Display.
+   * @sa Message, Display
    */
-  AMessage *show(AMessage *message);
+  Message *show(Message *message);
 
   /*!
    * @brief Sets the monologue mode.

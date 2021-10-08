@@ -3,8 +3,8 @@
 
 #include "core/basis.h"
 #include "dialogues/modal-handler.h"
-#include "widgets/a_button.h"
-#include "widgets/a_explanationlabel.h"
+#include "widgets/button.h"
+#include "widgets/explanationlabel.h"
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QSizePolicy>
@@ -35,7 +35,7 @@ private:
   QSpinBox *minDelay = nullptr;
   QSpinBox *maxDelay = nullptr;
   QCheckBox *keepHistory = nullptr;
-  AButton *save_and_close = nullptr;
+  Button *save_and_close = nullptr;
 
   // Constants:
   inline static const QString object_name = "settings";

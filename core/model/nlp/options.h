@@ -10,4 +10,4 @@
  */
 typedef QMap<QString, QString> Options;
 
-#endif // NLPOPTIONS_H
+#endif

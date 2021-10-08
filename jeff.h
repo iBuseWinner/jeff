@@ -2,11 +2,11 @@
 #define JEFF_H
 
 #include "core/core.h"
-#include "widgets/a_board.h"
-#include "widgets/a_button.h"
-#include "widgets/a_display.h"
-#include "widgets/a_line.h"
-#include "widgets/a_menubar.h"
+#include "widgets/board.h"
+#include "widgets/button.h"
+#include "widgets/display.h"
+#include "widgets/line.h"
+#include "widgets/menubar.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -31,7 +31,7 @@ public:
    */
   ~Jeff() override { save_window_settings(); }
 
-  // Functions described in 'asw.cpp':
+  // Functions described in 'jeff.cpp':
   Jeff();
   void greeting();
 
@@ -59,9 +59,9 @@ private:
   Core *core = new Core(this);
   Basis *basis = core->basis;
   HProcessor *history_processor = core->history_processor;
-  ALine *line = new ALine(this);
-  ADisplay *display = new ADisplay(25, this);
-  AMenuBar *menubar = new AMenuBar(line, this);
+  Line *line = new Line(this);
+  Display *display = new Display(25, this);
+  MenuBar *menubar = new MenuBar(line, this);
 
   // Constants:
   static const int minimalWidth = 600;
@@ -78,7 +78,7 @@ private:
   void export_message_history();
   void import_message_history();
   void clear();
-  // void help() { emit send("/help"); }
+  void help() { emit send("/help"); }
 };
 
-#endif // JEFF_H
+#endif

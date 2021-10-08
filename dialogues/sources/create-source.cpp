@@ -9,10 +9,10 @@
 CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
     : QWidget(parent), basis(_basis) {
   auto *grid_layout = new QGridLayout();
-  titleInput = new ALineEdit(this);
-  selectFileBtn = new AButton("", this);
-  saveBtn = new AButton(tr("Save"), this);
-  cancelBtn = new AButton(tr("Cancel"), this);
+  titleInput = new LineEdit(this);
+  selectFileBtn = new Button("", this);
+  saveBtn = new Button(tr("Save"), this);
+  cancelBtn = new Button(tr("Cancel"), this);
   auto *spacer =
       new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   titleInput->setPlaceholderText(tr("Enter source name"));
@@ -33,9 +33,9 @@ CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
  * @brief Establishes communications for user interaction through the widget.
  */
 void CreateSourceDialog::connector() {
-  connect(selectFileBtn, &AButton::clicked, this, &CreateSourceDialog::select);
-  connect(saveBtn, &AButton::clicked, this, &CreateSourceDialog::save);
-  connect(cancelBtn, &AButton::clicked, this, &QWidget::close);
+  connect(selectFileBtn, &Button::clicked, this, &CreateSourceDialog::select);
+  connect(saveBtn, &Button::clicked, this, &CreateSourceDialog::save);
+  connect(cancelBtn, &Button::clicked, this, &QWidget::close);
 }
 
 /*!

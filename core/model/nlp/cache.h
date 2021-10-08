@@ -9,4 +9,4 @@
  */
 typedef QList<Expression *> Cache;
 
-#endif // CACHE_H
+#endif

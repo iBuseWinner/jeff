@@ -43,10 +43,10 @@ void Core::got_message_from_user(const QString &user_expression) {
   if (user_expression.isEmpty())
     return;
   /*! Displays the entered message on the screen. */
-  Message message = get_message(user_expression, Author::User,
+  MessageData message = get_message(user_expression, Author::User,
                                 ContentType::Markdown, Theme::Std);
   history_processor->append(message);
-  emit show(new AMessage(message));
+  emit show(new Message(message));
   /*! If a user has entered the command, there is no need to run other modules.
    */
   if (_standard_templates->dialogues(user_expression))
@@ -66,7 +66,7 @@ void Core::got_message_from_user(const QString &user_expression) {
 void Core::got_message_from_nlp(const QString &result_expression) {
   if (result_expression.isEmpty())
     return;
-  Message message = get_message(result_expression, Author::Jeff,
+  MessageData message = get_message(result_expression, Author::Jeff,
                                 ContentType::Markdown, Theme::Std);
   history_processor->append(message);
   /*! Delay is triggered if enabled. */
@@ -76,7 +76,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
       this, [this, message, result_expression] {
-        emit show(new AMessage(message));
+        emit show(new Message(message));
         if (_monologue_enabled)
           _nlp->search_for_suggests(result_expression);
       });
@@ -102,10 +102,10 @@ void Core::got_message_wo_from_nlp(ResponseWO result_expression_wo) {
  */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
-  Message message = get_message(warning_text, Author::Jeff,
+  MessageData message = get_message(warning_text, Author::Jeff,
                                 ContentType::Warning, Theme::Yellow);
   history_processor->append(message);
-  emit show(new AMessage(message));
+  emit show(new Message(message));
 }
 
 /*!
@@ -115,26 +115,26 @@ void Core::got_warning(const QString &warning_text) {
  */
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
-  Message message =
+  MessageData message =
       get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   history_processor->append(message);
-  emit show(new AMessage(message));
+  emit show(new Message(message));
 }
 
 /*!
  * @fn Core::got_modal
- * @brief Creates AMessage @a message_widget, inserts a widget into it and
+ * @brief Creates Message @a message_widget, inserts a widget into it and
  * displays a message.
  * @param[in,out] m_handler handler with widget which should be displayed
  * @sa ModalHandler
  */
 void Core::got_modal(ModalHandler *m_handler) {
-  Message message = get_message(m_handler->getPrisoner()->objectName(),
+  MessageData message = get_message(m_handler->getPrisoner()->objectName(),
                                 Author::Jeff, ContentType::Widget, Theme::Std);
   history_processor->append(message);
-  auto *message_widget = new AMessage(message);
+  auto *message_widget = new Message(message);
   m_handler->getPrisoner()->setParent(message_widget);
-  m_handler->getPrisoner()->setFixedWidth(AMessage::maximalMessageWidth);
+  m_handler->getPrisoner()->setFixedWidth(Message::maximalMessageWidth);
   message_widget->setWidget(m_handler);
   emit show(message_widget);
 }
@@ -144,9 +144,9 @@ void Core::got_modal(ModalHandler *m_handler) {
  * @brief Displays all messages from @a message_histor} on the screen.
  * @param[in] message_history
  */
-void Core::show_history(QList<Message> message_history) {
+void Core::show_history(Messages message_history) {
   for (const auto &message : message_history)
-    emit show(new AMessage(message));
+    emit show(new Message(message));
 }
 
 /*!
@@ -156,11 +156,11 @@ void Core::show_history(QList<Message> message_history) {
  * @param[in] author who is author - user or asw?
  * @param[in] content_type type of given content
  * @param[in] theme appearance of the message
- * @returns Message with given parameters.
+ * @returns MessageData with given parameters.
  */
-Message Core::get_message(const QString &content, Author author,
+MessageData Core::get_message(const QString &content, Author author,
                           ContentType content_type, Theme theme) {
-  Message message;
+  MessageData message;
   message.content = content;
   message.datetime = QDateTime::currentDateTime();
   message.author = author;

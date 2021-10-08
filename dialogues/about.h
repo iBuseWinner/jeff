@@ -2,7 +2,7 @@
 #define ABOUT_H
 
 #include "dialogues/modal-handler.h"
-#include "widgets/a_button.h"
+#include "widgets/button.h"
 #include <QCoreApplication>
 #include <QGridLayout>
 #include <QLabel>
@@ -34,4 +34,4 @@ private:
   static const int fixed_height = 230;
 };
 
-#endif // ABOUT_H
+#endif

@@ -1,7 +1,7 @@
-#ifndef A_DISPLAY_H
-#define A_DISPLAY_H
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
-#include "widgets/a_message.h"
+#include "widgets/message.h"
 #include <QMutex>
 #include <QScrollArea>
 #include <QScrollBar>
@@ -9,28 +9,28 @@
 #include <QWidget>
 
 /*!
- * @class ADisplay
+ * @class Display
  * @brief Widget that displays messages.
- * @sa AMessage
+ * @sa Message
  */
-class ADisplay : public QScrollArea {
+class Display : public QScrollArea {
   Q_OBJECT
 public:
   // Functions:
   /*!
-   * @fn ADisplay::setScrollEnabled
+   * @fn Display::setScrollEnabled
    * @brief Sets the scroll state.
    * @param[in] _scrollEnabled boolean value of whether scroll is enabled or not
    */
   void setScrollEnabled(bool _scrollEnabled) { scrollEnabled = _scrollEnabled; }
 
-  // Functions described in 'a_display.cpp':
-  explicit ADisplay(short _max_message_amount = 50, QWidget *parent = nullptr);
+  // Functions described in 'display.cpp':
+  explicit Display(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
-  void addMessage(AMessage *message);
+  void addMessage(Message *message);
 
 private:
-  Q_DISABLE_COPY(ADisplay)
+  Q_DISABLE_COPY(Display)
 
   // Objects:
   QVBoxLayout *vertical_box_layout = nullptr;
@@ -46,12 +46,12 @@ private:
   inline static const QString box_style_sheet =
       "#display, #box { background-color: rgba(255, 255, 255, 0); }";
 
-  // Functions described in 'a_display.cpp':
+  // Functions described in 'display.cpp':
   void connector();
   void scrollDown(int min, int max);
   void scrollTumbler(int value);
   void showWidgets(int value = 0);
-  void removeMessage(AMessage *message);
+  void removeMessage(Message *message);
 };
 
-#endif // A_DISPLAY_H
+#endif

@@ -2,7 +2,7 @@
 #define EDITSOURCEDIALOG_H
 
 #include "core/basis.h"
-#include "widgets/a_expressionlist.h"
+#include "widgets/expressionlist.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QObject>
@@ -11,7 +11,7 @@
 /*!
  * @class EditSourceDialog
  * @brief Edits databases and allows users to change the reaction of ASW.
- * @sa Basis, AExpressionList
+ * @sa Basis, ExpressionList
  */
 class EditSourceDialog : public QWidget {
   Q_OBJECT
@@ -24,7 +24,7 @@ private:
 
   // Objects:
   Basis *basis = nullptr;
-  AExpressionList *activators = nullptr, *curr = nullptr, *reagents = nullptr;
+  ExpressionList *activators = nullptr, *curr = nullptr, *reagents = nullptr;
 };
 
-#endif // EDITSOURCEDIALOG_H
+#endif

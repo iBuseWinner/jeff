@@ -1,13 +1,13 @@
-#include "a_line.h"
+#include "line.h"
 
 /*!
- * @fn ALine::ALine
+ * @fn Line::Line
  * @brief The constructor.
  * @param[in,out] parent QObject parent
  */
-ALine::ALine(QWidget *parent) : ABoard(parent) {
-  lineEdit = new ALineEdit(this);
-  sendButton = new AButton("", this);
+Line::Line(QWidget *parent) : Board(parent) {
+  lineEdit = new LineEdit(this);
+  sendButton = new Button("", this);
   sendButton->setToolButtonStyle(Qt::ToolButtonIconOnly);
 #ifdef Q_OS_UNIX
   sendButton->setIcon(QIcon::fromTheme("mail-send"));

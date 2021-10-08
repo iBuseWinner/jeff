@@ -28,10 +28,10 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
   grid_layout = new QGridLayout();
   grid_layout->setSpacing(0);
   grid_layout->setMargin(0);
-  add_source = new AButton(QTranslator::tr("Add source"), this);
+  add_source = new Button(QTranslator::tr("Add source"), this);
   create_source = new QAction(QTranslator::tr("Create"), this);
   remove_source = new QAction(QTranslator::tr("Remove"), this);
-  save_and_close = new AButton(QTranslator::tr("Save and close"), this);
+  save_and_close = new Button(QTranslator::tr("Save and close"), this);
   add_source->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
   create_source->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
   remove_source->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
@@ -39,7 +39,7 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
   add_source->setPopupMode(QToolButton::MenuButtonPopup);
   add_source->addAction(create_source);
   add_source->addAction(remove_source);
-  source_list = new ASourceList(this);
+  source_list = new SourceList(this);
   grid_layout->addWidget(source_list, 0, 0, 1, 0);
   grid_layout->addWidget(add_source, 1, 0);
   grid_layout->addWidget(save_and_close, 1, 1);
@@ -100,10 +100,10 @@ void SourcesDialog::remove() {
  * box.
  */
 void SourcesDialog::connector() {
-  connect(add_source, &AButton::clicked, this, &SourcesDialog::add);
+  connect(add_source, &Button::clicked, this, &SourcesDialog::add);
   connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
   connect(remove_source, &QAction::triggered, this, &SourcesDialog::remove);
-  connect(save_and_close, &AButton::clicked, this, &SourcesDialog::sncl);
+  connect(save_and_close, &Button::clicked, this, &SourcesDialog::sncl);
 }
 
 /*!
@@ -111,7 +111,7 @@ void SourcesDialog::connector() {
  * @brief Adds sources to the selection.
  * @param[in] sources sources to be added
  */
-void SourcesDialog::append(const QList<Source> &sources) {
+void SourcesDialog::append(Sources sources) {
   for (const auto &source : sources) {
     QTreeWidgetItem *parent = nullptr;
     bool isInside = false;
@@ -156,7 +156,7 @@ void SourcesDialog::appendSingle(const Source &source) {
  */
 void SourcesDialog::sncl() {
   if (edited) {
-    QList<Source> sources;
+    Sources sources;
     for (int tli2 = 0; tli2 < source_list->topLevelItemCount(); tli2++)
       for (int childIndex = 0;
            childIndex <
@@ -164,7 +164,8 @@ void SourcesDialog::sncl() {
            childIndex++)
         sources.append(source_widgets.value(
             source_list->invisibleRootItem()->child(tli2)->child(childIndex)));
-    (new Json(this))->write_source_list(basis->sql, basis->get_settings_path(), sources);
+    Json json(basis->get_settings_path());
+    json.write_source_list(basis->sql, sources);
   }
   _m_handler->closePrisoner();
 }

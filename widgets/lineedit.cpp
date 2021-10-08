@@ -1,11 +1,11 @@
-#include "a_lineedit.h"
+#include "lineedit.h"
 
 /*!
- * @fn ALineEdit::ALineEdit
+ * @fn LineEdit::LineEdit
  * @brief The constructor.
  * @param[in,out] parent QObject parent
  */
-ALineEdit::ALineEdit(QWidget *parent) : QLineEdit(parent) {
+LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {
   setStyleSheet(style_sheet);
   setFrame(false);
 }

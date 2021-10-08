@@ -11,4 +11,4 @@
  */
 typedef QPair<QString, Options> ResponseWO;
 
-#endif // RESPONSEWO_H
+#endif

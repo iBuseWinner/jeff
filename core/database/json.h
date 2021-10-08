@@ -3,8 +3,8 @@
 
 #include "core/database/sqlite.h"
 #include "core/model/message.h"
-#include "core/model/source.h"
 #include "core/model/nlp/cache.h"
+#include "core/model/source.h"
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>
@@ -23,16 +23,17 @@ public:
    * @fn Json::Json
    * @brief The constructor.
    */
-  Json(QObject *parent = nullptr);
+  Json(QString settingsPath, QObject *parent = nullptr);
 
   // Functions described in `json.cpp`:
-  Sources read_source_list(SQLite *sql, QString settingsPath);
+  Sources read_source_list(SQLite *sql);
   Messages read_message_history(QFile *file);
-  Cache read_NLP_cache(QString settingsPath);
-  void write_source_list(SQLite *sql, QString settingsPath,
-                         Sources source_list);
+  Cache read_NLP_cache();
+  QStringList read_modules_list();
+  void write_source_list(SQLite *sql, Sources sources);
   void write_message_history(Messages message_history, QFile *file);
-  void write_NLP_cache(Cache cache, QString settingsPath);
+  void write_NLP_cache(Cache cache);
+  QStringList write_modules_list(QStringList modules_list);
 
 signals:
   /*!
@@ -43,8 +44,12 @@ signals:
 private:
   // Constants:
   inline static const QString sources_store_filename = "jeff_sources.json";
-  inline static const QString cache_store_filename = "nlp_module_cache.json";
+  inline static const QString cache_store_filename = "jeff_nlp_module_cache.json";
+  inline static const QString history_store_filename = "jeff_history.json";
 
+  // Objects:
+  QString _settings_path;
+  
   // Functions described in `json.cpp`:
   QJsonArray read_json(QFile *file);
   void write_json(QFile *savefile, QJsonArray json_array);

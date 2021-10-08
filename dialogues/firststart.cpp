@@ -35,7 +35,7 @@ FirstStart::FirstStart(QWidget *parent, ModalHandler *m_handler)
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse |
                                      Qt::LinksAccessibleByMouse);
   auto *bottomLine = new QWidget(this);
-  auto *closeBtn = new AButton(QTranslator::tr("Close"), bottomLine);
+  auto *closeBtn = new Button(QTranslator::tr("Close"), bottomLine);
   auto *bottomLayout = new QHBoxLayout();
   bottomLayout->setMargin(0);
   bottomLayout->setSpacing(0);
@@ -44,7 +44,7 @@ FirstStart::FirstStart(QWidget *parent, ModalHandler *m_handler)
   bottomLayout->addItem(spacer);
   bottomLayout->addWidget(closeBtn);
   bottomLine->setLayout(bottomLayout);
-  connect(closeBtn, &AButton::clicked, this,
+  connect(closeBtn, &Button::clicked, this,
           [this] { _m_handler->closePrisoner(); });
   layout->addWidget(title);
   layout->addWidget(startText);

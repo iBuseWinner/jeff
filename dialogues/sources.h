@@ -3,8 +3,8 @@
 
 #include "dialogues/modal-handler.h"
 #include "dialogues/sources/create-source.h"
-#include "widgets/a_button.h"
-#include "widgets/a_sourcelist.h"
+#include "widgets/button.h"
+#include "widgets/sourcelist.h"
 #include <QDialog>
 #include <QFileDialog>
 #include <QMenu>
@@ -32,12 +32,12 @@ private:
   ModalHandler *_m_handler = nullptr;
   QMap<QTreeWidgetItem *, Source> source_widgets;
   CreateSourceDialog *create_source_dialog = nullptr;
-  ASourceList *source_list = nullptr;
+  SourceList *source_list = nullptr;
   QGridLayout *grid_layout = nullptr;
-  AButton *add_source = nullptr;
+  Button *add_source = nullptr;
   QAction *create_source = nullptr;
   QAction *remove_source = nullptr;
-  AButton *save_and_close = nullptr;
+  Button *save_and_close = nullptr;
   QAction *cancel = nullptr;
   bool edited = false;
 
@@ -46,7 +46,7 @@ private:
 
   // Functions described in 'sources.cpp':
   void connector();
-  void append(const QList<Source> &sources);
+  void append(Sources sources);
   void appendSingle(const Source &source);
   void sncl();
   void openCS();
@@ -54,4 +54,4 @@ private:
   void load();
 };
 
-#endif // SOURCESDIALOG_H
+#endif

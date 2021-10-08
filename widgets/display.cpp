@@ -1,13 +1,13 @@
-#include "a_display.h"
+#include "display.h"
 
 /*!
- * @fn ADisplay::ADisplay
+ * @fn Display::Display
  * @brief The constructor.
  * @param[in] _max_message_amount number of messages that can be displayed
  * simultaneously
  * @param[in,out] parent QObject parent
  */
-ADisplay::ADisplay(short _max_message_amount, QWidget *parent)
+Display::Display(short _max_message_amount, QWidget *parent)
     : QScrollArea(parent), max_message_amount(_max_message_amount) {
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -21,15 +21,15 @@ ADisplay::ADisplay(short _max_message_amount, QWidget *parent)
 }
 
 /*!
- * @fn ADisplay::addMessage
+ * @fn Display::addMessage
  * @brief Adds a message to the display.
  * @param[in,out] message message to be added
  */
-void ADisplay::addMessage(AMessage *message) {
+void Display::addMessage(Message *message) {
   messages_mutex.lock();
   message_counter++;
   message->setParent(this);
-  connect(message, &AMessage::closed, this,
+  connect(message, &Message::closed, this,
           [this, message] { removeMessage(message); });
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
@@ -49,11 +49,11 @@ void ADisplay::addMessage(AMessage *message) {
 }
 
 /*!
- * @fn ADisplay::start
+ * @fn Display::start
  * @brief Sets the widget to its initial state.
  * @details The method is also used to reset an existing state.
  */
-void ADisplay::start() {
+void Display::start() {
   messages_mutex.lock();
   all_messages.clear();
   if (vertical_box_layout)
@@ -72,16 +72,16 @@ void ADisplay::start() {
 }
 
 /*!
- * @fn ADisplay::connector
+ * @fn Display::connector
  * @brief Establishes communications for user interaction through the widget.
  */
-void ADisplay::connector() {
+void Display::connector() {
   connect(verticalScrollBar(), &QScrollBar::rangeChanged, this,
-          &ADisplay::scrollDown);
+          &Display::scrollDown);
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this,
-          &ADisplay::scrollTumbler);
+          &Display::scrollTumbler);
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this,
-          &ADisplay::showWidgets);
+          &Display::showWidgets);
 }
 
 /*!
@@ -90,24 +90,24 @@ void ADisplay::connector() {
  *
  */
 /*!
- * @fn ADisplay::scrollDown
+ * @fn Display::scrollDown
  * @brief When the scrolling range of the display changes, it scrolls to the end
  * if automatic scrolling is enabled.
  * @param[in] min minimal vertical scroll bar value
  * @param[in] max maximal vertical scroll bar value
  */
-void ADisplay::scrollDown(int min, int max) {
+void Display::scrollDown(int min, int max) {
   Q_UNUSED(min)
   if (scrollEnabled)
     verticalScrollBar()->setValue(max);
 }
 
 /*!
- * @fn ADisplay::scrollTumbler
+ * @fn Display::scrollTumbler
  * @brief Enables or disables automatic scrolling.
  * @param[in] value current position of the vertical scroll bar
  */
-void ADisplay::scrollTumbler(int value) {
+void Display::scrollTumbler(int value) {
   if (not scrollEnabled and (value == verticalScrollBar()->maximum()))
     scrollEnabled = true;
   if (scrollEnabled and (value != verticalScrollBar()->maximum()))
@@ -115,11 +115,11 @@ void ADisplay::scrollTumbler(int value) {
 }
 
 /*!
- * @fn ADisplay::showWidgets
+ * @fn Display::showWidgets
  * @brief Shows the message history when scrolling up.
  * @param[in] value current position of the vertical scroll bar
  */
-void ADisplay::showWidgets(int value) {
+void Display::showWidgets(int value) {
   if ((value == verticalScrollBar()->minimum()) and
       (message_counter < all_messages.length())) {
     /*! Add half of the maximum. */
@@ -138,12 +138,12 @@ void ADisplay::showWidgets(int value) {
 }
 
 /*!
- * @fn ADisplay::removeMessage
- * @brief Removes the message from ADisplay.
+ * @fn Display::removeMessage
+ * @brief Removes the message from Display.
  * @attention This method does not remove the message from history.
  * @param[in,out] message
  */
-void ADisplay::removeMessage(AMessage *message) {
+void Display::removeMessage(Message *message) {
   messages_mutex.lock();
   message->close();
   vertical_box_layout->removeWidget(message);

@@ -1,27 +1,27 @@
-#ifndef A_BUTTON_H
-#define A_BUTTON_H
+#ifndef BUTTON_H
+#define BUTTON_H
 
 #include <QFocusEvent>
 #include <QTimer>
 #include <QToolButton>
 
 /*!
- * @class AButton
+ * @class Button
  * @brief Button with click animation and options.
  */
-class AButton : public QToolButton {
+class Button : public QToolButton {
   Q_OBJECT
 
 public:
   // Functions described in 'a_button.cpp':
-  explicit AButton(const QString &text = "", QWidget *parent = nullptr);
+  explicit Button(const QString &text = "", QWidget *parent = nullptr);
 
 protected:
   // Functions described in 'a_button.cpp':
   virtual void mousePressEvent(QMouseEvent *e) override;
 
 private:
-  Q_DISABLE_COPY(AButton)
+  Q_DISABLE_COPY(Button)
 
   // Objects:
   QColor currentButtonColor = unpressedButtonColor;
@@ -32,11 +32,11 @@ private:
 
   // Functions:
   /*!
-   * @fn AButton::ss
+   * @fn Button::ss
    * @returns style sheet
    */
   QString ss() {
-    return QString("AButton {"
+    return QString("Button {"
                    "border-width: 3px;"
                    "border-style: solid;"
                    "border-radius: 3px;"
@@ -50,4 +50,4 @@ private:
   }
 };
 
-#endif // A_BUTTON_H
+#endif

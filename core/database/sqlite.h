@@ -2,6 +2,7 @@
 #define SQLITE_H
 
 #include "core/model/nlp/cache.h"
+#include "core/model/nlp/stringssearch.h"
 #include "core/model/source.h"
 #include <QFile>
 #include <QJsonObject>
@@ -19,6 +20,7 @@
 #include <QTime>
 #include <QUuid>
 #include <QVariant>
+#include <iostream>
 
 /*!
  * @enum Check
@@ -70,28 +72,6 @@ public:
     QSqlDatabase::addDatabase("QSQLITE");
   }
 
-  /*!
-   * @fn SQLite::purify
-   * @brief Purifies @a str.
-   * @param[in] str string to be purified
-   * @returns purified string
-   */
-  QString purify(const QString &str) {
-    return remove_symbols(str.trimmed().toLower());
-  }
-
-  /*!
-   * @fn SQLite::remove_symbols
-   * @brief Removes punctuation.
-   * @param[in] str string that should not contain punctuation
-   * @returns string without punctuation
-   */
-  QString remove_symbols(QString str) {
-    for (auto symbol : punctuation_symbols)
-      str.remove(symbol);
-    return str;
-  }
-
   // Functions described in `sqlite.cpp`:
 #ifdef SQLITE_AUTO_TESTS
   virtual
@@ -99,7 +79,7 @@ public:
       bool
       create_source(const Source &source, QString *uuid);
   bool create_base_structure(QSqlQuery *query);
-  QList<Source> sources(const QString &path);
+  Sources sources(const QString &path);
   Source load_source(Source source);
   bool write_source(const Source &source);
   bool insert_expression(const Source &source, int address,
@@ -124,7 +104,6 @@ private:
       4; /*!< Number of attempts for table creation. */
   static const int init_additionals_rows =
       3; /*!< Column from which additional expression properties begin. */
-  inline static const QString punctuation_symbols = ".,:;!?-'\"";
 
   // Functions described in `sqlite.cpp`:
   QSqlDatabase prepare(const QString &path, Check option = Openable,
@@ -134,7 +113,8 @@ private:
   bool validate(QSqlDatabase *db, const QString &source_table,
                 bool quiet = false);
   bool exec(QSqlQuery *query, ToDo option, QStringList values = {});
-  Options get_additional_properties(QSqlDatabase *db, const Source &source, int address);
+  Options get_additional_properties(QSqlDatabase *db, const Source &source,
+                                    int address);
   QSet<int> unpack_links(const QString &links);
 };
 

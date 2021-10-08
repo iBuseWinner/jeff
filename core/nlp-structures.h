@@ -40,4 +40,4 @@ struct GlobalMap {
   QMap<QString, QStringList> activator_reagents;
 };
 
-#endif // NLPSTRUCTURES_H
+#endif

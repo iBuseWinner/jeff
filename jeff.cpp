@@ -112,24 +112,24 @@ void Jeff::connect_all() {
   // menubar
   connect(menubar->fullScreenAction, &QAction::triggered, this,
           &Jeff::full_screen_handler);
-  connect(menubar, &AMenuBar::clearHistoryTriggered, this, &Jeff::clear);
-  connect(menubar, &AMenuBar::aboutTriggered, this,
+  connect(menubar, &MenuBar::clearHistoryTriggered, this, &Jeff::clear);
+  connect(menubar, &MenuBar::aboutTriggered, this,
           [this] { emit send("/about"); });
-  connect(menubar, &AMenuBar::sourcesTriggered, this,
+  connect(menubar, &MenuBar::sourcesTriggered, this,
           [this] { emit send("/sm"); });
-  connect(menubar, &AMenuBar::settingsTriggered, this,
+  connect(menubar, &MenuBar::settingsTriggered, this,
           [this] { emit send("/settings"); });
-  connect(menubar, &AMenuBar::exportTriggered, this,
+  connect(menubar, &MenuBar::exportTriggered, this,
           &Jeff::export_message_history);
-  connect(menubar, &AMenuBar::importTriggered, this,
+  connect(menubar, &MenuBar::importTriggered, this,
           &Jeff::import_message_history);
   connect(menubar->emm, &QAction::triggered, this,
           [this] { emit send("/mm"); });
   // others
-  connect(line->sendButton, &AButton::clicked, this, &Jeff::user_input_handler);
+  connect(line->sendButton, &Button::clicked, this, &Jeff::user_input_handler);
   connect(this, &Jeff::ready_state, this, [this] { emit send(tr("Hello!")); });
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
-  connect(core, &Core::show, display, &ADisplay::addMessage);
+  connect(core, &Core::show, display, &Display::addMessage);
   connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm,
           &QAction::setChecked);
 }

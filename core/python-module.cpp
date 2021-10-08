@@ -8,3 +8,11 @@
 PythonModule::PythonModule(QObject *parent) : QObject(parent) {
   Py_Initialize();
 }
+
+PythonModule::~PythonModule() {
+  Py_Finalize();
+}
+
+QString PythonModule::run(QString module_path, QString args) {
+  
+}

@@ -1,15 +1,16 @@
 #include "json.h"
 
-Json::Json(QObject *parent) : QObject(parent) {}
+Json::Json(QString settingsPath, QObject *parent)
+    : QObject(parent), _settings_path(settingsPath) {}
 
 /*!
  * @fn Json::read_source_list
  * @brief Reads the store and loads a list of connected sources.
  * @returns list of sources
  */
-Sources Json::read_source_list(SQLite *sql, QString settingsPath) {
+Sources Json::read_source_list(SQLite *sql) {
   auto *store = new QFile(
-      settingsPath + QDir::separator() + sources_store_filename, this);
+      _settings_path + QDir::separator() + sources_store_filename, this);
   QJsonArray sources_json = read_json(store);
   Sources sources;
   for (const QJsonValue &source_json : qAsConst(sources_json))
@@ -32,13 +33,13 @@ Messages Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
   Messages message_history;
   for (const QJsonValue &obj : qAsConst(messages_json))
-    message_history.append(Message(obj.toObject()));
+    message_history.append(MessageData(obj.toObject()));
   return message_history;
 }
 
-Cache Json::read_NLP_cache(QString settingsPath) {
-  auto *store =
-      new QFile(settingsPath + QDir::separator() + cache_store_filename, this);
+Cache Json::read_NLP_cache() {
+  auto *store = new QFile(
+      _settings_path + QDir::separator() + cache_store_filename, this);
   if (not store->exists()) {
     delete store;
     return Cache();
@@ -56,17 +57,16 @@ Cache Json::read_NLP_cache(QString settingsPath) {
  * @brief Writes @a sourceList to @a savefile.
  * @param[in] source_list list of sources' properties
  */
-void Json::write_source_list(SQLite *sql, QString settingsPath,
-                             Sources source_list) {
+void Json::write_source_list(SQLite *sql, Sources sources) {
   QJsonArray cs;
-  for (auto source : source_list) {
-    cs.append(source.to_json());
+  for (int i = 0; i < sources.length(); i++) {
+    cs.append(Source::to_json(sources[i]));
     // Some properties of sources are stored directly in the database itself
-    // in "tables". ASW writes them there.
-    sql->write_source(source);
+    // in "tables". Jeff writes them there.
+    sql->write_source(sources[i]);
   }
   auto *savefile =
-      new QFile(settingsPath + QDir::separator() + sources_store_filename);
+      new QFile(_settings_path + QDir::separator() + sources_store_filename);
   write_json(savefile, cs);
 }
 
@@ -88,11 +88,12 @@ void Json::write_message_history(Messages message_history, QFile *file) {
  * @brief Saves @a cache to @a file.
  * @param[in] cache list of expressions
  */
-void Json::write_NLP_cache(Cache cache, QString settingsPath) {
+void Json::write_NLP_cache(Cache cache) {
   QJsonArray cache_json;
   for (auto expression : cache)
     cache_json.append(expression->to_json());
-  auto *file = new QFile(settingsPath + QDir::separator() + cache_store_filename, this);
+  auto *file = new QFile(
+      _settings_path + QDir::separator() + cache_store_filename, this);
   write_json(file, cache_json);
   delete file;
 }

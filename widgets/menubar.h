@@ -1,7 +1,7 @@
-#ifndef A_MENUBAR_H
-#define A_MENUBAR_H
+#ifndef MENUBAR_H
+#define MENUBAR_H
 
-#include "widgets/a_line.h"
+#include "widgets/line.h"
 #include <QAction>
 #include <QApplication>
 #include <QJsonArray>
@@ -10,18 +10,18 @@
 #include <QWidget>
 
 /*!
- * @class AMenuBar
- * @brief Provides the ability to interact with ASW using the menubar.
+ * @class MenuBar
+ * @brief Provides the ability to interact with Jeff using the menubar.
  */
-class AMenuBar : public QMenuBar {
+class MenuBar : public QMenuBar {
   Q_OBJECT
 public:
   // Objects:
   QAction *fullScreenAction = nullptr;
   QAction *emm = nullptr;
 
-  // Functions described in 'a_menubar.cpp':
-  explicit AMenuBar(ALine *line, QWidget *parent = nullptr);
+  // Functions described in 'menubar.cpp':
+  explicit MenuBar(Line *line, QWidget *parent = nullptr);
 
 signals:
   /*!
@@ -61,7 +61,7 @@ signals:
   void importTriggered();
 
 private:
-  Q_DISABLE_COPY(AMenuBar)
+  Q_DISABLE_COPY(MenuBar)
 };
 
-#endif // A_MENUBAR_H
+#endif

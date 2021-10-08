@@ -1,8 +1,13 @@
 #ifndef PYTHONMODULE_H
 #define PYTHONMODULE_H
 
-#include <Python.h>
+#include "core/database/json.h"
 #include <QObject>
+
+#pragma push_macro("slots")
+#undef slots
+#include "Python.h"
+#pragma pop_macro("slots")
 
 /*!
  * @class PythonModule
@@ -13,6 +18,8 @@ class PythonModule : public QObject {
 public:
   // Functions described in `python-module.cpp`:
   PythonModule(QObject *parent = nullptr);
+  ~PythonModule();
+  QString run(QString module_path, QString args);
 };
 
-#endif // PYTHONMODULE_H
+#endif
