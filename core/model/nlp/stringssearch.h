@@ -15,7 +15,7 @@ struct WordMetadata {
 class StringSearch {
 public:
   /*!
-   * @fn remove_symbols
+   * @fn StringSearch::remove_symbols
    * @brief Removes punctuation.
    * @param[in] str string that should not contain punctuation
    * @returns string without punctuation
@@ -27,7 +27,7 @@ public:
   }
 
   /*!
-   * @fn purify
+   * @fn StringSearch::purify
    * @brief Purifies @a str.
    * @param[in] str string to be purified
    * @returns purified string
@@ -37,9 +37,8 @@ public:
   }
 
   /*!
-   * @fn get_POC
+   * @fn StringSearch::get_POC
    * @brief Calculates the percentage of the second word in the first.
-   * @details
    * @param[in] e1 source word
    * @param[in] e2 search word
    * @returns % of @a e2 in @a e1
@@ -100,13 +99,48 @@ public:
       if (POC > max_POC)
         max_POC = POC;
     std::cout << "\tCalculated: max_POC = " << max_POC << std::endl;
-    std::cout << "\tCalculated: max_POC / (l1 + l2) = " << float(max_POC) / (l1 + l2)
-              << std::endl;
+    std::cout << "\tCalculated: max_POC / (l1 + l2) = "
+              << float(max_POC) / (l1 + l2) << std::endl;
     return float(max_POC) / (l1 + l2);
+  }
+  
+  /*!
+   * @fn StringSearch::get_POC2
+   */
+  static float get_POC2(const QString &e1, const QString &e2) {
+    std::cout << "--------" << std::endl;
+    std::cout << "\tfn get_POC2" << std::endl;
+    std::cout << "\tGot e1 as \"" << e1.toStdString() << "\" and e2 as \"" << e2.toStdString() << "\"" << std::endl;
+    if (e1.length() + e2.length() == 0)
+      return 0.0;
+    QList<int> indices;
+    int i = 0;
+    for (int j = 0; j < e2.length(); j++)
+      if ((i = e1.indexOf(e2[j], j)) != -1 and i <= j + (e1.length() - e2.length()))
+        indices.append(i);
+    std::cout << "\tCalculated indices.length() = " << indices.length() << std::endl;
+    if (not indices.length())
+      return 0.0;
+    QList<QList<int>> subs;
+    std::cout << "\tCalculated indices:" << std::endl;
+    for (auto i : indices) {
+      std::cout << "\t  " << i << std::endl;
+      for (int si = 0; si < subs.length(); si++)
+        if (subs[si].length())
+          if (subs[si].last() < i)
+            subs[si].append(i);
+      subs.append(QList<int>());
+      subs[subs.length() - 1].append(i);
+    }
+    int max_len = 0, len = 0;
+    for (int si = 0; si < subs.length(); si++)
+      if ((len = subs[si].length()) > max_len)
+        max_len = len;
+    return float(max_len * 2) / (e1.length() + e2.length());
   }
 
   /*!
-   * @fn contains
+   * @fn StringSearch::contains
    * @brief Determines the presence of the semantic load @a inner in this
    * expression.
    * @param[in] that input
@@ -174,7 +208,7 @@ public:
       QPair<float, WordMetadata> max_POC = {0.0, WordMetadata()};
       // TODO Можно ещё сделать реализацию POC по синонимам.
       for (auto w1 : that_metadata) {
-        float POC = get_POC(w1.word, w2.word);
+        float POC = get_POC2(w1.word, w2.word);
         std::cout << "\tCalculated POC = " << POC << " when EL = " << EL
                   << " and max_POC = " << max_POC.first << std::endl;
         if (POC >= EL and POC > max_POC.first)
@@ -200,7 +234,7 @@ public:
   }
 
   /*!
-   * @fn replace
+   * @fn StringSearch::replace
    * @brief Replaces an expression in a string with another, given an accuracy
    * and inaccuracy search.
    * @param[in,out] that string in which you need to replace part of @a that
@@ -219,7 +253,8 @@ public:
               << std::endl;
     auto k = that.left(indices.first);
     auto l = that.right(that.length() - indices.second - 1);
-    std::cout << "\tCalculated k as \"" << k.toStdString() << "\" and l as \"" << l.toStdString() << "\"" << std::endl;
+    std::cout << "\tCalculated k as \"" << k.toStdString() << "\" and l as \""
+              << l.toStdString() << "\"" << std::endl;
     return that.left(indices.first) + to +
            that.right(that.length() - indices.second - 1);
   }

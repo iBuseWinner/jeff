@@ -60,6 +60,7 @@ set (SRCS
     core/model/nlp/cache.h
     core/model/nlp/options.h
     core/model/nlp/responsewo.h
+    core/model/nlp/stringssearch.h
     core/python-module.h
     core/model/source.h
     core/scenery.h
