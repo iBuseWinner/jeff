@@ -100,9 +100,9 @@ public:
       if (POC > max_POC)
         max_POC = POC;
     std::cout << "\tCalculated: max_POC = " << max_POC << std::endl;
-    std::cout << "\tCalculated: max_POC / (l1 + l2) = " << max_POC / (l1 + l2)
+    std::cout << "\tCalculated: max_POC / (l1 + l2) = " << float(max_POC) / (l1 + l2)
               << std::endl;
-    return max_POC / (l1 + l2);
+    return float(max_POC) / (l1 + l2);
   }
 
   /*!
@@ -174,7 +174,7 @@ public:
       QPair<float, WordMetadata> max_POC = {0.0, WordMetadata()};
       // TODO Можно ещё сделать реализацию POC по синонимам.
       for (auto w1 : that_metadata) {
-        auto POC = get_POC(w1.word, w2.word);
+        float POC = get_POC(w1.word, w2.word);
         std::cout << "\tCalculated POC = " << POC << " when EL = " << EL
                   << " and max_POC = " << max_POC.first << std::endl;
         if (POC >= EL and POC > max_POC.first)
