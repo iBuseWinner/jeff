@@ -227,40 +227,26 @@ CacheWithIndices SQLite::scan_source(const Source &source,
   auto *query = new QSqlQuery(db);
   exec(query, SelectAEL, {source.table_name});
   query->first();
-  std::cout << "--------" << std::endl;
-  std::cout << "\tfn scan_source" << std::endl;
-  std::cout << "\tGot source.table_name() = \""
-            << source.table_name.toStdString() << "\" and input = \""
-            << input.toStdString() << "\"" << std::endl;
   while (query->isValid()) {
     /*! If the expression includes a value from the table... */
     auto x = StringSearch::contains(input, query->value(1).toString());
     if (x[0] != 0) {
       /*! ...then this value is an activator. */
-      std::cout << "\tGot an activator. x[0] = " << x[0] << std::endl;
       auto address = query->value(0).toInt();
       auto props = get_additional_properties(&db, source, address);
       auto links = unpack_links(query->value(2).toString());
       auto activator_text = query->value(1).toString();
       auto subquery = new QSqlQuery(db);
-      std::cout << "\tHere we got clear" << std::endl;
       for (auto link : links) {
-        if (link == 0) {
-          std::cout << "Break." << std::endl;
+        if (link == 0)
           break;
-        }
         auto *expr = new Expression();
-        std::cout << "\tHere we got clear 3" << std::endl;
         expr->activator_text = activator_text;
-        std::cout << "\tHere we got clear 3.5" << std::endl;
         exec(subquery, SelectExpressionByAddress,
              {source.table_name, QString::number(link)});
-        std::cout << "\tHere we got clear 4" << std::endl;
         subquery->first();
-        std::cout << "\tHere we got clear 5" << std::endl;
         if (not subquery->isValid())
           continue;
-        std::cout << "\tHere we got clear 15" << std::endl;
         expr->reagent_text = subquery->value(0).toString();
         expr->properties = props;
         if (selection.keys().length() == 0)
@@ -269,16 +255,13 @@ CacheWithIndices SQLite::scan_source(const Source &source,
           selection[selection.keys().length()] = ExpressionWithIndices(x, expr);
       }
       if (subquery) {
-        std::cout << "IF THAT..." << std::endl;
         delete subquery;
-        std::cout << "no." << std::endl;
       }
     }
     query->next();
   }
   db.close();
   delete query;
-  std::cout << "But when?" << std::endl;
   return selection;
 }
 

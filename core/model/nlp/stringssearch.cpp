@@ -30,10 +30,6 @@ QString StringSearch::purify(const QString &str) {
  * @returns % of @a e2 in @a e1
  */
 float StringSearch::get_POC(const QString &e1, const QString &e2) {
-  std::cout << "--------" << std::endl;
-  std::cout << "\tfn get_POC2" << std::endl;
-  std::cout << "\tGot e1 as \"" << e1.toStdString() << "\" and e2 as \""
-            << e2.toStdString() << "\"" << std::endl;
   if (e1.length() + e2.length() == 0)
     return 0.0;
   QList<int> indices;
@@ -42,14 +38,10 @@ float StringSearch::get_POC(const QString &e1, const QString &e2) {
     if ((i = e1.indexOf(e2[j], j)) != -1 and
         i <= j + (e1.length() - e2.length()))
       indices.append(i);
-  std::cout << "\tCalculated indices.length() = " << indices.length()
-            << std::endl;
   if (not indices.length())
     return 0.0;
   QList<QList<int>> subs;
-  std::cout << "\tCalculated indices:" << std::endl;
   for (auto i : indices) {
-    std::cout << "\t  " << i << std::endl;
     for (int si = 0; si < subs.length(); si++)
       if (subs[si].length())
         if (subs[si].last() < i)
@@ -75,10 +67,6 @@ float StringSearch::get_POC(const QString &e1, const QString &e2) {
  * @sa get_POC
  */
 QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
-  std::cout << "--------" << std::endl;
-  std::cout << "\tfn contains" << std::endl;
-  std::cout << "\tGot that as \"" << that.toStdString() << "\" and inner as \""
-            << inner.toStdString() << "\"" << std::endl;
   QMap<int, int> m;
   QList<WordMetadata> that_metadata, inner_metadata;
   auto p1 = purify(that), p2 = purify(inner);
@@ -87,9 +75,6 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
     p1 = p2;
     p2 = x;
   }
-  std::cout << "\tCalculated p1 as \"" << p1.toStdString() << "\" and p2 as \""
-            << p2.toStdString() << "\"" << std::endl;
-  //     for (auto str : {p1, p2}) {
   int last = 0;
   for (auto word : p1.split(" ")) {
     WordMetadata wmd;
@@ -98,11 +83,6 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
     wmd.i2 = wmd.i1 + word.length();
     last = wmd.i2;
     that_metadata.append(wmd);
-    std::cout << "\t  Calculated that WordMetadata:" << std::endl;
-    std::cout << "\t    wmd.word = \"" << wmd.word.toStdString() << "\""
-              << std::endl;
-    std::cout << "\t    wmd.i1 = " << wmd.i1 << std::endl;
-    std::cout << "\t    wmd.i2 = " << wmd.i2 << std::endl;
   }
   last = 0;
   for (auto word : p2.split(" ")) {
@@ -112,15 +92,7 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
     wmd.i2 = wmd.i1 + word.length();
     last = wmd.i2;
     inner_metadata.append(wmd);
-    std::cout << "\t  Calculated inner WordMetadata:" << std::endl;
-    std::cout << "\t    wmd.word = \"" << wmd.word.toStdString() << "\""
-              << std::endl;
-    std::cout << "\t    wmd.i1 = " << wmd.i1 << std::endl;
-    std::cout << "\t    wmd.i2 = " << wmd.i2 << std::endl;
   }
-  //     }
-  std::cout << "\tCalculated inner_metadata.length() = "
-            << inner_metadata.length() << std::endl;
   if (inner_metadata.length() == 0) {
     m[0] = 0;
     return m;
@@ -135,22 +107,15 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
     // TODO Можно ещё сделать реализацию POC по синонимам.
     for (auto w1 : that_metadata) {
       float POC = get_POC(w1.word, w2.word);
-      std::cout << "\tCalculated POC = " << POC << " when EL = " << EL
-                << " and max_POC = " << max_POC.first << std::endl;
       if (POC >= EL and POC > max_POC.first)
         max_POC = QPair<float, WordMetadata>(POC, w1);
     }
     common.append(max_POC);
   }
-  std::cout << "\tCalculated common.length() = " << common.length()
-            << std::endl;
   if (float(common.length()) / inner_metadata.length() >= EL) {
-    std::cout << "\t  And float(common.length()) / inner_metadata.length() = " << float(common.length()) / inner_metadata.length() << std::endl;
     m[0] = -2;
-    for (auto wmd_pair : common) {
-      std::cout << "\t *wmd_pair.second.i1 : wmd_pair.second.i2 = " << wmd_pair.second.i1 << " : " << wmd_pair.second.i2 << std::endl;
+    for (auto wmd_pair : common)
       m[wmd_pair.second.i1] = wmd_pair.second.i2;
-    }
     return m;
   }
   m[0] = 0;
@@ -167,8 +132,6 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
  */
 Intersects StringSearch::intersects(QMap<int, int> first,
                                     QMap<int, int> second) {
-  std::cout << "--------" << std::endl;
-  std::cout << "\tfn intersects" << std::endl;
   int first_total = 0;
   bool is_intersects = false;
   for (auto i : first.keys()) {
@@ -178,9 +141,6 @@ Intersects StringSearch::intersects(QMap<int, int> first,
       if (j == 0 and second[j] == -2)
         continue;
       first_total += first[i] - i - second[j] + j;
-      std::cout << "\tWith " << i << ", " << first[i] << "; " << j << ", "
-                << second[j] << " got first_total = " << first_total
-                << std::endl;
       if (i == j) {
         is_intersects = true;
       } else if (i < j) {
@@ -196,7 +156,6 @@ Intersects StringSearch::intersects(QMap<int, int> first,
       }
     }
   }
-  std::cout << "\tIntersects?" << std::endl;
   if (not is_intersects)
     return Intersects::No;
   else if (first_total == 0)
@@ -219,16 +178,8 @@ Intersects StringSearch::intersects(QMap<int, int> first,
  */
 QString StringSearch::replace(QString that, QMap<int, int> indices,
                               QString to) {
-  std::cout << "--------" << std::endl;
-  std::cout << "\tfn replace" << std::endl;
-  std::cout << "\tGot that as \"" << that.toStdString()
-            << "\" with len = " << that.length()
-            << " and indices.keys().length() = " << indices.keys().length()
-            << std::endl;
   int len = that.length();
   for (auto i1 : indices.keys()) {
-    std::cout << "\t  Pregot i1 = " << i1
-              << " and indices[i1] = " << indices[i1] << std::endl;
     if (i1 == 0 and indices[i1] == -2)
       continue;
     if (i1 > len or indices[i1] > len)
@@ -238,17 +189,7 @@ QString StringSearch::replace(QString that, QMap<int, int> indices,
       n += " ";
     auto left = that.left(i1);
     auto right = that.right(len - indices[i1]);
-    std::cout << "\t  Precalculated n as \"" <<
-        n.toStdString() << "\", left as \"" << left.toStdString()
-                        << "\" and right as \"" << right.toStdString() << "\""
-                        << std::endl;
     that = left + n + right;
-    std::cout << "\t  Precalculated that as \"" << that.toStdString() << "\""
-              << std::endl;
-    std::cout << "\t  When len - indices[i1] - 1 = " << len - indices[i1]
-              << std::endl;
   }
-  std::cout << "\tCalculated that as \"" << that.toStdString() << "\""
-            << std::endl;
   return that.trimmed();
 }
