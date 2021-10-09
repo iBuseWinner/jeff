@@ -65,4 +65,6 @@ private:
   }
 };
 
+typedef QPair<QMap<int, int>, Expression *> ExpressionWithIndices;
+
 #endif

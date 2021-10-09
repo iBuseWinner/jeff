@@ -79,12 +79,12 @@ private:
   inline static const QString cache_path = "";
 
   // Functions described in `nlp-module.cpp`:
-  Cache select_from_cache(const QString &input);
-  Cache select_from_db(const QString &input);
-  
-  QMap<int, Expression *> select_candidates(Cache selection, QString input);
+  CacheWithIndices select_from_cache(const QString &input);
+  CacheWithIndices select_from_db(const QString &input);
+
+  CacheWithIndices select_candidates(CacheWithIndices selection, QString input);
   QPair<QString, QString> compose_answer(QString input,
-                                         QMap<int, Expression *> candidates);
+                                         CacheWithIndices candidates);
 };
 
 #endif

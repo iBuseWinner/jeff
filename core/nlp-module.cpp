@@ -8,28 +8,44 @@
  * @param[in] input text string
  * @returns dictionary with indices and selected expressions
  */
-QMap<int, Expression *> NLPmodule::select_candidates(Cache selection,
-                                                     QString input) {
-  QMap<int, Expression *> candidates;
-  for (auto *expr : selection) {
-    auto x = StringSearch::contains(input, expr->activator_text);
-    if (x.first == 0 and x.second == 0)
+CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
+                                              QString input) {
+  std::cout << "--------" << std::endl;
+  std::cout << "\tfn select_candidates" << std::endl;
+  std::cout << "\tGot input as \"" << input.toStdString() << "\"" << std::endl;
+  CacheWithIndices candidates;
+  for (auto ewi : selection) {
+    if (candidates.keys().isEmpty()) {
+      std::cout << "\tFirst ewi is \"" << ewi.second->activator_text.toStdString() << "\"" << std::endl;
+      candidates[0] = ewi;
       continue;
-    if (candidates.contains(x.first)) {
-      if (candidates[x.first]->activator_text.length() <
-          expr->activator_text.length())
-        candidates[x.first] = expr;
-      else if (candidates[x.first]->activator_text.length() ==
-               expr->activator_text.length()) {
-        if (candidates[x.first]->use_cases < expr->use_cases)
-          candidates[x.first] = expr;
-        else if (candidates[x.first]->use_cases == expr->use_cases) {
-          if (_gen->bounded(0, 2) == 1)
-            candidates[x.first] = expr;
+    }
+    bool not_in_candidates = true;
+    for (auto rival : candidates.keys()) {
+      std::cout << "\t *Got rival = " << rival << std::endl;
+      auto x = StringSearch::intersects(ewi.first, candidates[rival].first);
+      if (x == Intersects::FirstBetter) {
+        std::cout << "\t  Got first better" << std::endl;
+        not_in_candidates = false;
+        candidates.remove(rival);
+      } else if (x == Intersects::Equal) {
+        std::cout << "\t  Got equals" << std::endl;
+        if (ewi.second->use_cases > candidates[rival].second->use_cases) {
+          not_in_candidates = false;
+          candidates.remove(rival);
+        } else if (ewi.second->use_cases ==
+                   candidates[rival].second->use_cases) {
+          if (_gen->bounded(0, 2) == 1) {
+            not_in_candidates = false;
+            candidates.remove(rival);
+          }
         }
       }
-    } else
-      candidates[x.first] = expr;
+    }
+    if (not_in_candidates) {
+      std::cout << "\tAppending at " << candidates.lastKey() + 1 << " ewi as \"" << ewi.second->activator_text.toStdString() << "\"" << std::endl;
+      candidates[candidates.lastKey() + 1] = ewi;
+    }
   }
   return candidates;
 }
@@ -42,32 +58,26 @@ QMap<int, Expression *> NLPmodule::select_candidates(Cache selection,
  * @param[in] candidates to be printed
  * @returns QPair of @a input and @a output
  */
-QPair<QString, QString>
-NLPmodule::compose_answer(QString input, QMap<int, Expression *> candidates) {
+QPair<QString, QString> NLPmodule::compose_answer(QString input,
+                                                  CacheWithIndices candidates) {
   QString output;
   std::cout << "--------" << std::endl;
   std::cout << "\tfn compose_answer" << std::endl;
   std::cout << "\tGot input as \"" << input.toStdString() << "\"" << std::endl;
-  for (auto i : candidates.keys()) {
-    std::cout << "\tHmm..." << std::endl;
-    std::cout << "\tWhat, if we haven't candidates?" << std::endl;
-    if (not candidates[i]) {
+  input = StringSearch::purify(input);
+  for (auto ewi : candidates) {
+    if (not ewi.second) {
       std::cout << "\tWWW" << std::endl;
       continue;
     }
     std::cout << "\tHere we go again. Let's try:" << std::endl;
-    auto x = StringSearch::contains(
-        input, candidates[i]->activator_text);
-    if (not(x.first == 0 and x.second == 0)) {
-      std::cout << "\tSo, found x.first = " << x.first
-                << " and x.second = " << x.second
-                << ", and we found it in input" << std::endl;
-      candidates[i]->use_cases += 1;
-      if (not _cache.contains(candidates[i]))
-        _cache.append(candidates[i]);
-      output += candidates[i]->reagent_text + " ";
-      input = StringSearch::replace(input, x);
+    ewi.second->use_cases += 1;
+    if (not _cache.contains(ewi.second)) {
+      std::cout << "\tNew expression in cache!" << std::endl;
+      _cache.append(ewi.second);
     }
+    output += ewi.second->reagent_text + " ";
+    input = StringSearch::replace(input, ewi.first);
   }
   return QPair<QString, QString>(input, output);
 }
@@ -78,28 +88,26 @@ NLPmodule::compose_answer(QString input, QMap<int, Expression *> candidates) {
  * @param[in] input user input
  */
 void NLPmodule::search_for_suggests(const QString &input) {
-  Cache selection = select_from_cache(input);
+  auto selection = select_from_cache(input);
   bool from_db = false;
-  if (selection.isEmpty()) {
+  if (selection.keys().isEmpty()) {
     selection = select_from_db(input);
     from_db = true;
   }
   std::cout << "--------" << std::endl;
   std::cout << "\tfn search_for_suggests" << std::endl;
   std::cout << "\tGot input as \"" << input.toStdString() << "\"" << std::endl;
-  std::cout << "\tCalculated selection.length() = " << selection.length()
-            << std::endl;
+  std::cout << "\tCalculated selection.keys().length() = "
+            << selection.keys().length() << std::endl;
   std::cout << "\tSelection is from DB? " << from_db << std::endl;
-  if (selection.isEmpty())
+  if (selection.keys().isEmpty())
     return;
   auto sorted = select_candidates(selection, input);
   auto composition = compose_answer(input, sorted);
   if (composition.first.length() / input.length() > 0.33 and not from_db) {
-    selection.clear();
     selection = select_from_db(input);
-    if (selection.isEmpty())
+    if (selection.keys().isEmpty())
       return;
-    sorted.clear();
     sorted = select_candidates(selection, input);
     composition = compose_answer(input, sorted);
   }
@@ -107,7 +115,7 @@ void NLPmodule::search_for_suggests(const QString &input) {
   std::cout << "\tfn search_for_suggests (requested)" << std::endl;
   std::cout << "\tCalculated response: \"" << composition.second.toStdString()
             << "\"" << std::endl;
-  emit response(composition.second);
+  emit response(composition.second.trimmed());
 }
 
 /*!
@@ -116,17 +124,29 @@ void NLPmodule::search_for_suggests(const QString &input) {
  * @param[in] input user input
  * @returns matching expressions
  */
-Cache NLPmodule::select_from_cache(const QString &input) {
-  Cache selection;
+CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
+  CacheWithIndices selection;
   std::cout << "--------" << std::endl;
   std::cout << "\tfn select_from_cache" << std::endl;
   std::cout << "\tCache:" << std::endl;
   for (auto *ex : _cache)
-    std::cout << "\t  \"" << ex->activator_text.toStdString() << "\"" << std::endl;
+    std::cout << "\t  \"" << ex->activator_text.toStdString() << "\""
+              << std::endl;
   for (int i = 0; i < _cache.length(); i++) {
     auto x = StringSearch::contains(input, _cache[i]->activator_text);
-    if (not(x.first == 0 and x.second == 0))
-      selection.append(_cache[i]);
+    if (x[0] != 0) {
+      bool is_in = false;
+      for (auto ewi : selection)
+        if (ewi.second == _cache[i])
+          is_in = true;
+      if (is_in)
+        continue;
+      if (selection.keys().length() == 0)
+        selection[0] = ExpressionWithIndices(x, _cache[i]);
+      else
+        selection[selection.lastKey() + 1] =
+            ExpressionWithIndices(x, _cache[i]);
+    }
   }
   return selection;
 }
@@ -137,11 +157,24 @@ Cache NLPmodule::select_from_cache(const QString &input) {
  * @param[in] input user input
  * @returns matching expressions
  */
-Cache NLPmodule::select_from_db(const QString &input) {
-  Cache selection;
+CacheWithIndices NLPmodule::select_from_db(const QString &input) {
+  CacheWithIndices selection;
   Sources sources = _basis->get_sources();
-  for (int i = 0; i < sources.length(); i++)
-    selection.append(_basis->sql->scan_source(sources[i], input));
+  for (int i = 0; i < sources.length(); i++) {
+    auto cwi = _basis->sql->scan_source(sources[i], input);
+    for (auto ewi : cwi) {
+      bool is_in = false;
+      for (auto _ewi : selection)
+        if (_ewi.second == ewi.second)
+          is_in = true;
+      if (is_in)
+        continue;
+      if (selection.keys().length() == 0)
+        selection[0] = ewi;
+      else 
+        selection[selection.lastKey() + 1] = ewi;
+    }
+  }
   return selection;
 }
 

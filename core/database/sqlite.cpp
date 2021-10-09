@@ -58,7 +58,8 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
    * the source table with the name generated in the form of UUID @a *uuid. */
   if (not(exec(query, WriteOptions,
                {*uuid, source.table_title, QString::number(source.is_read_only),
-                QString::number(source.is_private), QString::number(source.is_catching),
+                QString::number(source.is_private),
+                QString::number(source.is_catching),
                 QString::number(source.is_prioritised)}) and
           exec(query, CreateSourceTable, QStringList(*uuid)))) {
     emit sqlite_error("Could not write options and create source table.");
@@ -151,11 +152,12 @@ bool SQLite::write_source(const Source &source) {
   auto *query = new QSqlQuery(db);
   exec(query, CreateMainTableIfNotExists);
   exec(query, WithDraw, QStringList(source.table_name));
-  auto result =
-      exec(query, WriteOptions,
-           {source.table_name, source.table_title, QString::number(source.is_read_only),
-            QString::number(source.is_private), QString::number(source.is_catching),
-            QString::number(source.is_prioritised)});
+  auto result = exec(query, WriteOptions,
+                     {source.table_name, source.table_title,
+                      QString::number(source.is_read_only),
+                      QString::number(source.is_private),
+                      QString::number(source.is_catching),
+                      QString::number(source.is_prioritised)});
   db.close();
   delete query;
   return result;
@@ -216,51 +218,67 @@ Expression SQLite::get_expression_by_address(const Source &source,
  * @param[in] expression expression
  * @returns selection for given input
  */
-Cache SQLite::scan_source(const Source &source, const QString &input) {
+CacheWithIndices SQLite::scan_source(const Source &source,
+                                     const QString &input) {
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty())
-    return Cache();
-  Cache selection;
+    return CacheWithIndices();
+  CacheWithIndices selection;
   auto *query = new QSqlQuery(db);
   exec(query, SelectAEL, {source.table_name});
   query->first();
   std::cout << "--------" << std::endl;
   std::cout << "\tfn scan_source" << std::endl;
-  std::cout << "\tGot source.table_name() = \"" << source.table_name.toStdString() << "\" and input = \"" << input.toStdString() << "\"" << std::endl;
+  std::cout << "\tGot source.table_name() = \""
+            << source.table_name.toStdString() << "\" and input = \""
+            << input.toStdString() << "\"" << std::endl;
   while (query->isValid()) {
     /*! If the expression includes a value from the table... */
     auto x = StringSearch::contains(input, query->value(1).toString());
-    std::cout << "\tFor query->value(1).toString() = \"" << query->value(1).toString().toStdString() << "\" calculated x.first = " << x.first << " and x.second = " << x.second << std::endl;
-    if (not (x.first == 0 and x.second == 0)) {
+    if (x[0] != 0) {
       /*! ...then this value is an activator. */
-      std::cout << "\tGot an activator." << std::endl;
+      std::cout << "\tGot an activator. x[0] = " << x[0] << std::endl;
       auto address = query->value(0).toInt();
       auto props = get_additional_properties(&db, source, address);
       auto links = unpack_links(query->value(2).toString());
       auto activator_text = query->value(1).toString();
       auto subquery = new QSqlQuery(db);
+      std::cout << "\tHere we got clear" << std::endl;
       for (auto link : links) {
+        if (link == 0) {
+          std::cout << "Break." << std::endl;
+          break;
+        }
         auto *expr = new Expression();
+        std::cout << "\tHere we got clear 3" << std::endl;
         expr->activator_text = activator_text;
+        std::cout << "\tHere we got clear 3.5" << std::endl;
         exec(subquery, SelectExpressionByAddress,
              {source.table_name, QString::number(link)});
+        std::cout << "\tHere we got clear 4" << std::endl;
         subquery->first();
-        if (not subquery->isValid()) {
-          delete subquery;
-          subquery = nullptr;
+        std::cout << "\tHere we got clear 5" << std::endl;
+        if (not subquery->isValid())
           continue;
-        };
+        std::cout << "\tHere we got clear 15" << std::endl;
         expr->reagent_text = subquery->value(0).toString();
         expr->properties = props;
-        selection.append(expr);
+        if (selection.keys().length() == 0)
+          selection[0] = ExpressionWithIndices(x, expr);
+        else
+          selection[selection.keys().length()] = ExpressionWithIndices(x, expr);
       }
-      if (subquery)
+      if (subquery) {
+        std::cout << "IF THAT..." << std::endl;
         delete subquery;
+        std::cout << "no." << std::endl;
+      }
     }
     query->next();
   }
   db.close();
   delete query;
+  std::cout << "But when?" << std::endl;
   return selection;
 }
 
@@ -515,7 +533,7 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
 bool SQLite::validate(QSqlDatabase *db, const QString &source_table,
                       bool quiet) {
   auto db_source_suffix = tr("Database \"%1\", source \"%2\".")
-                                 .arg(db->databaseName(), source_table);
+                              .arg(db->databaseName(), source_table);
   auto query = QSqlQuery(*db);
   exec(&query, IfSourceTableExists, {source_table});
   if (not query.isValid() and not quiet) {
@@ -681,7 +699,8 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   case NoneToDo:;
   }
   if (not query->exec()) {
-    emit sqlite_error(query->lastError().text() + " " + QString::number(int(option)));
+    emit sqlite_error(query->lastError().text() + " " +
+                      QString::number(int(option)));
     return false;
   }
   return true;

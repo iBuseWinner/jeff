@@ -85,7 +85,7 @@ public:
   bool insert_expression(const Source &source, int address,
                          const QString &expression, const QString &links);
   Expression get_expression_by_address(const Source &source, int address);
-  Cache scan_source(const Source &source, const QString &input);
+  CacheWithIndices scan_source(const Source &source, const QString &input);
 
 signals:
   /*!
@@ -118,4 +118,4 @@ private:
   QSet<int> unpack_links(const QString &links);
 };
 
-#endif // SQLITE_H
+#endif
