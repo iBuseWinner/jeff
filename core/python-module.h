@@ -2,12 +2,19 @@
 #define PYTHONMODULE_H
 
 #include "core/database/json.h"
+#include <QList>
 #include <QObject>
+#include <QString>
 
-#pragma push_macro("slots")
-#undef slots
-#include "Python.h"
-#pragma pop_macro("slots")
+/*!
+ * @struct ScriptMetadata
+ */
+struct ScriptMetadata {
+  QString path;
+  bool startup;
+  bool custom_scan;
+  bool answer;
+};
 
 /*!
  * @class PythonModule
@@ -17,9 +24,12 @@ class PythonModule : public QObject {
   Q_OBJECT
 public:
   // Functions described in `python-module.cpp`:
-  PythonModule(QObject *parent = nullptr);
-  ~PythonModule();
-  QString run(QString module_path, QString args);
+  PythonModule();
+  QString run(QString module_path, QString def_name, QString args);
+
+private:
+  // Objects:
+  QList<
 };
 
 #endif
