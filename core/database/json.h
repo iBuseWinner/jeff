@@ -55,4 +55,4 @@ private:
   void write_json(QFile *savefile, QJsonArray json_array);
 };
 
-#endif // JSON_H
+#endif
