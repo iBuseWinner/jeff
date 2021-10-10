@@ -63,4 +63,4 @@ private:
   Messages _message_history;
 };
 
-#endif // HISTORY_PROCESSOR_H
+#endif

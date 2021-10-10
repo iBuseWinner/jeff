@@ -2,10 +2,19 @@
 #define SCRIPT_H
 
 /*!
- * @struct ScriptMetadata
+ * @class ScriptMetadata
  * @brief Contains metadata about a script.
  */
-struct ScriptMetadata {
+class ScriptMetadata {
+public:
+  /*! Constructors. */
+  ScriptMetadata() {}
+  ScriptMetadata(const QJsonObject &json_object) {
+    path = json_object["path"].toString();
+    startup = json_object["startup"].toBool();
+    custom_scan = json_object["custom_scan"].toBool();
+    answer = json_object["answer"].toBool();
+  }
   /*! The path to the script on disk. */
   QString path;
   /*! Does it have a function that should run every time Jeff starts? */
@@ -16,6 +25,15 @@ struct ScriptMetadata {
   /*! Does it have a function that is performed only when a certain semantic
    * load is found? */
   bool answer;
+  /*!
+   * 
+   */
+  QJsonObject to_json() {
+    return {{"path", path},
+            {"startup", startup},
+            {"custom_scan", custom_scan},
+            {"answer", answer}};
+  }
 };
 
 /*!

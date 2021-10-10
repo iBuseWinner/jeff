@@ -7,6 +7,7 @@ Json::Json(QString settingsPath, QObject *parent)
  * @fn Json::read_source_list
  * @brief Reads the store and loads a list of connected sources.
  * @returns list of sources
+ * @sa Sources
  */
 Sources Json::read_source_list(SQLite *sql) {
   auto *store = new QFile(
@@ -28,6 +29,7 @@ Sources Json::read_source_list(SQLite *sql) {
  * @brief Recreates message history from file.
  * @param[in,out] file QFile to read message history from
  * @returns list of messages from file
+ * @sa Messages
  */
 Messages Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
@@ -37,19 +39,41 @@ Messages Json::read_message_history(QFile *file) {
   return message_history;
 }
 
+/*!
+ * @fn Json::read_NLP_cache
+ * @brief Reads the expressions most commonly used in Jeff's answers.
+ * @returns cache for NLPmodule
+ * @sa Cache
+ */
 Cache Json::read_NLP_cache() {
   auto *store = new QFile(
       _settings_path + QDir::separator() + cache_store_filename, this);
-  if (not store->exists()) {
-    delete store;
+  if (not store->exists())
     return Cache();
-  }
   QJsonArray cache_json = read_json(store);
   Cache cache;
   for (const QJsonValue &obj : qAsConst(cache_json))
     cache.append(new Expression(obj.toObject()));
-  delete store;
   return cache;
+}
+
+/*!
+ * @fn Json::read_scripts
+ * @brief Reads scripts metadata that is intended to enhance Jeff's
+ * capabilities.
+ * @returns scripts metadata
+ * @sa Scripts
+ */
+Scripts Json::read_scripts() {
+  auto *store =
+      new QFile(_settings_path + QDir::separator() + scipts_store_filename);
+  if (not store->exists())
+    return Scripts();
+  QJsonArray scripts_json = read_json(store);
+  Scripts scripts;
+  for (const QJsonValue &obj : qAsConst(scripts_json))
+    scripts.append(Script(obj.toObject()));
+  return scripts;
 }
 
 /*!
@@ -65,8 +89,8 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
     // in "tables". Jeff writes them there.
     sql->write_source(sources[i]);
   }
-  auto *savefile =
-      new QFile(_settings_path + QDir::separator() + sources_store_filename);
+  auto *savefile = new QFile(
+      _settings_path + QDir::separator() + sources_store_filename, this);
   write_json(savefile, cs);
 }
 
@@ -84,7 +108,7 @@ void Json::write_message_history(Messages message_history, QFile *file) {
 }
 
 /*!
- * @fn Json::write_cache
+ * @fn Json::write_NLP_cache
  * @brief Saves @a cache to @a file.
  * @param[in] cache list of expressions
  */
@@ -95,7 +119,20 @@ void Json::write_NLP_cache(Cache cache) {
   auto *file = new QFile(
       _settings_path + QDir::separator() + cache_store_filename, this);
   write_json(file, cache_json);
-  delete file;
+}
+
+/*!
+ * @fn Json::write_scripts()
+ * @brief Saves @a scripts to @a file.
+ * @param[in] scripts metadata to save
+ */
+void Json::write_scripts(Scripts scripts) {
+  QJsonArray scripts_json;
+  for (auto script : scripts)
+    scripts_json.append(script.to_json());
+  auto *file = new QFile(
+      _settings_path + QDir::separator() + scripts_store_filename, this);
+  write_json(file, scripts_json);
 }
 
 /*!

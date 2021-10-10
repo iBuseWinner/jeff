@@ -4,14 +4,26 @@
  * @fn PythonModule::PythonModule
  * @brief The constructor.
  */
-PythonModule::PythonModule() {
-  
+PythonModule::PythonModule(Basis *_basis) {
+  basis = _basis;
+  _scripts = basis->json->read_scripts();
 }
 
-QString PythonModule::run(QString module_path, QString def_name, QString args) {
+/*!
+ * @fn PythonModule::~PythonModule
+ * @brief The destructor.
+ */
+PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); }
+
+/*!
+ * @fn PythonModule::run
+ * @brief Runs a function with parameters and returns the result.
+ * TODO Не реализована передача данных.
+ */
+QList<QVariant> PythonModule::run(QString path, QString def_name,
+                                  QList<QVariant> args) {
   boost::python::object main = boost::python::import("__main__");
   boost::python::object global(main.attr("__dict__"));
-  boost::python::object result = boost::python::exec_file(module_path, global, global);
+  boost::python::object result = boost::python::exec_file(path, global, global);
   boost::python::object fn = global[def_name];
-  
 }
