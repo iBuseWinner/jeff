@@ -14,6 +14,7 @@ public:
     startup = json_object["startup"].toBool();
     custom_scan = json_object["custom_scan"].toBool();
     answer = json_object["answer"].toBool();
+    dynamic_status = json_object["dynamic_status"].toBool();
   }
   /*! The path to the script on disk. */
   QString path;
@@ -25,14 +26,21 @@ public:
   /*! Does it have a function that is performed only when a certain semantic
    * load is found? */
   bool answer;
+  /*! Does it have a function that constantly updates the text of the message?
+   */
+  bool dynamic_status;
   /*!
-   * 
+   * @fn ScriptMetadata::to_json
+   * @brief Turns @a script into a JSON object.
+   * @param[in] script
+   * @returns converted properties of @a script
    */
   QJsonObject to_json() {
     return {{"path", path},
             {"startup", startup},
             {"custom_scan", custom_scan},
-            {"answer", answer}};
+            {"answer", answer},
+            {"dynamic_status", dynamic_status}};
   }
 };
 

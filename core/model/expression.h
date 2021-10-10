@@ -31,7 +31,7 @@ public:
   /*! How much times this expression used. */
   ushort use_cases = 0;
   /*!
-   * @fn to_json
+   * @fn Expression::to_json
    * @brief Turns @an expresson into a JSON object.
    * @param[in] expression
    * @returns converted properties of @an expression

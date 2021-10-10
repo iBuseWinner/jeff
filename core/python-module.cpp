@@ -15,6 +15,12 @@ PythonModule::PythonModule(Basis *_basis) {
  */
 PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); }
 
+void PythonModule::startup() {
+  for (auto script : _scripts) {
+    run(script.path, startup_name, QList<QVariant>());
+  }
+}
+
 /*!
  * @fn PythonModule::run
  * @brief Runs a function with parameters and returns the result.

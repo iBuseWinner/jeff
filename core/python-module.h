@@ -23,7 +23,11 @@ public:
   bool add_script(ScriptMetadata script);
   bool remove_script(ScriptMetadata script);
   Scripts get_scripts();
+  void startup();
 
+signals:
+  
+  
 private:
   Q_DISABLE_COPY(PythonModule)
 
@@ -35,6 +39,8 @@ private:
   const char *startup_name = "startup";
   const char *custom_scan_name = "custom_scan";
   const char *answer_name = "answer";
+  const char *dynamic_status_name = "dynamic_status";
+  const char *custom_compose_name = "custom_compose";
 
   // Functions described in `python-module.cpp`:
   QList<QVariant> run(QString path, QString def_name, QList<QVariant> args);
