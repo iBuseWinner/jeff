@@ -103,7 +103,7 @@ private:
   static const int maximum_number_of_attempts =
       4; /*!< Number of attempts for table creation. */
   static const int init_additionals_rows =
-      3; /*!< Column from which additional expression properties begin. */
+      4; /*!< Column from which additional expression properties begin. */
 
   // Functions described in `sqlite.cpp`:
   QSqlDatabase prepare(const QString &path, Check option = Openable,

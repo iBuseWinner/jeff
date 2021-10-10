@@ -574,6 +574,22 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table,
                       " " + db_source_suffix);
     return false;
   }
+  if (not query.next() and not quiet) {
+    emit sqlite_error(
+        tr("Validation error: the source contains only three columns.") + " " +
+        db_source_suffix);
+    return false;
+  }
+  auto execColumnValid = true;
+  execColumnValid &= query.value(1).toString() == "exec";
+  execColumnValid &= query.value(2).toString() == "INTEGER";
+  execColumnValid &= query.value(3).toString() == 1;
+  if (not execColumnValid and not quiet) {
+    emit sqlite_error(tr("Validation error: the fourth column of the source "
+                         "does not fit the description of \"exec\" INTEGER NOT NULL.") +
+                      " " + db_source_suffix);
+    return false;
+  }
   return true;
 }
 
