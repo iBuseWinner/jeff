@@ -7,7 +7,11 @@
 #include <QList>
 #include <QObject>
 #include <QString>
+#pragma push_macro("slots")
+#undef slots
 #include <boost/python/exec.hpp>
+#include <boost/python/import.hpp>
+#pragma pop_macro("slots")
 #include <string>
 
 /*!
@@ -26,8 +30,7 @@ public:
   void startup();
 
 signals:
-  
-  
+
 private:
   Q_DISABLE_COPY(PythonModule)
 

@@ -585,9 +585,10 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table,
   execColumnValid &= query.value(2).toString() == "INTEGER";
   execColumnValid &= query.value(3).toString() == 1;
   if (not execColumnValid and not quiet) {
-    emit sqlite_error(tr("Validation error: the fourth column of the source "
-                         "does not fit the description of \"exec\" INTEGER NOT NULL.") +
-                      " " + db_source_suffix);
+    emit sqlite_error(
+        tr("Validation error: the fourth column of the source "
+           "does not fit the description of \"exec\" INTEGER NOT NULL.") +
+        " " + db_source_suffix);
     return false;
   }
   return true;
@@ -620,7 +621,8 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   case CreateSourceTable:
     query->prepare(
         QString("CREATE TABLE \"%1\" (address INTEGER NOT NULL PRIMARY KEY "
-                "AUTOINCREMENT UNIQUE, expression TEXT, links TEXT)")
+                "AUTOINCREMENT UNIQUE, expression TEXT, links TEXT, exec "
+                "INTEGER NOT NULL)")
             .arg(values[0]));
     break;
   case WithDraw:
@@ -658,12 +660,12 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
     query->bindValue(":a", values[1].toInt());
     break;
   case SelectAEL:
-    query->prepare(QString("SELECT address, expression, links FROM \"%1\"")
+    query->prepare(QString("SELECT address, expression, links, exec FROM \"%1\"")
                        .arg(values[0]));
     break;
   case SelectELByAddress:
     query->prepare(
-        QString("SELECT expression, links FROM \"%1\" WHERE address = :a")
+        QString("SELECT expression, links, exec FROM \"%1\" WHERE address = :a")
             .arg(values[0]));
     query->bindValue(":a", values[1].toInt());
     break;

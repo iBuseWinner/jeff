@@ -2,7 +2,7 @@
 #include <QTranslator>
 
 /*!
- * @copyright 2018-2021 Titov Klimenty <aclo.create@gmail.com>, Shamshin Victor
+ * @copyright 2018-2021 Mark CDA <markcda@protonmail.com>, Shamshin Victor
  * <androiddeveloper@yandex.ru>
  *
  * This program is free software; you can redistribute it and/or modify

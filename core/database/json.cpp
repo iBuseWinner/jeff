@@ -66,13 +66,13 @@ Cache Json::read_NLP_cache() {
  */
 Scripts Json::read_scripts() {
   auto *store =
-      new QFile(_settings_path + QDir::separator() + scipts_store_filename);
+      new QFile(_settings_path + QDir::separator() + scripts_store_filename);
   if (not store->exists())
     return Scripts();
   QJsonArray scripts_json = read_json(store);
   Scripts scripts;
   for (const QJsonValue &obj : qAsConst(scripts_json))
-    scripts.append(Script(obj.toObject()));
+    scripts.append(ScriptMetadata(obj.toObject()));
   return scripts;
 }
 

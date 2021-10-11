@@ -9,4 +9,4 @@ public:
   Scenery();
 };
 
-#endif // SCENERY_H
+#endif

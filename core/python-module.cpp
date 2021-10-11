@@ -30,6 +30,7 @@ QList<QVariant> PythonModule::run(QString path, QString def_name,
                                   QList<QVariant> args) {
   boost::python::object main = boost::python::import("__main__");
   boost::python::object global(main.attr("__dict__"));
-  boost::python::object result = boost::python::exec_file(path, global, global);
+  boost::python::object result =
+      boost::python::exec_file(path.toStdString().c_str(), global, global);
   boost::python::object fn = global[def_name];
 }

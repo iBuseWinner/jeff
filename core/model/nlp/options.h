@@ -12,7 +12,7 @@ enum OptionType {
   ExpressionWeight,
   AutoDelete,
   Custom
-}
+};
 
 /*!
  * @typedef Options
