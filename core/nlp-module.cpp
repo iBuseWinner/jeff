@@ -18,24 +18,30 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
     }
     bool not_in_candidates = false;
     for (auto rival : candidates.keys()) {
-      auto x = StringSearch::intersects(ewi.first, candidates[rival].first);
-      if (x == Intersects::FirstBetter) {
+      auto intersection_and_weight =
+          StringSearch::intersects(ewi.first, candidates[rival].first);
+      auto x = intersection_and_weight.first;
+      auto weight_sub = intersection_and_weight.second;
+      if (x == Intersects::No)
         not_in_candidates = true;
-        candidates.remove(rival);
-      } else if (x == Intersects::Equal) {
-        if (ewi.second->use_cases > candidates[rival].second->use_cases) {
+      else {
+        weight_sub += ewi.second->weight() - candidates[rival].second->weight();
+        if (weight_sub > 0) {
           not_in_candidates = true;
           candidates.remove(rival);
-        } else if (ewi.second->use_cases ==
-                   candidates[rival].second->use_cases) {
-          if (_gen->bounded(0, 2) == 1) {
+        } else if (weight_sub == 0) {
+          if (ewi.second->use_cases > candidates[rival].second->use_cases) {
             not_in_candidates = true;
             candidates.remove(rival);
-            std::cout << candidates.keys().length() << std::endl;
+          } else if (ewi.second->use_cases ==
+                     candidates[rival].second->use_cases) {
+            if (_gen->bounded(0, 2) == 1) {
+              not_in_candidates = true;
+              candidates.remove(rival);
+            }
           }
         }
-      } else if (x == Intersects::No)
-        not_in_candidates = true;
+      }
     }
     if (not_in_candidates)
       candidates[candidates.lastKey() + 1] = ewi;
@@ -102,22 +108,22 @@ void NLPmodule::search_for_suggests(const QString &input) {
 CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   CacheWithIndices selection;
   for (auto *ex : _cache)
-  for (int i = 0; i < _cache.length(); i++) {
-    auto x = StringSearch::contains(input, _cache[i]->activator_text);
-    if (x[0] != 0) {
-      bool is_in = false;
-      for (auto ewi : selection)
-        if (ewi.second == _cache[i])
-          is_in = true;
-      if (is_in)
-        continue;
-      if (selection.keys().length() == 0)
-        selection[0] = ExpressionWithIndices(x, _cache[i]);
-      else
-        selection[selection.lastKey() + 1] =
-            ExpressionWithIndices(x, _cache[i]);
+    for (int i = 0; i < _cache.length(); i++) {
+      auto x = StringSearch::contains(input, _cache[i]->activator_text);
+      if (x[0] != 0) {
+        bool is_in = false;
+        for (auto ewi : selection)
+          if (ewi.second == _cache[i])
+            is_in = true;
+        if (is_in)
+          continue;
+        if (selection.keys().length() == 0)
+          selection[0] = ExpressionWithIndices(x, _cache[i]);
+        else
+          selection[selection.lastKey() + 1] =
+              ExpressionWithIndices(x, _cache[i]);
+      }
     }
-  }
   return selection;
 }
 
@@ -141,7 +147,7 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
         continue;
       if (selection.keys().length() == 0)
         selection[0] = ewi;
-      else 
+      else
         selection[selection.lastKey() + 1] = ewi;
     }
   }

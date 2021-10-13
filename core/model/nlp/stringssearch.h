@@ -36,7 +36,8 @@ public:
   static QString purify(const QString &str);
   static float get_POC(const QString &e1, const QString &e2);
   static QMap<int, int> contains(QString that, QString inner, float EL = 0.66);
-  static Intersects intersects(QMap<int, int> first, QMap<int, int> second);
+  static QPair<Intersects, int> intersects(QMap<int, int> first,
+                                           QMap<int, int> second);
   static QString replace(QString that, QMap<int, int> indices, QString to = "");
 };
 

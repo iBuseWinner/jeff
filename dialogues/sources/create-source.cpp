@@ -53,7 +53,7 @@ void CreateSourceDialog::selStart() {
  */
 void CreateSourceDialog::select() {
   m_dbpath = QFileDialog::getSaveFileName(
-      nullptr, tr("Select database..."), "", tr("ASW database") + "(*.asw.db)",
+      nullptr, tr("Select database..."), "", tr("Jeff database") + "(*.j.db)",
       nullptr, QFileDialog::DontConfirmOverwrite);
   if (!m_dbpath.isEmpty()) {
     selectFileBtn->setText(m_dbpath);

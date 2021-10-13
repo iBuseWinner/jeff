@@ -128,10 +128,10 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
  * covers more text.
  * @param[in] first indices to calculate intersection
  * @param[in] second indices to calculate intersection
- * @returns info about intersection
+ * @returns info about intersection and substraction of weights
  */
-Intersects StringSearch::intersects(QMap<int, int> first,
-                                    QMap<int, int> second) {
+QPair<Intersects, int> StringSearch::intersects(QMap<int, int> first,
+                                                QMap<int, int> second) {
   int first_total = 0;
   bool is_intersects = false;
   for (auto i : first.keys()) {
@@ -157,13 +157,13 @@ Intersects StringSearch::intersects(QMap<int, int> first,
     }
   }
   if (not is_intersects)
-    return Intersects::No;
+    return QPair<Intersects, int>(Intersects::No, 0);
   else if (first_total == 0)
-    return Intersects::Equal;
+    return QPair<Intersects, int>(Intersects::Equal, 0);
   else if (first_total > 0)
-    return Intersects::FirstBetter;
+    return QPair<Intersects, int>(Intersects::FirstBetter, first_total);
   else
-    return Intersects::SecondBetter;
+    return QPair<Intersects, int>(Intersects::SecondBetter, first_total);
 }
 
 /*!

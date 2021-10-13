@@ -21,6 +21,7 @@ public:
     reagent_text = json_object["reagent_text"].toString();
     properties = parse_props(json_object["aps"]);
     use_cases = json_object["use_cases"].toInt();
+    exec = json_object["exec"].toBool();
   }
   /*! What we looking for. */
   QString activator_text;
@@ -30,6 +31,8 @@ public:
   Options properties;
   /*! How much times this expression used. */
   ushort use_cases = 0;
+  /*! Is the reagent a script to be executed? */
+  bool exec = false;
   /*!
    * @fn Expression::to_json
    * @brief Turns @an expresson into a JSON object.
@@ -40,13 +43,15 @@ public:
     return {{"activator_text", activator_text},
             {"reagent_text", reagent_text},
             {"properties", pack_props(properties)},
-            {"use_cases", use_cases}};
+            {"use_cases", use_cases},
+            {"exec", exec}};
   }
-  
+
   int weight() {
     if (properties.contains("weight"))
       return properties.value("weight").toInt();
-    else return 0;
+    else
+      return 0;
   }
 
 private:

@@ -40,4 +40,4 @@ private:
   QWidget *_prisoner = nullptr; /*!< Prisoner. */
 };
 
-#endif // MODALHANDLER_H
+#endif

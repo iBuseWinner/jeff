@@ -164,7 +164,11 @@
     </message>
     <message>
         <source>ASW database</source>
-        <translation>База данных ASW</translation>
+        <translation type="vanished">База данных ASW</translation>
+    </message>
+    <message>
+        <source>Jeff database</source>
+        <translation>База данных Джеффа</translation>
     </message>
 </context>
 <context>
