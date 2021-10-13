@@ -59,6 +59,7 @@ void Display::start() {
   if (vertical_box_layout)
     delete vertical_box_layout;
   QWidget *box = new QWidget(this);
+  box->setContentsMargins(0, 0, 5, 0);
   box->setObjectName(box_object_name);
   setStyleSheet(box_style_sheet);
   auto *sp = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
@@ -69,6 +70,12 @@ void Display::start() {
   box->setLayout(vertical_box_layout);
   setWidget(box);
   messages_mutex.unlock();
+  verticalScrollBar()->setStyleSheet(
+      "QScrollBar:vertical { background: transparent; border: none; width: "
+      "5px; margin: 0px 0px 5px 0px; } QScrollBar::handle:vertical { border: "
+      "2px solid #e4e4e4; background: #e4e4e4; width: 5px; border-radius: 1px; "
+      "} QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { width: "
+      "0px; height: 0px; }");
 }
 
 /*!

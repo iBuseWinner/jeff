@@ -78,6 +78,7 @@ void Message::setAuthor(Author aType) {
  * @brief Adjusts the message to the content type.
  * @param[in] cType content type
  * @sa ContentType
+ * TODO
  */
 void Message::setMessageType(ContentType cType) {
   switch (cType) {
@@ -182,7 +183,7 @@ void Message::setupMarkdown(const QString &content) {
 /*!
  * @fn Message::setupWarning
  * @brief Displays a warning @a content.
- * \param content text of a warning
+ * @param content text of a warning
  */
 void Message::setupWarning(const QString &content) {
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
@@ -193,7 +194,7 @@ void Message::setupWarning(const QString &content) {
 /*!
  * @fn Message::setupError
  * @brief Displays an error @a content.
- * \param content text of an error
+ * @param content text of an error
  */
 void Message::setupError(const QString &content) {
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());

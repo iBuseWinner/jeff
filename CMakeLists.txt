@@ -87,6 +87,8 @@ set (SRCS
     core/nlp-module.h
     widgets/explanationlabel.h
     widgets/sourcelist.h
+    widgets/menu.h
+    widgets/menu.cpp
 )
 
 add_executable(${CMAKE_PROJECT_NAME} ${SRCS} resources.qrc)

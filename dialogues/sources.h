@@ -4,6 +4,7 @@
 #include "dialogues/modal-handler.h"
 #include "dialogues/sources/create-source.h"
 #include "widgets/button.h"
+#include "widgets/menu.h"
 #include "widgets/sourcelist.h"
 #include <QDialog>
 #include <QFileDialog>
@@ -34,7 +35,8 @@ private:
   CreateSourceDialog *create_source_dialog = nullptr;
   SourceList *source_list = nullptr;
   QGridLayout *grid_layout = nullptr;
-  Button *add_source = nullptr;
+  Button *source_actions = nullptr;
+  QAction *add_source = nullptr;
   QAction *create_source = nullptr;
   QAction *remove_source = nullptr;
   Button *save_and_close = nullptr;

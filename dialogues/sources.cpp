@@ -28,20 +28,25 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
   grid_layout = new QGridLayout();
   grid_layout->setSpacing(0);
   grid_layout->setMargin(0);
-  add_source = new Button(QTranslator::tr("Add source"), this);
-  create_source = new QAction(QTranslator::tr("Create"), this);
-  remove_source = new QAction(QTranslator::tr("Remove"), this);
+  source_actions = new Button(QTranslator::tr("Source actions..."), this);
+  add_source = new QAction(QTranslator::tr("Add sources"), this);
+  create_source = new QAction(QTranslator::tr("Create source"), this);
+  remove_source = new QAction(QTranslator::tr("Remove source"), this);
   save_and_close = new Button(QTranslator::tr("Save and close"), this);
+  source_actions->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
   add_source->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
   create_source->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
   remove_source->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
   save_and_close->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
-  add_source->setPopupMode(QToolButton::MenuButtonPopup);
-  add_source->addAction(create_source);
-  add_source->addAction(remove_source);
+  source_actions->setPopupMode(QToolButton::InstantPopup);
+  auto *add_source_menu = new Menu(source_actions);
+  add_source_menu->addAction(add_source);
+  add_source_menu->addAction(create_source);
+  add_source_menu->addAction(remove_source);
+  source_actions->setMenu(add_source_menu);
   source_list = new SourceList(this);
   grid_layout->addWidget(source_list, 0, 0, 1, 0);
-  grid_layout->addWidget(add_source, 1, 0);
+  grid_layout->addWidget(source_actions, 1, 0);
   grid_layout->addWidget(save_and_close, 1, 1);
   setLayout(grid_layout);
   connector();
@@ -66,7 +71,7 @@ void SourcesDialog::load() {
 void SourcesDialog::add() {
   QString filename = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
-      QTranslator::tr("Jeff's database") + "(*.asw.db, *.j.db)");
+      QTranslator::tr("Jeff's database") + "(*.j.db)");
   if (filename.isEmpty())
     return;
   edited = true;
@@ -100,7 +105,7 @@ void SourcesDialog::remove() {
  * box.
  */
 void SourcesDialog::connector() {
-  connect(add_source, &Button::clicked, this, &SourcesDialog::add);
+  connect(add_source, &QAction::triggered, this, &SourcesDialog::add);
   connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
   connect(remove_source, &QAction::triggered, this, &SourcesDialog::remove);
   connect(save_and_close, &Button::clicked, this, &SourcesDialog::sncl);

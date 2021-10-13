@@ -23,16 +23,18 @@
  */
 MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   // File
-  QMenu *mf = addMenu(tr("File"));
+  auto *mf = new Menu(this);
+  mf->setTitle(tr("File"));
+  addMenu(mf);
   QAction *sm = new QAction(tr("Source manager") + " (/sm)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
   QAction *imh = new QAction(tr("Import message history"), mf);
   emm = new QAction(tr("Enable monologue mode") + " (/mm)", mf);
   emm->setCheckable(true);
-  sm->setShortcut(Qt::CTRL + Qt::Key_M);
-  emh->setShortcut(Qt::CTRL + Qt::Key_E);
-  imh->setShortcut(Qt::CTRL + Qt::Key_I);
-  emm->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_M);
+  sm->setShortcut(Qt::CTRL | Qt::Key_M);
+  emh->setShortcut(Qt::CTRL | Qt::Key_E);
+  imh->setShortcut(Qt::CTRL | Qt::Key_I);
+  emm->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_M);
 #ifdef Q_OS_UNIX
   sm->setIcon(QIcon::fromTheme("network-server-database"));
   emh->setIcon(QIcon::fromTheme("document-export.svg"));
@@ -57,19 +59,21 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
       QIcon(":/arts/icons/16/application-exit.svg")
 #endif
           ,
-      tr("&Exit"), &QApplication::quit, Qt::ALT + Qt::Key_F4);
+      tr("&Exit"), &QApplication::quit, Qt::ALT | Qt::Key_F4);
   connect(sm, &QAction::triggered, this, [this] { emit sourcesTriggered(); });
   connect(emh, &QAction::triggered, this, [this] { emit exportTriggered(); });
   connect(imh, &QAction::triggered, this, [this] { emit importTriggered(); });
   // Edit
-  QMenu *me = addMenu(tr("Edit"));
+  auto *me = new Menu(this);
+  me->setTitle(tr("Edit"));
+  addMenu(me);
   QAction *cmh = new QAction(tr("Clear message history"), me);
   QAction *del = new QAction(tr("Delete"), me);
   QAction *cut = new QAction(tr("Cut"), me);
   QAction *copy = new QAction(tr("Copy"), me);
   QAction *paste = new QAction(tr("Paste"), me);
   QAction *sel = new QAction(tr("Select all"), me);
-  cmh->setShortcut(Qt::CTRL + Qt::ALT + Qt::Key_D);
+  cmh->setShortcut(Qt::CTRL | Qt::ALT | Qt::Key_D);
   del->setShortcut(Qt::Key_Backspace);
   cut->setShortcuts(QKeySequence::Cut);
   copy->setShortcuts(QKeySequence::Copy);
@@ -101,14 +105,16 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   connect(paste, &QAction::triggered, line->lineEdit, &LineEdit::paste);
   connect(sel, &QAction::triggered, line->lineEdit, &LineEdit::selectAll);
   // Tools
-  QMenu *mt = addMenu(tr("Tools"));
+  auto *mt = new Menu(this);
+  mt->setTitle(tr("Tools"));
+  addMenu(mt);
   QAction *hb = new QAction(tr("Hide menubar"), mt);
   fullScreenAction = new QAction(tr("Full screen"), mt);
   fullScreenAction->setCheckable(true);
   QAction *st = new QAction(tr("Settings...") + " (/settings)", mt);
-  hb->setShortcut(Qt::CTRL + Qt::Key_H);
+  hb->setShortcut(Qt::CTRL | Qt::Key_H);
   fullScreenAction->setShortcut(Qt::Key_F11);
-  st->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_Comma);
+  st->setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_Comma);
   hb->setIcon(QIcon(":/arts/icons/16/show-menu.svg"));
   fullScreenAction->setIcon(QIcon(":/arts/icons/16/view-fullscreen.svg"));
   st->setIcon(QIcon(":/arts/icons/16/configure.svg"));
@@ -119,7 +125,9 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   connect(hb, &QAction::triggered, this, [this] { setVisible(!isVisible()); });
   connect(st, &QAction::triggered, this, [this] { emit settingsTriggered(); });
   // Help
-  QMenu *mh = addMenu(tr("Help"));
+  auto *mh = new Menu(this);
+  mh->setTitle(tr("Help"));
+  addMenu(mh);
   QAction *about = new QAction(tr("About") + " (/about)", mh);
   about->setIcon(QIcon(":/arts/icons/16/help-about.svg"));
   mh->addAction(about);

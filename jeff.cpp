@@ -18,10 +18,7 @@ Jeff::Jeff() : QMainWindow() {
   layout()->setMargin(0);
   auto *centralWidget = new QWidget(this);
   centralWidget->setObjectName("cw");
-  centralWidget->setStyleSheet(
-      "#cw { background-color: qlineargradient(spread:pad, x1:0, y1:0, "
-      "x2:1, y2:1, stop:0 rgba(191, 29, 160, 255), stop:1 rgba(6, 255, 255, "
-      "255)); }");
+  centralWidget->setStyleSheet("#cw { background-color: rgb(40, 44, 52); }");
   auto *layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->addWidget(display);

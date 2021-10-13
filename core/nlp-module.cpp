@@ -16,24 +16,26 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
       candidates[0] = ewi;
       continue;
     }
-    bool not_in_candidates = true;
+    bool not_in_candidates = false;
     for (auto rival : candidates.keys()) {
       auto x = StringSearch::intersects(ewi.first, candidates[rival].first);
       if (x == Intersects::FirstBetter) {
-        not_in_candidates = false;
+        not_in_candidates = true;
         candidates.remove(rival);
       } else if (x == Intersects::Equal) {
         if (ewi.second->use_cases > candidates[rival].second->use_cases) {
-          not_in_candidates = false;
+          not_in_candidates = true;
           candidates.remove(rival);
         } else if (ewi.second->use_cases ==
                    candidates[rival].second->use_cases) {
           if (_gen->bounded(0, 2) == 1) {
-            not_in_candidates = false;
+            not_in_candidates = true;
             candidates.remove(rival);
+            std::cout << candidates.keys().length() << std::endl;
           }
         }
-      }
+      } else if (x == Intersects::No)
+        not_in_candidates = true;
     }
     if (not_in_candidates)
       candidates[candidates.lastKey() + 1] = ewi;

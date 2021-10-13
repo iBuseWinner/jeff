@@ -2,6 +2,7 @@
 #define MENUBAR_H
 
 #include "widgets/line.h"
+#include "widgets/menu.h"
 #include <QAction>
 #include <QApplication>
 #include <QJsonArray>
@@ -47,6 +48,7 @@ signals:
   /*!
    * @brief Informs about clicking on the "Help" action.
    * @details [constructing]
+   * TODO
    */
   // void helpTriggered();
 
