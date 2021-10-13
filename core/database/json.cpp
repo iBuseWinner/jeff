@@ -136,6 +136,51 @@ void Json::write_scripts(Scripts scripts) {
 }
 
 /*!
+ * @fn Json::to_json
+ * @brief Translates a dictionary to JSON.
+ * @param[in] keystore with keys and values
+ * @returns string with JSON
+ */
+std::string Json::to_json(KeyStore keystore) {
+  QJsonArray arr;
+  for (auto key : keystore.keys()) {
+    QJsonArray a1;
+    a1.append(key.toString());
+    a1.append(keystore[key].toString());
+    arr.append(a1);
+  }
+  QJsonDocument doc(arr);
+  return doc.toJson(QJsonDocument::Compact).toStdString();
+}
+
+/*!
+ * @fn Json::from_json
+ * @brief Translates a JSON string into a data dictionary.
+ * @param[in] str to translate
+ * @returns translated keystore
+ */
+KeyStore Json::from_json(std::string str) {
+  auto *errors = new QJsonParseError();
+  auto doc = QJsonDocument::fromJson(QString(str.c_str()).toUtf8(), errors);
+  if (errors->error != QJsonParseError::NoError) {
+    emit json_error(errors->errorString());
+    delete errors;
+    return KeyStore();
+  }
+  KeyStore keystore;
+  for (auto val : doc.array()) {
+    auto va = val.toArray();
+    if (va.size() != 2) {
+      emit json_error(
+          tr("The number of elements in the object is not equal to two."));
+      return keystore;
+    }
+    keystore[QVariant(va[0].toString())] = QVariant(va[1].toString());
+  }
+  return keystore;
+}
+
+/*!
  * @fn Json::read_json
  * @brief Universal JSON read function.
  * @details Additionally checks the file for errors.
@@ -171,6 +216,6 @@ void Json::write_json(QFile *savefile, QJsonArray json_array) {
     return;
   QJsonDocument jsonDocument(json_array);
   QTextStream textStream(savefile);
-  textStream << jsonDocument.toJson(QJsonDocument::Indented);
+  textStream << jsonDocument.toJson(QJsonDocument::Compact);
   savefile->close();
 }

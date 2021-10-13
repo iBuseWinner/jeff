@@ -152,4 +152,4 @@ private:
   Sources _sources; /*!< List of sources for @a NLPmodule. */
 };
 
-#endif // BASIS_H
+#endif

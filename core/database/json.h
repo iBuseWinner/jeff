@@ -2,6 +2,7 @@
 #define JSON_H
 
 #include "core/database/sqlite.h"
+#include "core/model/keystore.h"
 #include "core/model/message.h"
 #include "core/model/nlp/cache.h"
 #include "core/model/python/script.h"
@@ -35,6 +36,9 @@ public:
   void write_message_history(Messages message_history, QFile *file);
   void write_NLP_cache(Cache cache);
   void write_scripts(Scripts scripts);
+
+  std::string to_json(KeyStore keystore);
+  KeyStore from_json(std::string str);
 
 signals:
   /*!

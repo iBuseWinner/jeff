@@ -5,12 +5,15 @@
 #include "core/database/json.h"
 #include "core/model/python/script.h"
 #include <QList>
+#include <QMutex>
 #include <QObject>
 #include <QString>
 #pragma push_macro("slots")
 #undef slots
 #include <boost/python/exec.hpp>
+#include <boost/python/extract.hpp>
 #include <boost/python/import.hpp>
+#include <boost/python/str.hpp>
 #pragma pop_macro("slots")
 #include <string>
 
@@ -36,6 +39,8 @@ private:
 
   // Objects:
   Basis *basis = nullptr;
+  QMutex *memory_mutex = nullptr;
+  QMap<QVariant, QVariant> _memory_map;
   Scripts _scripts;
 
   // Constants:
@@ -46,7 +51,10 @@ private:
   const char *custom_compose_name = "custom_compose";
 
   // Functions described in `python-module.cpp`:
-  QList<QVariant> run(QString path, QString def_name, QList<QVariant> args);
+  QMap<QVariant, QVariant> run(QString path, QString def_name,
+                               QMap<QVariant, QVariant> args);
+  void write_into_memory(QVariant key, QVariant value);
+  QVariant read_from_memory(QVariant key);
 };
 
 #endif
