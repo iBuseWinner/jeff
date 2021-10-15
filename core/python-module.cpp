@@ -15,10 +15,14 @@ PythonModule::PythonModule(Basis *_basis) {
  */
 PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); }
 
+/*!
+ * @fn PythonModule::startup
+ * @brief Runs functions in scripts intended to start when Jeff starts.
+ */
 void PythonModule::startup() {
-  for (auto script : _scripts) {
-    run(script.path, startup_name, KeyStore());
-  }
+  for (auto script : _scripts)
+    if (script.startup)
+      run(script.path, startup_name, KeyStore());
 }
 
 /*!

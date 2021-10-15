@@ -30,7 +30,7 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
           not_in_candidates = true;
           candidates.remove(rival);
         } else if (weight_sub == 0) {
-          if (ewi.second->use_cases > candidates[rival].second->use_cases) {
+          if (ewi.second->use_cases < candidates[rival].second->use_cases) {
             not_in_candidates = true;
             candidates.remove(rival);
           } else if (ewi.second->use_cases ==
