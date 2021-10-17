@@ -8,33 +8,39 @@
  * @returns boolean variable, found or not
  */
 bool StandardTemplates::dialogues(const QString &expression) {
-  if (expression == "/about") {
+  if (expression == about_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *about = new About(nullptr, modal_handler);
     Q_UNUSED(about)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == "/sm") {
+  if (expression == source_manager_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *sources = new SourcesDialog(basis, nullptr, modal_handler);
     Q_UNUSED(sources)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == "/first") {
+  if (expression == first_start_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *first_start = new FirstStart(nullptr, modal_handler);
     Q_UNUSED(first_start)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == "/settings") {
+  if (expression == settings_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *settings = new Settings(basis, nullptr, modal_handler);
     Q_UNUSED(settings)
     emit showModalWidget(modal_handler);
     return true;
+  }
+  if (expression == fast_append_cmd) {
+    
+  }
+  if (expression == expression_manager_cmd) {
+    
   }
   return false;
 }
@@ -46,7 +52,7 @@ bool StandardTemplates::dialogues(const QString &expression) {
  * @returns boolean variable, found or not
  */
 bool StandardTemplates::fastCommands(const QString &expression) {
-  if (expression == "/mm") {
+  if (expression == monologue_mode_cmd) {
     emit changeMonologueMode();
     return true;
   }

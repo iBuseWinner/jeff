@@ -28,10 +28,20 @@ public:
   StandardTemplates(Basis *_basis, QObject *parent = nullptr)
       : QObject(parent), basis(_basis) {}
 
+  // Constants:
+  static inline const QString source_manager_cmd = "/sourcemanager";
+  static inline const QString first_start_cmd = "/firststart";
+  static inline const QString about_cmd = "/about";
+  static inline const QString settings_cmd = "/settings";
+  static inline const QString fast_append_cmd = "/fastappend";
+  static inline const QString expression_manager_cmd = "/expressionmanager";
+
+  static inline const QString monologue_mode_cmd = "/mm";
+
   // Functions described in 'standard-templates.cpp':
   bool dialogues(const QString &expression);
-  bool fastCommands(const QString &expression);
-  static QPair<QString, QStringList> inlineCommands(const QString &expression);
+  bool fast_commands(const QString &expression);
+  static QPair<QString, QStringList> inline_commands(const QString &expression);
 
 signals:
   /*!
@@ -48,9 +58,6 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
-
-  // Constants:
-  inline static const QString current_time_tmpl = "<stdt::currtime>";
 };
 
-#endif // STANDARDTEMPLATES_H
+#endif

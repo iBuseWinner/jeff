@@ -51,7 +51,7 @@ void Core::got_message_from_user(const QString &user_expression) {
    */
   if (_standard_templates->dialogues(user_expression))
     return;
-  if (_standard_templates->fastCommands(user_expression))
+  if (_standard_templates->fast_commands(user_expression))
     return;
   _nlp->search_for_suggests(user_expression);
 }
