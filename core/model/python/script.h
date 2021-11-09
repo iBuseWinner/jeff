@@ -26,8 +26,14 @@ public:
   /*! Does it have a function that is performed only when a certain semantic
    * load is found? */
   bool answer;
-  /*! Does it have a function that constantly updates the text of the message?
-   */
+  /*! Does it contain a function that composes the bot's response from the proposed expressions and additional properties? */
+  bool custom_compose;
+  /*! Does it contain quick actions? */
+  bool has_actions;
+  /*! Actions and their short descriptions. */
+  QList<QPair<QString, QString>> actions;
+  /*! Does it have a function that constantly updates the text 
+   * of the message? */
   bool dynamic_status;
   /*!
    * @fn ScriptMetadata::to_json

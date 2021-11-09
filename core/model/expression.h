@@ -10,7 +10,6 @@
 /*!
  * @class Expression
  * @brief Contains information about a single expression of NLPmodule.
- * TODO Необходимо использовать такие свойства, как вес выражения и прочее.
  */
 class Expression {
 public:
