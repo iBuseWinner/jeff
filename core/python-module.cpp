@@ -22,7 +22,7 @@ PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); }
 void PythonModule::startup() {
   for (auto script : _scripts)
     if (script.startup)
-      run(script.path, startup_name, QJsonObject::fromVariantMap());
+      run(script.path, startup_name, QJsonObject::fromVariantMap(QVariantMap()));
 }
 
 /*!

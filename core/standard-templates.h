@@ -8,6 +8,7 @@
 #include "dialogues/modal-handler.h"
 #include "dialogues/settings.h"
 #include "dialogues/sources.h"
+#include "core/standard-templates.h"
 #include <QString>
 #include <QTime>
 

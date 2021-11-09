@@ -3,12 +3,14 @@
 
 #include "core/basis.h"
 #include "core/database/json.h"
-#include "core/model/python/script.h"
 #include "core/model/keystore.h"
+#include "core/model/python/modulesdata.h"
+#include "core/model/python/script.h"
 #include <QList>
 #include <QMutex>
 #include <QObject>
 #include <QString>
+#include <QVariantMap>
 #pragma push_macro("slots")
 #undef slots
 #include <boost/python/exec.hpp>

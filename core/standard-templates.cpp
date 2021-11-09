@@ -46,33 +46,15 @@ bool StandardTemplates::dialogues(const QString &expression) {
 }
 
 /*!
- * @fn StandardTemplates::fastCommands
+ * @fn StandardTemplates::fast_commands
  * @brief Looking for a fast command in the expression. If found, takes action.
  * @param[in] expression processed string
  * @returns boolean variable, found or not
  */
-bool StandardTemplates::fastCommands(const QString &expression) {
+bool StandardTemplates::fast_commands(const QString &expression) {
   if (expression == monologue_mode_cmd) {
     emit changeMonologueMode();
     return true;
   }
   return false;
-}
-
-/*!
- * @fn StandardTemplates::inlineCommands
- * @brief Searches for templates in the response expression.
- * @param[in] expression processed string
- * @returns result expression with additional options
- */
-QPair<QString, QStringList>
-StandardTemplates::inlineCommands(const QString &expression) {
-  if (expression.contains(current_time_tmpl)) {
-    QString expression_copy = expression;
-    expression_copy.replace(current_time_tmpl,
-                            QTime::currentTime().toString("HH:mm"));
-    return QPair<QString, QStringList>(expression_copy, QStringList());
-  }
-  /*! If not found... */
-  return QPair<QString, QStringList>(expression, QStringList());
 }
