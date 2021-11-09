@@ -4,6 +4,7 @@
 #include "core/basis.h"
 #include "core/database/json.h"
 #include "core/model/python/script.h"
+#include "core/model/keystore.h"
 #include <QList>
 #include <QMutex>
 #include <QObject>
@@ -40,7 +41,7 @@ private:
   // Objects:
   Basis *basis = nullptr;
   QMutex *memory_mutex = nullptr;
-  QMap<QVariant, QVariant> _memory_map;
+  KeyStore _memory_map;
   Scripts _scripts;
 
   // Constants:
@@ -51,8 +52,7 @@ private:
   const char *custom_compose_name = "custom_compose";
 
   // Functions described in `python-module.cpp`:
-  QMap<QVariant, QVariant> run(QString path, QString def_name,
-                               QMap<QVariant, QVariant> args);
+  QJsonObject run(QString path, QString def_name, QJsonObject values);
   void write_into_memory(QVariant key, QVariant value);
   QVariant read_from_memory(QVariant key);
 };
