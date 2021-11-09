@@ -7,6 +7,7 @@
 PythonModule::PythonModule(Basis *_basis) {
   basis = _basis;
   _scripts = basis->json->read_scripts();
+  fill_modules_data();
 }
 
 /*!
@@ -14,6 +15,25 @@ PythonModule::PythonModule(Basis *_basis) {
  * @brief The destructor.
  */
 PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); }
+
+void PythonModule::fill_modules_data() {
+  for (auto script : _scripts) {
+    QFile f(script.path);
+    if (not f.open(QIODevice::ReadOnly)) {
+      emit script_exception(tr("The module with path ") + script.path + tr(" cannot be opened."));
+      continue;
+    }
+    auto str = QString(f.readAll());
+    f.close();
+    if (QString(f.readAll()).contains("def startup("))
+      _mdata.startup_paths.append(script.path);
+    if (QString(f.readAll()).contains("def custom_scan("))
+      _mdata.custom_scan_paths.append(script.path);
+    //if (QString(f.readAll()).contains("def action_provider(")) {
+    //  auto vals = run(script.path, 
+    }
+  }
+}
 
 /*!
  * @fn PythonModule::startup

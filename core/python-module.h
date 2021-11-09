@@ -6,6 +6,7 @@
 #include "core/model/keystore.h"
 #include "core/model/python/modulesdata.h"
 #include "core/model/python/script.h"
+#include <QFile>
 #include <QList>
 #include <QMutex>
 #include <QObject>
@@ -36,7 +37,8 @@ public:
   void startup();
 
 signals:
-
+  QString script_exception(QString error);
+  
 private:
   Q_DISABLE_COPY(PythonModule)
 
@@ -45,15 +47,19 @@ private:
   QMutex *memory_mutex = nullptr;
   KeyStore _memory_map;
   Scripts _scripts;
+  ModulesData _mdata;
 
   // Constants:
   const char *startup_name = "startup";
   const char *custom_scan_name = "custom_scan";
   const char *answer_name = "answer";
-  const char *dynamic_status_name = "dynamic_status";
+  const char *get_status_update_name = "get_status_update";
   const char *custom_compose_name = "custom_compose";
+  const char *action_provider_name = "action_provider";
+  const char *go_action_name = "go_action";
 
   // Functions described in `python-module.cpp`:
+  void fill_modules_data();
   QJsonObject run(QString path, QString def_name, QJsonObject values);
   void write_into_memory(QVariant key, QVariant value);
   QVariant read_from_memory(QVariant key);
