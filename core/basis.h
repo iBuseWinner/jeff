@@ -71,21 +71,29 @@ public:
    * @brief Determines if a settings file exists.
    * @returns the boolean value of the existence of the file.
    */
-  bool exists() { return QFile::exists(_settings->fileName()); }
+  inline bool exists() { return QFile::exists(_settings->fileName()); }
+  
+  /*!
+   * @fn Basis::db_exists
+   * @brief Determines if a database specified by @a filename exists.
+   * @param[in] filename
+   * @returns the boolean value of existence of the file.
+   */
+  inline bool db_exists(const QString &filename) { return QFile::exists(filename); }
 
   /*!
    * @fn Basis::accessible
    * @brief Determines whether the settings file is readable or writable.
    * @returns the boolean value of the accessibility of the settings file.
    */
-  bool accessible() { return _settings->status() != QSettings::AccessError; }
+  inline bool accessible() { return _settings->status() != QSettings::AccessError; }
 
   /*!
    * @fn Basis::correct
    * @brief Determines the correctness of the settings file format.
    * @returns the boolean value of the correctness of the settings file.
    */
-  bool correct() { return _settings->status() != QSettings::FormatError; }
+  inline bool correct() { return _settings->status() != QSettings::FormatError; }
 
   /*!
    * @fn Basis::read
@@ -93,18 +101,16 @@ public:
    * @param[in] key a key to get the value
    * @returns value for @a key.
    */
-  QVariant read(const QString &key) { return _settings->value(key); }
-  QVariant operator[](const QString &key) { return _settings->value(key); }
-  QVariant operator[](const char *key) { return _settings->value(key); }
+  inline QVariant read(const QString &key) { return _settings->value(key); }
+  inline QVariant operator[](const QString &key) { return _settings->value(key); }
+  inline QVariant operator[](const char *key) { return _settings->value(key); }
 
   /*!
    * @fn Basis::get_settings_path
    * @brief Determines where application settings are stored.
    * @returns the absolute path of the application settings folder.
    */
-  QString get_settings_path() {
-    return QFileInfo(_settings->fileName()).absolutePath();
-  }
+  inline QString get_settings_path() { return QFileInfo(_settings->fileName()).absolutePath(); }
 
   /*!
    * @fn Basis::load_sources
@@ -115,15 +121,16 @@ public:
       _sources.clear();
     Sources tmp = json->read_source_list(sql);
     for (int i = 0; i < tmp.length(); i++)
-      if (not _sources.contains(tmp[i]))
-        _sources.append(tmp[i]);
+      if (db_exists(tmp[i].path))
+        if (not _sources.contains(tmp[i]))
+          _sources.append(tmp[i]);
   }
 
   /*!
    * @fn Basis::get_sources
    * @returns a list of sources @a _sources.
    */
-  Sources get_sources() { return _sources; }
+  inline Sources get_sources() { return _sources; }
 
   /*!
    * @fn Basis::set_sources

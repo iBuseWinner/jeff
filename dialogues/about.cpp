@@ -39,11 +39,11 @@ About::About(QWidget *parent, ModalHandler *m_handler)
       "background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);");
   auto *tab1 = new QLabel(this);
   tab1->setText(QTranslator::tr("Jeff - chat bot and automatization tool") +
-                "<br><br>© 2018-2021 " + QTranslator::tr("Jeff Authors") +
+                "<br><br>© 2018-2022 " + QTranslator::tr("Jeff Authors") +
                 "<br><br><a "
-                "href=\"https://github.com/markcda/jeff\">https://"
+                "href=\"https://github.com/markcda/cc-jeff\">https://"
                 "github.com/markcda/jeff</a><br><a "
-                "href=\"https://raw.githubusercontent.com/markcda/jeff/"
+                "href=\"https://raw.githubusercontent.com/markcda/cc-jeff/"
                 "master/LICENSE\">" +
                 QTranslator::tr("License") + ": GNU General Public License, " +
                 QTranslator::tr("version") + " 3</a>");

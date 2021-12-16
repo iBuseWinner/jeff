@@ -29,7 +29,7 @@ void PythonModule::fill_modules_data() {
       _mdata.startup_paths.append(script.path);
     if (QString(f.readAll()).contains("def custom_scan("))
       _mdata.custom_scan_paths.append(script.path);
-    //if (QString(f.readAll()).contains("def action_provider(")) {
+    if (QString(f.readAll()).contains("def action_provider(")) {
     //  auto vals = run(script.path, 
     }
   }

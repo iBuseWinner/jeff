@@ -12,6 +12,6 @@ struct ModulesData {
   QStringList startup_paths;
   QList<QPair<QString, QString>> fast_commands_and_paths;
   QStringList custom_scan_paths;
-}
+};
 
 #endif
