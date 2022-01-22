@@ -8,11 +8,7 @@
  * @enum OptionType
  * @brief 
  */
-enum OptionType {
-  ExpressionWeight,
-  AutoDelete,
-  Custom
-};
+enum OptionType { ExpressionWeight, AutoDelete, Custom };
 
 /*!
  * @typedef Options

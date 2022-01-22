@@ -17,8 +17,8 @@ class Line : public Board {
   Q_OBJECT
 public:
   // Objects:
-  Button *sendButton = nullptr;
-  LineEdit *lineEdit = nullptr;
+  Button *send_button = nullptr;
+  LineEdit *line_edit = nullptr;
 
   // Functions described in 'line.cpp':
   explicit Line(QWidget *parent = nullptr);

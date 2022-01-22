@@ -19,3 +19,13 @@ void HProcessor::load(const QString &filename) {
       basis->json->read_message_history(new QFile(filename)) + _message_history;
   emit send_message_history(_message_history);
 }
+
+Messages HProcessor::recent(int amount) {
+  Messages messages;
+  Messages mh_clone = Messages(_message_history);
+  if (amount > mh_clone.length())
+    amount = mh_clone.length();
+  for (int i = 0; i < amount; i++)
+    messages.append(mh_clone[mh_clone.length() - i]);
+  return messages;
+}

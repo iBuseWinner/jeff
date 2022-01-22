@@ -28,39 +28,39 @@ signals:
   /*!
    * @brief Informs about clicking on the "Clear history" action.
    */
-  void clearHistoryTriggered();
+  void clear_history_triggered();
 
   /*!
    * @brief Informs about clicking on the "About" action.
    */
-  void aboutTriggered();
+  void about_triggered();
 
   /*!
    * @brief Informs about clicking on the "Settings" action.
    */
-  void settingsTriggered();
+  void settings_triggered();
 
   /*!
    * @brief Informs about clicking on the "Source manager" action.
    */
-  void sourcesTriggered();
+  void sources_triggered();
 
   /*!
    * @brief Informs about clicking on the "Help" action.
    * @details [constructing]
    * TODO
    */
-  // void helpTriggered();
+  // void help_triggered();
 
   /*!
    * @brief Informs about clicking on the "Export message history..." action.
    */
-  void exportTriggered();
+  void export_triggered();
 
   /*!
    * @brief Informs about clicking on the "Import message history..." action.
    */
-  void importTriggered();
+  void import_triggered();
 
 private:
   Q_DISABLE_COPY(MenuBar)

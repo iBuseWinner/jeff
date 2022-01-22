@@ -46,8 +46,7 @@ public:
   MessageData() {}
   MessageData(const QJsonObject &json_object) {
     content = json_object["content"].toString();
-    datetime = QDateTime::fromString(json_object["datetime"].toString(),
-        Qt::ISODateWithMs);
+    datetime = QDateTime::fromString(json_object["datetime"].toString(), Qt::ISODateWithMs);
     author = Author(json_object["author"].toInt());
     content_type = ContentType(json_object["contentType"].toInt());
     theme = Theme(json_object["theme"].toInt());

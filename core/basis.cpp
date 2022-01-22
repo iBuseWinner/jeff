@@ -7,11 +7,10 @@
 void Basis::check_settings_file() {
   if (not accessible())
     emit settings_warning(
-        tr("An access error occurred (e.g. trying to write to a read-only "
-           "file)."));
+      tr("An access error occurred (e.g. trying to write to a read-only " "file).")
+    );
   else if (not correct())
-    emit settings_warning(
-        tr("A format error occurred (e.g. loading a malformed file)."));
+    emit settings_warning(tr("A format error occurred (e.g. loading a malformed file)."));
 }
 
 /*!

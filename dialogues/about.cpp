@@ -14,35 +14,35 @@
  * @param m_handler reference to the ModalHandler instance
  * @sa ModalHandler
  */
-About::About(QWidget *parent, ModalHandler *m_handler)
-    : QWidget(parent), _m_handler(m_handler) {
+About::About(QWidget *parent, ModalHandler *m_handler) : QWidget(parent), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   setObjectName(object_name);
-  setFixedSize(fixed_width, fixed_height);
+  // setFixedSize(fixed_width, fixed_height);
+  setFixedWidth(fixed_width);
   auto *layout = new QGridLayout();
   layout->setMargin(0);
   layout->setSpacing(0);
-  auto *logo = new QLabel(
-      "<img width=\"100\" height=\"100\" src=\":/arts/jeff.png\">", this);
+  auto *logo = new QLabel(this);
+  logo->setScaledContents(true);
+  logo->setFixedWidth(fixed_width / 2);
+  logo->setPixmap(QPixmap(":/arts/jeff.png").scaledToWidth(logo->width(), Qt::SmoothTransformation));
   auto *title = new QLabel(this);
   title->setText("<font size=\"4\">" + QTranslator::tr("Jeff") + "</font>");
   title->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *version = new QLabel(this);
   QString version_title = QTranslator::tr("version");
   version_title[0] = version_title[0].toUpper();
-  version->setText(version_title + " " +
-                   QCoreApplication::applicationVersion());
-  auto *spacer =
-      new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
+  version->setText(version_title + " " + QCoreApplication::applicationVersion());
+  version->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
   auto *tabs = new QTabWidget(this);
-  tabs->setStyleSheet(
-      "background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);");
+  tabs->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);");
   auto *tab1 = new QLabel(this);
   tab1->setText(QTranslator::tr("Jeff - chat bot and automatization tool") +
                 "<br><br>© 2018-2022 " + QTranslator::tr("Jeff Authors") +
                 "<br><br><a "
                 "href=\"https://github.com/markcda/cc-jeff\">https://"
-                "github.com/markcda/jeff</a><br><a "
+                "github.com/markcda/cc-jeff</a><br><a "
                 "href=\"https://raw.githubusercontent.com/markcda/cc-jeff/"
                 "master/LICENSE\">" +
                 QTranslator::tr("License") + ": GNU General Public License, " +
@@ -74,13 +74,11 @@ About::About(QWidget *parent, ModalHandler *m_handler)
   auto *bottomLayout = new QHBoxLayout();
   bottomLayout->setMargin(0);
   bottomLayout->setSpacing(0);
-  auto *bottomSpacer =
-      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  auto *bottomSpacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   bottomLayout->addItem(bottomSpacer);
   bottomLayout->addWidget(closeBtn);
   bottomLine->setLayout(bottomLayout);
-  connect(closeBtn, &Button::clicked, this,
-          [this] { _m_handler->closePrisoner(); });
+  connect(closeBtn, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
   scroll_area_1->setWidget(tab1);
   scroll_area_2->setWidget(tab2);
   tabs->addTab(scroll_area_1, QTranslator::tr("About"));

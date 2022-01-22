@@ -41,7 +41,7 @@ enum ToDo {
   WriteOptions,
   SelectSources,
   InsertExpression,
-  SelectExpressionByAddress,
+  SelectExpressionAndExecByAddress,
   SelectAEL,         /*!< Address, expression and links. */
   SelectELByAddress, /*!< Expression and links. */
   SelectAPByAddress, /*!< Additional properties. */
@@ -68,16 +68,10 @@ public:
    * @details Initializes SQLite database.
    * @param[in,out] parent QObject parent
    */
-  SQLite(QObject *parent = nullptr) : QObject(parent) {
-    QSqlDatabase::addDatabase("QSQLITE");
-  }
+  SQLite(QObject *parent = nullptr) : QObject(parent) { QSqlDatabase::addDatabase("QSQLITE"); }
 
   // Functions described in `sqlite.cpp`:
-#ifdef SQLITE_AUTO_TESTS
-  virtual
-#endif
-      bool
-      create_source(const Source &source, QString *uuid);
+  bool create_source(const Source &source, QString *uuid);
   bool create_base_structure(QSqlQuery *query);
   Sources sources(const QString &path);
   Source load_source(Source source);
@@ -86,6 +80,7 @@ public:
                          const QString &expression, const QString &links);
   Expression get_expression_by_address(const Source &source, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
+  QString generate_uuid();
 
 signals:
   /*!
@@ -93,28 +88,20 @@ signals:
    */
   QString sqlite_error(QString error_text);
 
-  /*!
-   * @brief [constructing]
-   */
-  QString sqlite_warning(QString warning_text);
-
 private:
   // Constants:
-  static const int maximum_number_of_attempts =
-      4; /*!< Number of attempts for table creation. */
-  static const int init_additionals_rows =
-      4; /*!< Column from which additional expression properties begin. */
+  static const int maximum_number_of_attempts = 4; /*!< Number of attempts for table creation. */
+  static const int init_additionals_rows = 4;      /*!< Column from which additional expression 
+                                                   /*!< properties begin. */
 
   // Functions described in `sqlite.cpp`:
   QSqlDatabase prepare(const QString &path, Check option = Openable,
                        bool *result = nullptr, bool quiet = false);
   bool check(QSqlDatabase *db, Check option = NoCheck);
   bool validate(QSqlDatabase *db, bool recursive = false, bool quiet = false);
-  bool validate(QSqlDatabase *db, const QString &source_table,
-                bool quiet = false);
+  bool validate(QSqlDatabase *db, const QString &source_table, bool quiet = false);
   bool exec(QSqlQuery *query, ToDo option, QStringList values = {});
-  Options get_additional_properties(QSqlDatabase *db, const Source &source,
-                                    int address);
+  Options get_additional_properties(QSqlDatabase *db, const Source &source, int address);
   QSet<int> unpack_links(const QString &links);
 };
 

@@ -2,6 +2,7 @@
 #define NLPMODULE_H
 
 #include "core/basis.h"
+#include "core/python-module.h"
 #include "core/database/sqlite.h"
 #include "core/model/expression.h"
 #include "core/model/nlp/cache.h"
@@ -34,8 +35,8 @@ public:
    * @param[in,out] basis reference to the Basis instance
    * @param[in,out] parent QObject parent
    */
-  NLPmodule(Basis *basis, QObject *parent = nullptr)
-      : QObject(parent), _basis(basis) {
+  NLPmodule(Basis *basis, PythonModule *pm, QObject *parent = nullptr) 
+    : QObject(parent), _basis(basis), _pm(pm) {
     _gen = new QRandomGenerator(QTime::currentTime().msec());
     load_cache();
   }
@@ -46,8 +47,7 @@ public:
    */
   ~NLPmodule() {
     save_cache();
-    for (auto *expr : _cache)
-      delete expr;
+    for (auto *expr : _cache) delete expr;
   }
 
   // Functions described in `nlp-module.cpp`:
@@ -72,6 +72,7 @@ signals:
 private:
   // Objects:
   Basis *_basis = nullptr;
+  PythonModule *_pm = nullptr;
   Cache _cache;
   QRandomGenerator *_gen = nullptr;
 
@@ -83,8 +84,7 @@ private:
   CacheWithIndices select_from_db(const QString &input);
 
   CacheWithIndices select_candidates(CacheWithIndices selection, QString input);
-  QPair<QString, QString> compose_answer(QString input,
-                                         CacheWithIndices candidates);
+  QPair<QString, QString> compose_answer(QString input, CacheWithIndices candidates);
 };
 
 #endif

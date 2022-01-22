@@ -4,11 +4,19 @@
 #include "core/basis.h"
 #include "core/history-processor.h"
 #include "core/nlp-module.h"
+#include "core/python-module.h"
 #include "core/standard-templates.h"
 #include "dialogues/modal-handler.h"
 #include "core/database/sqlite.h"
 #include <QObject>
 #include <QTimer>
+
+/*!
+ * @enum State
+ * @brief Specifies how messages from the user should be handled.
+ * @sa PythonModule
+ */
+enum State { Default, HandleNextInScript, HandleInScript };
 
 /*!
  * @class Core
@@ -21,31 +29,39 @@ class Core : public QObject {
   Q_OBJECT
 public:
   // Objects:
-  Basis *basis = new Basis(this);
-  HProcessor *history_processor = new HProcessor(basis, this);
+  Basis *basis = new Basis();
+  HProcessor *history_processor = new HProcessor(basis);
+  PythonModule *pm = new PythonModule(history_processor, basis);
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
   ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_nlp(const QString &result_expression);
-  void
-  got_message_wo_from_nlp(ResponseWO result_expression_wo);
+  void got_message_wo_from_nlp(ResponseWO result_expression_wo);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);
   // void got_script();
   void show_history(Messages message_history);
   void set_monologue_enabled(const bool enabled);
-  MessageData get_message(const QString &content, Author author,
-                      ContentType content_type, Theme theme);
+  MessageData get_message(const QString &content, Author author, 
+                          ContentType content_type, Theme theme);
 
 signals:
+#ifdef QT
   /*!
    * @brief Sends a message to Display.
    * @sa Message, Display
    */
-  Message *show(Message *message);
+  ModalHandler *show_modal(MessageData message_data, ModalHandler *handler);
+#endif
+  
+  /*!
+   * @brief Sends a message.
+   * @sa MessageData
+   */
+  MessageData show(MessageData message_data);
 
   /*!
    * @brief Sets the monologue mode.
@@ -56,8 +72,9 @@ private:
   Q_DISABLE_COPY(Core)
 
   // Objects:
-  NLPmodule *_nlp = new NLPmodule(basis, this);
-  StandardTemplates *_standard_templates = new StandardTemplates(basis, this);
+  NLPmodule *_nlp = new NLPmodule(basis, pm);
+  StandardTemplates *_standard_templates = new StandardTemplates(basis);
+  
   bool _monologue_enabled = false;
 };
 

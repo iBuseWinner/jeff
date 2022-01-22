@@ -20,8 +20,7 @@
  * @param[in,out] parent QObject parent
  * @param[in,out] m_handler reference to the ModalHandler instance
  */
-SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent,
-                             ModalHandler *m_handler)
+SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   setObjectName(object_name);
@@ -72,8 +71,7 @@ void SourcesDialog::add() {
   QString filename = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
       QTranslator::tr("Jeff's database") + "(*.j.db)");
-  if (filename.isEmpty())
-    return;
+  if (filename.isEmpty()) return;
   edited = true;
   append(basis->sql->sources(filename));
 }
@@ -83,18 +81,14 @@ void SourcesDialog::add() {
  * @brief Removes selected sources.
  */
 void SourcesDialog::remove() {
-  if (not source_list->selectedItems().length())
-    return;
+  if (not source_list->selectedItems().length()) return;
   edited = true;
   for (auto *item : source_list->selectedItems()) {
     QTreeWidgetItem *parent;
-    if (not item->parent())
-      parent = source_list->invisibleRootItem();
-    else
-      parent = item->parent();
+    if (not item->parent()) parent = source_list->invisibleRootItem();
+    else parent = item->parent();
     parent->removeChild(item);
-    if (not parent->childCount() and
-        (parent != source_list->invisibleRootItem()))
+    if (not parent->childCount() and (parent != source_list->invisibleRootItem()))
       source_list->invisibleRootItem()->removeChild(parent);
   }
 }
@@ -121,14 +115,12 @@ void SourcesDialog::append(Sources sources) {
     QTreeWidgetItem *parent = nullptr;
     bool isInside = false;
     for (int tli2 = 0; tli2 < source_list->topLevelItemCount(); tli2++)
-      if (source_list->invisibleRootItem()->child(tli2)->text(0) ==
-          source.path) {
+      if (source_list->invisibleRootItem()->child(tli2)->text(0) == source.path) {
         isInside = true;
         parent = source_list->invisibleRootItem()->takeChild(tli2);
         break;
       }
-    if (not isInside)
-      parent = new QTreeWidgetItem(QStringList(source.path));
+    if (not isInside) parent = new QTreeWidgetItem(QStringList(source.path));
     source_list->addTopLevelItem(parent);
     bool notContains = true;
     for (int childIndex = 0; childIndex < parent->childCount(); childIndex++)
@@ -168,7 +160,8 @@ void SourcesDialog::sncl() {
            source_list->invisibleRootItem()->child(tli2)->childCount();
            childIndex++)
         sources.append(source_widgets.value(
-            source_list->invisibleRootItem()->child(tli2)->child(childIndex)));
+          source_list->invisibleRootItem()->child(tli2)->child(childIndex)
+        ));
     Json json(basis->get_settings_path());
     json.write_source_list(basis->sql, sources);
   }

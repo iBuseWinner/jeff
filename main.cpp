@@ -2,8 +2,8 @@
 #include <QTranslator>
 
 /*!
- * @copyright 2018-2021 Mark CDA <markcda@protonmail.com>, Shamshin Victor
- * <androiddeveloper@yandex.ru>
+ * @copyright 2018-2022 Mark CDA <markcda@protonmail.com>
+ * @copyright 2018-2022 Shamshin Victor <androiddeveloper@yandex.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@
  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("0.4.5");
+  QCoreApplication::setApplicationVersion("0.5.0");
   QApplication jeff(argc, argv);
   auto *jeff_locals = new QTranslator(&jeff);
   jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());

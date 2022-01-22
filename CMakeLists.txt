@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Gui Widgets Sql Xml REQUIRED)
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
-find_package(Boost COMPONENTS python REQUIRED)
+add_compile_definitions(QT)
 
 include_directories(
     .
@@ -93,4 +93,4 @@ set (SRCS
 
 add_executable(${CMAKE_PROJECT_NAME} ${SRCS} resources.qrc)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::Sql Python::Python ${Boost_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::Sql Python::Python)

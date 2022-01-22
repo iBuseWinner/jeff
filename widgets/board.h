@@ -24,7 +24,7 @@ public:
                                               "background-color: #ffec4d;"
                                               "}"
                                               "* {"
-                                              "color: white;"
+                                              "color: black;"
                                               "}";
   inline static const QString error_style = "#board {"
                                             "border-width: 4px;"

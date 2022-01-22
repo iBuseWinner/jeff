@@ -33,8 +33,7 @@ Message::Message(MessageData message) {
  * @sa MessageData
  */
 void Message::setMessage(MessageData _message) {
-  if (_message.datetime.isNull())
-    return;
+  if (_message.datetime.isNull()) return;
   message = _message;
   setAuthor(message.author);
   setMessageType(message.content_type);
@@ -43,15 +42,13 @@ void Message::setMessage(MessageData _message) {
 
 /*!
  * @fn Message::setWidget
- * @brief Sets {@code m_handler->getPrisoner()} into the Message.
+ * @brief Sets {m_handler->getPrisoner()} into the Message.
  * @param[in,out] m_handler reference to the ModalHandler instance
  */
 void Message::setWidget(ModalHandler *m_handler) {
-  if (widget)
-    return;
+  if (widget) return;
   widget = m_handler->getPrisoner();
-  connect(m_handler, &ModalHandler::prisonerClosed, this,
-          [this] { emit closed(); });
+  connect(m_handler, &ModalHandler::prisonerClosed, this, [this] { emit closed(); });
   gridLayout->addWidget(widget);
 }
 
@@ -105,7 +102,6 @@ void Message::setMessageType(ContentType cType) {
     return;
   default:;
   }
-  alignTextToWindowWidth();
 }
 
 /*!
@@ -146,8 +142,7 @@ void Message::setupText(const QString &content) {
   widget = label;
   label->setObjectName("text");
   label->setTextFormat(Qt::PlainText);
-  label->setTextInteractionFlags(Qt::TextSelectableByMouse |
-                                 Qt::TextSelectableByKeyboard);
+  label->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
   label->setFocusPolicy(Qt::NoFocus);
   gridLayout->addWidget(widget);
 }
@@ -207,18 +202,16 @@ void Message::setupError(const QString &content) {
  * @brief Prepares Message for widget installation.
  */
 void Message::prepareSetupWidget() {
-  gridLayout->parentWidget()->setSizePolicy(QSizePolicy::Preferred,
-                                            QSizePolicy::Fixed);
+  gridLayout->parentWidget()->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
 /*!
- * @fn Message::alignTextToWindowWidth
+ * @fn Message::resizeEvent
  * @brief Aligns text to the width of the window.
  */
-void Message::alignTextToWindowWidth() {
+void Message::resizeEvent(QResizeEvent *event) {
   auto *label = qobject_cast<QLabel *>(widget);
-  if (not label)
-    return;
+  if (not label) return;
   QTextDocument textDocument;
   if (message.content_type == ContentType::Markdown)
     textDocument.setHtml(label->text());
@@ -226,12 +219,13 @@ void Message::alignTextToWindowWidth() {
     textDocument.setPlainText(label->text());
   else
     return;
-  if (textDocument.idealWidth() < maximalMessageWidth)
+  if (textDocument.idealWidth() < width())
     label->setWordWrap(false);
   else {
     label->setWordWrap(true);
-    label->setFixedWidth(maximalMessageWidth);
+    label->setFixedWidth(width());
   }
+  event->accept();
 }
 
 /*!
@@ -240,8 +234,7 @@ void Message::alignTextToWindowWidth() {
  * @returns QSpacerItem-ABoard pair
  */
 QPair<QSpacerItem *, Board *> Message::makeLayout() {
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding,
-                                 QSizePolicy::Minimum);
+  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
   auto *board = new Board(this);
   gridLayout = new QGridLayout();
   gridLayout->setSpacing(0);

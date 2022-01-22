@@ -47,25 +47,21 @@ public:
   }
 
   int weight() {
-    if (properties.contains("weight"))
-      return properties.value("weight").toInt();
-    else
-      return 0;
+    if (properties.contains("weight")) return properties.value("weight").toInt();
+    else return 0;
   }
 
 private:
   /*! Properties' parser. */
   Options parse_props(QJsonValue _aps) {
     Options aps;
-    for (auto _ap_key : _aps.toObject().keys())
-      aps[_ap_key] = _aps[_ap_key].toString();
+    for (auto _ap_key : _aps.toObject().keys()) aps[_ap_key] = _aps[_ap_key].toString();
     return aps;
   }
   /*! Properties' packer. */
   QJsonObject pack_props(Options aps) {
     QJsonObject _aps;
-    for (auto ap_key : aps.keys())
-      _aps.insert(ap_key, aps[ap_key]);
+    for (auto ap_key : aps.keys()) _aps.insert(ap_key, aps[ap_key]);
     return _aps;
   }
 };

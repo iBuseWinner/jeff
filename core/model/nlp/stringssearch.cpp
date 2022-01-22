@@ -7,8 +7,7 @@
  * @returns string without punctuation
  */
 QString StringSearch::remove_symbols(QString str) {
-  for (auto symbol : ".!?;:,-'\"")
-    str.remove(symbol);
+  for (auto symbol : ".!?;:,-'\"") str.remove(symbol);
   return str;
 }
 
@@ -130,40 +129,28 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL) {
  * @param[in] second indices to calculate intersection
  * @returns info about intersection and substraction of weights
  */
-QPair<Intersects, int> StringSearch::intersects(QMap<int, int> first,
-                                                QMap<int, int> second) {
+QPair<Intersects, int> StringSearch::intersects(QMap<int, int> first, QMap<int, int> second) {
   int first_total = 0;
   bool is_intersects = false;
   for (auto i : first.keys()) {
-    if (i == 0 and first[i] == -2)
-      continue;
+    if (i == 0 and first[i] == -2) continue;
     for (auto j : second.keys()) {
-      if (j == 0 and second[j] == -2)
-        continue;
+      if (j == 0 and second[j] == -2) continue;
       first_total += first[i] - i - second[j] + j;
-      if (i == j) {
-        is_intersects = true;
-      } else if (i < j) {
-        if (first[i] < j)
-          continue;
-        else
-          is_intersects = true;
+      if (i == j) { is_intersects = true; }
+      else if (i < j) {
+        if (first[i] < j) continue;
+        else is_intersects = true;
       } else {
-        if (i > second[j])
-          continue;
-        else
-          is_intersects = true;
+        if (i > second[j]) continue;
+        else is_intersects = true;
       }
     }
   }
-  if (not is_intersects)
-    return QPair<Intersects, int>(Intersects::No, 0);
-  else if (first_total == 0)
-    return QPair<Intersects, int>(Intersects::Equal, 0);
-  else if (first_total > 0)
-    return QPair<Intersects, int>(Intersects::FirstBetter, first_total);
-  else
-    return QPair<Intersects, int>(Intersects::SecondBetter, first_total);
+  if (not is_intersects) return QPair<Intersects, int>(Intersects::No, 0);
+  else if (first_total == 0) return QPair<Intersects, int>(Intersects::Equal, 0);
+  else if (first_total > 0) return QPair<Intersects, int>(Intersects::FirstBetter, first_total);
+  else return QPair<Intersects, int>(Intersects::SecondBetter, first_total);
 }
 
 /*!
@@ -176,17 +163,13 @@ QPair<Intersects, int> StringSearch::intersects(QMap<int, int> first,
  * @param[in] to <-- see above >
  * @returns @a that string with replaced text
  */
-QString StringSearch::replace(QString that, QMap<int, int> indices,
-                              QString to) {
+QString StringSearch::replace(QString that, QMap<int, int> indices, QString to) {
   int len = that.length();
   for (auto i1 : indices.keys()) {
-    if (i1 == 0 and indices[i1] == -2)
-      continue;
-    if (i1 > len or indices[i1] > len)
-      continue;
+    if (i1 == 0 and indices[i1] == -2) continue;
+    if (i1 > len or indices[i1] > len) continue;
     QString n = "";
-    for (int i = i1; i < indices[i1]; i++)
-      n += " ";
+    for (int i = i1; i < indices[i1]; i++) n += " ";
     auto left = that.left(i1);
     auto right = that.right(len - indices[i1]);
     that = left + n + right;

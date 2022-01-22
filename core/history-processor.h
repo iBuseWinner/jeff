@@ -22,9 +22,7 @@ public:
    * @param[in,out] basis reference to the Basis instance
    * @param[in,out] parent QObject parent
    */
-  HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent) {
-    basis = _basis;
-  }
+  HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent) { basis = _basis; }
 
   /*!
    * @fn HProcessor::append
@@ -49,13 +47,14 @@ public:
   // Functions described in `history-processor.cpp`:
   void save(const QString &filename);
   void load(const QString &filename);
+  Messages recent(int amount);
 
 signals:
   /*!
    * @brief Sends message history to Display.
    * @sa Display
    */
-  QList<Message> send_message_history(Messages message_history);
+  Messages send_message_history(Messages message_history);
 
 private:
   // Objects:

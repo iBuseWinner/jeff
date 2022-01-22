@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 #include <QGridLayout>
 #include <QLabel>
+#include <QPixmap>
 #include <QScrollArea>
 #include <QSizePolicy>
 #include <QTabWidget>

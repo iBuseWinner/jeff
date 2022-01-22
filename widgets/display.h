@@ -1,6 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "core/model/message.h"
+#include "dialogues/modal-handler.h"
 #include "widgets/message.h"
 #include <QMutex>
 #include <QScrollArea>
@@ -27,7 +29,9 @@ public:
   // Functions described in 'display.cpp':
   explicit Display(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
-  void addMessage(Message *message);
+  void add_message(Message *message);
+  void add_message_by_md(MessageData message_data);
+  void add_message_with_widget(MessageData message_data, ModalHandler *handler);
 
 private:
   Q_DISABLE_COPY(Display)

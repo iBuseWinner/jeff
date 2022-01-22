@@ -7,15 +7,13 @@
  * @param[in,out] parent QObject parent
  */
 Core::Core(QObject *parent) : QObject(parent) {
-  //  connect(basis, &Basis::json_error, this, &Core::got_error);
+  connect(basis->json, &Json::json_error, this, &Core::got_error);
   connect(basis, &Basis::settings_warning, this, &Core::got_warning);
   basis->check_settings_file();
-  connect(history_processor, &HProcessor::send_message_history, this,
-          &Core::show_history);
+  connect(history_processor, &HProcessor::send_message_history, this, &Core::show_history);
+  connect(pm, &PythonModule::script_exception, this, &Core::got_warning);
   connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);
-  connect(basis->sql, &SQLite::sqlite_warning, this, &Core::got_warning);
-  connect(_standard_templates, &StandardTemplates::showModalWidget, this,
-          &Core::got_modal);
+  connect(_standard_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
   connect(_nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
   connect(_nlp, &NLPmodule::response_wo, this, &Core::got_message_wo_from_nlp);
   connect(_standard_templates, &StandardTemplates::changeMonologueMode, this,
@@ -30,7 +28,13 @@ Core::Core(QObject *parent) : QObject(parent) {
  * SYSSEGV if Basis instance will be deleted first.
  * @sa NLPmodule, Json, Basis
  */
-Core::~Core() { delete _nlp; }
+Core::~Core() {
+  delete _nlp;
+  delete pm;
+  delete history_processor;
+  delete _standard_templates;
+  delete basis;
+}
 
 /*!
  * @fn Core::got_message_from_user
@@ -40,19 +44,15 @@ Core::~Core() { delete _nlp; }
  */
 void Core::got_message_from_user(const QString &user_expression) {
   /*! Does not respond to blank input. */
-  if (user_expression.isEmpty())
-    return;
+  if (user_expression.isEmpty()) return;
   /*! Displays the entered message on the screen. */
-  MessageData message = get_message(user_expression, Author::User,
-                                ContentType::Markdown, Theme::Std);
+  MessageData message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   history_processor->append(message);
-  emit show(new Message(message));
+  emit show(message);
   /*! If a user has entered the command, there is no need to run other modules.
    */
-  if (_standard_templates->dialogues(user_expression))
-    return;
-  if (_standard_templates->fast_commands(user_expression))
-    return;
+  if (_standard_templates->dialogues(user_expression)) return;
+  if (_standard_templates->fast_commands(user_expression)) return;
   _nlp->search_for_suggests(user_expression);
 }
 
@@ -64,10 +64,9 @@ void Core::got_message_from_user(const QString &user_expression) {
  * input
  */
 void Core::got_message_from_nlp(const QString &result_expression) {
-  if (result_expression.isEmpty())
-    return;
-  MessageData message = get_message(result_expression, Author::Jeff,
-                                ContentType::Markdown, Theme::Std);
+  if (result_expression.isEmpty()) return;
+  MessageData message = get_message(result_expression, Author::Jeff, 
+                                    ContentType::Markdown, Theme::Std);
   history_processor->append(message);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
@@ -76,9 +75,8 @@ void Core::got_message_from_nlp(const QString &result_expression) {
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
       this, [this, message, result_expression] {
-        emit show(new Message(message));
-        if (_monologue_enabled)
-          _nlp->search_for_suggests(result_expression);
+        emit show(message);
+        if (_monologue_enabled) _nlp->search_for_suggests(result_expression);
       });
 }
 
@@ -90,9 +88,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
  * user input
  */
 void Core::got_message_wo_from_nlp(ResponseWO result_expression_wo) {
-  if (result_expression_wo.first.isEmpty() and
-      result_expression_wo.second.isEmpty())
-    return;
+  if (result_expression_wo.first.isEmpty() and result_expression_wo.second.isEmpty()) return;
 }
 
 /*!
@@ -102,10 +98,9 @@ void Core::got_message_wo_from_nlp(ResponseWO result_expression_wo) {
  */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
-  MessageData message = get_message(warning_text, Author::Jeff,
-                                ContentType::Warning, Theme::Yellow);
+  MessageData message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
   history_processor->append(message);
-  emit show(new Message(message));
+  emit show(message);
 }
 
 /*!
@@ -115,10 +110,9 @@ void Core::got_warning(const QString &warning_text) {
  */
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
-  MessageData message =
-      get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
+  MessageData message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   history_processor->append(message);
-  emit show(new Message(message));
+  emit show(message);
 }
 
 /*!
@@ -130,13 +124,9 @@ void Core::got_error(const QString &error_text) {
  */
 void Core::got_modal(ModalHandler *m_handler) {
   MessageData message = get_message(m_handler->getPrisoner()->objectName(),
-                                Author::Jeff, ContentType::Widget, Theme::Std);
+                                    Author::Jeff, ContentType::Widget, Theme::Std);
   history_processor->append(message);
-  auto *message_widget = new Message(message);
-  m_handler->getPrisoner()->setParent(message_widget);
-  m_handler->getPrisoner()->setFixedWidth(Message::maximalMessageWidth);
-  message_widget->setWidget(m_handler);
-  emit show(message_widget);
+  emit show_modal(message, m_handler);
 }
 
 /*!
@@ -145,8 +135,7 @@ void Core::got_modal(ModalHandler *m_handler) {
  * @param[in] message_history
  */
 void Core::show_history(Messages message_history) {
-  for (const auto &message : message_history)
-    emit show(new Message(message));
+  for (const auto &message : message_history) emit show(message);
 }
 
 /*!
@@ -159,7 +148,7 @@ void Core::show_history(Messages message_history) {
  * @returns MessageData with given parameters.
  */
 MessageData Core::get_message(const QString &content, Author author,
-                          ContentType content_type, Theme theme) {
+                              ContentType content_type, Theme theme) {
   MessageData message;
   message.content = content;
   message.datetime = QDateTime::currentDateTime();

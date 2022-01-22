@@ -43,8 +43,8 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
       emit send("/settings");
   }
   if (event->key() == Qt::Key_Return)
-    event->modifiers() == Qt::ControlModifier ? line->lineEdit->insert("\n")
-                                              : line->sendButton->click();
+    event->modifiers() == Qt::ControlModifier ? line->line_edit->insert("\n")
+                                              : line->send_button->click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H)
       menubar->setVisible(not menubar->isVisible());
@@ -107,28 +107,21 @@ void Jeff::save_window_settings() {
  */
 void Jeff::connect_all() {
   // menubar
-  connect(menubar->fullScreenAction, &QAction::triggered, this,
-          &Jeff::full_screen_handler);
-  connect(menubar, &MenuBar::clearHistoryTriggered, this, &Jeff::clear);
-  connect(menubar, &MenuBar::aboutTriggered, this,
-          [this] { emit send("/about"); });
-  connect(menubar, &MenuBar::sourcesTriggered, this,
-          [this] { emit send("/sm"); });
-  connect(menubar, &MenuBar::settingsTriggered, this,
-          [this] { emit send("/settings"); });
-  connect(menubar, &MenuBar::exportTriggered, this,
-          &Jeff::export_message_history);
-  connect(menubar, &MenuBar::importTriggered, this,
-          &Jeff::import_message_history);
-  connect(menubar->emm, &QAction::triggered, this,
-          [this] { emit send("/mm"); });
+  connect(menubar->fullScreenAction, &QAction::triggered, this, &Jeff::full_screen_handler);
+  connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
+  connect(menubar, &MenuBar::about_triggered, this, [this] { emit send("/about"); });
+  connect(menubar, &MenuBar::sources_triggered, this, [this] { emit send("/sourcemanager"); });
+  connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send("/settings"); });
+  connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
+  connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
+  connect(menubar->emm, &QAction::triggered, this, [this] { emit send("/mm"); });
   // others
-  connect(line->sendButton, &Button::clicked, this, &Jeff::user_input_handler);
+  connect(line->send_button, &Button::clicked, this, &Jeff::user_input_handler);
   connect(this, &Jeff::ready_state, this, [this] { emit send(tr("Hello!")); });
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
-  connect(core, &Core::show, display, &Display::addMessage);
-  connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm,
-          &QAction::setChecked);
+  connect(core, &Core::show, display, &Display::add_message_by_md);
+  connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
+  connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm, &QAction::setChecked);
 }
 
 /*!
@@ -145,10 +138,10 @@ void Jeff::full_screen_handler() {
  * @sa Core
  */
 void Jeff::user_input_handler() {
-  // If the user sends a message, the display automatically scrolls to the end.
+  // If user sends a message, the display automatically scrolls to the end.
   display->setScrollEnabled(true);
-  QString text = line->lineEdit->text();
-  line->lineEdit->clear();
+  QString text = line->line_edit->text();
+  line->line_edit->clear();
   emit send(text);
 }
 

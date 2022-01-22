@@ -21,16 +21,15 @@ Display::Display(short _max_message_amount, QWidget *parent)
 }
 
 /*!
- * @fn Display::addMessage
+ * @fn Display::add_message
  * @brief Adds a message to the display.
  * @param[in,out] message message to be added
  */
-void Display::addMessage(Message *message) {
+void Display::add_message(Message *message) {
   messages_mutex.lock();
   message_counter++;
   message->setParent(this);
-  connect(message, &Message::closed, this,
-          [this, message] { removeMessage(message); });
+  connect(message, &Message::closed, this, [this, message] { removeMessage(message); });
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   /*! If the scroll is approximately below the middle, and the number of
@@ -42,10 +41,32 @@ void Display::addMessage(Message *message) {
     /*! ...we delete all unnecessary messages */
     while (message_counter > max_message_amount) {
       all_messages[all_messages.length() - message_counter]->hide();
-      vertical_box_layout->removeWidget(
-          all_messages[all_messages.length() - message_counter--]);
+      vertical_box_layout->removeWidget(all_messages[all_messages.length() - message_counter--]);
     }
   messages_mutex.unlock();
+}
+
+/*!
+ * @fn Display::add_message
+ * @brief Constructs @a Message and adds it to the display.
+ * @param[in] message_data message to be added
+ */
+void Display::add_message_by_md(MessageData message_data) {
+  add_message(new Message(message_data));
+}
+
+/*!
+ * @fn Display::add_message
+ * @brief Constructs @a Message and adds it to the display.
+ * @param[in] message_data message to be added
+ * @param[in,out] handler modal handler with @a QWidget to be shown
+ */
+void Display::add_message_with_widget(MessageData message_data, ModalHandler *handler) {
+  auto *message = new Message(message_data);
+  handler->getPrisoner()->setParent(message);
+//   handler->getPrisoner()->setFixedWidth(Message::maximalMessageWidth);
+  message->setWidget(handler);
+  add_message(message);
 }
 
 /*!
@@ -56,8 +77,7 @@ void Display::addMessage(Message *message) {
 void Display::start() {
   messages_mutex.lock();
   all_messages.clear();
-  if (vertical_box_layout)
-    delete vertical_box_layout;
+  if (vertical_box_layout) delete vertical_box_layout;
   QWidget *box = new QWidget(this);
   box->setContentsMargins(0, 0, 5, 0);
   box->setObjectName(box_object_name);
@@ -83,19 +103,11 @@ void Display::start() {
  * @brief Establishes communications for user interaction through the widget.
  */
 void Display::connector() {
-  connect(verticalScrollBar(), &QScrollBar::rangeChanged, this,
-          &Display::scrollDown);
-  connect(verticalScrollBar(), &QScrollBar::valueChanged, this,
-          &Display::scrollTumbler);
-  connect(verticalScrollBar(), &QScrollBar::valueChanged, this,
-          &Display::showWidgets);
+  connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scrollDown);
+  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scrollTumbler);
+  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::showWidgets);
 }
 
-/*!
- * Arguments: int {min} [transmitted automatically by Qt],
- *            int {max} [transmitted automatically by Qt].
- *
- */
 /*!
  * @fn Display::scrollDown
  * @brief When the scrolling range of the display changes, it scrolls to the end
@@ -105,8 +117,7 @@ void Display::connector() {
  */
 void Display::scrollDown(int min, int max) {
   Q_UNUSED(min)
-  if (scrollEnabled)
-    verticalScrollBar()->setValue(max);
+  if (scrollEnabled) verticalScrollBar()->setValue(max);
 }
 
 /*!
@@ -115,10 +126,8 @@ void Display::scrollDown(int min, int max) {
  * @param[in] value current position of the vertical scroll bar
  */
 void Display::scrollTumbler(int value) {
-  if (not scrollEnabled and (value == verticalScrollBar()->maximum()))
-    scrollEnabled = true;
-  if (scrollEnabled and (value != verticalScrollBar()->maximum()))
-    scrollEnabled = false;
+  if (not scrollEnabled and (value == verticalScrollBar()->maximum())) scrollEnabled = true;
+  if (scrollEnabled and (value != verticalScrollBar()->maximum())) scrollEnabled = false;
 }
 
 /*!

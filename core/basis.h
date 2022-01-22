@@ -117,8 +117,7 @@ public:
    * @brief Loads @a _sources from file.
    */
   void load_sources() {
-    if (not _sources.isEmpty())
-      _sources.clear();
+    if (not _sources.isEmpty()) _sources.clear();
     Sources tmp = json->read_source_list(sql);
     for (int i = 0; i < tmp.length(); i++)
       if (db_exists(tmp[i].path))
@@ -153,9 +152,8 @@ signals:
 
 private:
   // Objects:
-  QSettings *_settings =
-      new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
-                    applicationName, this); /*!< Qt settings object. */
+  QSettings *_settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
+                                       applicationName, this); /*!< Qt settings object. */
   Sources _sources; /*!< List of sources for @a NLPmodule. */
 };
 

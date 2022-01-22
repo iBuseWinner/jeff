@@ -26,7 +26,7 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   auto *mf = new Menu(this);
   mf->setTitle(tr("File"));
   addMenu(mf);
-  QAction *sm = new QAction(tr("Source manager") + " (/sm)", mf);
+  QAction *sm = new QAction(tr("Source manager") + " (/sourcemanager)", mf);
   QAction *emh = new QAction(tr("Export message history"), mf);
   QAction *imh = new QAction(tr("Import message history"), mf);
   emm = new QAction(tr("Enable monologue mode") + " (/mm)", mf);
@@ -60,9 +60,9 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
 #endif
           ,
       tr("&Exit"), &QApplication::quit, Qt::ALT | Qt::Key_F4);
-  connect(sm, &QAction::triggered, this, [this] { emit sourcesTriggered(); });
-  connect(emh, &QAction::triggered, this, [this] { emit exportTriggered(); });
-  connect(imh, &QAction::triggered, this, [this] { emit importTriggered(); });
+  connect(sm, &QAction::triggered, this, [this] { emit sources_triggered(); });
+  connect(emh, &QAction::triggered, this, [this] { emit export_triggered(); });
+  connect(imh, &QAction::triggered, this, [this] { emit import_triggered(); });
   // Edit
   auto *me = new Menu(this);
   me->setTitle(tr("Edit"));
@@ -97,13 +97,12 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   me->addAction(paste);
   me->addSeparator();
   me->addAction(sel);
-  connect(cmh, &QAction::triggered, this,
-          [this] { emit clearHistoryTriggered(); });
-  connect(del, &QAction::triggered, line->lineEdit, &LineEdit::backspace);
-  connect(cut, &QAction::triggered, line->lineEdit, &LineEdit::cut);
-  connect(copy, &QAction::triggered, line->lineEdit, &LineEdit::copy);
-  connect(paste, &QAction::triggered, line->lineEdit, &LineEdit::paste);
-  connect(sel, &QAction::triggered, line->lineEdit, &LineEdit::selectAll);
+  connect(cmh, &QAction::triggered, this, [this] { emit clear_history_triggered(); });
+  connect(del, &QAction::triggered, line->line_edit, &LineEdit::backspace);
+  connect(cut, &QAction::triggered, line->line_edit, &LineEdit::cut);
+  connect(copy, &QAction::triggered, line->line_edit, &LineEdit::copy);
+  connect(paste, &QAction::triggered, line->line_edit, &LineEdit::paste);
+  connect(sel, &QAction::triggered, line->line_edit, &LineEdit::selectAll);
   // Tools
   auto *mt = new Menu(this);
   mt->setTitle(tr("Tools"));
@@ -123,7 +122,7 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   mt->addSeparator();
   mt->addAction(st);
   connect(hb, &QAction::triggered, this, [this] { setVisible(!isVisible()); });
-  connect(st, &QAction::triggered, this, [this] { emit settingsTriggered(); });
+  connect(st, &QAction::triggered, this, [this] { emit settings_triggered(); });
   // Help
   auto *mh = new Menu(this);
   mh->setTitle(tr("Help"));
@@ -131,7 +130,6 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   QAction *about = new QAction(tr("About") + " (/about)", mh);
   about->setIcon(QIcon(":/arts/icons/16/help-about.svg"));
   mh->addAction(about);
-  mh->addAction(QIcon(":/arts/icons/16/qt.svg"), tr("About Qt"),
-                &QApplication::aboutQt);
-  connect(about, &QAction::triggered, this, [this] { emit aboutTriggered(); });
+  mh->addAction(QIcon(":/arts/icons/16/qt.svg"), tr("About Qt"), &QApplication::aboutQt);
+  connect(about, &QAction::triggered, this, [this] { emit about_triggered(); });
 }

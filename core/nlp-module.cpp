@@ -2,14 +2,12 @@
 
 /*!
  * @fn NLPmodule::select_candidates
- * @brief Matches candidates for each index of occurrence in the input
- * expression.
+ * @brief Matches candidates for each index of occurrence in the input expression.
  * @param[in] selection selected expressions
  * @param[in] input text string
  * @returns dictionary with indices and selected expressions
  */
-CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
-                                              QString input) {
+CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QString input) {
   CacheWithIndices candidates;
   for (auto ewi : selection) {
     if (candidates.keys().isEmpty()) {
@@ -18,23 +16,24 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
     }
     bool not_in_candidates = false;
     for (auto rival : candidates.keys()) {
-      auto intersection_and_weight =
-          StringSearch::intersects(ewi.first, candidates[rival].first);
+      auto intersection_and_weight = StringSearch::intersects(ewi.first, candidates[rival].first);
       auto x = intersection_and_weight.first;
       auto weight_sub = intersection_and_weight.second;
-      if (x == Intersects::No)
-        not_in_candidates = true;
+      if (x == Intersects::No) not_in_candidates = true;
       else {
         weight_sub += ewi.second->weight() - candidates[rival].second->weight();
         if (weight_sub > 0) {
           not_in_candidates = true;
           candidates.remove(rival);
-        } else if (weight_sub == 0) {
+          continue;
+        }
+        if (weight_sub == 0) {
           if (ewi.second->use_cases < candidates[rival].second->use_cases) {
             not_in_candidates = true;
             candidates.remove(rival);
-          } else if (ewi.second->use_cases ==
-                     candidates[rival].second->use_cases) {
+            continue;
+          }
+          if (ewi.second->use_cases == candidates[rival].second->use_cases) {
             if (_gen->bounded(0, 2) == 1) {
               not_in_candidates = true;
               candidates.remove(rival);
@@ -43,8 +42,10 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
         }
       }
     }
-    if (not_in_candidates)
-      candidates[candidates.lastKey() + 1] = ewi;
+    if (not_in_candidates) {
+      if (not candidates.isEmpty()) candidates[candidates.lastKey() + 1] = ewi;
+      else candidates[0] = ewi;
+    }
   }
   return candidates;
 }
@@ -57,17 +58,26 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection,
  * @param[in] candidates to be printed
  * @returns QPair of @a input and @a output
  */
-QPair<QString, QString> NLPmodule::compose_answer(QString input,
-                                                  CacheWithIndices candidates) {
+QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndices candidates) {
   QString output;
   input = StringSearch::purify(input);
   for (auto ewi : candidates) {
-    if (not ewi.second)
-      continue;
-    ewi.second->use_cases += 1;
-    if (not _cache.contains(ewi.second))
-      _cache.append(ewi.second);
-    output += ewi.second->reagent_text + " ";
+    if (not ewi.second) continue;
+    if (ewi.second->exec) {
+      // On a such moment we need to figure out, what kind of expression we have.
+      // If we have executable expression, we must evaluate it.
+      auto obj = _pm->request_answer(*ewi.second);
+      if (obj.contains("error_type")) continue;
+      if (obj.contains("send")) {
+        ewi.second->use_cases += 1;
+        if (not _cache.contains(ewi.second)) _cache.append(ewi.second);
+        output += obj["send"].toString() + " ";
+      }
+    } else {
+      ewi.second->use_cases += 1;
+      if (not _cache.contains(ewi.second)) _cache.append(ewi.second);
+      output += ewi.second->reagent_text + " ";
+    }
     input = StringSearch::replace(input, ewi.first);
   }
   return QPair<QString, QString>(input, output);
@@ -85,8 +95,7 @@ void NLPmodule::search_for_suggests(const QString &input) {
     selection = select_from_db(input);
     from_db = true;
   }
-  if (selection.keys().isEmpty())
-    return;
+  if (selection.keys().isEmpty()) return;
   auto sorted = select_candidates(selection, input);
   auto composition = compose_answer(input, sorted);
   if (composition.first.length() / input.length() > 0.33 and not from_db) {

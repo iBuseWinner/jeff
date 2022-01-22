@@ -1,7 +1,6 @@
 #include "json.h"
 
-Json::Json(QString settingsPath, QObject *parent)
-    : QObject(parent), _settings_path(settingsPath) {}
+Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {}
 
 /*!
  * @fn Json::read_source_list
@@ -10,11 +9,10 @@ Json::Json(QString settingsPath, QObject *parent)
  * @sa Sources
  */
 Sources Json::read_source_list(SQLite *sql) {
-  auto *store = new QFile(
-      _settings_path + QDir::separator() + sources_store_filename, this);
+  auto *store = new QFile(_settings_path + QDir::separator() + sources_store_filename, this);
   QJsonArray sources_json = read_json(store);
   Sources sources;
-  for (const QJsonValue &source_json : qAsConst(sources_json))
+  for (auto source_json : sources_json)
     /*!
      * Some properties of sources are stored directly in the database itself
      * in tables. Json reads them too.
@@ -34,8 +32,7 @@ Sources Json::read_source_list(SQLite *sql) {
 Messages Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
   Messages message_history;
-  for (const QJsonValue &obj : qAsConst(messages_json))
-    message_history.append(MessageData(obj.toObject()));
+  for (auto obj : messages_json) message_history.append(MessageData(obj.toObject()));
   return message_history;
 }
 
@@ -46,33 +43,26 @@ Messages Json::read_message_history(QFile *file) {
  * @sa Cache
  */
 Cache Json::read_NLP_cache() {
-  auto *store = new QFile(
-      _settings_path + QDir::separator() + cache_store_filename, this);
-  if (not store->exists())
-    return Cache();
+  auto *store = new QFile(_settings_path + QDir::separator() + cache_store_filename, this);
+  if (not store->exists()) return Cache();
   QJsonArray cache_json = read_json(store);
   Cache cache;
-  for (const QJsonValue &obj : qAsConst(cache_json))
-    cache.append(new Expression(obj.toObject()));
+  for (auto obj : cache_json) cache.append(new Expression(obj.toObject()));
   return cache;
 }
 
 /*!
  * @fn Json::read_scripts
- * @brief Reads scripts metadata that is intended to enhance Jeff's
- * capabilities.
+ * @brief Reads scripts metadata that is intended to enhance Jeff's capabilities.
  * @returns scripts metadata
  * @sa Scripts
  */
 Scripts Json::read_scripts() {
-  auto *store =
-      new QFile(_settings_path + QDir::separator() + scripts_store_filename);
-  if (not store->exists())
-    return Scripts();
+  auto *store = new QFile(_settings_path + QDir::separator() + scripts_store_filename);
+  if (not store->exists()) return Scripts();
   QJsonArray scripts_json = read_json(store);
   Scripts scripts;
-  for (const QJsonValue &obj : qAsConst(scripts_json))
-    scripts.append(ScriptMetadata(obj.toObject()));
+  for (auto obj : scripts_json) scripts.append(ScriptMetadata(obj.toObject()));
   return scripts;
 }
 
@@ -85,12 +75,11 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
   QJsonArray cs;
   for (int i = 0; i < sources.length(); i++) {
     cs.append(Source::to_json(sources[i]));
-    // Some properties of sources are stored directly in the database itself
-    // in "tables". Jeff writes them there.
+    // Some properties of sources are stored directly in the database itself in "tables".
+    // Jeff writes them there.
     sql->write_source(sources[i]);
   }
-  auto *savefile = new QFile(
-      _settings_path + QDir::separator() + sources_store_filename, this);
+  auto *savefile = new QFile(_settings_path + QDir::separator() + sources_store_filename, this);
   write_json(savefile, cs);
 }
 
@@ -102,8 +91,7 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
  */
 void Json::write_message_history(Messages message_history, QFile *file) {
   QJsonArray message_history_json;
-  for (auto message : message_history)
-    message_history_json.append(message.to_json());
+  for (auto message : message_history) message_history_json.append(message.to_json());
   write_json(file, message_history_json);
 }
 
@@ -114,10 +102,8 @@ void Json::write_message_history(Messages message_history, QFile *file) {
  */
 void Json::write_NLP_cache(Cache cache) {
   QJsonArray cache_json;
-  for (auto expression : cache)
-    cache_json.append(expression->to_json());
-  auto *file = new QFile(
-      _settings_path + QDir::separator() + cache_store_filename, this);
+  for (auto expression : cache) cache_json.append(expression->to_json());
+  auto *file = new QFile(_settings_path + QDir::separator() + cache_store_filename, this);
   write_json(file, cache_json);
 }
 
@@ -128,10 +114,8 @@ void Json::write_NLP_cache(Cache cache) {
  */
 void Json::write_scripts(Scripts scripts) {
   QJsonArray scripts_json;
-  for (auto script : scripts)
-    scripts_json.append(script.to_json());
-  auto *file = new QFile(
-      _settings_path + QDir::separator() + scripts_store_filename, this);
+  for (auto script : scripts) scripts_json.append(script.to_json());
+  auto *file = new QFile(_settings_path + QDir::separator() + scripts_store_filename, this);
   write_json(file, scripts_json);
 }
 
@@ -145,8 +129,8 @@ std::string Json::to_json(KeyStore keystore) {
   QJsonArray arr;
   for (auto key : keystore.keys()) {
     QJsonArray a1;
-    a1.append(key.toString());
-    a1.append(keystore[key].toString());
+    a1.append(key);
+    a1.append(keystore[key]);
     arr.append(a1);
   }
   QJsonDocument doc(arr);
@@ -171,11 +155,10 @@ KeyStore Json::from_json(std::string str) {
   for (auto val : doc.array()) {
     auto va = val.toArray();
     if (va.size() != 2) {
-      emit json_error(
-          tr("The number of elements in the object is not equal to two."));
+      emit json_error(tr("The number of elements in the object is not equal to two."));
       return keystore;
     }
-    keystore[QVariant(va[0].toString())] = QVariant(va[1].toString());
+    keystore[va[0].toString()] = va[1];
   }
   return keystore;
 }
@@ -188,12 +171,11 @@ KeyStore Json::from_json(std::string str) {
  * @returns QJsonArray read from file
  */
 QJsonArray Json::read_json(QFile *file) {
-  if (not file->open(QIODevice::ReadOnly | QIODevice::Text))
-    return QJsonArray();
+  if (not file->exists()) return QJsonArray();
+  if (not file->open(QIODevice::ReadOnly | QIODevice::Text)) return QJsonArray();
   QTextStream textStream(file);
   auto *errors = new QJsonParseError();
-  QJsonDocument document =
-      QJsonDocument::fromJson(textStream.readAll().toUtf8(), errors);
+  QJsonDocument document = QJsonDocument::fromJson(textStream.readAll().toUtf8(), errors);
   if (errors->error != QJsonParseError::NoError) {
     emit json_error(errors->errorString());
     delete errors;
@@ -212,8 +194,7 @@ QJsonArray Json::read_json(QFile *file) {
  * @param[in] json_array array to write in @a savefile
  */
 void Json::write_json(QFile *savefile, QJsonArray json_array) {
-  if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text))
-    return;
+  if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) return;
   QJsonDocument jsonDocument(json_array);
   QTextStream textStream(savefile);
   textStream << jsonDocument.toJson(QJsonDocument::Compact);

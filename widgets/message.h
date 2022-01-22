@@ -7,6 +7,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
+#include <QResizeEvent>
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextDocument>
@@ -20,9 +21,6 @@
 class Message : public QWidget {
   Q_OBJECT
 public:
-  // Constants:
-  static const ushort maximalMessageWidth = 400;
-
   // Functions:
   Author returnAuthor() { return message.author; }
   ContentType returnContentType() { return message.content_type; }
@@ -68,7 +66,7 @@ private:
   void setupWarning(const QString &content);
   void setupError(const QString &content);
   void prepareSetupWidget();
-  void alignTextToWindowWidth();
+  void resizeEvent(QResizeEvent *event) override;
   QPair<QSpacerItem *, Board *> makeLayout();
 };
 
