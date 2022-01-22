@@ -18,4 +18,4 @@ private:
   Q_DISABLE_COPY(Help)
 };
 
-#endif // HELP_H
+#endif

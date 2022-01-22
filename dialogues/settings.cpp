@@ -37,12 +37,10 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
   box1->setLayout(box1Lt);
   keepHistory = new QCheckBox(QTranslator::tr("Keep history"), this);
   keepHistory->setEnabled(false);
-  auto *delayExplanation = new ExplanationLabel(
-      QTranslator::tr("Enables Jeff's response delay."), this);
-  auto *keepHistoryExplanation = new ExplanationLabel(
-      QTranslator::tr(
-          "Enables keeping the message history after exiting the application."),
-      this);
+  auto *delayExplanation = new ExplanationLabel(QTranslator::tr("Enables Jeff's response delay."), this);
+  auto *keepHistoryExplanation = new ExplanationLabel(QTranslator::tr(
+    "Enables keeping the message history after exiting the application."), this
+  );
   save_and_close = new Button(QTranslator::tr("OK"), this);
   save_and_close->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
   vert_box_lt->addWidget(delay);

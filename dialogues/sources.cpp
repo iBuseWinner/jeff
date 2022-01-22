@@ -176,10 +176,8 @@ void SourcesDialog::openCS() {
   disconnect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
   create_source_dialog = new CreateSourceDialog(basis, this);
   grid_layout->addWidget(create_source_dialog, 2, 0, 1, 0);
-  connect(create_source_dialog, &CreateSourceDialog::add, this,
-          &SourcesDialog::appendSingle);
-  connect(create_source_dialog, &CreateSourceDialog::cancelled, this,
-          &SourcesDialog::closeCS);
+  connect(create_source_dialog, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
+  connect(create_source_dialog, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCS);
 }
 
 /*!

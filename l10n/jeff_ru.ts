@@ -2,134 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
-    <name>AMenuBar</name>
-    <message>
-        <source>File</source>
-        <translation type="vanished">Файл</translation>
-    </message>
-    <message>
-        <source>Source manager</source>
-        <translation type="vanished">Менеджер источников</translation>
-    </message>
-    <message>
-        <source>Export message history</source>
-        <translation type="vanished">Экспортировать историю сообщений</translation>
-    </message>
-    <message>
-        <source>Import message history</source>
-        <translation type="vanished">Импортировать историю сообщений</translation>
-    </message>
-    <message>
-        <source>Enable monologue mode</source>
-        <translation type="vanished">Включить режим монолога</translation>
-    </message>
-    <message>
-        <source>&amp;Exit</source>
-        <translation type="vanished">&amp;Выход</translation>
-    </message>
-    <message>
-        <source>Edit</source>
-        <translation type="vanished">Правка</translation>
-    </message>
-    <message>
-        <source>Clear message history</source>
-        <translation type="vanished">Очистить историю сообщений</translation>
-    </message>
-    <message>
-        <source>Delete</source>
-        <translation type="vanished">Удалить</translation>
-    </message>
-    <message>
-        <source>Cut</source>
-        <translation type="vanished">Вырезать</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation type="vanished">Копировать</translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="vanished">Вставить</translation>
-    </message>
-    <message>
-        <source>Select all</source>
-        <translation type="vanished">Выбрать всё</translation>
-    </message>
-    <message>
-        <source>Tools</source>
-        <translation type="vanished">Инструменты</translation>
-    </message>
-    <message>
-        <source>Hide menubar</source>
-        <translation type="vanished">Скрыть меню</translation>
-    </message>
-    <message>
-        <source>Full screen</source>
-        <translation type="vanished">Полноэкранный режим</translation>
-    </message>
-    <message>
-        <source>Settings...</source>
-        <translation type="vanished">Параметры...</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished">Справка</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="vanished">О приложении</translation>
-    </message>
-    <message>
-        <source>About Qt</source>
-        <translation type="vanished">О Qt</translation>
-    </message>
-</context>
-<context>
-    <name>AMessage</name>
-    <message>
-        <source>Warning: </source>
-        <translation type="vanished">Предупреждение: </translation>
-    </message>
-    <message>
-        <source>Error: </source>
-        <translation type="vanished">Ошибка: </translation>
-    </message>
-</context>
-<context>
-    <name>ASW</name>
-    <message>
-        <source>Hello!</source>
-        <translation type="vanished">Привет!</translation>
-    </message>
-    <message>
-        <source>Save history</source>
-        <translation type="vanished">Сохранить историю сообщений</translation>
-    </message>
-    <message>
-        <source>JSON file</source>
-        <translation type="vanished">Файл JSON</translation>
-    </message>
-    <message>
-        <source>Import message history?</source>
-        <translation type="vanished">Импортировать историю сообщений?</translation>
-    </message>
-    <message>
-        <source>Messages will be added to the beginning of the dialogue.</source>
-        <translation type="vanished">Сообщения будут добавлены в начало диалога.</translation>
-    </message>
-    <message>
-        <source>Load history</source>
-        <translation type="vanished">Загрузить историю сообщений</translation>
-    </message>
-</context>
-<context>
-    <name>ASourceList</name>
-    <message>
-        <source>Sources</source>
-        <translation type="vanished">Источники</translation>
-    </message>
-</context>
-<context>
     <name>Basis</name>
     <message>
         <source>An access error occurred (e.g. trying to write to a read-only file).</source>
@@ -161,10 +33,6 @@
     <message>
         <source>Select database...</source>
         <translation>Выберите базу данных...</translation>
-    </message>
-    <message>
-        <source>ASW database</source>
-        <translation type="vanished">База данных ASW</translation>
     </message>
     <message>
         <source>Jeff database</source>
@@ -215,6 +83,13 @@
     <message>
         <source>Load history</source>
         <translation>Загрузить историю сообщений</translation>
+    </message>
+</context>
+<context>
+    <name>Json</name>
+    <message>
+        <source>The number of elements in the object is not equal to two.</source>
+        <translation>Количество элементов в объекте не равно двум.</translation>
     </message>
 </context>
 <context>
@@ -312,15 +187,66 @@
     </message>
 </context>
 <context>
+    <name>PythonModule</name>
+    <message>
+        <source>The module with path </source>
+        <translation>Модуль по пути </translation>
+    </message>
+    <message>
+        <source> cannot be opened.</source>
+        <translation> не может быть открыт.</translation>
+    </message>
+    <message>
+        <source>Failed to connect the module.</source>
+        <translation>Не удалось подключить модуль.</translation>
+    </message>
+    <message>
+        <source>Could not find &quot;answer&quot; attribute in module.</source>
+        <translation>Не удалось найти атрибут answer в модуле.</translation>
+    </message>
+    <message>
+        <source>Cannot call &quot;answer&quot;: this is not a function!</source>
+        <translation>Невозможно вызвать answer: это не функция!</translation>
+    </message>
+    <message>
+        <source>Failed to construct argument from string.</source>
+        <translation>Не удалось составить аргумент из строки.</translation>
+    </message>
+    <message>
+        <source>Failed to construct a tuple from a string.</source>
+        <translation>Не удалось составить кортеж из строки.</translation>
+    </message>
+    <message>
+        <source>The function could not execute correctly because it did not return a result.</source>
+        <translation>Не удалось выполнить функцию корректно, так как она не вернула результат.</translation>
+    </message>
+    <message>
+        <source>No valid JSON received.</source>
+        <translation>Не получен валидный JSON.</translation>
+    </message>
+    <message>
+        <source>No JSON object received.</source>
+        <translation>Не получен объект JSON.</translation>
+    </message>
+    <message>
+        <source>The path to the module was not received.</source>
+        <translation>Не получен путь до модуля.</translation>
+    </message>
+    <message>
+        <source>The path to the module is empty.</source>
+        <translation>Путь до модуля пустой.</translation>
+    </message>
+    <message>
+        <source>The name of the function was not received.</source>
+        <translation>Не получено имя функции.</translation>
+    </message>
+    <message>
+        <source>The function name is empty.</source>
+        <translation>Имя функции пустое.</translation>
+    </message>
+</context>
+<context>
     <name>QTranslator</name>
-    <message>
-        <source>Associative system</source>
-        <translation>Ассоциативная система</translation>
-    </message>
-    <message>
-        <source>The ASW Authors</source>
-        <translation type="vanished">Авторы ASW</translation>
-    </message>
     <message>
         <source>License</source>
         <translation>Лицензия</translation>
@@ -354,10 +280,6 @@
         <translation>Марк Сидиэй</translation>
     </message>
     <message>
-        <source>Titov Klimenty</source>
-        <translation type="vanished">Титов Климентий</translation>
-    </message>
-    <message>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
@@ -370,32 +292,12 @@
         <translation>Авторы</translation>
     </message>
     <message>
-        <source>Add source</source>
-        <translation type="vanished">Добавить источник</translation>
-    </message>
-    <message>
-        <source>Create</source>
-        <translation type="vanished">Создать</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="vanished">Отключить</translation>
-    </message>
-    <message>
         <source>Save and close</source>
         <translation>Сохранить и закрыть</translation>
     </message>
     <message>
         <source>Select database</source>
         <translation>Выбрать базу данных</translation>
-    </message>
-    <message>
-        <source>ASW database</source>
-        <translation type="vanished">База данных ASW</translation>
-    </message>
-    <message>
-        <source>This is the first start of ASW. Before you start working:</source>
-        <translation>Это - первый запуск Ассиста. Прежде чем начать работать:</translation>
     </message>
     <message>
         <source>1) go to the Source Manager...</source>
@@ -430,10 +332,6 @@
         <translation>Хранить историю</translation>
     </message>
     <message>
-        <source>Enables ASW response delay.</source>
-        <translation type="vanished">Включает задержку отправки ответа Ассиста.</translation>
-    </message>
-    <message>
         <source>Enables keeping the message history after exiting the application.</source>
         <translation>Позволяет сохранить историю сообщений после выхода из приложения.</translation>
     </message>
@@ -465,21 +363,13 @@
         <source>Jeff&apos;s database</source>
         <translation>База данных Джеффа</translation>
     </message>
+    <message>
+        <source>This is the first start of Jeff. Before you start working:</source>
+        <translation>Это первый старт Джеффа. Перед тем, как начать работать:</translation>
+    </message>
 </context>
 <context>
     <name>SQLite</name>
-    <message>
-        <source>Database</source>
-        <translation type="vanished">База данных</translation>
-    </message>
-    <message>
-        <source>doesn&apos;t exist.</source>
-        <translation type="vanished">не существует.</translation>
-    </message>
-    <message>
-        <source>is empty.</source>
-        <translation type="vanished">пуста.</translation>
-    </message>
     <message>
         <source>Database &quot;%1&quot; doesn&apos;t exist.</source>
         <translation>Базы данных &quot;%1&quot; не существует.</translation>

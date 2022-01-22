@@ -17,8 +17,7 @@
 class FirstStart : public QWidget {
 public:
   // Functions described in 'firststart.cpp':
-  explicit FirstStart(QWidget *parent = nullptr,
-                      ModalHandler *m_handler = nullptr);
+  explicit FirstStart(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
 
 private:
   Q_DISABLE_COPY(FirstStart)
