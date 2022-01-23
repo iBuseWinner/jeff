@@ -5,6 +5,7 @@
 #include "widgets/message.h"
 #include <QFileDialog>
 #include <QList>
+#include <QMutex>
 #include <QStringList>
 
 /*!
@@ -24,30 +25,14 @@ public:
    */
   HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent) { basis = _basis; }
 
-  /*!
-   * @fn HProcessor::append
-   * @brief Adds @a message to the story.
-   * @param[in] message message to be added
-   */
-  void append(const MessageData &message) { _message_history.append(message); }
-
-  /*!
-   * @fn HProcessor::clear
-   * @brief Clears the history.
-   */
-  void clear() { _message_history.clear(); }
-
-  /*!
-   * @fn HProcessor::remove_one
-   * @brief Removes message from history.
-   * @param[in] message message to be removed
-   */
-  void remove_one(MessageData message) { _message_history.removeOne(message); }
-
   // Functions described in `history-processor.cpp`:
-  void save(const QString &filename);
   void load(const QString &filename);
+  void append(const MessageData &message);
+  void clear();
+  void remove_one(MessageData message);
+  void save(const QString &filename);
   Messages recent(int amount);
+  QString last_user_message();
 
 signals:
   /*!
@@ -59,7 +44,11 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
-  Messages _message_history;
+  QMutex message_mutex;
+  Messages message_history;
+  
+  // Constants:
+  const int maximum_number_of_recent_messages_to_be_sent = 20;
 };
 
 #endif

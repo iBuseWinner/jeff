@@ -5,7 +5,6 @@
 #include <QMap>
 #include <QPair>
 #include <QString>
-#include <iostream>
 
 /*!
  * @struct WordMetadata

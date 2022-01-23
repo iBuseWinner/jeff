@@ -17,6 +17,7 @@ include_directories(
     core/database
     model
     model/nlp
+    model/python
     dialogues
     dialogues/sources
     widgets
@@ -59,6 +60,8 @@ set (SRCS
     core/history-processor.h
     core/model/message.h
     core/model/nlp/cache.h
+    core/model/nlp/cacher.h
+    core/model/nlp/cacher.cpp
     core/model/nlp/options.h
     core/model/nlp/responsewo.h
     core/model/nlp/stringssearch.h

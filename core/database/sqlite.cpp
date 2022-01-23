@@ -10,6 +10,7 @@
 bool SQLite::create_source(const Source &source, QString *uuid) {
   /*! The source is created even if the database itself does not exist. */
   auto *correct = new bool(true);
+  sql_mutex.lock();
   auto db = prepare(source.path, Correct, correct);
   if (db.databaseName().isEmpty()) return false;
   auto *query = new QSqlQuery(db);
@@ -17,6 +18,8 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
     if (not create_base_structure(query)) {
       emit sqlite_error("Could not create main table.");
       delete query;
+      db.close();
+      sql_mutex.unlock();
       return false;
     }
   }
@@ -39,6 +42,8 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
       QString::number(maximum_number_of_attempts) + "."
     );
     delete query;
+    db.close();
+    sql_mutex.unlock();
     return false;
   }
   *uuid = uuid_to_verify; /*!< The UUID is passed by pointer to the object that
@@ -55,10 +60,13 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
                 QString::number(source.is_prioritised)}) and
           exec(query, CreateSourceTable, QStringList(*uuid)))) {
     emit sqlite_error("Could not write options and create source table.");
+    db.close();
+    sql_mutex.unlock();
     delete query;
     return false;
   }
   db.close();
+  sql_mutex.unlock();
   delete query;
   return true;
 }
@@ -84,8 +92,12 @@ bool SQLite::create_base_structure(QSqlQuery *query) {
  * @returns list of sources @a sources
  */
 Sources SQLite::sources(const QString &path) {
+  sql_mutex.lock();
   auto db = prepare(path, Openable);
-  if (db.databaseName().isEmpty()) return Sources();
+  if (db.databaseName().isEmpty()) {
+    sql_mutex.unlock();
+    return Sources();
+  }
   auto *query = new QSqlQuery(db);
   exec(query, SelectSources);
   query->first();
@@ -103,6 +115,7 @@ Sources SQLite::sources(const QString &path) {
     query->next();
   }
   db.close();
+  sql_mutex.unlock();
   delete query;
   return sources;
 }
@@ -114,12 +127,20 @@ Sources SQLite::sources(const QString &path) {
  * @returns complete source properties
  */
 Source SQLite::load_source(Source source) {
+  sql_mutex.lock();
   auto db = prepare(source.path);
-  if (db.databaseName().isEmpty()) return source;
+  if (db.databaseName().isEmpty()) {
+    sql_mutex.unlock();
+    return source;
+  }
   auto *query = new QSqlQuery(db);
   exec(query, LoadOptions, {source.table_name});
   db.close();
-  if (not query->first()) return source;
+  sql_mutex.unlock();
+  if (not query->first()) {
+    delete query;
+    return source;
+  }
   source.table_title = query->value(0).toString();
   source.is_read_only = query->value(1).toBool();
   source.is_private = query->value(2).toBool();
@@ -135,6 +156,7 @@ Source SQLite::load_source(Source source) {
  * @param[in] source source properties
  */
 bool SQLite::write_source(const Source &source) {
+  sql_mutex.lock();
   auto db = prepare(source.path, Openable);
   if (db.databaseName().isEmpty()) return false;
   auto *query = new QSqlQuery(db);
@@ -146,8 +168,9 @@ bool SQLite::write_source(const Source &source) {
                       QString::number(source.is_private),
                       QString::number(source.is_catching),
                       QString::number(source.is_prioritised)});
-  db.close();
   delete query;
+  db.close();
+  sql_mutex.unlock();
   return result;
 }
 
@@ -158,17 +181,111 @@ bool SQLite::write_source(const Source &source) {
  * @param[in] address address of expression
  * @param[in] expression expression
  * @param[in] links links to other expressions
+ * @returns result of addition
  */
 bool SQLite::insert_expression(
-  const Source &source, int address, const QString &expression, const QString &links
+  const Source &source, int address, const QString &expression, const QSet<int> &links, bool ex
 ) {
+  sql_mutex.lock();
   auto db = prepare(source.path);
-  if (db.databaseName().isEmpty())
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
     return false;
+  }
   auto *query = new QSqlQuery(db);
-  auto result = exec(query, InsertExpression, {source.table_name, QString::number(address), expression, links});
+  auto result = exec(
+    query, InsertExpression,
+    {
+      source.table_name, QString::number(address), expression, pack_links(links),
+      QString::number(int(ex))
+    }
+  );
   db.close();
+  sql_mutex.unlock();
   delete query;
+  return result;
+}
+
+/*!
+ * @fn SQLite::insert_expression
+ * @brief Inserts a new expression into the source.
+ * @details If the expressions are already in the database, just adds a link 
+ * from one expression to another.
+ * @param[in] source properties
+ * @param[in] expression to be added
+ * @returns result of addition
+ */
+bool SQLite::insert_expression(const Source &source, const Expression &expression) {
+  sql_mutex.lock();
+  auto db = prepare(source.path);
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return false;
+  }
+  auto *query = new QSqlQuery(db);
+  exec(query, CountExpressions, {source.table_name});
+  query->first();
+  if (not query->isValid()) {
+    delete query;
+    db.close();
+    sql_mutex.unlock();
+    return false;
+  }
+  auto new_address = query->value(0).toInt();
+  exec(query, SelectAddressesByExpression, {source.table_name, expression.activator_text});
+  query->first();
+  int activator_expr_addr = 0;
+  if (query->isValid()) {
+    activator_expr_addr = query->value(0).toInt();
+  }
+  exec(query, SelectAddressesByExpressionAndExec, 
+       {source.table_name, expression.reagent_text, QString::number(expression.exec)});
+  query->first();
+  int reagent_expr_address = -1;
+  if (query->isValid()) {
+    reagent_expr_address = query->value(0).toInt();
+  }
+  bool result = false;
+  if (activator_expr_addr > 0) {
+    if (reagent_expr_address > 0) {
+      exec(query, SelectLinksByAddress, {source.table_name, QString::number(activator_expr_addr)});
+      query->first();
+      auto links = unpack_links(query->value(0).toString());
+      links.insert(reagent_expr_address);
+      result = exec(query, UpdateLinksAtAddress, {source.table_name, 
+                                                  QString::number(activator_expr_addr),
+                                                  pack_links(links)});
+    } else {
+      exec(query, SelectLinksByAddress, {source.table_name, QString::number(activator_expr_addr)});
+      query->first();
+      auto links = unpack_links(query->value(0).toString());
+      links.insert(new_address);
+      result = exec(query, UpdateLinksAtAddress, {source.table_name, 
+                                                  QString::number(activator_expr_addr),
+                                                  pack_links(links)});
+      result &= exec(query, InsertExpression, {source.table_name, QString::number(new_address),
+                                               expression.reagent_text, "",
+                                               QString::number(int(expression.exec))});
+    }
+  } else {
+    if (reagent_expr_address > 0) {
+      result = exec(query, InsertExpression, {source.table_name, QString::number(new_address),
+                                              expression.activator_text,
+                                              QString::number(reagent_expr_address), "0"});
+    } else {
+      result = exec(query, InsertExpression, {source.table_name, QString::number(new_address),
+                                              expression.activator_text,
+                                              QString::number(new_address + 1), "0"});
+      result &= exec(query, InsertExpression, {source.table_name, QString::number(new_address + 1),
+                                               expression.reagent_text, "",
+                                               QString::number(int(expression.exec))});
+    }
+  }
+  delete query;
+  db.close();
+  sql_mutex.unlock();
   return result;
 }
 
@@ -180,11 +297,13 @@ bool SQLite::insert_expression(
  * @returns expression-links pair
  */
 Expression SQLite::get_expression_by_address(const Source &source, int address) {
+  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) return Expression();
   auto *query = new QSqlQuery(db);
   exec(query, SelectELByAddress, {source.table_name, QString::number(address)});
   db.close();
+  sql_mutex.unlock();
   query->first();
   Expression expr;
   if (query->isValid()) {
@@ -203,8 +322,13 @@ Expression SQLite::get_expression_by_address(const Source &source, int address) 
  * @returns selection for given input
  */
 CacheWithIndices SQLite::scan_source(const Source &source, const QString &input) {
+  sql_mutex.unlock();
   auto db = prepare(source.path);
-  if (db.databaseName().isEmpty()) return CacheWithIndices();
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return CacheWithIndices();
+  }
   CacheWithIndices selection;
   auto *query = new QSqlQuery(db);
   exec(query, SelectAEL, {source.table_name});
@@ -221,14 +345,14 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
       auto subquery = new QSqlQuery(db);
       for (auto link : links) {
         if (link == 0) break;
-        auto *expr = new Expression();
-        expr->activator_text = activator_text;
+        Expression expr;
+        expr.activator_text = activator_text;
         exec(subquery, SelectExpressionAndExecByAddress, {source.table_name, QString::number(link)});
         subquery->first();
         if (not subquery->isValid()) continue;
-        expr->reagent_text = subquery->value(0).toString();
-        expr->exec = subquery->value(1).toBool();
-        expr->properties = props;
+        expr.reagent_text = subquery->value(0).toString();
+        expr.exec = subquery->value(1).toBool();
+        expr.properties = props;
         if (selection.keys().length() == 0)
           selection[0] = ExpressionWithIndices(x, expr);
         else
@@ -239,6 +363,7 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
     query->next();
   }
   db.close();
+  sql_mutex.unlock();
   delete query;
   return selection;
 }
@@ -254,8 +379,7 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
  * @returns opened QSqlDatabase @a db with @a path
  * @sa Check
  */
-QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result,
-                             bool quiet) {
+QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result, bool quiet) {
   auto db = QSqlDatabase::database();
   switch (option) {
     case NoCheck: {
@@ -565,7 +689,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       break;
     case WriteOptions:
-      query->prepare("INSERT INTO sources VALUES (:c, :t, :ro, :pv, :ch, :pr)");
+      query->prepare("insert into sources values (:c, :t, :ro, :pv, :ch, :pr)");
       query->bindValue(":c", values[0]);
       query->bindValue(":t", values[1]);
       query->bindValue(":ro", values[2].toInt());
@@ -574,55 +698,81 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       query->bindValue(":pr", values[5].toInt());
       break;
     case SelectSources:
-      query->prepare("SELECT * FROM sources");
+      query->prepare("select * from sources");
+      break;
+    case CountExpressions:
+      query->prepare("select seq from sqlite_sequence where name = :n");
+      query->bindValue(":n", values[0]);
       break;
     case InsertExpression:
-      query->prepare(QString("INSERT OR REPLACE INTO \"%1\" VALUES (:a, :x, :ls, :e)").arg(values[0]));
+      query->prepare(
+        QString("insert or replace into \"%1\" values (:a, :x, :ls, :e)").arg(values[0])
+      );
       query->bindValue(":a", values[1].toInt());
       query->bindValue(":x", values[2]);
       query->bindValue(":ls", values[3]);
       query->bindValue(":e", values[4].toInt());
       break;
+    case SelectAddressesByExpression:
+      query->prepare(QString("select address from \"%1\" where expression = :x").arg(values[0]));
+      query->bindValue(":x", values[1]);
+      break;
+    case SelectAddressesByExpressionAndExec:
+      query->prepare(
+        QString("select address from \"%1\" where expression = :x and exec = :e").arg(values[0])
+      );
+      query->bindValue(":x", values[1]);
+      query->bindValue(":e", values[2].toInt());
+      break;
+    case SelectLinksByAddress:
+      query->prepare(
+        QString("select links from \"%1\" where address = :a").arg(values[0])
+      );
+      query->bindValue(":a", values[1].toInt());
+      break;
+    case UpdateLinksAtAddress:
+      query->prepare(QString("update \"%1\" set links = :ls where address = :a").arg(values[0]));
+      query->bindValue(":ls", values[1]);
+      query->bindValue(":a", values[2].toInt());
+      break;
     case SelectExpressionAndExecByAddress:
       query->prepare(QString(
-        "SELECT expression, exec FROM \"%1\" WHERE address = :a").arg(values[0])
+        "select expression, exec from \"%1\" where address = :a").arg(values[0])
       );
       query->bindValue(":a", values[1].toInt());
       break;
     case SelectAEL:
-      query->prepare(QString("SELECT address, expression, links FROM \"%1\"").arg(values[0]));
+      query->prepare(QString("select address, expression, links from \"%1\"").arg(values[0]));
       break;
     case SelectELByAddress:
       query->prepare(QString(
-        "SELECT expression, links FROM \"%1\" WHERE address = :a").arg(values[0])
+        "select expression, links from \"%1\" where address = :a").arg(values[0])
       );
       query->bindValue(":a", values[1].toInt());
       break;
     case SelectAPByAddress:
-      query->prepare(QString("SELECT * FROM \"%1\" WHERE address = :a").arg(values[0]));
+      query->prepare(QString("select * from \"%1\" where address = :a").arg(values[0]));
       query->bindValue(":a", values[1].toInt());
       break;
     case IfMainTableExists:
-      query->prepare("SELECT name FROM sqlite_master WHERE type='table' AND "
-                    "name='sources';");
+      query->prepare("select name from sqlite_master where type='table' and name='sources';");
       break;
     case IfMainTableCorrect:
-      query->prepare("PRAGMA table_info('sources');");
+      query->prepare("pragma table_info('sources');");
       break;
     case IfSourceTableExists:
-      query->prepare("SELECT name FROM sqlite_master WHERE type='table' AND "
-                    "name=':n';");
+      query->prepare("select name from sqlite_master where type='table' and name=':n';");
       query->bindValue(":n", values[0]);
       break;
     case IfSourceTableCorrect:
-      query->prepare("PRAGMA table_info(':n');");
+      query->prepare("pragma table_info(':n');");
       query->bindValue(":n", values[0]);
       break;
     case RemoveMainTableIfExists:
-      query->prepare("DROP TABLE IF EXISTS 'sources';");
+      query->prepare("drop table if exists 'sources';");
       break;
     case RemoveSourceTableIfExists:
-      query->prepare("DROP TABLE IF EXISTS ':n';");
+      query->prepare("drop table if exists ':n';");
       query->bindValue(":n", values[0]);
       break;
     case NoneToDo:;
@@ -665,6 +815,13 @@ QSet<int> SQLite::unpack_links(const QString &links) {
   QStringList splitted = links.split(",");
   for (auto link : splitted) unpacked.insert(link.toInt());
   return unpacked;
+}
+
+QString SQLite::pack_links(const QSet<int> &links) {
+  QString packed;
+  for (auto link : links) packed.append(QString::number(link) + ",");
+  packed.truncate(packed.length() - 1);
+  return packed;
 }
 
 /*!

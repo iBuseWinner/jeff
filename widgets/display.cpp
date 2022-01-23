@@ -35,8 +35,7 @@ void Display::add_message(Message *message) {
   /*! If the scroll is approximately below the middle, and the number of
    * displayed messages is greater than the maximum... */
   if ((verticalScrollBar()->value() >
-       ((verticalScrollBar()->minimum() + verticalScrollBar()->maximum()) /
-        2)) and
+       ((verticalScrollBar()->minimum() + verticalScrollBar()->maximum()) / 2)) and
       (message_counter > max_message_amount))
     /*! ...we delete all unnecessary messages */
     while (message_counter > max_message_amount) {

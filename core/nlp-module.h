@@ -6,6 +6,7 @@
 #include "core/database/sqlite.h"
 #include "core/model/expression.h"
 #include "core/model/nlp/cache.h"
+#include "core/model/nlp/cacher.h"
 #include "core/model/nlp/responsewo.h"
 #include "core/model/nlp/stringssearch.h"
 #include "core/standard-templates.h"
@@ -17,7 +18,6 @@
 #include <QStringList>
 #include <QTime>
 #include <future>
-#include <iostream>
 
 /*!
  * @class NLPmodule
@@ -47,7 +47,7 @@ public:
    */
   ~NLPmodule() {
     save_cache();
-    for (auto *expr : _cache) delete expr;
+    delete _gen;
   }
 
   // Functions described in `nlp-module.cpp`:
@@ -73,7 +73,6 @@ private:
   // Objects:
   Basis *_basis = nullptr;
   PythonModule *_pm = nullptr;
-  Cache _cache;
   QRandomGenerator *_gen = nullptr;
 
   // Constants:

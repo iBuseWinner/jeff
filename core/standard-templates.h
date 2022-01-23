@@ -8,6 +8,7 @@
 #include "dialogues/modal-handler.h"
 #include "dialogues/settings.h"
 #include "dialogues/sources.h"
+#include "core/history-processor.h"
 #include "core/standard-templates.h"
 #include <QString>
 #include <QTime>
@@ -24,17 +25,18 @@ public:
    * @fn StandardTemplates::StandardTemplates
    * @brief The constructor.
    * @param[in,out] _basis reference to the Basis instance
+   * @param[in,out] _hp reference to the HProcessor instance
    * @param[in,out] parent QObject parent
    */
-  StandardTemplates(Basis *_basis, QObject *parent = nullptr)
-      : QObject(parent), basis(_basis) {}
+  StandardTemplates(Basis *_basis, HProcessor *_hp, QObject *parent = nullptr)
+    : QObject(parent), basis(_basis), hp(_hp) {}
 
   // Constants:
   static inline const QString source_manager_cmd = "/sourcemanager";
   static inline const QString first_start_cmd = "/firststart";
   static inline const QString about_cmd = "/about";
   static inline const QString settings_cmd = "/settings";
-  static inline const QString fast_append_cmd = "/fastappend";
+  static inline const QString fast_append_cmd = "/+ ";
   static inline const QString expression_manager_cmd = "/expressionmanager";
 
   static inline const QString monologue_mode_cmd = "/mm";
@@ -59,6 +61,7 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
+  HProcessor *hp = nullptr;
 };
 
 #endif

@@ -21,19 +21,19 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
       auto weight_sub = intersection_and_weight.second;
       if (x == Intersects::No) not_in_candidates = true;
       else {
-        weight_sub += ewi.second->weight() - candidates[rival].second->weight();
+        weight_sub += ewi.second.weight() - candidates[rival].second.weight();
         if (weight_sub > 0) {
           not_in_candidates = true;
           candidates.remove(rival);
           continue;
         }
         if (weight_sub == 0) {
-          if (ewi.second->use_cases < candidates[rival].second->use_cases) {
+          if (ewi.second.use_cases < candidates[rival].second.use_cases) {
             not_in_candidates = true;
             candidates.remove(rival);
             continue;
           }
-          if (ewi.second->use_cases == candidates[rival].second->use_cases) {
+          if (ewi.second.use_cases == candidates[rival].second.use_cases) {
             if (_gen->bounded(0, 2) == 1) {
               not_in_candidates = true;
               candidates.remove(rival);
@@ -62,21 +62,20 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
   QString output;
   input = StringSearch::purify(input);
   for (auto ewi : candidates) {
-    if (not ewi.second) continue;
-    if (ewi.second->exec) {
+    if (ewi.second.exec) {
       // On a such moment we need to figure out, what kind of expression we have.
       // If we have executable expression, we must evaluate it.
-      auto obj = _pm->request_answer(*ewi.second);
+      auto obj = _pm->request_answer(ewi.second);
       if (obj.contains("error_type")) continue;
       if (obj.contains("send")) {
-        ewi.second->use_cases += 1;
-        if (not _cache.contains(ewi.second)) _cache.append(ewi.second);
+        ewi.second.use_cases += 1;
+        _basis->cacher->append(ewi.second);
         output += obj["send"].toString() + " ";
       }
     } else {
-      ewi.second->use_cases += 1;
-      if (not _cache.contains(ewi.second)) _cache.append(ewi.second);
-      output += ewi.second->reagent_text + " ";
+      ewi.second.use_cases += 1;
+      _basis->cacher->append(ewi.second);
+      output += ewi.second.reagent_text + " ";
     }
     input = StringSearch::replace(input, ewi.first);
   }
@@ -116,23 +115,22 @@ void NLPmodule::search_for_suggests(const QString &input) {
  */
 CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   CacheWithIndices selection;
-  for (auto *ex : _cache)
-    for (int i = 0; i < _cache.length(); i++) {
-      auto x = StringSearch::contains(input, _cache[i]->activator_text);
-      if (x[0] != 0) {
-        bool is_in = false;
-        for (auto ewi : selection)
-          if (ewi.second == _cache[i])
-            is_in = true;
-        if (is_in)
-          continue;
-        if (selection.keys().length() == 0)
-          selection[0] = ExpressionWithIndices(x, _cache[i]);
-        else
-          selection[selection.lastKey() + 1] =
-              ExpressionWithIndices(x, _cache[i]);
-      }
+  Cache cache = _basis->cacher->get();
+  for (int i = 0; i < cache.length(); i++) {
+    auto x = StringSearch::contains(input, cache[i].activator_text);
+    if (x[0] != 0) {
+      bool is_in = false;
+      for (auto ewi : selection)
+        if (ewi.second == cache[i])
+          is_in = true;
+      if (is_in)
+        continue;
+      if (selection.keys().length() == 0)
+        selection[0] = ExpressionWithIndices(x, cache[i]);
+      else
+        selection[selection.lastKey() + 1] = ExpressionWithIndices(x, cache[i]);
     }
+  }
   return selection;
 }
 
@@ -167,10 +165,10 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
  * @fn NLPmodule::load_cache
  * @brief Loads the cache into memory.
  */
-void NLPmodule::load_cache() { _cache = _basis->json->read_NLP_cache(); }
+void NLPmodule::load_cache() { _basis->cacher->append(_basis->json->read_NLP_cache()); }
 
 /*!
  * @fn NLPmodule::save_cache
  * @brief Saves the cache to disk.
  */
-void NLPmodule::save_cache() { _basis->json->write_NLP_cache(_cache); }
+void NLPmodule::save_cache() { _basis->json->write_NLP_cache(_basis->cacher->get()); }

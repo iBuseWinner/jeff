@@ -73,7 +73,7 @@ private:
 
   // Objects:
   NLPmodule *_nlp = new NLPmodule(basis, pm);
-  StandardTemplates *_standard_templates = new StandardTemplates(basis);
+  StandardTemplates *_standard_templates = new StandardTemplates(basis, history_processor);
   
   bool _monologue_enabled = false;
 };

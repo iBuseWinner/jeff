@@ -4,6 +4,7 @@
 #include "core/database/json.h"
 #include "core/database/sqlite.h"
 #include "core/model/message.h"
+#include "core/model/nlp/cacher.h"
 #include "core/model/source.h"
 #include <QDir>
 #include <QFile>
@@ -14,6 +15,7 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QList>
+#include <QMutex>
 #include <QSettings>
 #include <QString>
 #include <QTextStream>
@@ -33,8 +35,9 @@ class Basis : public QObject {
   Q_OBJECT
 public:
   // Objects:
-  SQLite *sql = new SQLite(this); /*!< SQLite handler. */
-  Json *json = nullptr;           /*!< Json handler. */
+  SQLite *sql = new SQLite(this);    /*!< SQLite handler. */
+  Cacher *cacher = new Cacher(this); /*!< Cache handler.  */
+  Json *json = nullptr;              /*!< Json handler.   */
 
   // Constants:
   const char *companyName = "CCLC";
@@ -52,13 +55,15 @@ public:
   const char *isKeepingEnabledSt = "core/iskeepingenabled";
   const char *isHintsEnabledSt = "core/ishintsenabled";
   const char *isInaccurateSearchEnabledSt = "core/isinnacuratesearchenabled";
+  
+  const char *defaultSourcePath = "sources/defaultsourcepath";
+  const char *defaultSourceContainer = "sources/defaultsourcecontainer";
 
   // Functions:
   /*!
    * @fn Basis::Basis
    * @brief The constructor.
-   * @details At initialization, it reads a list of sources from the @a
-   * sourcesStoreFilename file.
+   * @details At initialization, it reads a list of sources from @a sourcesStoreFilename file.
    * @param[in,out] parent QObject parent
    */
   Basis(QObject *parent = nullptr) : QObject(parent) {
@@ -101,9 +106,12 @@ public:
    * @param[in] key a key to get the value
    * @returns value for @a key.
    */
-  inline QVariant read(const QString &key) { return _settings->value(key); }
-  inline QVariant operator[](const QString &key) { return _settings->value(key); }
-  inline QVariant operator[](const char *key) { return _settings->value(key); }
+  inline QVariant read(const QString &key)       { return _settings->value(key); }
+  inline QVariant operator[](const char *key)    { return _settings->value(key); }
+  inline QVariant operator[](const QString &key) { return read(key); }
+  
+  /*! Says if there is a parameter with this key in the settings. */
+  inline bool contains(const char *key) { return _settings->contains(key); }
 
   /*!
    * @fn Basis::get_settings_path
@@ -117,31 +125,43 @@ public:
    * @brief Loads @a _sources from file.
    */
   void load_sources() {
-    if (not _sources.isEmpty()) _sources.clear();
+    sources_mutex.lock();
+    if (not sources.isEmpty()) sources.clear();
     Sources tmp = json->read_source_list(sql);
-    for (int i = 0; i < tmp.length(); i++)
+    for (int i = 0; i < tmp.length(); i++) {
       if (db_exists(tmp[i].path))
-        if (not _sources.contains(tmp[i]))
-          _sources.append(tmp[i]);
+        if (not sources.contains(tmp[i]))
+          sources.append(tmp[i]);
+    }
+    sources_mutex.unlock();
   }
 
   /*!
    * @fn Basis::get_sources
    * @returns a list of sources @a _sources.
    */
-  inline Sources get_sources() { return _sources; }
+  inline Sources get_sources() {
+    sources_mutex.lock();
+    Sources s = sources;
+    sources_mutex.unlock();
+    return s;
+  }
 
   /*!
    * @fn Basis::set_sources
    * @brief Saves @a sources list.
    */
-  void set_sources(Sources sources) {
-    _sources = sources;
-    json->write_source_list(sql, sources);
+  void set_sources(Sources _sources) {
+    sources_mutex.lock();
+    sources = _sources;
+    sources_mutex.unlock();
+    json->write_source_list(sql, _sources);
+    check_default_source();
   }
 
   // Functions described in `basis.cpp`:
   void check_settings_file();
+  void check_default_source();
   void write(const QString &key, const QVariant &data);
 
 signals:
@@ -152,9 +172,14 @@ signals:
 
 private:
   // Objects:
-  QSettings *_settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, companyName,
-                                       applicationName, this); /*!< Qt settings object. */
-  Sources _sources; /*!< List of sources for @a NLPmodule. */
+  QSettings *_settings = new QSettings( /*!< Qt settings object. */
+    QSettings::IniFormat, QSettings::UserScope, companyName, applicationName, this
+  );
+  QMutex sources_mutex;
+  Sources sources; /*!< List of sources for @a NLPmodule. */
+  
+  // Functions described in `basis.cpp`:
+  void set_first_source_as_default();
 };
 
 #endif

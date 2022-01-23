@@ -32,6 +32,12 @@ public:
   ushort use_cases = 0;
   /*! Is the reagent a script to be executed? */
   bool exec = false;
+  /*! Compares two expressions. */
+  friend bool operator==(Expression e1, Expression e2) {
+    return e1.activator_text == e2.activator_text and e1.reagent_text == e2.reagent_text and
+           e1.properties == e2.properties and e1.exec == e2.exec;
+  }
+  
   /*!
    * @fn Expression::to_json
    * @brief Turns @an expresson into a JSON object.
@@ -46,6 +52,10 @@ public:
             {"exec", exec}};
   }
 
+  /*!
+   * @fn Expression::weight
+   * @brief Returns @a weight of expression.
+   */
   int weight() {
     if (properties.contains("weight")) return properties.value("weight").toInt();
     else return 0;
@@ -66,6 +76,6 @@ private:
   }
 };
 
-typedef QPair<QMap<int, int>, Expression *> ExpressionWithIndices;
+typedef QPair<QMap<int, int>, Expression> ExpressionWithIndices;
 
 #endif

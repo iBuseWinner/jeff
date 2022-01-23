@@ -13,8 +13,7 @@ CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
   selectFileBtn = new Button("", this);
   saveBtn = new Button(tr("Save"), this);
   cancelBtn = new Button(tr("Cancel"), this);
-  auto *spacer =
-      new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   titleInput->setPlaceholderText(tr("Enter source name"));
   saveBtn->setIcon(QIcon(":/arts/icons/16/document-save.svg"));
   cancelBtn->setIcon(QIcon(":/arts/icons/16/window-close.svg"));

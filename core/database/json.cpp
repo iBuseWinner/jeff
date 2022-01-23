@@ -47,7 +47,7 @@ Cache Json::read_NLP_cache() {
   if (not store->exists()) return Cache();
   QJsonArray cache_json = read_json(store);
   Cache cache;
-  for (auto obj : cache_json) cache.append(new Expression(obj.toObject()));
+  for (auto obj : cache_json) cache.append(Expression(obj.toObject()));
   return cache;
 }
 
@@ -102,7 +102,7 @@ void Json::write_message_history(Messages message_history, QFile *file) {
  */
 void Json::write_NLP_cache(Cache cache) {
   QJsonArray cache_json;
-  for (auto expression : cache) cache_json.append(expression->to_json());
+  for (auto expression : cache) cache_json.append(expression.to_json());
   auto *file = new QFile(_settings_path + QDir::separator() + cache_store_filename, this);
   write_json(file, cache_json);
 }

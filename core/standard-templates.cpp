@@ -36,8 +36,23 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == fast_append_cmd) {
-    
+  if (expression.startsWith(fast_append_cmd)) {
+    if (expression.length() > fast_append_cmd.length()) {
+      QString reagent_text = expression;
+      reagent_text.remove(0, fast_append_cmd.length());
+      QString activator_text = hp->last_user_message();
+      if (not activator_text.isEmpty()) {
+        Expression e;
+        e.activator_text = activator_text;
+        e.reagent_text = reagent_text;
+        Source s;
+        s.path = basis->read(basis->defaultSourcePath).toString();
+        s.table_name = basis->read(basis->defaultSourceContainer).toString();
+        basis->sql->insert_expression(s, e);
+        basis->cacher->append(e);
+      }
+    }
+    return true;
   }
   if (expression == expression_manager_cmd) {
     

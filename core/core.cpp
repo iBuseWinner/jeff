@@ -10,6 +10,7 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(basis->json, &Json::json_error, this, &Core::got_error);
   connect(basis, &Basis::settings_warning, this, &Core::got_warning);
   basis->check_settings_file();
+  basis->check_default_source();
   connect(history_processor, &HProcessor::send_message_history, this, &Core::show_history);
   connect(pm, &PythonModule::script_exception, this, &Core::got_warning);
   connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);

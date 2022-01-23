@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QJsonObject>
 #include <QMap>
+#include <QMutex>
 #include <QObject>
 #include <QPair>
 #include <QRandomGenerator>
@@ -20,7 +21,6 @@
 #include <QTime>
 #include <QUuid>
 #include <QVariant>
-#include <iostream>
 
 /*!
  * @enum Check
@@ -40,7 +40,12 @@ enum ToDo {
   LoadOptions,
   WriteOptions,
   SelectSources,
+  CountExpressions,
   InsertExpression,
+  SelectAddressesByExpression,
+  SelectAddressesByExpressionAndExec,
+  SelectLinksByAddress,
+  UpdateLinksAtAddress,
   SelectExpressionAndExecByAddress,
   SelectAEL,         /*!< Address, expression and links. */
   SelectELByAddress, /*!< Expression and links. */
@@ -76,8 +81,9 @@ public:
   Sources sources(const QString &path);
   Source load_source(Source source);
   bool write_source(const Source &source);
-  bool insert_expression(const Source &source, int address,
-                         const QString &expression, const QString &links);
+  bool insert_expression(const Source &source, int address, const QString &expression, 
+                         const QSet<int> &links, bool ex);
+  bool insert_expression(const Source &source, const Expression &expression);
   Expression get_expression_by_address(const Source &source, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
   QString generate_uuid();
@@ -89,6 +95,9 @@ signals:
   QString sqlite_error(QString error_text);
 
 private:
+  // Objects:
+  QMutex sql_mutex;
+  
   // Constants:
   static const int maximum_number_of_attempts = 4; /*!< Number of attempts for table creation. */
   static const int init_additionals_rows = 4;      /*!< Column from which additional expression 
@@ -103,6 +112,8 @@ private:
   bool exec(QSqlQuery *query, ToDo option, QStringList values = {});
   Options get_additional_properties(QSqlDatabase *db, const Source &source, int address);
   QSet<int> unpack_links(const QString &links);
+  QString pack_links(const QSet<int> &links);
+  
 };
 
 #endif
