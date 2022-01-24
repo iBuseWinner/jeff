@@ -15,9 +15,9 @@ include_directories(
     .
     core
     core/database
-    model
-    model/nlp
-    model/python
+    core/model
+    core/model/nlp
+    core/model/python
     dialogues
     dialogues/sources
     widgets
@@ -25,73 +25,80 @@ include_directories(
 
 set (SRCS
     core/basis.cpp
-    core/core.cpp
-    core/database/json.cpp
-    core/history-processor.cpp
-    core/python-module.cpp
-    core/scenery.cpp
-    core/standard-templates.cpp
-    dialogues/sources/create-source.cpp
-    dialogues/settings.cpp
-    dialogues/sources.cpp
-    dialogues/sources/edit-source.cpp
-    main.cpp
-    jeff.cpp
-    core/database/sqlite.cpp
-    dialogues/help.cpp
-    dialogues/firststart.cpp
-    dialogues/about.cpp
-    widgets/button.cpp
-    widgets/expressionlist.cpp
-    widgets/message.cpp
-    widgets/board.cpp
-    widgets/display.cpp
-    widgets/line.cpp
-    widgets/lineedit.cpp
-    widgets/menubar.cpp
-    core/nlp-module.cpp
-    widgets/explanationlabel.cpp
-    widgets/sourcelist.cpp
-    jeff.h
     core/basis.h
+    core/core.cpp
     core/core.h
-    core/database/json.h
-    core/model/expression.h
+    core/history-processor.cpp
     core/history-processor.h
+    core/nlp-module.cpp
+    core/nlp-module.h
+    core/nlp-structures.h
+    core/python-module.cpp
+    core/python-module.h
+    core/scenery.cpp
+    core/scenery.h
+    core/standard-templates.cpp
+    core/standard-templates.h
+    core/database/json.cpp
+    core/database/json.h
+    core/database/sqlite.cpp
+    core/database/sqlite.h
+    core/model/expression.h
+    core/model/keystore.h
     core/model/message.h
+    core/model/source.h
     core/model/nlp/cache.h
-    core/model/nlp/cacher.h
     core/model/nlp/cacher.cpp
+    core/model/nlp/cacher.h
     core/model/nlp/options.h
     core/model/nlp/responsewo.h
-    core/model/nlp/stringssearch.h
     core/model/nlp/stringssearch.cpp
-    core/python-module.h
-    core/model/source.h
-    core/scenery.h
-    core/database/sqlite.h
-    core/standard-templates.h
-    dialogues/modal-handler.h
-    dialogues/sources/create-source.h
-    dialogues/help.h
-    dialogues/firststart.h
+    core/model/nlp/stringssearch.h
+    core/model/python/modulesdata.h
+    core/model/python/object.h
+    core/model/python/script.h
+    dialogues/about.cpp
     dialogues/about.h
+    dialogues/firststart.cpp
+    dialogues/firststart.h
+    dialogues/help.cpp
+    dialogues/help.h
+    dialogues/modal-handler.h
+    dialogues/settings.cpp
     dialogues/settings.h
+    dialogues/sources.cpp
     dialogues/sources.h
+    dialogues/sources/create-source.cpp
+    dialogues/sources/create-source.h
+    dialogues/sources/edit-source.cpp
     dialogues/sources/edit-source.h
-    widgets/button.h
-    widgets/expressionlist.h
-    widgets/message.h
+    widgets/board.cpp
     widgets/board.h
+    widgets/button.cpp
+    widgets/button.h
+    widgets/display.cpp
     widgets/display.h
-    widgets/line.h
-    widgets/lineedit.h
-    widgets/menubar.h
-    core/nlp-module.h
+    widgets/explanationlabel.cpp
     widgets/explanationlabel.h
-    widgets/sourcelist.h
-    widgets/menu.h
+    widgets/expressionlist.cpp
+    widgets/expressionlist.h
+    widgets/line.cpp
+    widgets/line.h
+    widgets/lineedit.cpp
+    widgets/lineedit.h
     widgets/menu.cpp
+    widgets/menu.h
+    widgets/menubar.cpp
+    widgets/menubar.h
+    widgets/message.cpp
+    widgets/message.h
+    widgets/sourcelist.cpp
+    widgets/sourcelist.h
+    widgets/spoiler.cpp
+    widgets/spoiler.h
+    jeff.cpp
+    jeff.h
+    main.cpp
 )
 
 add_executable(${CMAKE_PROJECT_NAME} ${SRCS} resources.qrc)

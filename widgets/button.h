@@ -11,11 +11,10 @@
  */
 class Button : public QToolButton {
   Q_OBJECT
-public:
-  // Functions described in 'a_button.cpp':
-  explicit Button(const QString &text = "", QWidget *parent = nullptr);
-private:
   Q_DISABLE_COPY(Button)
+public:
+  // Functions described in 'button.cpp':
+  Button(const QString &text = "", QWidget *parent = nullptr);
 };
 
 #endif

@@ -9,6 +9,7 @@
  */
 class Menu : public QMenu {
   Q_OBJECT
+  Q_DISABLE_COPY(Menu)
 public:
   // Functions described in `menu.cpp`:
   Menu(QWidget *parent);

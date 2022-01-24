@@ -9,12 +9,10 @@
  */
 class SourceList : public QTreeWidget {
   Q_OBJECT
+  Q_DISABLE_COPY(SourceList)
 public:
   // Functions described in 'sourcelist.cpp':
-  explicit SourceList(QWidget *parent = nullptr);
-
-private:
-  Q_DISABLE_COPY(SourceList)
+  SourceList(QWidget *parent = nullptr);
 };
 
 #endif

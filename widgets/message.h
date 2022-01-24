@@ -20,6 +20,7 @@
  */
 class Message : public QWidget {
   Q_OBJECT
+  Q_DISABLE_COPY(Message)
 public:
   // Functions:
   Author returnAuthor() { return message.author; }
@@ -30,8 +31,8 @@ public:
   MessageData returnMessage() { return message; }
 
   // Functions described in 'message.cpp':
-  explicit Message();
-  explicit Message(MessageData message);
+  Message();
+  Message(MessageData message);
   void setMessage(MessageData _message);
   void setWidget(ModalHandler *m_handler);
 
@@ -43,8 +44,6 @@ signals:
   void closed();
 
 private:
-  Q_DISABLE_COPY(Message)
-
   // Objects:
   MessageData message;
   QGridLayout *gridLayout = nullptr;
