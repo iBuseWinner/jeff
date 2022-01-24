@@ -6,18 +6,16 @@
  * @param[in,out] parent QObject parent
  */
 Line::Line(QWidget *parent) : Board(parent) {
-  line_edit = new LineEdit(this);
-  send_button = new Button("", this);
-  send_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
+  send_button.setText("");
+  send_button.setToolButtonStyle(Qt::ToolButtonIconOnly);
 #ifdef Q_OS_UNIX
-  send_button->setIcon(QIcon::fromTheme("mail-send"));
+  send_button.setIcon(QIcon::fromTheme("mail-send"));
 #else
-  send_button->setIcon(QIcon(":/arts/icons/16/send.svg"));
+  send_button.setIcon(QIcon(":/arts/icons/16/send.svg"));
 #endif
-  auto *layout = new QHBoxLayout(this);
-  layout->setMargin(0);
-  layout->setSpacing(0);
-  layout->addWidget(line_edit);
-  layout->addWidget(send_button);
-  setLayout(layout);
+  layout.setMargin(0);
+  layout.setSpacing(0);
+  layout.addWidget(&line_edit);
+  layout.addWidget(&send_button);
+  setLayout(&layout);
 }

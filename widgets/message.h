@@ -23,18 +23,18 @@ class Message : public QWidget {
   Q_DISABLE_COPY(Message)
 public:
   // Functions:
-  Author returnAuthor() { return message.author; }
-  ContentType returnContentType() { return message.content_type; }
-  Theme returnTheme() { return message.theme; }
-  QString returnContent() { return message.content; }
-  QDateTime returnDateTime() { return message.datetime; }
-  MessageData returnMessage() { return message; }
+  Author author() { return md.author; }
+  ContentType content_type() { return md.content_type; }
+  Theme theme() { return md.theme; }
+  QString content() { return md.content; }
+  QDateTime date_time() { return md.datetime; }
+  MessageData message_data() { return md; }
 
   // Functions described in 'message.cpp':
   Message();
-  Message(MessageData message);
-  void setMessage(MessageData _message);
-  void setWidget(ModalHandler *m_handler);
+  Message(MessageData _md);
+  void message_data(MessageData _md);
+  void widget(ModalHandler *modal_handler);
 
 signals:
   /*!
@@ -45,28 +45,28 @@ signals:
 
 private:
   // Objects:
-  MessageData message;
-  QGridLayout *gridLayout = nullptr;
-  QWidget *widget = nullptr;
+  MessageData md;
+  QGridLayout *grid_layout = nullptr;
+  QWidget *w = nullptr;
 
   // Constants:
   static const ushort standardMargin = 6;
 
   // Functions described in 'message.cpp':
-  void setAuthor(Author aType);
-  void setMessageType(ContentType cType);
-  // void setTheme(eT tType);
-  void setupJeff();
-  void setupUser();
-  void setupText(const QString &content);
-  void setupMarkdown(const QString &content);
-  // void setupPicture(const QString &content);
-  // void setupFile(const QString &content);
-  void setupWarning(const QString &content);
-  void setupError(const QString &content);
-  void prepareSetupWidget();
+  void author(Author _a);
+  void content_type(ContentType _ct);
+  // void theme(Theme _t);
+  void setup_jeff();
+  void setup_user();
+  void setup_text(const QString &content);
+  void setup_markdown(const QString &content);
+  // void setup_picture(const QString &content);
+  // void setup_file(const QString &content);
+  void setup_warning(const QString &content);
+  void setup_error(const QString &content);
+  void prepare_to_widget();
   void resizeEvent(QResizeEvent *event) override;
-  QPair<QSpacerItem *, Board *> makeLayout();
+  QPair<QSpacerItem *, Board *> make_layout();
 };
 
 #endif

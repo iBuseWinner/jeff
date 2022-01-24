@@ -15,16 +15,18 @@
  */
 class Line : public Board {
   Q_OBJECT
+  Q_DISABLE_COPY(Line)
 public:
   // Objects:
-  Button *send_button = nullptr;
-  LineEdit *line_edit = nullptr;
+  Button send_button;
+  LineEdit line_edit;
 
   // Functions described in 'line.cpp':
-  explicit Line(QWidget *parent = nullptr);
+  Line(QWidget *parent = nullptr);
 
 private:
-  Q_DISABLE_COPY(Line)
+  //Objects:
+  QHBoxLayout layout;
 };
 
 #endif

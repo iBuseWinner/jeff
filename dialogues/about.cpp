@@ -51,7 +51,7 @@ About::About(QWidget *parent, ModalHandler *m_handler) : QWidget(parent), _m_han
   tab2->setText(
     "<b>" + QTranslator::tr("Shamshin Victor") + "</b><br>" + QTranslator::tr("Developer") + 
     "<br><a href=\"mailto:androiddevelop@yandex.ru\">androiddevelop@yandex.ru</a><br><br><b>" +
-    QTranslator::tr("Mark CDA") + "</b><br>" + QTranslator::tr("Developer") + "<br><a"
+    QTranslator::tr("Mark CDA") + "</b><br>" + QTranslator::tr("Developer") + "<br><a "
     "href=\"mailto:markcda@protonmail.com\">markcda@protonmail.com</a>"
   );
   tab2->setOpenExternalLinks(true);

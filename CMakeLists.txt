@@ -103,4 +103,6 @@ set (SRCS
 
 add_executable(${CMAKE_PROJECT_NAME} ${SRCS} resources.qrc)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::Sql Python::Python)
+target_link_libraries(
+    ${CMAKE_PROJECT_NAME} PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::Sql Python::Python
+)

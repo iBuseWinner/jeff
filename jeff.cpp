@@ -43,8 +43,8 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
       emit send("/settings");
   }
   if (event->key() == Qt::Key_Return)
-    event->modifiers() == Qt::ControlModifier ? line->line_edit->insert("\n")
-                                              : line->send_button->click();
+    event->modifiers() == Qt::ControlModifier ? line->line_edit.insert("\n")
+                                              : line->send_button.click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H)
       menubar->setVisible(not menubar->isVisible());
@@ -56,8 +56,7 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
       import_message_history();
   }
   if (event->key() == Qt::Key_F11) {
-    menubar->fullScreenAction->setChecked(
-        not menubar->fullScreenAction->isChecked());
+    menubar->full_screen_action.setChecked(not menubar->full_screen_action.isChecked());
     /*! If the menu bar is hidden, it does not send signals. */
     if (menubar->isHidden())
       full_screen_handler();
@@ -80,11 +79,10 @@ void Jeff::apply_settings() {
     return;
   }
   resize((*basis)[basis->sizeSt].toSize());
-  menubar->fullScreenAction->setChecked(
-      (*basis)[basis->isFullScreenSt].toBool());
-  emit menubar->fullScreenAction->triggered();
+  menubar->full_screen_action.setChecked((*basis)[basis->isFullScreenSt].toBool());
+  emit menubar->full_screen_action.triggered();
   menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
-  menubar->emm->setChecked((*basis)[basis->isMonologueModeEnabledSt].toBool());
+  menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueModeEnabledSt].toBool());
 }
 
 /*!
@@ -98,7 +96,7 @@ void Jeff::save_window_settings() {
   basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
   basis->write(basis->isFullScreenSt, isFullScreen());
   basis->write(basis->isNotFirstStartSt, true);
-  basis->write(basis->isMonologueModeEnabledSt, menubar->emm->isChecked());
+  basis->write(basis->isMonologueModeEnabledSt, menubar->enable_monologue_mode.isChecked());
 }
 
 /*!
@@ -107,21 +105,24 @@ void Jeff::save_window_settings() {
  */
 void Jeff::connect_all() {
   // menubar
-  connect(menubar->fullScreenAction, &QAction::triggered, this, &Jeff::full_screen_handler);
+  connect(&(menubar->full_screen_action), &QAction::triggered, this, &Jeff::full_screen_handler);
+  connect(&(menubar->enable_monologue_mode), &QAction::triggered, this, [this] { emit send("/mm"); });
   connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
   connect(menubar, &MenuBar::about_triggered, this, [this] { emit send("/about"); });
   connect(menubar, &MenuBar::sources_triggered, this, [this] { emit send("/sourcemanager"); });
   connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send("/settings"); });
   connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
-  connect(menubar->emm, &QAction::triggered, this, [this] { emit send("/mm"); });
   // others
-  connect(line->send_button, &Button::clicked, this, &Jeff::user_input_handler);
+  connect(&(line->send_button), &Button::clicked, this, &Jeff::user_input_handler);
   connect(this, &Jeff::ready_state, this, [this] { emit send(tr("Hello!")); });
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
   connect(core, &Core::show, display, &Display::add_message_by_md);
   connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
-  connect(core, &Core::changeMenuBarMonologueCheckbox, menubar->emm, &QAction::setChecked);
+  connect(
+    core,                              &Core::changeMenuBarMonologueCheckbox, 
+    &(menubar->enable_monologue_mode), &QAction::setChecked
+  );
 }
 
 /*!
@@ -129,7 +130,7 @@ void Jeff::connect_all() {
  * @brief Shows a window in full screen or in normal mode.
  */
 void Jeff::full_screen_handler() {
-  menubar->fullScreenAction->isChecked() ? showFullScreen() : showNormal();
+  menubar->full_screen_action.isChecked() ? showFullScreen() : showNormal();
 }
 
 /*!
@@ -140,8 +141,8 @@ void Jeff::full_screen_handler() {
 void Jeff::user_input_handler() {
   // If user sends a message, the display automatically scrolls to the end.
   display->setScrollEnabled(true);
-  QString text = line->line_edit->text();
-  line->line_edit->clear();
+  QString text = line->line_edit.text();
+  line->line_edit.clear();
   emit send(text);
 }
 
@@ -152,9 +153,8 @@ void Jeff::user_input_handler() {
  */
 void Jeff::export_message_history() {
   QString filename = QFileDialog::getSaveFileName(
-      nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
-  if (filename.isEmpty())
-    return;
+    nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
+  if (filename.isEmpty()) return;
   history_processor->save(filename);
 }
 
@@ -170,9 +170,8 @@ void Jeff::import_message_history() {
           QMessageBox::Ok | QMessageBox::Cancel,
           QMessageBox::Ok) == QMessageBox::Ok) {
     QString filename = QFileDialog::getOpenFileName(
-        nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
-    if (filename.isEmpty())
-      return;
+      nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
+    if (filename.isEmpty()) return;
     display->start();
     history_processor->load(filename);
   }

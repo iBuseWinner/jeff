@@ -16,10 +16,11 @@
  */
 class MenuBar : public QMenuBar {
   Q_OBJECT
+  Q_DISABLE_COPY(MenuBar)
 public:
   // Objects:
-  QAction *fullScreenAction = nullptr;
-  QAction *emm = nullptr;
+  QAction full_screen_action;
+  QAction enable_monologue_mode;
 
   // Functions described in 'menubar.cpp':
   MenuBar(Line *line, QWidget *parent = nullptr);
@@ -44,9 +45,15 @@ signals:
    * TODO
    */
   // void help_triggered();
-
+  
 private:
-  Q_DISABLE_COPY(MenuBar)
+  // Objects:
+  Menu file_menu, edit_menu, tools_menu, help_menu;
+  QAction source_manager_action, export_history_action, import_history_action, /*!< `File`  menu. */
+    clear_history_action, delete_text_action, cut_text_action,                 /*!< `Edit`  menu. */
+    copy_text_action, paste_text_action, select_all_text_action,
+    hide_menubar_action, settings_action,                                      /*!< `Tools` menu. */
+    about_action;                                                              /*!< `Help`  menu. */
 };
 
 #endif

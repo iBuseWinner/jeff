@@ -64,7 +64,7 @@ void Display::add_message_with_widget(MessageData message_data, ModalHandler *ha
   auto *message = new Message(message_data);
   handler->getPrisoner()->setParent(message);
 //   handler->getPrisoner()->setFixedWidth(Message::maximalMessageWidth);
-  message->setWidget(handler);
+  message->widget(handler);
   add_message(message);
 }
 
