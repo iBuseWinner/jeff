@@ -51,7 +51,6 @@ set (SRCS
     core/model/nlp/cacher.cpp
     core/model/nlp/cacher.h
     core/model/nlp/options.h
-    core/model/nlp/responsewo.h
     core/model/nlp/stringssearch.cpp
     core/model/nlp/stringssearch.h
     core/model/python/modulesdata.h

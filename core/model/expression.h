@@ -1,8 +1,8 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-#include "nlp/options.h"
-#include "source.h"
+#include "core/model/nlp/options.h"
+#include "core/model/source.h"
 #include <QList>
 #include <QMap>
 #include <QString>
@@ -13,15 +13,7 @@
  */
 class Expression {
 public:
-  /*! Constructors. */
-  Expression() {}
-  Expression(const QJsonObject &json_object) {
-    activator_text = json_object["activator_text"].toString();
-    reagent_text = json_object["reagent_text"].toString();
-    properties = parse_props(json_object["aps"]);
-    use_cases = json_object["use_cases"].toInt();
-    exec = json_object["exec"].toBool();
-  }
+  // Objects:
   /*! What we looking for. */
   QString activator_text;
   /*! Answer expression. */
@@ -32,18 +24,25 @@ public:
   ushort use_cases = 0;
   /*! Is the reagent a script to be executed? */
   bool exec = false;
-  /*! Compares two expressions. */
+  
+  // Constructors:
+  Expression() {}
+  Expression(const QJsonObject &json_object) {
+    activator_text = json_object["activator_text"].toString();
+    reagent_text = json_object["reagent_text"].toString();
+    properties = parse_props(json_object["properties"]);
+    use_cases = json_object["use_cases"].toInt();
+    exec = json_object["exec"].toBool();
+  }
+  
+  // Functions:
+  /*! @brief Compares two expressions. */
   friend bool operator==(Expression e1, Expression e2) {
     return e1.activator_text == e2.activator_text and e1.reagent_text == e2.reagent_text and
            e1.properties == e2.properties and e1.exec == e2.exec;
   }
   
-  /*!
-   * @fn Expression::to_json
-   * @brief Turns @an expresson into a JSON object.
-   * @param[in] expression
-   * @returns converted properties of @an expression
-   */
+  /*! @brief Turns @an expresson into a JSON object. */
   QJsonObject to_json() {
     return {{"activator_text", activator_text},
             {"reagent_text", reagent_text},
@@ -52,24 +51,18 @@ public:
             {"exec", exec}};
   }
 
-  /*!
-   * @fn Expression::weight
-   * @brief Returns @a weight of expression.
-   */
-  int weight() {
-    if (properties.contains("weight")) return properties.value("weight").toInt();
-    else return 0;
-  }
+  /*! @brief Returns @a weight of expression. */
+  int weight() { return properties.contains("weight") ? properties.value("weight").toInt() : 0; }
 
-private:
-  /*! Properties' parser. */
-  Options parse_props(QJsonValue _aps) {
+  /*! @brief Properties' parser. */
+  static Options parse_props(QJsonValue _aps) {
     Options aps;
     for (auto _ap_key : _aps.toObject().keys()) aps[_ap_key] = _aps[_ap_key].toString();
     return aps;
   }
-  /*! Properties' packer. */
-  QJsonObject pack_props(Options aps) {
+  
+  /*! @brief Properties' packer. */
+  static QJsonObject pack_props(Options aps) {
     QJsonObject _aps;
     for (auto ap_key : aps.keys()) _aps.insert(ap_key, aps[ap_key]);
     return _aps;

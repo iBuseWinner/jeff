@@ -56,12 +56,10 @@ void Basis::set_first_source_as_default() {
  */
 void Basis::write(const QString &key, const QVariant &data) {
   if (not correct()) {
-    /*!
-     * If the file is incorrectly formatted, Basis will not be able to restore
-     * the data structure, so it clears the file.
-     */
-    _settings->clear();
-    _settings->sync();
+    /*! If the file is incorrectly formatted, Basis will not be able to restore
+     *  the data structure, so it clears the file.  */
+    _settings.clear();
+    _settings.sync();
   }
-  _settings->setValue(key, data);
+  _settings.setValue(key, data);
 }

@@ -7,7 +7,6 @@
 #include "core/model/expression.h"
 #include "core/model/nlp/cache.h"
 #include "core/model/nlp/cacher.h"
-#include "core/model/nlp/responsewo.h"
 #include "core/model/nlp/stringssearch.h"
 #include "core/standard-templates.h"
 #include <QList>
@@ -21,8 +20,7 @@
 
 /*!
  * @class NLPmodule
- * @brief Looks for regular expressions in user input and displays answers to
- * them.
+ * @brief Looks for regular expressions in user input and displays answers to them.
  * @sa Basis
  */
 class NLPmodule : public QObject {
@@ -56,18 +54,8 @@ public:
   void search_for_suggests(const QString &input);
 
 signals:
-  /*!
-   * @brief Sends a response expression to @a Core.
-   * @sa Core
-   */
+  /*! @brief Sends a response expression to @a Core. */
   QString response(QString response);
-
-  /*!
-   * @brief Sends a response expression with additional options for @a Core and
-   * others.
-   * @sa Core
-   */
-  ResponseWO response_wo(ResponseWO response_wo);
 
 private:
   // Objects:

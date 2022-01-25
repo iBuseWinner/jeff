@@ -117,7 +117,29 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
 }
 
 /*!
- * 
+ * @fn PythonModule::write_into_memory
+ * @brief Writes @a value to memory by @a key.
+ */
+void PythonModule::write_into_memory(QString key, QJsonValue value) { _memory_map[key] = value; }
+
+/*!
+ * @fn PythonModule::read_from_memory
+ * @brief Reads a value from memory by @a key.
+ */
+QJsonValue PythonModule::read_from_memory(QString key) {
+  return _memory_map.contains(key) ? _memory_map[key] : QJsonValue();
+}
+
+/*!
+ * @fn PythonModule::request_answer
+ * @brief Processes the script configuration and gets the necessary information from it.
+ * @details Handles next things:
+ *   1. `get_hist` prop
+ *   2. `need_values` prop
+ *   3. `properties` from @a expression
+ *   4. `script_path` and `func_name` props
+ *   5. <!-- script runs -->
+ *   6. `store_values` prop from script
  */
 QJsonObject PythonModule::request_answer(Expression &expression) {
   auto doc = QJsonDocument::fromJson(expression.reagent_text.toUtf8());
@@ -149,12 +171,15 @@ QJsonObject PythonModule::request_answer(Expression &expression) {
     if (not val_keys.isEmpty()) {
       transport["dict"] = QJsonObject();
       for (auto key : val_keys) {
+        if (not key.isString()) continue;
         QString k = key.toString();
-        if (_memory_map.contains(k)) transport["dict"].toObject()[k] = _memory_map[k];
+        transport["dict"].toObject()[k] = read_from_memory(k);
       }
     }
   }
-  // Let's find out module path and function's name:
+  if (not expression.properties.isEmpty()) {
+    transport["expression_properties"] = Expression::pack_props(expression.properties);
+  }
   if (not requirements.contains("script_path")) {
     emit script_exception(tr("The path to the module was not received."));
     return {{"error_type", 9}};
@@ -174,5 +199,17 @@ QJsonObject PythonModule::request_answer(Expression &expression) {
     return {{"error_type", 12}};
   }
   QJsonObject result = run(path, func, transport);
+  if (result.contains("store_values")) {
+    QJsonArray to_store = result["store_values"].toArray();
+    if (not to_store.isEmpty()) {
+      for (auto pair : to_store) {
+        if (pair.isObject()) continue;
+        auto pair_obj = pair.toObject();
+        if (not pair_obj.contains("key") or not pair_obj.contains("value")) continue;
+        if (not pair_obj["key"].isString()) continue;
+        write_into_memory(pair_obj["key"].toString(), pair_obj["value"]);
+      }
+    }
+  }
   return result;
 }

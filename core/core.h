@@ -12,13 +12,6 @@
 #include <QTimer>
 
 /*!
- * @enum State
- * @brief Specifies how messages from the user should be handled.
- * @sa PythonModule
- */
-enum State { Default, HandleNextInScript, HandleInScript };
-
-/*!
  * @class Core
  * @brief Controls I/O.
  * @details Manages objects associated with receiving messages from different
@@ -38,11 +31,10 @@ public:
   ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_nlp(const QString &result_expression);
-  void got_message_wo_from_nlp(ResponseWO result_expression_wo);
+  void got_message_from_script(const QString &message);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);
-  // void got_script();
   void show_history(Messages message_history);
   void set_monologue_enabled(const bool enabled);
   MessageData get_message(const QString &content, Author author, 

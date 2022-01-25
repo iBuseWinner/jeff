@@ -76,7 +76,7 @@ public:
    * @brief Determines if a settings file exists.
    * @returns the boolean value of the existence of the file.
    */
-  inline bool exists() { return QFile::exists(_settings->fileName()); }
+  inline bool exists() { return QFile::exists(_settings.fileName()); }
   
   /*!
    * @fn Basis::db_exists
@@ -91,14 +91,14 @@ public:
    * @brief Determines whether the settings file is readable or writable.
    * @returns the boolean value of the accessibility of the settings file.
    */
-  inline bool accessible() { return _settings->status() != QSettings::AccessError; }
+  inline bool accessible() { return _settings.status() != QSettings::AccessError; }
 
   /*!
    * @fn Basis::correct
    * @brief Determines the correctness of the settings file format.
    * @returns the boolean value of the correctness of the settings file.
    */
-  inline bool correct() { return _settings->status() != QSettings::FormatError; }
+  inline bool correct() { return _settings.status() != QSettings::FormatError; }
 
   /*!
    * @fn Basis::read
@@ -106,19 +106,19 @@ public:
    * @param[in] key a key to get the value
    * @returns value for @a key.
    */
-  inline QVariant read(const QString &key)       { return _settings->value(key); }
-  inline QVariant operator[](const char *key)    { return _settings->value(key); }
+  inline QVariant read(const QString &key)       { return _settings.value(key); }
+  inline QVariant operator[](const char *key)    { return _settings.value(key); }
   inline QVariant operator[](const QString &key) { return read(key); }
   
   /*! Says if there is a parameter with this key in the settings. */
-  inline bool contains(const char *key) { return _settings->contains(key); }
+  inline bool contains(const char *key) { return _settings.contains(key); }
 
   /*!
    * @fn Basis::get_settings_path
    * @brief Determines where application settings are stored.
    * @returns the absolute path of the application settings folder.
    */
-  inline QString get_settings_path() { return QFileInfo(_settings->fileName()).absolutePath(); }
+  inline QString get_settings_path() { return QFileInfo(_settings.fileName()).absolutePath(); }
 
   /*!
    * @fn Basis::load_sources
@@ -172,11 +172,14 @@ signals:
 
 private:
   // Objects:
-  QSettings *_settings = new QSettings( /*!< Qt settings object. */
-    QSettings::IniFormat, QSettings::UserScope, companyName, applicationName, this
+  QMutex sources_mutex, context_mutex;
+  Sources sources;      /*!< List of sources for @a NLPmodule. */
+  Options context;      /*!< Context values (@sa AIML). */
+  
+  /*! Qt settings object. */
+  QSettings _settings = QSettings(
+    QSettings::IniFormat, QSettings::UserScope, companyName, applicationName
   );
-  QMutex sources_mutex;
-  Sources sources; /*!< List of sources for @a NLPmodule. */
   
   // Functions described in `basis.cpp`:
   void set_first_source_as_default();

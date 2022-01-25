@@ -4,6 +4,7 @@
 #include "core/basis.h"
 #include "core/history-processor.h"
 #include "core/database/json.h"
+#include "core/model/expression.h"
 #include "core/model/keystore.h"
 #include "core/model/message.h"
 #include "core/model/python/modulesdata.h"
@@ -45,6 +46,7 @@ public:
 
 signals:
   QString script_exception(QString error);
+  QString send(QString message);
   
 private:
   Q_DISABLE_COPY(PythonModule)
@@ -69,8 +71,8 @@ private:
   // Functions described in `python-module.cpp`:
   void fill_modules_data();
   QJsonObject run(QString path, QString def_name, QJsonObject values);
-  void write_into_memory(QVariant key, QVariant value);
-  QVariant read_from_memory(QVariant key);
+  void write_into_memory(QString key, QJsonValue value);
+  QJsonValue read_from_memory(QString key);
 };
 
 #endif
