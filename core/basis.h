@@ -24,15 +24,17 @@
 /*!
  * @class Basis
  * @brief Provides methods for intra-component work.
- * @details Basis does a few important things:
+ * @details Basis does a lot of important things:
  *   - provides identifiers for saving settings
  *   - reads and writes a list of sources, settings and message history
- *   - stores a list of sources in memory
- *   - checks the settings file for errors.
- * @sa SQLite, Json, QSettings
+ *   - stores a list of sources and cached expressions
+ *   - checks the settings file for errors
+ *   - stores context and memory map.
+ * @sa SQLite, Json, PythonModule, NLPmodule, QSettings
  */
 class Basis : public QObject {
   Q_OBJECT
+  Q_DISABLE_COPY(Basis)
 public:
   // Objects:
   SQLite *sql = new SQLite(this);    /*!< SQLite handler. */
@@ -40,141 +42,102 @@ public:
   Json *json = nullptr;              /*!< Json handler.   */
 
   // Constants:
-  const char *companyName = "CCLC";
-  const char *applicationName = "Jeff";
+  const char *companyName     = "cclc";
+  const char *applicationName = "jeff";
 
   const char *isMenuBarHiddenSt = "jeff-qt/menubarishidden";
-  const char *sizeSt = "jeff-qt/size";
-  const char *isFullScreenSt = "jeff-qt/isfullscreen";
+  const char *sizeSt            = "jeff-qt/size";
+  const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  const char *isMonologueModeEnabledSt = "core/ismonologuemodeenabled";
-  const char *isDelayEnabledSt = "core/isdelayenabled";
-  const char *minDelaySt = "core/mindelay";
-  const char *maxDelaySt = "core/maxdelay";
-  const char *isKeepingEnabledSt = "core/iskeepingenabled";
-  const char *isHintsEnabledSt = "core/ishintsenabled";
-  const char *isInaccurateSearchEnabledSt = "core/isinnacuratesearchenabled";
+  const char *isMonologueEnabledSt = "core/ismonologuemodeenabled";
+  const char *isDelayEnabledSt     = "core/isdelayenabled";
+  const char *minDelaySt           = "core/mindelay";
+  const char *maxDelaySt           = "core/maxdelay";
+  const char *isKeepingEnabledSt   = "core/iskeepingenabled";
+  const char *isHintsEnabledSt     = "core/ishintsenabled";
   
-  const char *defaultSourcePath = "sources/defaultsourcepath";
+  const char *defaultSourcePath      = "sources/defaultsourcepath";
   const char *defaultSourceContainer = "sources/defaultsourcecontainer";
+  
+  const char *serverAuthorizationOnSt = "server/authorize";
+  const char *serverAuthKeySt         = "server/auth_key";
+  
+  const char *scriptPathWk   = "script_path";
+  const char *funcNameWk     = "func_name";
+  const char *getHistWk      = "get_hist";
+  const char *errorTypeWk    = "error_type;"
+  const char *recentWk       = "recent";
+  const char *readMemoryWk   = "need_values";
+  const char *values         = "values";
+  const char *exprPropsWk    = "expression_properties";
+  const char *writeMemoryWk  = "store_values";
+  const char *sendWk         = "send";
+  const char *searchAgainWk  = "search_again";
+  const char *send_as_userWk = "send_as_user";
+  const char *send_statusWk  = "send_status";
+  const char *authKeyWk      = "auth_key";
 
   // Functions:
-  /*!
-   * @fn Basis::Basis
-   * @brief The constructor.
-   * @details At initialization, it reads a list of sources from @a sourcesStoreFilename file.
-   * @param[in,out] parent QObject parent
-   */
+  /*! @brief The constructor. */
   Basis(QObject *parent = nullptr) : QObject(parent) {
     json = new Json(get_settings_path(), this);
     load_sources();
+    load_memory();
   }
-
-  /*!
-   * @fn Basis::exists
-   * @brief Determines if a settings file exists.
-   * @returns the boolean value of the existence of the file.
-   */
-  inline bool exists() { return QFile::exists(_settings.fileName()); }
   
-  /*!
-   * @fn Basis::db_exists
-   * @brief Determines if a database specified by @a filename exists.
-   * @param[in] filename
-   * @returns the boolean value of existence of the file.
-   */
+  /*! @brief The destructor. */
+  ~Basis() { save_memory(); }
+
+  /*! @brief Determines if a settings file exists. */
+  inline bool exists() { return QFile::exists(_settings.fileName()); }
+  /*! @brief Determines if a database specified by @a filename exists. */
   inline bool db_exists(const QString &filename) { return QFile::exists(filename); }
-
-  /*!
-   * @fn Basis::accessible
-   * @brief Determines whether the settings file is readable or writable.
-   * @returns the boolean value of the accessibility of the settings file.
-   */
+  /*! @brief Determines whether the settings file is readable or writable. */
   inline bool accessible() { return _settings.status() != QSettings::AccessError; }
-
-  /*!
-   * @fn Basis::correct
-   * @brief Determines the correctness of the settings file format.
-   * @returns the boolean value of the correctness of the settings file.
-   */
+  /*! @brief Determines the correctness of the settings file format. */
   inline bool correct() { return _settings.status() != QSettings::FormatError; }
-
-  /*!
-   * @fn Basis::read
-   * @brief Reads the setting.
-   * @param[in] key a key to get the value
-   * @returns value for @a key.
-   */
+  
+  /*! @brief Reads the setting. */
   inline QVariant read(const QString &key)       { return _settings.value(key); }
   inline QVariant operator[](const char *key)    { return _settings.value(key); }
   inline QVariant operator[](const QString &key) { return read(key); }
   
-  /*! Says if there is a parameter with this key in the settings. */
+  /*! @brief Says if there is a parameter with this key in the settings. */
   inline bool contains(const char *key) { return _settings.contains(key); }
-
-  /*!
-   * @fn Basis::get_settings_path
-   * @brief Determines where application settings are stored.
-   * @returns the absolute path of the application settings folder.
-   */
+  /*! @brief Determines where application settings are stored. */
   inline QString get_settings_path() { return QFileInfo(_settings.fileName()).absolutePath(); }
 
-  /*!
-   * @fn Basis::load_sources
-   * @brief Loads @a _sources from file.
-   */
-  void load_sources() {
-    sources_mutex.lock();
-    if (not sources.isEmpty()) sources.clear();
-    Sources tmp = json->read_source_list(sql);
-    for (int i = 0; i < tmp.length(); i++) {
-      if (db_exists(tmp[i].path))
-        if (not sources.contains(tmp[i]))
-          sources.append(tmp[i]);
-    }
-    sources_mutex.unlock();
-  }
-
-  /*!
-   * @fn Basis::get_sources
-   * @returns a list of sources @a _sources.
-   */
-  inline Sources get_sources() {
-    sources_mutex.lock();
-    Sources s = sources;
-    sources_mutex.unlock();
-    return s;
-  }
-
-  /*!
-   * @fn Basis::set_sources
-   * @brief Saves @a sources list.
-   */
-  void set_sources(Sources _sources) {
-    sources_mutex.lock();
-    sources = _sources;
-    sources_mutex.unlock();
-    json->write_source_list(sql, _sources);
-    check_default_source();
-  }
-
   // Functions described in `basis.cpp`:
+  void write(const QString &key, const QVariant &data);
   void check_settings_file();
   void check_default_source();
-  void write(const QString &key, const QVariant &data);
+  void load_sources();
+  void load_memory();
+  void save_memory();
+  Sources sources();
+  void sources(Sources s);
+  void context (const QString &key, const QString &value);
+  void memory  (const QString &key, QJsonValue     data );
+  QString    context (const QString &key);
+  QJsonValue memory  (const QString &key);
+  QJsonObject handle_to_script(const QJsonObject &object);
+  void handle_from_script(const QJsonObject &object, bool except_send = false);
 
 signals:
-  /*!
-   * @brief Reports a result of checking the settings file, if it is incorrect.
-   */
+  /*! @brief Reports a result of checking the settings file, if it is incorrect. */
   QString settings_warning(QString warning_text);
+  QString send(QString outter_message);
+  QString search_again(QString rephrased_message);
+  QString send_as_user(QString outter_message);
+  QString send_status(QString outter_message);
 
 private:
   // Objects:
-  QMutex sources_mutex, context_mutex;
-  Sources sources;      /*!< List of sources for @a NLPmodule. */
-  Options context;      /*!< Context values (@sa AIML). */
+  QMutex sources_mutex, context_mutex, memory_mutex;
+  Sources _sources; /*!< List of sources for @a NLPmodule. */
+  Options _context; /*!< Context values (@sa AIML). */
+  KeyStore _memory; /*!< Long-life memory. */
   
   /*! Qt settings object. */
   QSettings _settings = QSettings(

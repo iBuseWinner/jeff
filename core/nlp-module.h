@@ -25,28 +25,18 @@
  */
 class NLPmodule : public QObject {
   Q_OBJECT
+  Q_DISABLE_COPY(NLPmodule)
 public:
   // Functions:
-  /*!
-   * @fn NLPmodule::NLPmodule
-   * @brief The constructor.
-   * @param[in,out] basis reference to the Basis instance
-   * @param[in,out] parent QObject parent
-   */
+  /*! @brief The constructor. */
   NLPmodule(Basis *basis, PythonModule *pm, QObject *parent = nullptr) 
-    : QObject(parent), _basis(basis), _pm(pm) {
-    _gen = new QRandomGenerator(QTime::currentTime().msec());
+      : QObject(parent), basis(_basis), pm(_pm) {
+    gen = new QRandomGenerator(QTime::currentTime().msec());
     load_cache();
   }
 
-  /*!
-   * @fn NLPmodule::~NLPmodule
-   * @brief Saves cache.
-   */
-  ~NLPmodule() {
-    save_cache();
-    delete _gen;
-  }
+  /*! @brief The destructor. */
+  ~NLPmodule() { save_cache(); delete gen; }
 
   // Functions described in `nlp-module.cpp`:
   void load_cache();
@@ -59,9 +49,9 @@ signals:
 
 private:
   // Objects:
-  Basis *_basis = nullptr;
-  PythonModule *_pm = nullptr;
-  QRandomGenerator *_gen = nullptr;
+  Basis *basis = nullptr;
+  PythonModule *pm = nullptr;
+  QRandomGenerator *gen = nullptr;
 
   // Constants:
   inline static const QString cache_path = "";
@@ -69,7 +59,6 @@ private:
   // Functions described in `nlp-module.cpp`:
   CacheWithIndices select_from_cache(const QString &input);
   CacheWithIndices select_from_db(const QString &input);
-
   CacheWithIndices select_candidates(CacheWithIndices selection, QString input);
   QPair<QString, QString> compose_answer(QString input, CacheWithIndices candidates);
 };

@@ -14,35 +14,38 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
       candidates[0] = ewi;
       continue;
     }
-    bool not_in_candidates = false;
-    for (auto rival : candidates.keys()) {
-      auto intersection_and_weight = StringSearch::intersects(ewi.first, candidates[rival].first);
-      auto x = intersection_and_weight.first;
-      auto weight_sub = intersection_and_weight.second;
-      if (x == Intersects::No) not_in_candidates = true;
-      else {
-        weight_sub += ewi.second.weight() - candidates[rival].second.weight();
-        if (weight_sub > 0) {
-          not_in_candidates = true;
-          candidates.remove(rival);
-          continue;
-        }
-        if (weight_sub == 0) {
-          if (ewi.second.use_cases < candidates[rival].second.use_cases) {
-            not_in_candidates = true;
+    bool to_add = false;
+    if (not ewi.second.consonant()) { to_add = true; }
+    else {
+      for (auto rival : candidates.keys()) {
+        auto intersection_and_weight = StringSearch::intersects(ewi.first, candidates[rival].first);
+        auto x = intersection_and_weight.first;
+        auto weight_sub = intersection_and_weight.second;
+        if (x == Intersects::No) to_add = true;
+        else {
+          weight_sub += ewi.second.weight() - candidates[rival].second.weight();
+          if (weight_sub > 0) {
+            to_add = true;
             candidates.remove(rival);
             continue;
           }
-          if (ewi.second.use_cases == candidates[rival].second.use_cases) {
-            if (_gen->bounded(0, 2) == 1) {
-              not_in_candidates = true;
+          if (weight_sub == 0) {
+            if (ewi.second.use_cases < candidates[rival].second.use_cases) {
+              to_add = true;
               candidates.remove(rival);
+              continue;
+            }
+            if (ewi.second.use_cases == candidates[rival].second.use_cases) {
+              if (_gen->bounded(0, 2) == 1) {
+                to_add = true;
+                candidates.remove(rival);
+              }
             }
           }
         }
       }
     }
-    if (not_in_candidates) {
+    if (to_add) {
       if (not candidates.isEmpty()) candidates[candidates.lastKey() + 1] = ewi;
       else candidates[0] = ewi;
     }
@@ -66,18 +69,18 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
       // On a such moment we need to figure out, what kind of expression we have.
       // If we have executable expression, we must evaluate it.
       auto obj = _pm->request_answer(ewi.second);
-      if (obj.contains("error_type")) continue;
-      if (obj.contains("send")) {
+      if (obj.contains(basis->error_type)) continue;
+      if (obj.contains(basis->send)) {
         ewi.second.use_cases += 1;
-        _basis->cacher->append(ewi.second);
-        output += obj["send"].toString() + " ";
+        basis->cacher->append(ewi.second);
+        output += obj[basis->send].toString() + " ";
       }
     } else {
       ewi.second.use_cases += 1;
-      _basis->cacher->append(ewi.second);
+      basis->cacher->append(ewi.second);
       output += ewi.second.reagent_text + " ";
     }
-    input = StringSearch::replace(input, ewi.first);
+    if (not ewi.second.consonant()) input = StringSearch::replace(input, ewi.first);
   }
   return QPair<QString, QString>(input, output);
 }

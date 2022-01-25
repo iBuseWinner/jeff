@@ -339,7 +339,6 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
     if (x[0] != 0) {
       /*! ...then this value is an activator. */
       auto address = query->value(0).toInt();
-      auto props = get_additional_properties(&db, source, address);
       auto links = unpack_links(query->value(2).toString());
       auto activator_text = query->value(1).toString();
       auto subquery = new QSqlQuery(db);
@@ -352,7 +351,7 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
         if (not subquery->isValid()) continue;
         expr.reagent_text = subquery->value(0).toString();
         expr.exec = subquery->value(1).toBool();
-        expr.properties = props;
+        expr.properties = get_additional_properties(&db, source, link);
         if (selection.keys().length() == 0)
           selection[0] = ExpressionWithIndices(x, expr);
         else

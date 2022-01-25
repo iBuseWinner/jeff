@@ -7,8 +7,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(Qt5 COMPONENTS Core Gui Widgets Sql Xml REQUIRED)
-find_package(Python COMPONENTS Interpreter Development REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets Xml REQUIRED)
+find_package(Python COMPONENTS Development Interpreter REQUIRED)
 add_compile_definitions(QT)
 
 include_directories(
@@ -30,6 +30,8 @@ set (SRCS
     core/core.h
     core/history-processor.cpp
     core/history-processor.h
+    core/local-server.cpp
+    core/local-server.h
     core/nlp-module.cpp
     core/nlp-module.h
     core/nlp-structures.h
@@ -103,5 +105,12 @@ set (SRCS
 add_executable(${CMAKE_PROJECT_NAME} ${SRCS} resources.qrc)
 
 target_link_libraries(
-    ${CMAKE_PROJECT_NAME} PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::Sql Python::Python
+    ${CMAKE_PROJECT_NAME} PRIVATE
+        Python::Python
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Network
+        Qt5::Sql
+        Qt5::Widgets
+        Qt5::Xml
 )

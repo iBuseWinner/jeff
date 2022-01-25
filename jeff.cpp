@@ -82,7 +82,7 @@ void Jeff::apply_settings() {
   menubar->full_screen_action.setChecked((*basis)[basis->isFullScreenSt].toBool());
   emit menubar->full_screen_action.triggered();
   menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
-  menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueModeEnabledSt].toBool());
+  menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueEnabledSt].toBool());
 }
 
 /*!
@@ -96,7 +96,7 @@ void Jeff::save_window_settings() {
   basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
   basis->write(basis->isFullScreenSt, isFullScreen());
   basis->write(basis->isNotFirstStartSt, true);
-  basis->write(basis->isMonologueModeEnabledSt, menubar->enable_monologue_mode.isChecked());
+  basis->write(basis->isMonologueEnabledSt, menubar->enable_monologue_mode.isChecked());
 }
 
 /*!

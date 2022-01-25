@@ -7,19 +7,22 @@
  * @param[in,out] parent QObject parent
  */
 Core::Core(QObject *parent) : QObject(parent) {
-  connect(basis->json, &Json::json_error, this, &Core::got_error);
   connect(basis, &Basis::settings_warning, this, &Core::got_warning);
+  connect(basis, &Basis::send, this, &Core::got_message_from_script);
+  connect(basis, &Basis::send_again, this, &Core::got_message_to_search_again);
+  connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);
+  connect(basis, &Basis::send_status, this, &Core::got_status_from_script);
   basis->check_settings_file();
   basis->check_default_source();
   connect(history_processor, &HProcessor::send_message_history, this, &Core::show_history);
   connect(pm, &PythonModule::script_exception, this, &Core::got_warning);
   connect(pm, &PythonModule::send, this, &Core::got_message_from_script);
   connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);
-  connect(_standard_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
-  connect(_nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
-  connect(_standard_templates, &StandardTemplates::changeMonologueMode, this,
-          [this] { set_monologue_enabled(not _monologue_enabled); });
-  set_monologue_enabled((*basis)[basis->isMonologueModeEnabledSt].toBool());
+  connect(std_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
+  connect(nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
+  connect(std_templates, &StandardTemplates::changeMonologueMode, this,
+          [this] { set_monologue_enabled(not monologue_enabled); });
+  set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
 }
 
 /*!
@@ -30,10 +33,10 @@ Core::Core(QObject *parent) : QObject(parent) {
  * @sa NLPmodule, Json, Basis
  */
 Core::~Core() {
-  delete _nlp;
+  delete nlp;
   delete pm;
   delete history_processor;
-  delete _standard_templates;
+  delete std_templates;
   delete basis;
 }
 
@@ -51,9 +54,9 @@ void Core::got_message_from_user(const QString &user_expression) {
   history_processor->append(message);
   emit show(message);
   /*! If a user has entered the command, there is no need to run other modules. */
-  if (_standard_templates->dialogues(user_expression)) return;
-  if (_standard_templates->fast_commands(user_expression)) return;
-  _nlp->search_for_suggests(user_expression);
+  if (std_templates->dialogues(user_expression)) return;
+  if (std_templates->fast_commands(user_expression)) return;
+  nlp->search_for_suggests(user_expression);
 }
 
 /*!
@@ -75,11 +78,14 @@ void Core::got_message_from_nlp(const QString &result_expression) {
           : 0,
       this, [this, message, result_expression] {
         emit show(message);
-        if (_monologue_enabled) _nlp->search_for_suggests(result_expression);
+        if (monologue_enabled) nlp->search_for_suggests(result_expression);
       });
 }
 
 void Core::got_message_from_script(const QString &message) {}
+void Core::got_message_to_search_again(const QString &rephrased_message) {}
+void Core::got_message_from_script_as_user(const QString &outter_message) {}
+void Core::got_status_from_script(const QString &outter_message, const QString &uuid) {}
 
 /*!
  * @fn Core::got_warning
@@ -154,6 +160,6 @@ MessageData Core::get_message(const QString &content, Author author,
  * @param[in] enabled boolean value of monologue mode state
  */
 void Core::set_monologue_enabled(const bool enabled) {
-  _monologue_enabled = enabled;
+  monologue_enabled = enabled;
   emit changeMenuBarMonologueCheckbox(enabled);
 }

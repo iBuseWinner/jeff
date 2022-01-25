@@ -89,9 +89,7 @@ public:
   QString generate_uuid();
 
 signals:
-  /*!
-   * @brief Reports an error in the database.
-   */
+  /*! @brief Reports an error in the database. */
   QString sqlite_error(QString error_text);
 
 private:

@@ -20,6 +20,7 @@
  */
 class Core : public QObject {
   Q_OBJECT
+  Q_DISABLE_COPY(Core)
 public:
   // Objects:
   Basis *basis = new Basis();
@@ -31,7 +32,10 @@ public:
   ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_nlp(const QString &result_expression);
-  void got_message_from_script(const QString &message);
+  void got_message_from_script(const QString &outter_message);
+  void got_message_to_search_again(const QString &rephrased_message);
+  void got_message_from_script_as_user(const QString &outter_message);
+  void got_status_from_script(const QString &outter_message, const QString &uuid);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);
@@ -42,32 +46,19 @@ public:
 
 signals:
 #ifdef QT
-  /*!
-   * @brief Sends a message to Display.
-   * @sa Message, Display
-   */
+  /*! @brief Sends a message to Display. */
   ModalHandler *show_modal(MessageData message_data, ModalHandler *handler);
 #endif
-  
-  /*!
-   * @brief Sends a message.
-   * @sa MessageData
-   */
+  /*! @brief Sends a message. */
   MessageData show(MessageData message_data);
-
-  /*!
-   * @brief Sets the monologue mode.
-   */
+  /*! @brief Sets the monologue mode. */
   bool changeMenuBarMonologueCheckbox(bool enabled);
 
 private:
-  Q_DISABLE_COPY(Core)
-
   // Objects:
-  NLPmodule *_nlp = new NLPmodule(basis, pm);
-  StandardTemplates *_standard_templates = new StandardTemplates(basis, history_processor);
-  
-  bool _monologue_enabled = false;
+  bool monologue_enabled = false;
+  NLPmodule *nlp = new NLPmodule(basis, pm);
+  StandardTemplates *std_templates = new StandardTemplates(basis, history_processor);
 };
 
 #endif

@@ -54,8 +54,6 @@ private:
   // Objects:
   HProcessor *hp = nullptr;
   Basis *basis = nullptr;
-  QMutex *memory_mutex = nullptr;
-  KeyStore _memory_map;
   Scripts _scripts;
   ModulesData _mdata;
   QString _current_path;
@@ -71,8 +69,6 @@ private:
   // Functions described in `python-module.cpp`:
   void fill_modules_data();
   QJsonObject run(QString path, QString def_name, QJsonObject values);
-  void write_into_memory(QString key, QJsonValue value);
-  QJsonValue read_from_memory(QString key);
 };
 
 #endif

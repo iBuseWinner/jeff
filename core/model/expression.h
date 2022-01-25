@@ -52,7 +52,9 @@ public:
   }
 
   /*! @brief Returns @a weight of expression. */
-  int weight() { return properties.contains("weight") ? properties.value("weight").toInt() : 0; }
+  int weight() { return properties.value("weight").toInt(); }
+  /*! @brief Tells whether the expression can be answered together with other expressions. */
+  bool consonant() { return properties.value("consonant").toBool(); }
 
   /*! @brief Properties' parser. */
   static Options parse_props(QJsonValue _aps) {
