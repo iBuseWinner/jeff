@@ -1,6 +1,7 @@
 #ifndef LINEEDIT_H
 #define LINEEDIT_H
 
+#include "widgets/styling.h"
 #include <QLineEdit>
 #include <QWidget>
 
@@ -12,12 +13,12 @@ class LineEdit : public QLineEdit {
   Q_OBJECT
   Q_DISABLE_COPY(LineEdit)
 public:
-  // Functions described in 'lineedit.cpp':
+  // Functions described in `lineedit.cpp`:
   LineEdit(QWidget *parent = nullptr);
 
 private:
   // Constants:
-  inline static const QString style_sheet = "background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);";
+  inline static const QString style_sheet = "background-color: %1; color: %2;";
 };
 
 #endif

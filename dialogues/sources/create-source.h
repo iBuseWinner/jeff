@@ -17,32 +17,23 @@
  */
 class CreateSourceDialog : public QWidget {
   Q_OBJECT
+  Q_DISABLE_COPY(CreateSourceDialog)
 public:
-  // Functions described in 'create-source.cpp':
-  explicit CreateSourceDialog(Basis *_basis, QWidget *parent = nullptr);
+  // Functions described in `create-source.cpp`:
+  CreateSourceDialog(Basis *_basis, QWidget *parent = nullptr);
 
 signals:
-  /*!
-   * @brief Sends a signal that the user did not want to create a source.
-   */
+  /*! @brief Sends a signal that the user did not want to create a source. */
   void cancelled();
-
-  /*!
-   * @brief Sends source's data to create it.
-   */
+  /*! @brief Sends source's data to create it. */
   const Source add(const Source &source);
 
 protected:
   // Functions:
   /*! Cancels source's creation. */
-  void closeEvent(QCloseEvent *event) override {
-    emit cancelled();
-    event->accept();
-  }
+  void closeEvent(QCloseEvent *event) override { emit cancelled(); event->accept(); }
 
 private:
-  Q_DISABLE_COPY(CreateSourceDialog)
-
   // Objects:
   QString m_dbpath = "";
   Basis *basis = nullptr;
@@ -51,7 +42,7 @@ private:
   Button *saveBtn = nullptr;
   Button *cancelBtn = nullptr;
 
-  // Functions described in 'create-source.cpp':
+  // Functions described in `create-source.cpp`:
   void connector();
   void selStart();
   void select();

@@ -3,9 +3,12 @@
 
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
+#include "widgets/styling.h"
+#include <QApplication>
 #include <QCoreApplication>
 #include <QGridLayout>
 #include <QLabel>
+#include <QPalette>
 #include <QPixmap>
 #include <QScrollArea>
 #include <QSizePolicy>
@@ -19,13 +22,12 @@
  * @sa ModalHandler
  */
 class About : public QWidget {
+  Q_DISABLE_COPY(About)
 public:
-  // Functions described in 'about.cpp':
-  explicit About(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  // Functions described in `about.cpp`:
+  About(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
 
 private:
-  Q_DISABLE_COPY(About)
-
   // Objects:
   ModalHandler *_m_handler = nullptr;
 

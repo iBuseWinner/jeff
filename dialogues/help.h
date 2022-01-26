@@ -10,12 +10,10 @@
  * @brief Tells users how to use this program.
  */
 class Help : public QWidget {
-public:
-  // Functions described in 'help.cpp':
-  explicit Help(QWidget *parent = nullptr);
-
-private:
   Q_DISABLE_COPY(Help)
+public:
+  // Functions described in `help.cpp`:
+  Help(QWidget *parent = nullptr);
 };
 
 #endif

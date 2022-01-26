@@ -32,11 +32,16 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_han
   create_source = new QAction(QTranslator::tr("Create source"), this);
   remove_source = new QAction(QTranslator::tr("Remove source"), this);
   save_and_close = new Button(QTranslator::tr("Save and close"), this);
-  source_actions->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
-  add_source->setIcon(QIcon(":/arts/icons/16/insert-link.svg"));
-  create_source->setIcon(QIcon(":/arts/icons/16/document-new.svg"));
-  remove_source->setIcon(QIcon(":/arts/icons/16/remove-link.svg"));
-  save_and_close->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
+  source_actions->setIcon(
+    QIcon::fromTheme("insert-link", QIcon(":/arts/icons/16/insert-link.svg")));
+  add_source->setIcon(
+    QIcon::fromTheme("insert-link", QIcon(":/arts/icons/16/insert-link.svg")));
+  create_source->setIcon(
+    QIcon::fromTheme("document-new", QIcon(":/arts/icons/16/document-new.svg")));
+  remove_source->setIcon(
+    QIcon::fromTheme("remove-link", QIcon(":/arts/icons/16/remove-link.svg")));
+  save_and_close->setIcon(
+    QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
   source_actions->setPopupMode(QToolButton::InstantPopup);
   auto *add_source_menu = new Menu(source_actions);
   add_source_menu->addAction(add_source);

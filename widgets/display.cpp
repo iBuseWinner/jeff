@@ -107,10 +107,7 @@ void Display::start() {
   setWidget(box);
   messages_mutex.unlock();
   verticalScrollBar()->setStyleSheet(
-    "QScrollBar:vertical { background: transparent; border: none; width: 5px;"
-    "margin: 0px 0px 5px 0px; } QScrollBar::handle:vertical { border: 2px solid #e4e4e4;"
-    "background: #e4e4e4; width: 5px; border-radius: 1px; }"
-    "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { width: 0px; height: 0px; }"
+    styling.css_scroll_bar.arg(styling.light_theme ? styling.css_light_sb : styling.css_dark_sb)
   );
 }
 

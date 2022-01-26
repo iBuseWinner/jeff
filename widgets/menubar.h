@@ -22,7 +22,7 @@ public:
   QAction full_screen_action;
   QAction enable_monologue_mode;
 
-  // Functions described in 'menubar.cpp':
+  // Functions described in `menubar.cpp`:
   MenuBar(Line *line, QWidget *parent = nullptr);
 
 signals:
@@ -38,14 +38,14 @@ signals:
   void export_triggered();
   /*! @brief Informs about clicking on the "Import message history..." action. */
   void import_triggered();
-  
+
   /*!
    * @brief Informs about clicking on the "Help" action.
    * @details [constructing]
    * TODO
    */
   // void help_triggered();
-  
+
 private:
   // Objects:
   Menu file_menu, edit_menu, tools_menu, help_menu;

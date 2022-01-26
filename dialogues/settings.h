@@ -19,14 +19,13 @@
  */
 class Settings : public QWidget {
   Q_OBJECT
+  Q_DISABLE_COPY(Settings)
 public:
-  // Functions described in 'settings.cpp':
+  // Functions described in `settings.cpp`:
   explicit Settings(Basis *_basis, QWidget *parent = nullptr,
                     ModalHandler *m_handler = nullptr);
 
 private:
-  Q_DISABLE_COPY(Settings)
-
   // Objects:
   Basis *basis = nullptr;
   ModalHandler *_m_handler = nullptr;
@@ -48,7 +47,7 @@ private:
    */
   void delayChecked() { box1->setEnabled(delay->isChecked()); }
 
-  // Functions described in 'settings.cpp':
+  // Functions described in `settings.cpp`:
   void connector();
   void loadStates();
   void saveAndClose();
@@ -56,4 +55,4 @@ private:
   void maxDelayValueChanged(int value);
 };
 
-#endif // SETTINGS_H
+#endif

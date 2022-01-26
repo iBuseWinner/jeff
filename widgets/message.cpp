@@ -59,15 +59,8 @@ void Message::widget(ModalHandler *modal_handler) {
  * @sa Author
  */
 void Message::author(Author _a) {
-  switch (_a) {
-  case 1:
-    setup_jeff();
-    break;
-  case 2:
-    setup_user();
-    break;
-  default:;
-  }
+  if (_a == Author::Jeff) setup_jeff();
+  else setup_user();
 }
 
 /*! @brief Updates the text of a message. */
@@ -86,30 +79,13 @@ void Message::update_text(const QString &text) {
  * TODO
  */
 void Message::content_type(ContentType _ct) {
-  switch (_ct) {
-  case 1:
-    setup_text(md.content);
-    break;
-  case 2:
-    setup_markdown(md.content);
-    break;
-  // case 3:
-  //  setup_picture(md.content);
-  //  break;
-  // case 4:
-  //  setup_file(md.content);
-  //  break;
-  case 5:
-    setup_warning(md.content);
-    break;
-  case 6:
-    setup_error(md.content);
-    break;
-  case 7:
-    prepare_to_widget();
-    return;
-  default:;
-  }
+  if (_ct == ContentType::Text) setup_text(md.content);
+  else if (_ct == ContentType::Markdown) setup_markdown(md.content);
+  // else if (_ct == ContentType::Picture) setup_picture(md.content);
+  // else if (_ct == ContentType::File) setup_file(md.content);
+  else if (_ct == ContentType::Warning) setup_warning(md.content);
+  else if (_ct == ContentType::Error) setup_error(md.content);
+  else prepare_to_widget();
 }
 
 /*!

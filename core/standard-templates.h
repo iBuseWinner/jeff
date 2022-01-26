@@ -41,7 +41,7 @@ public:
 
   static inline const QString monologue_mode_cmd = "/mm";
 
-  // Functions described in 'standard-templates.cpp':
+  // Functions described in `standard-templates.cpp`:
   bool dialogues(const QString &expression);
   bool fast_commands(const QString &expression);
   static QPair<QString, QStringList> inline_commands(const QString &expression);

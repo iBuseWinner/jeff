@@ -1,6 +1,7 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include "widgets/styling.h"
 #include <QFrame>
 #include <QGridLayout>
 #include <QWidget>
@@ -13,9 +14,6 @@ class Board : public QFrame {
   Q_OBJECT
   Q_DISABLE_COPY(Board)
 public:
-  // Functions described in 'board.cpp':
-  Board(QWidget *parent = nullptr);
-
   // Constants:
   inline static const QString warning_style =
     "#board { border-width: 4px; border-style: solid; border-color: #ffec4d;"
@@ -24,12 +22,12 @@ public:
     "#board { border-width: 4px; border-style: solid; border-color: #e8553a;"
     "border-radius: 6px; background-color: #e8553a; } * { color: white; }";
 
+  // Functions described in `board.cpp`:
+  Board(QWidget *parent = nullptr);
+
 private:
   // Constants:
   inline static const QString object_name = "board";
-  inline static const QString style_sheet =
-    "#board { border-width: 4px; border-style: solid; border-color: white;"
-    "border-radius: 6px; background-color: white; } * { color: black; }";
 };
 
 #endif

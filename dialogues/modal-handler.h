@@ -12,6 +12,7 @@
  */
 class ModalHandler : public QObject {
   Q_OBJECT
+  Q_DISABLE_COPY(ModalHandler)
 public:
   /*!
    * @brief The constructor.
@@ -30,13 +31,13 @@ public:
 signals:
   /*!
    * @brief Says the @a _prisoner is closed.
-   * @attention At this point, the custom widget on ADisplay becomes zero size
-   * and displays as an empty message. It must be removed with ADisplay.
+   * @attention At this point, the custom widget on Display becomes zero size
+   * and displays as an empty message. It must be removed with Display.
    */
   void prisonerClosed();
 
 private:
-  Q_DISABLE_COPY(ModalHandler)
+  // Objects:
   QWidget *_prisoner = nullptr; /*!< Prisoner. */
 };
 

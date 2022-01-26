@@ -36,20 +36,22 @@ About::About(QWidget *parent, ModalHandler *m_handler) : QWidget(parent), _m_han
   version->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
   auto *tabs = new QTabWidget(this);
-  tabs->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);");
+  tabs->setStyleSheet(
+    QString("background-color: %1; color: %2;").arg(styling.css_bg_color).arg(styling.css_fg_color)
+  );
   auto *tab1 = new QLabel(this);
   tab1->setText(
     QTranslator::tr("Jeff - chat bot and automatization tool") + "<br><br>© 2018-2022 " +
     QTranslator::tr("Jeff Authors") + "<br><br><a href=\"https://github.com/markcda/cc-jeff\">"
     "https://github.com/markcda/cc-jeff</a><br><a href=\"https://raw.githubusercontent"
-    ".com/markcda/cc-jeff/master/LICENSE\">" + QTranslator::tr("License") + 
+    ".com/markcda/cc-jeff/master/LICENSE\">" + QTranslator::tr("License") +
     ": GNU General Public License, " + QTranslator::tr("version") + " 3</a>"
   );
   tab1->setOpenExternalLinks(true);
   tab1->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   auto *tab2 = new QLabel(this);
   tab2->setText(
-    "<b>" + QTranslator::tr("Shamshin Victor") + "</b><br>" + QTranslator::tr("Developer") + 
+    "<b>" + QTranslator::tr("Shamshin Victor") + "</b><br>" + QTranslator::tr("Developer") +
     "<br><a href=\"mailto:androiddevelop@yandex.ru\">androiddevelop@yandex.ru</a><br><br><b>" +
     QTranslator::tr("Mark CDA") + "</b><br>" + QTranslator::tr("Developer") + "<br><a "
     "href=\"mailto:markcda@protonmail.com\">markcda@protonmail.com</a>"

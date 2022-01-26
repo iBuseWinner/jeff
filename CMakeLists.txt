@@ -97,6 +97,8 @@ set (SRCS
     widgets/sourcelist.h
     widgets/spoiler.cpp
     widgets/spoiler.h
+    widgets/styling.cpp
+    widgets/styling.h
     jeff.cpp
     jeff.h
     main.cpp

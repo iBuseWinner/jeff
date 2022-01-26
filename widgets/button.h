@@ -1,6 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include "widgets/styling.h"
 #include <QFocusEvent>
 #include <QTimer>
 #include <QToolButton>
@@ -13,7 +14,7 @@ class Button : public QToolButton {
   Q_OBJECT
   Q_DISABLE_COPY(Button)
 public:
-  // Functions described in 'button.cpp':
+  // Functions described in `button.cpp`:
   Button(const QString &text = "", QWidget *parent = nullptr);
 };
 

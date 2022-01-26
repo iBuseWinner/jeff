@@ -7,6 +7,7 @@
 #include "widgets/display.h"
 #include "widgets/line.h"
 #include "widgets/menubar.h"
+#include "widgets/styling.h"
 #include <QApplication>
 #include <QLayout>
 #include <QLineEdit>
@@ -23,6 +24,7 @@
  */
 class Jeff : public QMainWindow {
   Q_OBJECT
+  Q_DISABLE_COPY(Jeff)
 public:
   // Functions:
   /*!
@@ -31,7 +33,7 @@ public:
    */
   ~Jeff() override { save_window_settings(); }
 
-  // Functions described in 'jeff.cpp':
+  // Functions described in `jeff.cpp`:
   Jeff();
   void greeting();
 
@@ -49,12 +51,10 @@ signals:
   QString send(QString user_expression);
 
 protected:
-  // Functions described in 'jeff.cpp':
+  // Functions described in `jeff.cpp`:
   void keyPressEvent(QKeyEvent *event) override;
 
 private:
-  Q_DISABLE_COPY(Jeff)
-
   // Objects:
   Core *core = new Core(this);
   Basis *basis = core->basis;
@@ -69,7 +69,7 @@ private:
   static const int defaultWidth = 800;
   static const int defaultHeight = 496;
 
-  // Functions described in 'jeff.cpp':
+  // Functions described in `jeff.cpp`:
   void apply_settings();
   void save_window_settings();
   void connect_all();

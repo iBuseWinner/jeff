@@ -19,7 +19,7 @@
  */
 class SourcesDialog : public QWidget {
 public:
-  // Functions described in 'sources.cpp':
+  // Functions described in `sources.cpp`:
   SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
   void add();
   void remove();
@@ -45,7 +45,7 @@ private:
   // Constants:
   inline static const QString object_name = "sources";
 
-  // Functions described in 'sources.cpp':
+  // Functions described in `sources.cpp`:
   void connector();
   void append(Sources sources);
   void appendSingle(const Source &source);

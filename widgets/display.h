@@ -27,7 +27,7 @@ public:
    */
   void set_scroll_enabled(bool _scroll_enabled) { scroll_enabled = _scroll_enabled; }
 
-  // Functions described in 'display.cpp':
+  // Functions described in `display.cpp`:
   Display(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
   void add_message(Message *message);
@@ -51,7 +51,7 @@ private:
   inline static const QString box_style_sheet =
     "#display, #box { background-color: rgba(255, 255, 255, 0); }";
 
-  // Functions described in 'display.cpp':
+  // Functions described in `display.cpp`:
   void connector();
   void scroll_down(int min, int max);
   void scroll_tumbler(int value);

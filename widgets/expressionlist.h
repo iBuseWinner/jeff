@@ -14,7 +14,7 @@
 class ExpressionList : public QListWidget {
   Q_OBJECT
 public:
-  // Functions described in 'expressionlist.cpp':
+  // Functions described in `expressionlist.cpp`:
   ExpressionList(QWidget *parent = nullptr);
 };
 

@@ -18,7 +18,10 @@ Jeff::Jeff() : QMainWindow() {
   layout()->setMargin(0);
   auto *centralWidget = new QWidget(this);
   centralWidget->setObjectName("cw");
-  centralWidget->setStyleSheet("#cw { background-color: rgb(40, 44, 52); }");
+  centralWidget->setStyleSheet(
+    QString("#cw { background-color: %1; }")
+    .arg(styling.light_theme ? styling.css_light_wbg : styling.css_dark_wbg)
+  );
   auto *layout = new QVBoxLayout();
   layout->setSpacing(0);
   layout->addWidget(display);
@@ -111,7 +114,7 @@ void Jeff::connect_all() {
   connect(core, &Core::show, display, &Display::add_message_by_md);
   connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
   connect(core, &Core::show_status, display, &Display::update_status);
-  connect(core, &Core::changeMenuBarMonologueCheckbox, 
+  connect(core, &Core::changeMenuBarMonologueCheckbox,
           &(menubar->enable_monologue_mode), &QAction::setChecked);
 }
 
@@ -142,7 +145,7 @@ void Jeff::user_input_handler() {
  * to it.
  */
 void Jeff::export_message_history() {
-  QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save history"), nullptr, 
+  QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save history"), nullptr,
                                                   tr("JSON file") + "(*.json)");
   if (filename.isEmpty()) return;
   history_processor->save(filename);

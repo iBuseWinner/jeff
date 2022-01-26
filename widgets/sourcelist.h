@@ -1,6 +1,7 @@
 #ifndef SOURCELIST_H
 #define SOURCELIST_H
 
+#include "widgets/styling.h"
 #include <QTreeWidget>
 
 /*!
@@ -11,7 +12,7 @@ class SourceList : public QTreeWidget {
   Q_OBJECT
   Q_DISABLE_COPY(SourceList)
 public:
-  // Functions described in 'sourcelist.cpp':
+  // Functions described in `sourcelist.cpp`:
   SourceList(QWidget *parent = nullptr);
 };
 

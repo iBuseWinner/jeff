@@ -1,4 +1,5 @@
 #include "jeff.h"
+#include "widgets/styling.h"
 #include <QTranslator>
 
 /*!
@@ -40,13 +41,14 @@
  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("0.5.0");
+  QCoreApplication::setApplicationVersion("0.5.1");
   QApplication jeff(argc, argv);
+  styling.calculate_colors();
   auto *jeff_locals = new QTranslator(&jeff);
   jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());
   jeff.installTranslator(jeff_locals);
-  class Jeff JeffWindow;
-  emit JeffWindow.ready_state();
-  JeffWindow.show();
+  class Jeff jeff_window;
+  emit jeff_window.ready_state();
+  jeff_window.show();
   return QApplication::exec();
 }

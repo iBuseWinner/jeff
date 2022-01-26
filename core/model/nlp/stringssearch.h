@@ -30,7 +30,7 @@ enum Intersects { No, FirstBetter, SecondBetter, Equal };
  */
 class StringSearch {
 public:
-  // Functions described in 'stringssearch.cpp':
+  // Functions described in `stringssearch.cpp`:
   static QString remove_symbols(QString str);
   static QString purify(const QString &str);
   static float get_POC(const QString &e1, const QString &e2);

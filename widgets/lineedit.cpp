@@ -1,11 +1,9 @@
 #include "lineedit.h"
 
-/*!
- * @fn LineEdit::LineEdit
- * @brief The constructor.
- * @param[in,out] parent QObject parent
- */
+/*! @brief The constructor. */
 LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {
-  setStyleSheet(style_sheet);
+  setStyleSheet(
+    style_sheet.arg(styling.css_bg_color).arg(styling.css_fg_color)
+  );
   setFrame(false);
 }

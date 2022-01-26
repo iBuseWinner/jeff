@@ -15,13 +15,12 @@
  * @sa ModalHandler
  */
 class FirstStart : public QWidget {
+  Q_DISABLE_COPY(FirstStart)
 public:
-  // Functions described in 'firststart.cpp':
-  explicit FirstStart(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  // Functions described in `firststart.cpp`:
+  FirstStart(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
 
 private:
-  Q_DISABLE_COPY(FirstStart)
-
   // Objects:
   ModalHandler *_m_handler = nullptr;
 

@@ -42,7 +42,8 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     "Enables keeping the message history after exiting the application."), this
   );
   save_and_close = new Button(QTranslator::tr("OK"), this);
-  save_and_close->setIcon(QIcon(":/arts/icons/16/dialog-ok-apply.svg"));
+  save_and_close->setIcon(
+    QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
   vert_box_lt->addWidget(delay);
   vert_box_lt->addWidget(delayExplanation);
   vert_box_lt->addWidget(box1);

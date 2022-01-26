@@ -21,7 +21,7 @@ public:
   Button send_button;
   LineEdit line_edit;
 
-  // Functions described in 'line.cpp':
+  // Functions described in `line.cpp`:
   Line(QWidget *parent = nullptr);
 
 private:

@@ -11,7 +11,7 @@ class ExplanationLabel : public QLabel {
   Q_OBJECT
   Q_DISABLE_COPY(ExplanationLabel)
 public:
-  // Functions described in 'explanationlabel.cpp':
+  // Functions described in `explanationlabel.cpp`:
   ExplanationLabel(const QString &text = "", QWidget *parent = nullptr);
 };
 

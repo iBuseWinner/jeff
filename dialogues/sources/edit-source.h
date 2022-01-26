@@ -15,13 +15,12 @@
  */
 class EditSourceDialog : public QWidget {
   Q_OBJECT
+  Q_DISABLE_COPY(EditSourceDialog)
 public:
-  // Functions described in 'edit-source.cpp':
-  explicit EditSourceDialog(Basis *_basis, QWidget *parent = nullptr);
+  // Functions described in `edit-source.cpp`:
+  EditSourceDialog(Basis *_basis, QWidget *parent = nullptr);
 
 private:
-  Q_DISABLE_COPY(EditSourceDialog)
-
   // Objects:
   Basis *basis = nullptr;
   ExpressionList *activators = nullptr, *curr = nullptr, *reagents = nullptr;

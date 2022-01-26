@@ -15,8 +15,10 @@ CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
   cancelBtn = new Button(tr("Cancel"), this);
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   titleInput->setPlaceholderText(tr("Enter source name"));
-  saveBtn->setIcon(QIcon(":/arts/icons/16/document-save.svg"));
-  cancelBtn->setIcon(QIcon(":/arts/icons/16/window-close.svg"));
+  saveBtn->setIcon(
+    QIcon::fromTheme("document-save", QIcon(":/arts/icons/16/document-save.svg")));
+  cancelBtn->setIcon(
+    QIcon::fromTheme("window-close", QIcon(":/arts/icons/16/window-close.svg")));
   grid_layout->addWidget(titleInput, 0, 0, 1, 0);
   grid_layout->addWidget(selectFileBtn, 1, 0, 1, 0);
   grid_layout->addItem(spacer, 2, 0);
@@ -43,7 +45,8 @@ void CreateSourceDialog::connector() {
  */
 void CreateSourceDialog::selStart() {
   selectFileBtn->setText(tr("Select database file..."));
-  selectFileBtn->setIcon(QIcon(":/arts/icons/16/document-open.svg"));
+  selectFileBtn->setIcon(
+    QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/document-open.svg")));
 }
 
 /*!
@@ -56,9 +59,9 @@ void CreateSourceDialog::select() {
       nullptr, QFileDialog::DontConfirmOverwrite);
   if (!m_dbpath.isEmpty()) {
     selectFileBtn->setText(m_dbpath);
-    selectFileBtn->setIcon(QIcon(":/arts/icons/16/db-file.svg"));
-  } else
-    selStart();
+    selectFileBtn->setIcon(
+      QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/db-file.svg")));
+  } else selStart();
 }
 
 /*!
@@ -66,8 +69,7 @@ void CreateSourceDialog::select() {
  * @brief Finishes configuring the future source.
  */
 void CreateSourceDialog::save() {
-  if ((m_dbpath.isEmpty()) or (titleInput->text().isEmpty()))
-    close();
+  if ((m_dbpath.isEmpty()) or (titleInput->text().isEmpty())) close();
   Source source;
   source.path = m_dbpath;
   source.table_title = titleInput->text();

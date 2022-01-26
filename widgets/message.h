@@ -30,7 +30,7 @@ public:
   QDateTime date_time() { return md.datetime; }
   MessageData message_data() { return md; }
 
-  // Functions described in 'message.cpp':
+  // Functions described in `message.cpp`:
   Message();
   Message(MessageData _md);
   void message_data(MessageData _md);
@@ -53,7 +53,7 @@ private:
   // Constants:
   static const ushort standardMargin = 6;
 
-  // Functions described in 'message.cpp':
+  // Functions described in `message.cpp`:
   void author(Author _a);
   void content_type(ContentType _ct);
   // void theme(Theme _t);
