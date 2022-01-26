@@ -20,7 +20,7 @@
 class SourcesDialog : public QWidget {
 public:
   // Functions described in 'sources.cpp':
-  explicit SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
   void add();
   void remove();
 

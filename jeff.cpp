@@ -37,32 +37,24 @@ Jeff::Jeff() : QMainWindow() {
  */
 void Jeff::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-    if ((event->key() == Qt::Key_M))
-      emit send("/mm");
-    if (event->key() == Qt::Key_Less)
-      emit send("/settings");
+    if (event->key() == Qt::Key_M) emit send("/mm");
+    if (event->key() == Qt::Key_Less) emit send("/settings");
   }
   if (event->key() == Qt::Key_Return)
     event->modifiers() == Qt::ControlModifier ? line->line_edit.insert("\n")
                                               : line->send_button.click();
   if (event->modifiers() == Qt::ControlModifier) {
-    if (event->key() == Qt::Key_H)
-      menubar->setVisible(not menubar->isVisible());
-    if (event->key() == Qt::Key_M)
-      emit send("/sm");
-    if (event->key() == Qt::Key_E)
-      export_message_history();
-    if (event->key() == Qt::Key_I)
-      import_message_history();
+    if (event->key() == Qt::Key_H) menubar->setVisible(not menubar->isVisible());
+    if (event->key() == Qt::Key_M) emit send("/sm");
+    if (event->key() == Qt::Key_E) export_message_history();
+    if (event->key() == Qt::Key_I) import_message_history();
   }
   if (event->key() == Qt::Key_F11) {
     menubar->full_screen_action.setChecked(not menubar->full_screen_action.isChecked());
     /*! If the menu bar is hidden, it does not send signals. */
-    if (menubar->isHidden())
-      full_screen_handler();
+    if (menubar->isHidden()) full_screen_handler();
   }
-  if ((event->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) &&
-      (event->key() == Qt::Key_D))
+  if ((event->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) && (event->key() == Qt::Key_D))
     clear();
 }
 
@@ -90,8 +82,7 @@ void Jeff::apply_settings() {
  * @brief Writes changes to window settings to a file.
  */
 void Jeff::save_window_settings() {
-  if (not basis->accessible())
-    return;
+  if (not basis->accessible()) return;
   basis->write(basis->sizeSt, size());
   basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
   basis->write(basis->isFullScreenSt, isFullScreen());
@@ -119,10 +110,9 @@ void Jeff::connect_all() {
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
   connect(core, &Core::show, display, &Display::add_message_by_md);
   connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
-  connect(
-    core,                              &Core::changeMenuBarMonologueCheckbox, 
-    &(menubar->enable_monologue_mode), &QAction::setChecked
-  );
+  connect(core, &Core::show_status, display, &Display::update_status);
+  connect(core, &Core::changeMenuBarMonologueCheckbox, 
+          &(menubar->enable_monologue_mode), &QAction::setChecked);
 }
 
 /*!
@@ -140,7 +130,7 @@ void Jeff::full_screen_handler() {
  */
 void Jeff::user_input_handler() {
   // If user sends a message, the display automatically scrolls to the end.
-  display->setScrollEnabled(true);
+  display->set_scroll_enabled(true);
   QString text = line->line_edit.text();
   line->line_edit.clear();
   emit send(text);
@@ -152,16 +142,15 @@ void Jeff::user_input_handler() {
  * to it.
  */
 void Jeff::export_message_history() {
-  QString filename = QFileDialog::getSaveFileName(
-    nullptr, tr("Save history"), nullptr, tr("JSON file") + "(*.json)");
+  QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save history"), nullptr, 
+                                                  tr("JSON file") + "(*.json)");
   if (filename.isEmpty()) return;
   history_processor->save(filename);
 }
 
 /*!
  * @fn Jeff::import_message_history
- * @brief Calls the dialog, asks for @a filename and loads the message history
- * from it.
+ * @brief Calls the dialog, asks for @a filename and loads the message history from it.
  */
 void Jeff::import_message_history() {
   if (QMessageBox::question(
@@ -181,7 +170,4 @@ void Jeff::import_message_history() {
  * @fn Jeff::clear
  * @brief Clears message history and display.
  */
-void Jeff::clear() {
-  history_processor->clear();
-  display->start();
-}
+void Jeff::clear() { history_processor->clear(); display->start(); }

@@ -27,9 +27,9 @@ void Basis::check_default_source() {
 /*! @brief @see Basis::check_default_source */
 void Basis::set_first_source_as_default() {
   sources_mutex.lock();
-  if (not sources.isEmpty()) {
-    write(defaultSourcePath, sources[0].path);
-    write(defaultSourceContainer, sources[0].table_name);
+  if (not _sources.isEmpty()) {
+    write(defaultSourcePath, _sources[0].path);
+    write(defaultSourceContainer, _sources[0].table_name);
   } else {
     write(defaultSourcePath, "");
     write(defaultSourceContainer, "");
@@ -78,15 +78,15 @@ void Basis::sources(Sources s) {
   check_default_source();
 }
 
-/*! * @brief Writes @a value to context by @a key. */
-void context(const QString &key, const QString &value) {
+/*! @brief Writes @a value to context by @a key. */
+void Basis::context(const QString &key, const QString &value) {
   context_mutex.lock();
   _context[key] = value;
   context_mutex.unlock();
 }
 
 /*! @brief Reads @a value from context by @a key. */
-QString context(const QString &key) {
+QString Basis::context(const QString &key) {
   context_mutex.lock();
   auto value = _context[key];
   context_mutex.unlock();
@@ -109,7 +109,7 @@ void Basis::save_memory() {
   json->write_memory(m);
 }
 
-/*! * @brief Writes @a data to memory by @a key. */
+/*! @brief Writes @a data to memory by @a key. */
 void Basis::memory(const QString &key, QJsonValue data) {
   memory_mutex.lock();
   _memory[key] = data;
@@ -125,33 +125,77 @@ QJsonValue Basis::memory(const QString &key) {
 }
 
 /*! @brief Prepares @a transport to send into script. */
-QJsonObject handle_to_script(const QJsonObject &object) {
+QJsonObject Basis::handle_to_script(const QJsonObject &object) {
   QJsonObject transport;
-  if (object.contains(need_values)) {
-    QJsonArray val_keys = object[need_values].toArray();
+  if (object.contains(readMemoryWk)) {
+    QJsonArray val_keys = object[readMemoryWk].toArray();
     if (not val_keys.isEmpty()) {
-      transport[basis->values] = QJsonObject();
+      QJsonObject obj;
       for (auto key : val_keys) {
         if (not key.isString()) continue;
         QString k = key.toString();
-        transport[basis->values].toObject()[k] = memory(k);
+        obj[k] = memory(k);
       }
+      transport[valuesWk] = obj;
+    }
+  }
+  if (object.contains(readContextWk)) {
+    QJsonArray val_keys = object[readContextWk].toArray();
+    if (not val_keys.isEmpty()) {
+      QJsonObject obj;
+      for (auto key : val_keys) {
+        if (not key.isString()) continue;
+        QString k = key.toString();
+        obj[k] = context(k);
+      }
+      transport[contextWk] = obj;
     }
   }
   return transport;
 }
 
 /*! @brief Handles @a object that came from script. */
-void handle_from_script(const QJsonObject &object, bool except_send = false) {
-  if (object.contains(basis->store_values)) {
-    QJsonArray to_store = object[basis->store_values].toArray();
+void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
+  if (object.contains(writeMemoryWk)) {
+    QJsonArray to_store = object[writeMemoryWk].toArray();
     if (not to_store.isEmpty()) {
       for (auto pair : to_store) {
-        if (pair.isObject()) continue;
+        if (not pair.isObject()) continue;
         auto pair_obj = pair.toObject();
         if (not pair_obj.contains("key") or not pair_obj.contains("value")) continue;
         if (not pair_obj["key"].isString()) continue;
         memory(pair_obj["key"].toString(), pair_obj["value"]);
+      }
+    }
+  }
+  if (object.contains(writeContextWk)) {
+    QJsonArray to_store = object[writeContextWk].toArray();
+    if (not to_store.isEmpty()) {
+      for (auto pair : to_store) {
+        if (not pair.isObject()) continue;
+        auto pair_obj = pair.toObject();
+        if (not pair_obj.contains("key") or not pair_obj.contains("value")) continue;
+        if (not pair_obj["key"].isString()) continue;
+        context(pair_obj["key"].toString(), pair_obj["value"].toString());
+      }
+    }
+  }
+  if (not except_send) {
+    if (object.contains(sendWk)) {
+      QString message = object[sendWk].toString();
+      emit send(message);
+    } else if (object.contains(searchAgainWk)) {
+      QString rephrased_message = object[searchAgainWk].toString();
+      emit send(rephrased_message);
+    } else if (object.contains(sendAsUserWk)) {
+      QString outter_message = object[sendAsUserWk].toString();
+      emit send_as_user(outter_message);
+    } else if (object.contains(sendStatusWk)) {
+      QJsonObject status_obj = object[sendStatusWk].toObject();
+      if (not status_obj.isEmpty()) {
+        QPair<QString, QString> id_and_message(status_obj["id"].toString(),
+                                               status_obj["msg"].toString());
+        emit send_status(id_and_message);
       }
     }
   }

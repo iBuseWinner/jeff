@@ -60,7 +60,7 @@ void SourcesDialog::load() {
   source_widgets.clear();
   source_list->clear();
   basis->load_sources();
-  append(basis->get_sources());
+  append(basis->sources());
 }
 
 /*!
@@ -162,8 +162,7 @@ void SourcesDialog::sncl() {
         sources.append(source_widgets.value(
           source_list->invisibleRootItem()->child(tli2)->child(childIndex)
         ));
-    Json json(basis->get_settings_path());
-    json.write_source_list(basis->sql, sources);
+    basis->sources(sources);
   }
   _m_handler->closePrisoner();
 }
@@ -185,10 +184,8 @@ void SourcesDialog::openCS() {
  * @brief Closes the source creation dialog.
  */
 void SourcesDialog::closeCS() {
-  disconnect(create_source_dialog, &CreateSourceDialog::add, this,
-             &SourcesDialog::appendSingle);
-  disconnect(create_source_dialog, &CreateSourceDialog::cancelled, this,
-             &SourcesDialog::closeCS);
+  disconnect(create_source_dialog, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
+  disconnect(create_source_dialog, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCS);
   grid_layout->removeWidget(create_source_dialog);
   connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
 }

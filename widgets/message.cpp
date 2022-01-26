@@ -70,6 +70,14 @@ void Message::author(Author _a) {
   }
 }
 
+/*! @brief Updates the text of a message. */
+void Message::update_text(const QString &text) {
+  auto *label = qobject_cast<QLabel *>(w);
+  if (not label) return;
+  label->setText(text);
+  fit_text();
+}
+
 /*!
  * @fn Message::content_type
  * @brief Adjusts the message to the content type.
@@ -209,7 +217,25 @@ void Message::prepare_to_widget() {
  * @fn Message::resizeEvent
  * @brief Aligns text to the width of the window.
  */
-void Message::resizeEvent(QResizeEvent *event) {
+void Message::resizeEvent(QResizeEvent *event) { fit_text(); event->accept(); }
+
+/*!
+ * @fn Message::make_layout
+ * @brief Creates a spacer and an Board to adjust the layout.
+ * @returns QSpacerItem-Board pair
+ */
+QPair<QSpacerItem *, Board *> Message::make_layout() {
+  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+  auto *board = new Board(this);
+  grid_layout = new QGridLayout();
+  grid_layout->setSpacing(0);
+  grid_layout->setMargin(standardMargin);
+  board->setLayout(grid_layout);
+  return QPair<QSpacerItem *, Board *>(spacer, board);
+}
+
+/*! @brief Fits the text to the size of the message. */
+void Message::fit_text() {
   auto *label = qobject_cast<QLabel *>(w);
   if (not label) return;
   QTextDocument textDocument;
@@ -225,20 +251,4 @@ void Message::resizeEvent(QResizeEvent *event) {
     label->setWordWrap(true);
     label->setFixedWidth(width());
   }
-  event->accept();
-}
-
-/*!
- * @fn Message::make_layout
- * @brief Creates a spacer and an Board to adjust the layout.
- * @returns QSpacerItem-Board pair
- */
-QPair<QSpacerItem *, Board *> Message::make_layout() {
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-  auto *board = new Board(this);
-  grid_layout = new QGridLayout();
-  grid_layout->setSpacing(0);
-  grid_layout->setMargin(standardMargin);
-  board->setLayout(grid_layout);
-  return QPair<QSpacerItem *, Board *>(spacer, board);
 }

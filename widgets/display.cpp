@@ -3,8 +3,7 @@
 /*!
  * @fn Display::Display
  * @brief The constructor.
- * @param[in] _max_message_amount number of messages that can be displayed
- * simultaneously
+ * @param[in] _max_message_amount number of messages that can be displayed simultaneously
  * @param[in,out] parent QObject parent
  */
 Display::Display(short _max_message_amount, QWidget *parent)
@@ -29,7 +28,7 @@ void Display::add_message(Message *message) {
   messages_mutex.lock();
   message_counter++;
   message->setParent(this);
-  connect(message, &Message::closed, this, [this, message] { removeMessage(message); });
+  connect(message, &Message::closed, this, [this, message] { remove_message(message); });
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   /*! If the scroll is approximately below the middle, and the number of
@@ -46,7 +45,7 @@ void Display::add_message(Message *message) {
 }
 
 /*!
- * @fn Display::add_message
+ * @fn Display::add_message_by_md
  * @brief Constructs @a Message and adds it to the display.
  * @param[in] message_data message to be added
  */
@@ -55,7 +54,26 @@ void Display::add_message_by_md(MessageData message_data) {
 }
 
 /*!
- * @fn Display::add_message
+ * @fn Display::update_status
+ * @brief Updates the text of a message by its ID, or adds a new message with that ID.
+ * @param[in] id_and_message_data paired
+ */
+void Display::update_status(QPair<QString, MessageData> id_and_message_data) {
+  if (not status_messages.contains(id_and_message_data.first)) {
+    auto *message = new Message(id_and_message_data.second);
+    add_message(message);
+    messages_mutex.lock();
+    status_messages[id_and_message_data.first] = message;
+    messages_mutex.unlock();
+  } else {
+    messages_mutex.lock();
+    status_messages[id_and_message_data.first]->update_text(id_and_message_data.second.content);
+    messages_mutex.unlock();
+  }
+}
+
+/*!
+ * @fn Display::add_message_with_widget
  * @brief Constructs @a Message and adds it to the display.
  * @param[in] message_data message to be added
  * @param[in,out] handler modal handler with @a QWidget to be shown
@@ -81,11 +99,10 @@ void Display::start() {
   box->setContentsMargins(0, 0, 5, 0);
   box->setObjectName(box_object_name);
   setStyleSheet(box_style_sheet);
-  auto *sp = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
   vertical_box_layout = new QVBoxLayout(this);
   vertical_box_layout->setSpacing(0);
   vertical_box_layout->setMargin(0);
-  vertical_box_layout->addItem(sp);
+  vertical_box_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
   box->setLayout(vertical_box_layout);
   setWidget(box);
   messages_mutex.unlock();
@@ -102,41 +119,40 @@ void Display::start() {
  * @brief Establishes communications for user interaction through the widget.
  */
 void Display::connector() {
-  connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scrollDown);
-  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scrollTumbler);
-  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::showWidgets);
+  connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scroll_down);
+  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scroll_tumbler);
+  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::show_widgets);
 }
 
 /*!
- * @fn Display::scrollDown
+ * @fn Display::scroll_down
  * @brief When the scrolling range of the display changes, it scrolls to the end
  * if automatic scrolling is enabled.
  * @param[in] min minimal vertical scroll bar value
  * @param[in] max maximal vertical scroll bar value
  */
-void Display::scrollDown(int min, int max) {
+void Display::scroll_down(int min, int max) {
   Q_UNUSED(min)
-  if (scrollEnabled) verticalScrollBar()->setValue(max);
+  if (scroll_enabled) verticalScrollBar()->setValue(max);
 }
 
 /*!
- * @fn Display::scrollTumbler
+ * @fn Display::scroll_tumbler
  * @brief Enables or disables automatic scrolling.
  * @param[in] value current position of the vertical scroll bar
  */
-void Display::scrollTumbler(int value) {
-  if (not scrollEnabled and (value == verticalScrollBar()->maximum())) scrollEnabled = true;
-  if (scrollEnabled and (value != verticalScrollBar()->maximum())) scrollEnabled = false;
+void Display::scroll_tumbler(int value) {
+  if (not scroll_enabled and (value == verticalScrollBar()->maximum())) scroll_enabled = true;
+  else if (scroll_enabled and (value != verticalScrollBar()->maximum())) scroll_enabled = false;
 }
 
 /*!
- * @fn Display::showWidgets
+ * @fn Display::show_widgets
  * @brief Shows the message history when scrolling up.
  * @param[in] value current position of the vertical scroll bar
  */
-void Display::showWidgets(int value) {
-  if ((value == verticalScrollBar()->minimum()) and
-      (message_counter < all_messages.length())) {
+void Display::show_widgets(int value) {
+  if ((value == verticalScrollBar()->minimum()) and (message_counter < all_messages.length())) {
     /*! Add half of the maximum. */
     short portion = max_message_amount / 2;
     if (message_counter + portion > all_messages.length())
@@ -152,13 +168,8 @@ void Display::showWidgets(int value) {
   }
 }
 
-/*!
- * @fn Display::removeMessage
- * @brief Removes the message from Display.
- * @attention This method does not remove the message from history.
- * @param[in,out] message
- */
-void Display::removeMessage(Message *message) {
+/*! @brief Removes the message from Display. */
+void Display::remove_message(Message *message) {
   messages_mutex.lock();
   message->close();
   vertical_box_layout->removeWidget(message);

@@ -36,7 +36,7 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
               continue;
             }
             if (ewi.second.use_cases == candidates[rival].second.use_cases) {
-              if (_gen->bounded(0, 2) == 1) {
+              if (gen->bounded(0, 2) == 1) {
                 to_add = true;
                 candidates.remove(rival);
               }
@@ -68,12 +68,12 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
     if (ewi.second.exec) {
       // On a such moment we need to figure out, what kind of expression we have.
       // If we have executable expression, we must evaluate it.
-      auto obj = _pm->request_answer(ewi.second);
-      if (obj.contains(basis->error_type)) continue;
-      if (obj.contains(basis->send)) {
+      auto obj = pm->request_answer(ewi.second);
+      if (obj.contains(basis->errorTypeWk)) continue;
+      if (obj.contains(basis->sendWk)) {
         ewi.second.use_cases += 1;
         basis->cacher->append(ewi.second);
-        output += obj[basis->send].toString() + " ";
+        output += obj[basis->sendWk].toString() + " ";
       }
     } else {
       ewi.second.use_cases += 1;
@@ -118,7 +118,7 @@ void NLPmodule::search_for_suggests(const QString &input) {
  */
 CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   CacheWithIndices selection;
-  Cache cache = _basis->cacher->get();
+  Cache cache = basis->cacher->get();
   for (int i = 0; i < cache.length(); i++) {
     auto x = StringSearch::contains(input, cache[i].activator_text);
     if (x[0] != 0) {
@@ -145,9 +145,9 @@ CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
  */
 CacheWithIndices NLPmodule::select_from_db(const QString &input) {
   CacheWithIndices selection;
-  Sources sources = _basis->get_sources();
+  Sources sources = basis->sources();
   for (int i = 0; i < sources.length(); i++) {
-    auto cwi = _basis->sql->scan_source(sources[i], input);
+    auto cwi = basis->sql->scan_source(sources[i], input);
     for (auto ewi : cwi) {
       bool is_in = false;
       for (auto _ewi : selection)
@@ -168,10 +168,10 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
  * @fn NLPmodule::load_cache
  * @brief Loads the cache into memory.
  */
-void NLPmodule::load_cache() { _basis->cacher->append(_basis->json->read_NLP_cache()); }
+void NLPmodule::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
 
 /*!
  * @fn NLPmodule::save_cache
  * @brief Saves the cache to disk.
  */
-void NLPmodule::save_cache() { _basis->json->write_NLP_cache(_basis->cacher->get()); }
+void NLPmodule::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }

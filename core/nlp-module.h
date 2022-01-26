@@ -29,7 +29,7 @@ class NLPmodule : public QObject {
 public:
   // Functions:
   /*! @brief The constructor. */
-  NLPmodule(Basis *basis, PythonModule *pm, QObject *parent = nullptr) 
+  NLPmodule(Basis *_basis, PythonModule *_pm, QObject *parent = nullptr) 
       : QObject(parent), basis(_basis), pm(_pm) {
     gen = new QRandomGenerator(QTime::currentTime().msec());
     load_cache();

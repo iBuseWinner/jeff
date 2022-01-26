@@ -2,10 +2,12 @@
 #define LOCAL_SERVER_H
 
 #include "core/basis.h"
+#include <QDataStream>
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QObject>
 #include <QTcpServer>
+#include <QTcpSocket>
 
 /*!
  * @class Server
@@ -24,9 +26,9 @@ public:
   
 signals:
   /*! @brief Sends message to the screen on behalf of Jeff. */
-  const QString &send(const QString &message);
+  QString send(QString message);
   /*! @brief Sends a message to the screen and requests that it be handled as a user message. */
-  const QString &send_to_respond(const QString &message);
+  QString send_to_respond(QString message);
   /*! @brief Reports an error in server listening. */
   QString server_error(QString error_text);
   
@@ -36,7 +38,7 @@ private:
   QTcpServer *server = nullptr;
   
   // Functions described in `local-server.cpp`:
-  bool authorize_connection(QString key);
+  bool authorize_connection(const QString &key);
 };
 
 #endif

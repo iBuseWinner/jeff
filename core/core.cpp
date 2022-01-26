@@ -1,19 +1,15 @@
 #include "core.h"
 
-/*!
- * @fn Core::Core
- * @brief The constructor.
- * @details Creates connections between modules and output collectors.
- * @param[in,out] parent QObject parent
- */
+/*! @brief The constructor. */
 Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::settings_warning, this, &Core::got_warning);
   connect(basis, &Basis::send, this, &Core::got_message_from_script);
-  connect(basis, &Basis::send_again, this, &Core::got_message_to_search_again);
+  connect(basis, &Basis::search_again, this, &Core::got_message_to_search_again);
   connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);
   connect(basis, &Basis::send_status, this, &Core::got_status_from_script);
   basis->check_settings_file();
   basis->check_default_source();
+  connect(server, &Server::server_error, this, &Core::got_error);
   connect(history_processor, &HProcessor::send_message_history, this, &Core::show_history);
   connect(pm, &PythonModule::script_exception, this, &Core::got_warning);
   connect(pm, &PythonModule::send, this, &Core::got_message_from_script);
@@ -23,20 +19,17 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
+  server->start();
 }
 
-/*!
- * @fn Core::~Core
- * @brief The destructor.
- * @details Method which tells delete NLPmodule instance first because of
- * SYSSEGV if Basis instance will be deleted first.
- * @sa NLPmodule, Json, Basis
- */
+/*! @brief The destructor. */
 Core::~Core() {
   delete nlp;
   delete pm;
   delete history_processor;
   delete std_templates;
+  server->stop();
+  delete server;
   delete basis;
 }
 
@@ -67,25 +60,79 @@ void Core::got_message_from_user(const QString &user_expression) {
  */
 void Core::got_message_from_nlp(const QString &result_expression) {
   if (result_expression.isEmpty()) return;
-  MessageData message = get_message(result_expression, Author::Jeff, 
-                                    ContentType::Markdown, Theme::Std);
-  history_processor->append(message);
+  MessageData mdata = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
           ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
-      this, [this, message, result_expression] {
-        emit show(message);
+      this, [this, mdata, result_expression] {
+        history_processor->append(mdata);
+        emit show(mdata);
+        /*! Search again if monologue mode enabled. */
         if (monologue_enabled) nlp->search_for_suggests(result_expression);
       });
 }
 
-void Core::got_message_from_script(const QString &message) {}
-void Core::got_message_to_search_again(const QString &rephrased_message) {}
-void Core::got_message_from_script_as_user(const QString &outter_message) {}
-void Core::got_status_from_script(const QString &outter_message, const QString &uuid) {}
+/*! @brief Shows output from script or outter app on the screen. */
+void Core::got_message_from_script(const QString &message) {
+  if (message.isEmpty()) return;
+  MessageData mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Std);
+  /*! Delay is triggered if enabled. */
+  QTimer::singleShot(
+      (*basis)[basis->isDelayEnabledSt].toBool()
+          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
+                                       (*basis)[basis->maxDelaySt].toInt())
+          : 0,
+      this, [this, mdata, message] {
+        history_processor->append(mdata);
+        emit show(mdata);
+        /*! Search again if monologue mode enabled. */
+        if (monologue_enabled) nlp->search_for_suggests(message);
+      });
+}
+
+/*! @brief Searches again. */
+void Core::got_message_to_search_again(const QString &rephrased_message) {
+  if (rephrased_message.isEmpty()) return;
+  if (std_templates->dialogues(rephrased_message)) return;
+  if (std_templates->fast_commands(rephrased_message)) return;
+  nlp->search_for_suggests(rephrased_message);
+}
+
+/*! @brief Shows the message and searches again. */
+void Core::got_message_from_script_as_user(const QString &message) {
+  /*! Does not respond to blank input. */
+  if (message.isEmpty()) return;
+  /*! Displays the entered message on the screen. */
+  MessageData mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Blue);
+  history_processor->append(mdata);
+  emit show(mdata);
+  /*! If a user has entered the command, there is no need to run other modules. */
+  if (std_templates->dialogues(message)) return;
+  if (std_templates->fast_commands(message)) return;
+  nlp->search_for_suggests(message);
+}
+
+/*! @brief Shows updateable message. @details Checks id's length. */
+void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
+  if (id_and_message.first.isEmpty() or id_and_message.second.isEmpty()) return;
+  if (id_and_message.first.length() < 24) return;
+  MessageData mdata = get_message(id_and_message.second, Author::Jeff,
+                                  ContentType::Markdown, Theme::Std);
+  /*! Delay is triggered if enabled. */
+  QTimer::singleShot(
+      (*basis)[basis->isDelayEnabledSt].toBool()
+          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
+                                       (*basis)[basis->maxDelaySt].toInt())
+          : 0,
+      this, [this, mdata, id_and_message] {
+        history_processor->append(mdata);
+        QPair<QString, MessageData> id_and_message_data(id_and_message.first, mdata);
+        emit show_status(id_and_message_data);
+      });
+}
 
 /*!
  * @fn Core::got_warning

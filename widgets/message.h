@@ -35,6 +35,7 @@ public:
   Message(MessageData _md);
   void message_data(MessageData _md);
   void widget(ModalHandler *modal_handler);
+  void update_text(const QString &text);
 
 signals:
   /*!
@@ -67,6 +68,7 @@ private:
   void prepare_to_widget();
   void resizeEvent(QResizeEvent *event) override;
   QPair<QSpacerItem *, Board *> make_layout();
+  void fit_text();
 };
 
 #endif

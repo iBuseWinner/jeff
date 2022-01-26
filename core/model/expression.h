@@ -54,7 +54,7 @@ public:
   /*! @brief Returns @a weight of expression. */
   int weight() { return properties.value("weight").toInt(); }
   /*! @brief Tells whether the expression can be answered together with other expressions. */
-  bool consonant() { return properties.value("consonant").toBool(); }
+  bool consonant() { return bool(properties.value("consonant").toInt()); }
 
   /*! @brief Properties' parser. */
   static Options parse_props(QJsonValue _aps) {

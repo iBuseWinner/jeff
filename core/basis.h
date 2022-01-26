@@ -3,8 +3,10 @@
 
 #include "core/database/json.h"
 #include "core/database/sqlite.h"
+#include "core/model/keystore.h"
 #include "core/model/message.h"
 #include "core/model/nlp/cacher.h"
+#include "core/model/nlp/options.h"
 #include "core/model/source.h"
 #include <QDir>
 #include <QFile>
@@ -16,6 +18,7 @@
 #include <QJsonParseError>
 #include <QList>
 #include <QMutex>
+#include <QPair>
 #include <QSettings>
 #include <QString>
 #include <QTextStream>
@@ -66,16 +69,19 @@ public:
   const char *scriptPathWk   = "script_path";
   const char *funcNameWk     = "func_name";
   const char *getHistWk      = "get_hist";
-  const char *errorTypeWk    = "error_type;"
+  const char *errorTypeWk    = "error_type";
   const char *recentWk       = "recent";
   const char *readMemoryWk   = "need_values";
-  const char *values         = "values";
+  const char *readContextWk  = "need_context";
+  const char *valuesWk       = "values";
+  const char *contextWk      = "context";
   const char *exprPropsWk    = "expression_properties";
   const char *writeMemoryWk  = "store_values";
+  const char *writeContextWk = "store_context";
   const char *sendWk         = "send";
   const char *searchAgainWk  = "search_again";
-  const char *send_as_userWk = "send_as_user";
-  const char *send_statusWk  = "send_status";
+  const char *sendAsUserWk   = "send_as_user";
+  const char *sendStatusWk   = "send_status";
   const char *authKeyWk      = "auth_key";
 
   // Functions:
@@ -117,10 +123,10 @@ public:
   void save_memory();
   Sources sources();
   void sources(Sources s);
-  void context (const QString &key, const QString &value);
-  void memory  (const QString &key, QJsonValue     data );
-  QString    context (const QString &key);
-  QJsonValue memory  (const QString &key);
+  void context(const QString &key, const QString &value);
+  void memory(const QString &key, QJsonValue data);
+  QString context(const QString &key);
+  QJsonValue memory(const QString &key);
   QJsonObject handle_to_script(const QJsonObject &object);
   void handle_from_script(const QJsonObject &object, bool except_send = false);
 
@@ -130,11 +136,13 @@ signals:
   QString send(QString outter_message);
   QString search_again(QString rephrased_message);
   QString send_as_user(QString outter_message);
-  QString send_status(QString outter_message);
+  QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
 
 private:
   // Objects:
-  QMutex sources_mutex, context_mutex, memory_mutex;
+  QMutex sources_mutex;
+  QMutex context_mutex;
+  QMutex memory_mutex;
   Sources _sources; /*!< List of sources for @a NLPmodule. */
   Options _context; /*!< Context values (@sa AIML). */
   KeyStore _memory; /*!< Long-life memory. */

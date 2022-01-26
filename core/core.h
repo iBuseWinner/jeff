@@ -3,12 +3,14 @@
 
 #include "core/basis.h"
 #include "core/history-processor.h"
+#include "core/local-server.h"
 #include "core/nlp-module.h"
 #include "core/python-module.h"
 #include "core/standard-templates.h"
 #include "dialogues/modal-handler.h"
 #include "core/database/sqlite.h"
 #include <QObject>
+#include <QPair>
 #include <QTimer>
 
 /*!
@@ -26,6 +28,7 @@ public:
   Basis *basis = new Basis();
   HProcessor *history_processor = new HProcessor(basis);
   PythonModule *pm = new PythonModule(history_processor, basis);
+  Server *server = new Server(basis);
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
@@ -34,8 +37,8 @@ public:
   void got_message_from_nlp(const QString &result_expression);
   void got_message_from_script(const QString &outter_message);
   void got_message_to_search_again(const QString &rephrased_message);
-  void got_message_from_script_as_user(const QString &outter_message);
-  void got_status_from_script(const QString &outter_message, const QString &uuid);
+  void got_message_from_script_as_user(const QString &message);
+  void got_status_from_script(QPair<QString, QString> id_and_message);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);
@@ -51,6 +54,8 @@ signals:
 #endif
   /*! @brief Sends a message. */
   MessageData show(MessageData message_data);
+  /*! @brief Sends an updateable message. */
+  QPair<QString, MessageData> show_status(QPair<QString, MessageData> id_and_message_data);
   /*! @brief Sets the monologue mode. */
   bool changeMenuBarMonologueCheckbox(bool enabled);
 

@@ -21,19 +21,30 @@ void Server::start(QHostAddress address, quint16 port) {
   }
 }
 
-/*!
- * 
- */
+/*! @brief Handles incoming connections processing connection data. */
 void Server::handle_connection() {
   auto *connection = server->nextPendingConnection();
   connect(connection, &QAbstractSocket::disconnected, connection, &QObject::deleteLater);
-  auto byte_array = connection->readAll();
-  if (byte_array.isEmpty()) { connection->disconnectFromHost(); return; }
-  auto doc = QJsonDocument::fromJson(byte_array);
-  if (doc.isEmpty()) { connection->disconnectFromHost(); return; }
-  auto data = doc.object();
-  if (not authorize_connection(data[basis->auth_key])) { connection->disconnectFromHost(); return; }
-  
+  connect(connection, &QTcpSocket::readyRead, this, [this, connection] {
+    QByteArray byte_array;
+    while (connection->bytesAvailable()) byte_array.append(connection->readAll());
+    if (byte_array.isEmpty()) { connection->disconnectFromHost(); return; }
+    auto doc_from_script = QJsonDocument::fromJson(byte_array);
+    if (doc_from_script.isEmpty()) { connection->disconnectFromHost(); return; }
+    auto data = doc_from_script.object();
+    if (not authorize_connection(data[basis->authKeyWk].toString())) {
+      connection->disconnectFromHost();
+      return;
+    }
+    basis->handle_from_script(data);
+    auto transport = basis->handle_to_script(data);
+    if (not transport.isEmpty()) {
+      QJsonDocument doc_to_script(transport);
+      auto bytes_to_send = doc_to_script.toJson();
+      connection->write(bytes_to_send);
+    }
+    connection->disconnectFromHost();
+  });
 }
 
 /*!

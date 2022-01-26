@@ -50,7 +50,10 @@ KeyStore Json::read_memory() {
   if (not store.exists()) return KeyStore();
   QJsonArray memory_json = read_json(&store);
   KeyStore keystore;
-  for (auto cell : memory_json) keystore[cell.keys()[0]] = memory_json[cell[cell.keys()[0]]];
+  for (auto cell : memory_json) {
+    auto cell_obj = cell.toObject();
+    keystore[cell_obj.keys()[0]] = cell_obj[cell_obj.keys()[0]];
+  }
   return keystore;
 }
 
@@ -115,7 +118,7 @@ QJsonArray Json::read_json(QFile *file) {
 }
 
 /*! @brief Checks the file for access and writes file. */
-void Json::write_json(QFile *savefile, QJsonArray json_array) {
+void Json::write_json(QFile *savefile, const QJsonArray &json_array) {
   if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) return;
   QJsonDocument doc(json_array);
   QTextStream textStream(savefile);

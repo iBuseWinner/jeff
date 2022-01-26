@@ -21,25 +21,27 @@ class Display : public QScrollArea {
 public:
   // Functions:
   /*!
-   * @fn Display::setScrollEnabled
+   * @fn Display::set_scroll_enabled
    * @brief Sets the scroll state.
-   * @param[in] _scrollEnabled boolean value of whether scroll is enabled or not
+   * @param[in] _scroll_enabled boolean value of whether scroll is enabled or not
    */
-  void setScrollEnabled(bool _scrollEnabled) { scrollEnabled = _scrollEnabled; }
+  void set_scroll_enabled(bool _scroll_enabled) { scroll_enabled = _scroll_enabled; }
 
   // Functions described in 'display.cpp':
   Display(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
   void add_message(Message *message);
   void add_message_by_md(MessageData message_data);
+  void update_status(QPair<QString, MessageData> id_and_message_data);
   void add_message_with_widget(MessageData message_data, ModalHandler *handler);
 
 private:
   // Objects:
   QVBoxLayout *vertical_box_layout = nullptr;
-  bool scrollEnabled = true;
+  bool scroll_enabled = true;
   QMutex messages_mutex;
-  QList<QWidget *> all_messages;
+  QList<Message *> all_messages;
+  QMap<QString, Message *> status_messages;
   short message_counter = 0;
   short max_message_amount = 0;
 
@@ -51,10 +53,10 @@ private:
 
   // Functions described in 'display.cpp':
   void connector();
-  void scrollDown(int min, int max);
-  void scrollTumbler(int value);
-  void showWidgets(int value = 0);
-  void removeMessage(Message *message);
+  void scroll_down(int min, int max);
+  void scroll_tumbler(int value);
+  void show_widgets(int value = 0);
+  void remove_message(Message *message);
 };
 
 #endif

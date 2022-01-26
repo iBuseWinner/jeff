@@ -36,6 +36,23 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
+  if (expression == expression_manager_cmd) {
+    
+  }
+  return false;
+}
+
+/*!
+ * @fn StandardTemplates::fast_commands
+ * @brief Looking for a fast command in the expression. If found, takes action.
+ * @param[in] expression processed string
+ * @returns boolean variable, found or not
+ */
+bool StandardTemplates::fast_commands(const QString &expression) {
+  if (expression == monologue_mode_cmd) {
+    emit changeMonologueMode();
+    return true;
+  }
   if (expression.startsWith(fast_append_cmd)) {
     if (expression.length() > fast_append_cmd.length()) {
       QString reagent_text = expression;
@@ -52,23 +69,6 @@ bool StandardTemplates::dialogues(const QString &expression) {
         basis->cacher->append(e);
       }
     }
-    return true;
-  }
-  if (expression == expression_manager_cmd) {
-    
-  }
-  return false;
-}
-
-/*!
- * @fn StandardTemplates::fast_commands
- * @brief Looking for a fast command in the expression. If found, takes action.
- * @param[in] expression processed string
- * @returns boolean variable, found or not
- */
-bool StandardTemplates::fast_commands(const QString &expression) {
-  if (expression == monologue_mode_cmd) {
-    emit changeMonologueMode();
     return true;
   }
   return false;
