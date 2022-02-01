@@ -137,6 +137,8 @@ signals:
   QString search_again(QString rephrased_message);
   QString send_as_user(QString outter_message);
   QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
+  /*! @brief Reports that sources has been changed. */
+  void sources_changed();
 
 private:
   // Objects:

@@ -57,6 +57,8 @@ private:
   void scroll_tumbler(int value);
   void show_widgets(int value = 0);
   void remove_message(Message *message);
+  void resizeEvent(QResizeEvent *event) override;
+  void fit_messages();
 };
 
 #endif

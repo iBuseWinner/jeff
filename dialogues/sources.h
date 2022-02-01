@@ -5,9 +5,12 @@
 #include "dialogues/sources/create-source.h"
 #include "widgets/button.h"
 #include "widgets/menu.h"
-#include "widgets/sourcelist.h"
+#include "widgets/list.h"
+#include "widgets/styling.h"
+#include <QApplication>
 #include <QDialog>
 #include <QFileDialog>
+#include <QMap>
 #include <QMenu>
 #include <QString>
 #include <QTranslator>
@@ -18,6 +21,8 @@
  * @brief Manages NLP module's sources.
  */
 class SourcesDialog : public QWidget {
+  Q_OBJECT
+  Q_DISABLE_COPY(SourcesDialog)
 public:
   // Functions described in `sources.cpp`:
   SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
@@ -25,14 +30,12 @@ public:
   void remove();
 
 private:
-  Q_DISABLE_COPY(SourcesDialog)
-
   // Objects:
   Basis *basis = nullptr;
   ModalHandler *_m_handler = nullptr;
   QMap<QTreeWidgetItem *, Source> source_widgets;
   CreateSourceDialog *create_source_dialog = nullptr;
-  SourceList *source_list = nullptr;
+  List *source_list = nullptr;
   QGridLayout *grid_layout = nullptr;
   Button *source_actions = nullptr;
   QAction *add_source = nullptr;

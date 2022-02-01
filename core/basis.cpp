@@ -59,6 +59,7 @@ void Basis::load_sources() {
         _sources.append(tmp[i]);
   }
   sources_mutex.unlock();
+  emit sources_changed();
 }
 
 /*! @brief @returns @a _sources. */
@@ -76,6 +77,7 @@ void Basis::sources(Sources s) {
   sources_mutex.unlock();
   json->write_source_list(sql, s);
   check_default_source();
+  emit sources_changed();
 }
 
 /*! @brief Writes @a value to context by @a key. */

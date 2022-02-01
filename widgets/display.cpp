@@ -29,10 +29,12 @@ void Display::add_message(Message *message) {
   message_counter++;
   message->setParent(this);
   connect(message, &Message::closed, this, [this, message] { remove_message(message); });
+  auto max_width = int(width() * 0.8);
+  message->setWidth(max_width);
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   /*! If the scroll is approximately below the middle, and the number of
-   * displayed messages is greater than the maximum... */
+   *  displayed messages is greater than the maximum...  */
   if ((verticalScrollBar()->value() >
        ((verticalScrollBar()->minimum() + verticalScrollBar()->maximum()) / 2)) and
       (message_counter > max_message_amount))
@@ -109,6 +111,7 @@ void Display::start() {
   verticalScrollBar()->setStyleSheet(
     styling.css_scroll_bar.arg(styling.light_theme ? styling.css_light_sb : styling.css_dark_sb)
   );
+  verticalScrollBar()->setFixedWidth(5);
 }
 
 /*!
@@ -173,5 +176,16 @@ void Display::remove_message(Message *message) {
   all_messages.removeOne(message);
   disconnect(message);
   message_counter--;
+  messages_mutex.unlock();
+}
+
+/*! @brief TBD */
+void Display::resizeEvent(QResizeEvent *event) { fit_messages(); event->accept(); }
+
+/*! @brief TBD */
+void Display::fit_messages() {
+  if (not messages_mutex.try_lock()) { return; };
+  auto max_width = int(width() * 0.8);
+  for (auto *message : all_messages) message->setWidth(max_width);
   messages_mutex.unlock();
 }

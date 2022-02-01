@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QColor>
+#include <QFontMetrics>
 #include <QPalette>
 #include <QString>
 
@@ -16,6 +17,7 @@ public:
   QString css_fg_color;
   QString css_hl_color;
   bool light_theme;
+  QFontMetrics *metrics = nullptr;
 
   // Constants:
   inline static const QString css_blank = "rgb(%1,%2,%3)";
@@ -40,6 +42,7 @@ public:
   // Functions:
   /*! @brief Determines theme colors using the current palette. */
   void calculate_colors() {
+    metrics = new QFontMetrics(QApplication::font());
     const auto palette = QApplication::palette();
     bg_color = palette.color(QPalette::Active, QPalette::Window);
     fg_color = palette.color(QPalette::Active, QPalette::WindowText);

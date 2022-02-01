@@ -2,7 +2,11 @@
 #define MENU_H
 
 #include "widgets/styling.h"
+#include <QBitmap>
+#include <QBrush>
 #include <QMenu>
+#include <QPainter>
+#include <QPixmap>
 
 /*!
  * @class Menu
@@ -17,12 +21,8 @@ public:
   Menu(QWidget *parent);
 
 private:
-  // Constants:
-  inline static const QString style_sheet =
-    "QMenu { padding: 3px; border: 2px solid transparent; border-radius: 7px;"
-    "background-color: %1; color: %2; } QMenu::item { border: 2px solid transparent;"
-    "border-radius: 5px; padding: 5px 0px 5px 3px; } QMenu::item:selected { background-color: %3; }"
-    "QMenu::item:pressed { background-color: %4; } QMenu::icon { padding-left: 3px; }";
+  // Functions described in `menu.cpp`:
+  void setup();
 };
 
 #endif

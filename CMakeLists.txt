@@ -60,6 +60,8 @@ set (SRCS
     core/model/python/script.h
     dialogues/about.cpp
     dialogues/about.h
+    dialogues/expression-editor.cpp
+    dialogues/expression-editor.h
     dialogues/firststart.cpp
     dialogues/firststart.h
     dialogues/help.cpp
@@ -71,30 +73,28 @@ set (SRCS
     dialogues/sources.h
     dialogues/sources/create-source.cpp
     dialogues/sources/create-source.h
-    dialogues/sources/edit-source.cpp
-    dialogues/sources/edit-source.h
     widgets/board.cpp
     widgets/board.h
     widgets/button.cpp
     widgets/button.h
+    widgets/combobox.cpp
+    widgets/combobox.h
     widgets/display.cpp
     widgets/display.h
     widgets/explanationlabel.cpp
     widgets/explanationlabel.h
-    widgets/expressionlist.cpp
-    widgets/expressionlist.h
     widgets/line.cpp
     widgets/line.h
     widgets/lineedit.cpp
     widgets/lineedit.h
+    widgets/list.cpp
+    widgets/list.h
     widgets/menu.cpp
     widgets/menu.h
     widgets/menubar.cpp
     widgets/menubar.h
     widgets/message.cpp
     widgets/message.h
-    widgets/sourcelist.cpp
-    widgets/sourcelist.h
     widgets/spoiler.cpp
     widgets/spoiler.h
     widgets/styling.cpp

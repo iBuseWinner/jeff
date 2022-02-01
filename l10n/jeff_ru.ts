@@ -43,15 +43,30 @@
     <name>EditSourceDialog</name>
     <message>
         <source>Activators</source>
-        <translation>Активаторы</translation>
+        <translation type="vanished">Активаторы</translation>
     </message>
+    <message>
+        <source>Expressions</source>
+        <translation type="vanished">Выражения</translation>
+    </message>
+    <message>
+        <source>Reagents</source>
+        <translation type="vanished">Реагенты</translation>
+    </message>
+</context>
+<context>
+    <name>ExpressionEditor</name>
     <message>
         <source>Expressions</source>
         <translation>Выражения</translation>
     </message>
     <message>
-        <source>Reagents</source>
-        <translation>Реагенты</translation>
+        <source>New expression</source>
+        <translation>Новое выражение</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
     </message>
 </context>
 <context>
@@ -89,7 +104,14 @@
     <name>Json</name>
     <message>
         <source>The number of elements in the object is not equal to two.</source>
-        <translation>Количество элементов в объекте не равно двум.</translation>
+        <translation type="vanished">Количество элементов в объекте не равно двум.</translation>
+    </message>
+</context>
+<context>
+    <name>LineEdit</name>
+    <message>
+        <source>Enter your message...</source>
+        <translation>Введите сообщение...</translation>
     </message>
 </context>
 <context>
@@ -476,7 +498,21 @@
     </message>
 </context>
 <context>
+    <name>Server</name>
+    <message>
+        <source>Unable to start server. Perhaps the port %1 is busy.</source>
+        <translation>Не удалось запустить сервер. Возможно, порт %1 занят.</translation>
+    </message>
+</context>
+<context>
     <name>SourceList</name>
+    <message>
+        <source>Sources</source>
+        <translation type="vanished">Источники</translation>
+    </message>
+</context>
+<context>
+    <name>SourcesDialog</name>
     <message>
         <source>Sources</source>
         <translation>Источники</translation>

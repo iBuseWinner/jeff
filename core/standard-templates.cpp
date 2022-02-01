@@ -36,8 +36,12 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == expression_manager_cmd) {
-    
+  if (expression == expression_editor_cmd) {
+    auto *modal_handler = new ModalHandler(this);
+    auto *expression_editor = new ExpressionEditor(basis, nullptr, modal_handler);
+    Q_UNUSED(expression_editor)
+    emit showModalWidget(modal_handler);
+    return true;
   }
   return false;
 }

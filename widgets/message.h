@@ -36,12 +36,11 @@ public:
   void message_data(MessageData _md);
   void widget(ModalHandler *modal_handler);
   void update_text(const QString &text);
+  void setWidth(int width);
 
 signals:
-  /*!
-   * @brief When the message is closed, it can inform ModalHandler, and then it
-   * will delete the message from Display.
-   */
+  /*! @brief When the message is closed, it can inform ModalHandler, and then it
+   *  will delete the message from Display.  */
   void closed();
 
 private:
@@ -49,6 +48,7 @@ private:
   MessageData md;
   QGridLayout *grid_layout = nullptr;
   QWidget *w = nullptr;
+  int _width;
 
   // Constants:
   static const ushort standardMargin = 6;
@@ -66,9 +66,7 @@ private:
   void setup_warning(const QString &content);
   void setup_error(const QString &content);
   void prepare_to_widget();
-  void resizeEvent(QResizeEvent *event) override;
   QPair<QSpacerItem *, Board *> make_layout();
-  void fit_text();
 };
 
 #endif

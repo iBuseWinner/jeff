@@ -42,25 +42,23 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_han
     QIcon::fromTheme("remove-link", QIcon(":/arts/icons/16/remove-link.svg")));
   save_and_close->setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
-  source_actions->setPopupMode(QToolButton::InstantPopup);
   auto *add_source_menu = new Menu(source_actions);
   add_source_menu->addAction(add_source);
   add_source_menu->addAction(create_source);
   add_source_menu->addAction(remove_source);
   source_actions->setMenu(add_source_menu);
-  source_list = new SourceList(this);
+  source_list = new List(this);
+  source_list->setHeaderLabel(tr("Sources"));
   grid_layout->addWidget(source_list, 0, 0, 1, 0);
   grid_layout->addWidget(source_actions, 1, 0);
   grid_layout->addWidget(save_and_close, 1, 1);
   setLayout(grid_layout);
+  setFixedWidth(480);
   connector();
   load();
 }
 
-/*!
- * @fn SourcesDialog::load
- * @brief Loads saved sources.
- */
+/*! @brief Loads saved sources. */
 void SourcesDialog::load() {
   source_widgets.clear();
   source_list->clear();
@@ -68,10 +66,7 @@ void SourcesDialog::load() {
   append(basis->sources());
 }
 
-/*!
- * @fn SourcesDialog::add
- * @brief Adds a source to the widget, loads its data.
- */
+/*! @brief Adds a source to the widget, loads its data. */
 void SourcesDialog::add() {
   QString filename = QFileDialog::getOpenFileName(
       nullptr, QTranslator::tr("Select database"), nullptr,
@@ -81,10 +76,7 @@ void SourcesDialog::add() {
   append(basis->sql->sources(filename));
 }
 
-/*!
- * @fn SourcesDialog::remove
- * @brief Removes selected sources.
- */
+/*! @brief Removes selected sources. */
 void SourcesDialog::remove() {
   if (not source_list->selectedItems().length()) return;
   edited = true;
@@ -98,11 +90,7 @@ void SourcesDialog::remove() {
   }
 }
 
-/*!
- * @fn SourcesDialog::connector
- * @brief Establishes communications for user interaction through the dialog
- * box.
- */
+/*! @brief Establishes communications for user interaction through the dialog box. */
 void SourcesDialog::connector() {
   connect(add_source, &QAction::triggered, this, &SourcesDialog::add);
   connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
@@ -125,7 +113,8 @@ void SourcesDialog::append(Sources sources) {
         parent = source_list->invisibleRootItem()->takeChild(tli2);
         break;
       }
-    if (not isInside) parent = new QTreeWidgetItem(QStringList(source.path));
+    if (not isInside) parent = new QTreeWidgetItem(
+      QStringList(styling.metrics->elidedText(source.path, Qt::ElideLeft, width() - 30)));
     source_list->addTopLevelItem(parent);
     bool notContains = true;
     for (int childIndex = 0; childIndex < parent->childCount(); childIndex++)

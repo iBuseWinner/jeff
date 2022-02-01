@@ -68,7 +68,7 @@ void Message::update_text(const QString &text) {
   auto *label = qobject_cast<QLabel *>(w);
   if (not label) return;
   label->setText(text);
-  fit_text();
+  setMaximumWidth(_width);
 }
 
 /*!
@@ -190,12 +190,6 @@ void Message::prepare_to_widget() {
 }
 
 /*!
- * @fn Message::resizeEvent
- * @brief Aligns text to the width of the window.
- */
-void Message::resizeEvent(QResizeEvent *event) { fit_text(); event->accept(); }
-
-/*!
  * @fn Message::make_layout
  * @brief Creates a spacer and an Board to adjust the layout.
  * @returns QSpacerItem-Board pair
@@ -211,9 +205,12 @@ QPair<QSpacerItem *, Board *> Message::make_layout() {
 }
 
 /*! @brief Fits the text to the size of the message. */
-void Message::fit_text() {
+void Message::setWidth(int width) {
   auto *label = qobject_cast<QLabel *>(w);
-  if (not label) return;
+  if (not label) {
+    if (w) w->setMaximumWidth(width);
+    return;
+  }
   QTextDocument textDocument;
   if (md.content_type == ContentType::Markdown)
     textDocument.setHtml(label->text());
@@ -221,10 +218,11 @@ void Message::fit_text() {
     textDocument.setPlainText(label->text());
   else
     return;
-  if (textDocument.idealWidth() < width())
+  if (textDocument.idealWidth() < width)
     label->setWordWrap(false);
   else {
     label->setWordWrap(true);
-    label->setFixedWidth(width());
+    label->setFixedWidth(width);
   }
+  _width = width;
 }
