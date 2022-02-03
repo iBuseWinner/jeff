@@ -42,6 +42,7 @@ enum ToDo {
   SelectSources,
   CountExpressions,
   InsertExpression,
+  SelectExpressions,
   SelectAddressesByExpression,
   SelectAddressesByExpressionAndExec,
   SelectLinksByAddress,
@@ -81,6 +82,7 @@ public:
   Sources sources(const QString &path);
   Source load_source(Source source);
   bool write_source(const Source &source);
+  QList<QPair<int, QString>> select_all(const Source &source);
   bool insert_expression(const Source &source, int address, const QString &expression, 
                          const QSet<int> &links, bool ex);
   bool insert_expression(const Source &source, const Expression &expression);

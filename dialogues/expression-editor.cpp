@@ -13,7 +13,9 @@
 ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  expressions.setHeaderLabel(tr("Expressions"));
+  expressions.setHeaderLabels({tr("Address"), tr("Expression")});
+  expressions.setWordWrap(true);
+  expressions.setRootIsDecorated(false);
   new_expression.setText(tr("New expression"));
   close_editor.setText(tr("Close"));
   new_expression.setIcon(
@@ -28,7 +30,7 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   selector_layout.addWidget(&new_expression, 3, 0);
   selector_layout.addWidget(&close_editor, 3, 1);
   connect(basis, &Basis::sources_changed, this, &ExpressionEditor::fill_databases);
-  connect(&close_editor, &Button::clicked, this, [this]() { _m_handler->closePrisoner(); });
+  connect(&close_editor, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
   auto *lt = new QGridLayout();
   lt->setSpacing(0);
   lt->setMargin(0);
@@ -47,6 +49,7 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
 
 /*! @brief TBD */
 void ExpressionEditor::fill_databases() {
+  disconnect(&databases, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
   auto selected = databases.currentData();
   auto sources = basis->sources();
   for (auto source : sources) {
@@ -58,12 +61,15 @@ void ExpressionEditor::fill_databases() {
     int id = -1;
     if ((id = databases.findData(selected)) != -1)
       databases.setCurrentIndex(id);
-  }
-  fill_tables(sources);
+  } else fill_tables(sources);
+  connect(&databases, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, sources] {
+    fill_tables(sources);
+  });
 }
 
 /*! @brief TBD */
 void ExpressionEditor::fill_tables(const Sources &sources) {
+  disconnect(&tables, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
   auto selected = tables.currentData();
   for (auto source : sources) {
     if (tables.findData(source.table_name) == -1)
@@ -76,9 +82,28 @@ void ExpressionEditor::fill_tables(const Sources &sources) {
       tables.setCurrentIndex(id);
   }
   fill_expressions(sources);
+  connect(&tables, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, sources] {
+    fill_expressions(sources);
+  });
 }
 
 /*! @brief TBD */
 void ExpressionEditor::fill_expressions(const Sources &sources) {
-  
+  Source selected;
+  for (auto candidate : sources) {
+    if (
+      candidate.path == databases.currentData().toString() and 
+      candidate.table_name == tables.currentData().toString()
+    ) {
+      selected = candidate;
+      break;
+    }
+  }
+  selector_data = basis->sql->select_all(selected);
+  QTreeWidgetItem *parent = expressions.invisibleRootItem();
+  expressions.clear();
+  for (auto pair : selector_data) {
+    expressions.addTopLevelItem(new QTreeWidgetItem(parent, 
+                                                    {QString::number(pair.first), pair.second}));
+  }
 }

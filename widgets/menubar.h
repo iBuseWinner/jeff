@@ -34,6 +34,8 @@ signals:
   void settings_triggered();
   /*! @brief Informs about clicking on the "Source manager" action. */
   void sources_triggered();
+  /*! @brief Informs about clicking on the "Expression editor" action. */
+  void expression_editor_triggered();
   /*! @brief Informs about clicking on the "Export message history..." action. */
   void export_triggered();
   /*! @brief Informs about clicking on the "Import message history..." action. */
@@ -49,11 +51,16 @@ signals:
 private:
   // Objects:
   Menu file_menu, edit_menu, tools_menu, help_menu;
-  QAction source_manager_action, export_history_action, import_history_action, /*!< `File`  menu. */
-    clear_history_action, delete_text_action, cut_text_action,                 /*!< `Edit`  menu. */
-    copy_text_action, paste_text_action, select_all_text_action,
-    hide_menubar_action, settings_action,                                      /*!< `Tools` menu. */
-    about_action;                                                              /*!< `Help`  menu. */
+  QAction 
+    /*! `File`  menu. */
+    source_manager_action, expression_editor_action, export_history_action, import_history_action,
+    /*! `Edit`  menu. */
+    clear_history_action, delete_text_action, cut_text_action, copy_text_action, paste_text_action,
+    select_all_text_action,
+    /*! `Tools` menu. */
+    hide_menubar_action, settings_action,
+    /*! `Help`  menu. */
+    about_action;
 };
 
 #endif

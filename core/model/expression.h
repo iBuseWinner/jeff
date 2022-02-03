@@ -71,6 +71,8 @@ public:
   }
 };
 
+typedef QList<Expression> Expressions;
+
 typedef QPair<QMap<int, int>, Expression> ExpressionWithIndices;
 
 #endif

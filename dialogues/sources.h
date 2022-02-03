@@ -6,7 +6,6 @@
 #include "widgets/button.h"
 #include "widgets/menu.h"
 #include "widgets/list.h"
-#include "widgets/styling.h"
 #include <QApplication>
 #include <QDialog>
 #include <QFileDialog>

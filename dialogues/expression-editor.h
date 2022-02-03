@@ -38,6 +38,7 @@ private:
   Button new_expression, close_editor;
   ComboBox databases, tables;
   List expressions;
+  QList<QPair<int, QString>> selector_data;
   
   // Functions described in `expression-editor.cpp`:
 //   void open_brief();

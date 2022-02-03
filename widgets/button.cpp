@@ -14,7 +14,7 @@ Button::Button(const QString &text, QWidget *parent) : QPushButton(parent) {
 
 /*! @brief Sets a popup menu on button click. */
 void Button::setMenu(Menu *menu) {
-  connect(this, &Button::clicked, this, [this, menu]() {
+  connect(this, &Button::clicked, this, [this, menu] {
     if (not parent()) return;
     QPoint pos = qobject_cast<QWidget *>(parent())->mapToGlobal(this->pos());
     pos += QPoint(0, height());

@@ -113,8 +113,7 @@ void SourcesDialog::append(Sources sources) {
         parent = source_list->invisibleRootItem()->takeChild(tli2);
         break;
       }
-    if (not isInside) parent = new QTreeWidgetItem(
-      QStringList(styling.metrics->elidedText(source.path, Qt::ElideLeft, width() - 30)));
+    if (not isInside) parent = new QTreeWidgetItem(QStringList(source.path));
     source_list->addTopLevelItem(parent);
     bool notContains = true;
     for (int childIndex = 0; childIndex < parent->childCount(); childIndex++)

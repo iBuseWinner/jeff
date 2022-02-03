@@ -40,26 +40,7 @@
     </message>
 </context>
 <context>
-    <name>EditSourceDialog</name>
-    <message>
-        <source>Activators</source>
-        <translation type="vanished">Активаторы</translation>
-    </message>
-    <message>
-        <source>Expressions</source>
-        <translation type="vanished">Выражения</translation>
-    </message>
-    <message>
-        <source>Reagents</source>
-        <translation type="vanished">Реагенты</translation>
-    </message>
-</context>
-<context>
     <name>ExpressionEditor</name>
-    <message>
-        <source>Expressions</source>
-        <translation>Выражения</translation>
-    </message>
     <message>
         <source>New expression</source>
         <translation>Новое выражение</translation>
@@ -67,6 +48,14 @@
     <message>
         <source>Close</source>
         <translation>Закрыть</translation>
+    </message>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Expression</source>
+        <translation>Выражение</translation>
     </message>
 </context>
 <context>
@@ -98,13 +87,6 @@
     <message>
         <source>Load history</source>
         <translation>Загрузить историю сообщений</translation>
-    </message>
-</context>
-<context>
-    <name>Json</name>
-    <message>
-        <source>The number of elements in the object is not equal to two.</source>
-        <translation type="vanished">Количество элементов в объекте не равно двум.</translation>
     </message>
 </context>
 <context>
@@ -195,6 +177,10 @@
     <message>
         <source>About Qt</source>
         <translation>О Qt</translation>
+    </message>
+    <message>
+        <source>Expression editor</source>
+        <translation>Редактор выражений</translation>
     </message>
 </context>
 <context>
@@ -502,13 +488,6 @@
     <message>
         <source>Unable to start server. Perhaps the port %1 is busy.</source>
         <translation>Не удалось запустить сервер. Возможно, порт %1 занят.</translation>
-    </message>
-</context>
-<context>
-    <name>SourceList</name>
-    <message>
-        <source>Sources</source>
-        <translation type="vanished">Источники</translation>
     </message>
 </context>
 <context>

@@ -10,23 +10,28 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   // File
   file_menu.setTitle(tr("File"));
   source_manager_action.setText(tr("Source manager") + " (/sourcemanager)");
+  expression_editor_action.setText(tr("Expression editor") + " (/expressioneditor)");
   export_history_action.setText(tr("Export message history"));
   import_history_action.setText(tr("Import message history"));
   enable_monologue_mode.setText(tr("Enable monologue mode") + " (/mm)");
   enable_monologue_mode.setCheckable(true);
   source_manager_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_M));
+  expression_editor_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_T));
   export_history_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_E));
   import_history_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_I));
   enable_monologue_mode.setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_M);
   source_manager_action.setIcon(
     QIcon::fromTheme("network-server-database", QIcon(":/arts/icons/16/database-manager.svg")));
+  expression_editor_action.setIcon(
+    QIcon::fromTheme("node-add", QIcon(":/arts/icons/16/format-add-node.svg")));
   export_history_action.setIcon(
-    QIcon::fromTheme("document-export.svg", QIcon(":/arts/icons/16/document-export.svg")));
+    QIcon::fromTheme("document-export", QIcon(":/arts/icons/16/document-export.svg")));
   import_history_action.setIcon(
-    QIcon::fromTheme("document-import.svg", QIcon(":/arts/icons/16/document-import.svg")));
+    QIcon::fromTheme("document-import", QIcon(":/arts/icons/16/document-import.svg")));
   enable_monologue_mode.setIcon(
     QIcon::fromTheme("user-group-properties", QIcon(":/arts/icons/16/monologue.svg")));
   file_menu.addAction(&source_manager_action);
+  file_menu.addAction(&expression_editor_action);
   file_menu.addAction(&enable_monologue_mode);
   file_menu.addSeparator();
   file_menu.addAction(&export_history_action);
@@ -36,6 +41,9 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
     QIcon::fromTheme("application-exit", QIcon(":/arts/icons/16/application-exit.svg")),
     tr("&Exit"), &QApplication::quit, Qt::ALT | static_cast<int>(Qt::Key_F4));
   connect(&source_manager_action, &QAction::triggered, this, [this] { emit sources_triggered(); });
+  connect(&expression_editor_action, &QAction::triggered, this, [this] {
+    emit expression_editor_triggered();
+  });
   connect(&export_history_action, &QAction::triggered, this, [this] { emit export_triggered(); });
   connect(&import_history_action, &QAction::triggered, this, [this] { emit import_triggered(); });
   addMenu(&file_menu);
@@ -90,11 +98,11 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   full_screen_action.setShortcut(Qt::Key_F11);
   settings_action.setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_Comma);
   hide_menubar_action.setIcon(
-    QIcon::fromTheme("show-menu.svg", QIcon(":/arts/icons/16/show-menu.svg")));
+    QIcon::fromTheme("show-menu", QIcon(":/arts/icons/16/show-menu.svg")));
   full_screen_action.setIcon(
-    QIcon::fromTheme("view-fullscreen.svg", QIcon(":/arts/icons/16/view-fullscreen.svg")));
+    QIcon::fromTheme("view-fullscreen", QIcon(":/arts/icons/16/view-fullscreen.svg")));
   settings_action.setIcon(
-    QIcon::fromTheme("configure.svg", QIcon(":/arts/icons/16/configure.svg")));
+    QIcon::fromTheme("configure", QIcon(":/arts/icons/16/configure.svg")));
   tools_menu.addAction(&hide_menubar_action);
   tools_menu.addAction(&full_screen_action);
   tools_menu.addSeparator();

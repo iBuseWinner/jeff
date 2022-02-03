@@ -83,7 +83,6 @@ void Display::update_status(QPair<QString, MessageData> id_and_message_data) {
 void Display::add_message_with_widget(MessageData message_data, ModalHandler *handler) {
   auto *message = new Message(message_data);
   handler->getPrisoner()->setParent(message);
-//   handler->getPrisoner()->setFixedWidth(Message::maximalMessageWidth);
   message->widget(handler);
   add_message(message);
 }

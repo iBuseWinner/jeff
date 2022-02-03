@@ -39,7 +39,6 @@ public:
   static inline const QString settings_cmd = "/settings";
   static inline const QString fast_append_cmd = "/+ ";
   static inline const QString expression_editor_cmd = "/expressioneditor";
-
   static inline const QString monologue_mode_cmd = "/mm";
 
   // Functions described in `standard-templates.cpp`:
