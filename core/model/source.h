@@ -27,7 +27,7 @@ public:
   QString table_title = "";
   /*! Means that does not participate in the selection of reagents. */
   bool is_disabled = false;
-  /*! Means that not available for adding expressions from ASW. */
+  /*! Means that not available for adding expressions from Jeff. */
   bool is_read_only = false;
   /*! Means that unavailable until purposeful entry. */
   bool is_private = false;

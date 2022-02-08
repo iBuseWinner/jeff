@@ -17,29 +17,21 @@ class HProcessor : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  /*!
-   * @fn HProcessor::HProcessor
-   * @brief The constructor.
-   * @param[in,out] basis reference to the Basis instance
-   * @param[in,out] parent QObject parent
-   */
+  /*! @brief The constructor. */
   HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent) { basis = _basis; }
 
   // Functions described in `history-processor.cpp`:
-  void load(const QString &filename);
+  void load(const QString &filename = QString());
   void append(const MessageData &message);
   void clear();
   void remove_one(MessageData message);
-  void save(const QString &filename);
+  void save(const QString &filename = QString());
   Messages recent(int amount);
   QString last_user_message();
 
 signals:
-  /*!
-   * @brief Sends message history to Display.
-   * @sa Display
-   */
-  Messages send_message_history(Messages message_history);
+  /*! @brief Sends message history to Display. */
+  Messages history_loaded(Messages message_history);
 
 private:
   // Objects:

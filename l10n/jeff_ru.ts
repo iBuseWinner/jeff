@@ -2,6 +2,53 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>About</name>
+    <message>
+        <source>Jeff</source>
+        <translation>Джефф</translation>
+    </message>
+    <message>
+        <source>version</source>
+        <translation>версия</translation>
+    </message>
+    <message>
+        <source>Jeff - chat bot and automatization tool</source>
+        <translation>Джефф - чат-бот и средство автоматизации</translation>
+    </message>
+    <message>
+        <source>Jeff Authors</source>
+        <translation>Авторы Джеффа</translation>
+    </message>
+    <message>
+        <source>License</source>
+        <translation>Лицензия</translation>
+    </message>
+    <message>
+        <source>Shamshin Victor</source>
+        <translation>Шамшин Виктор</translation>
+    </message>
+    <message>
+        <source>Developer</source>
+        <translation>Разработчик</translation>
+    </message>
+    <message>
+        <source>Mark CDA</source>
+        <translation>Марк Сидиэй</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>О приложении</translation>
+    </message>
+    <message>
+        <source>Authors</source>
+        <translation>Авторы</translation>
+    </message>
+</context>
+<context>
     <name>Basis</name>
     <message>
         <source>An access error occurred (e.g. trying to write to a read-only file).</source>
@@ -56,6 +103,33 @@
     <message>
         <source>Expression</source>
         <translation>Выражение</translation>
+    </message>
+</context>
+<context>
+    <name>FirstStart</name>
+    <message>
+        <source>Jeff</source>
+        <translation>Джефф</translation>
+    </message>
+    <message>
+        <source>This is the first start of Jeff. Before you start working:</source>
+        <translation>Это первый старт Джеффа. Перед тем, как начать работать:</translation>
+    </message>
+    <message>
+        <source>1) go to the Source Manager...</source>
+        <translation>1) перейдите в Менеджер источников...</translation>
+    </message>
+    <message>
+        <source>2) add databases...</source>
+        <translation>2) добавьте базы данных...</translation>
+    </message>
+    <message>
+        <source>And now you&apos;ve done.</source>
+        <translation>И теперь вы можете приступать к работе.</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
     </message>
 </context>
 <context>
@@ -254,129 +328,6 @@
     </message>
 </context>
 <context>
-    <name>QTranslator</name>
-    <message>
-        <source>License</source>
-        <translation>Лицензия</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>версия</translation>
-    </message>
-    <message>
-        <source>Jeff</source>
-        <translation>Джефф</translation>
-    </message>
-    <message>
-        <source>Jeff - chat bot and automatization tool</source>
-        <translation>Джефф - чат-бот и средство автоматизации</translation>
-    </message>
-    <message>
-        <source>Jeff Authors</source>
-        <translation>Авторы Джеффа</translation>
-    </message>
-    <message>
-        <source>Shamshin Victor</source>
-        <translation>Шамшин Виктор</translation>
-    </message>
-    <message>
-        <source>Developer</source>
-        <translation>Разработчик</translation>
-    </message>
-    <message>
-        <source>Mark CDA</source>
-        <translation>Марк Сидиэй</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>Закрыть</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation>О приложении</translation>
-    </message>
-    <message>
-        <source>Authors</source>
-        <translation>Авторы</translation>
-    </message>
-    <message>
-        <source>Save and close</source>
-        <translation>Сохранить и закрыть</translation>
-    </message>
-    <message>
-        <source>Select database</source>
-        <translation>Выбрать базу данных</translation>
-    </message>
-    <message>
-        <source>1) go to the Source Manager...</source>
-        <translation>1) перейдите в Менеджер источников...</translation>
-    </message>
-    <message>
-        <source>2) add databases...</source>
-        <translation>2) добавьте базы данных...</translation>
-    </message>
-    <message>
-        <source>And now you&apos;ve done.</source>
-        <translation>И теперь вы можете приступать к работе.</translation>
-    </message>
-    <message>
-        <source>Enable delay</source>
-        <translation>Включить задержку</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>От</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <translation>до</translation>
-    </message>
-    <message>
-        <source>ms</source>
-        <translation>мс</translation>
-    </message>
-    <message>
-        <source>Keep history</source>
-        <translation>Хранить историю</translation>
-    </message>
-    <message>
-        <source>Enables keeping the message history after exiting the application.</source>
-        <translation>Позволяет сохранить историю сообщений после выхода из приложения.</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>ОК</translation>
-    </message>
-    <message>
-        <source>Enables Jeff&apos;s response delay.</source>
-        <translation>Добавить задержку для ответа Джеффа.</translation>
-    </message>
-    <message>
-        <source>Source actions...</source>
-        <translation>Действия с источниками...</translation>
-    </message>
-    <message>
-        <source>Add sources</source>
-        <translation>Добавить источники</translation>
-    </message>
-    <message>
-        <source>Create source</source>
-        <translation>Создать источник</translation>
-    </message>
-    <message>
-        <source>Remove source</source>
-        <translation>Удалить источник</translation>
-    </message>
-    <message>
-        <source>Jeff&apos;s database</source>
-        <translation>База данных Джеффа</translation>
-    </message>
-    <message>
-        <source>This is the first start of Jeff. Before you start working:</source>
-        <translation>Это первый старт Джеффа. Перед тем, как начать работать:</translation>
-    </message>
-</context>
-<context>
     <name>SQLite</name>
     <message>
         <source>Database &quot;%1&quot; doesn&apos;t exist.</source>
@@ -491,10 +442,81 @@
     </message>
 </context>
 <context>
+    <name>Settings</name>
+    <message>
+        <source>Enable delay</source>
+        <translation>Включить задержку</translation>
+    </message>
+    <message>
+        <source>Enables Jeff&apos;s response delay.</source>
+        <translation>Добавить задержку для ответа Джеффа.</translation>
+    </message>
+    <message>
+        <source>From</source>
+        <translation>От</translation>
+    </message>
+    <message>
+        <source>to</source>
+        <translation>до</translation>
+    </message>
+    <message>
+        <source>ms</source>
+        <translation>мс</translation>
+    </message>
+    <message>
+        <source>Keep history</source>
+        <translation>Хранить историю</translation>
+    </message>
+    <message>
+        <source>Enables keeping the message history after exiting the application.</source>
+        <translation>Позволяет сохранить историю сообщений после выхода из приложения.</translation>
+    </message>
+    <message>
+        <source>Enable greetings message on start</source>
+        <translation>Включить приветствие при запуске</translation>
+    </message>
+    <message>
+        <source>Allows you to automatically send a message to Jeff at startup so that he prepares the information you need in advance for you.</source>
+        <translation>Позволяет вам автоматически отправлять Джеффу сообщение при запуске, чтобы он заранее готовил информацию, которая вам нужна.</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+</context>
+<context>
     <name>SourcesDialog</name>
     <message>
         <source>Sources</source>
         <translation>Источники</translation>
+    </message>
+    <message>
+        <source>Source actions...</source>
+        <translation>Действия с источниками...</translation>
+    </message>
+    <message>
+        <source>Add sources</source>
+        <translation>Добавить источники</translation>
+    </message>
+    <message>
+        <source>Create source</source>
+        <translation>Создать источник</translation>
+    </message>
+    <message>
+        <source>Remove source</source>
+        <translation>Удалить источник</translation>
+    </message>
+    <message>
+        <source>Save and close</source>
+        <translation>Сохранить и закрыть</translation>
+    </message>
+    <message>
+        <source>Select database</source>
+        <translation>Выбрать базу данных</translation>
+    </message>
+    <message>
+        <source>Jeff&apos;s database</source>
+        <translation>База данных Джеффа</translation>
     </message>
 </context>
 </TS>

@@ -26,8 +26,8 @@ class Core : public QObject {
 public:
   // Objects:
   Basis *basis = new Basis();
-  HProcessor *history_processor = new HProcessor(basis);
-  PythonModule *pm = new PythonModule(history_processor, basis);
+  HProcessor *hp = new HProcessor(basis);
+  PythonModule *pm = new PythonModule(hp, basis);
   Server *server = new Server(basis);
 
   // Functions described in `core.cpp`:
@@ -42,10 +42,10 @@ public:
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
   void got_modal(ModalHandler *m_handler);
-  void show_history(Messages message_history);
   void set_monologue_enabled(const bool enabled);
   MessageData get_message(const QString &content, Author author, 
                           ContentType content_type, Theme theme);
+  void start();
 
 signals:
 #ifdef QT
@@ -63,7 +63,7 @@ private:
   // Objects:
   bool monologue_enabled = false;
   NLPmodule *nlp = new NLPmodule(basis, pm);
-  StandardTemplates *std_templates = new StandardTemplates(basis, history_processor);
+  StandardTemplates *std_templates = new StandardTemplates(basis, hp);
 };
 
 #endif

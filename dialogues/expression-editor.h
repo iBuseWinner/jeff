@@ -18,7 +18,7 @@
 
 /*!
  * @class ExpressionEditor
- * @brief TBD
+ * @brief Allows you to view, add, delete and edit the expressions that Jeff operates on.
  */
 class ExpressionEditor : public QWidget {
   Q_OBJECT

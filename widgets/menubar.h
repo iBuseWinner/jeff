@@ -41,11 +41,7 @@ signals:
   /*! @brief Informs about clicking on the "Import message history..." action. */
   void import_triggered();
 
-  /*!
-   * @brief Informs about clicking on the "Help" action.
-   * @details [constructing]
-   * TODO
-   */
+  /*! @brief Informs about clicking on the "Help" action [constructing] */
   // void help_triggered();
 
 private:
@@ -60,7 +56,7 @@ private:
     /*! `Tools` menu. */
     hide_menubar_action, settings_action,
     /*! `Help`  menu. */
-    about_action;
+    novice_guide, database_guide, aiml_guide, scripts_guide, server_script_guide, about_action;
 };
 
 #endif

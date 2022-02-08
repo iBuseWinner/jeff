@@ -1,10 +1,6 @@
 #include "list.h"
 
-/*!
- * @fn List::List
- * @brief The constructor.
- * @param[in,out] parent QObject parent
- */
+/*! @brief The constructor. */
 List::List(QWidget *parent) : QTreeWidget(parent) {
   setAnimated(false);
   setTextElideMode(Qt::ElideLeft);
@@ -19,7 +15,8 @@ List::List(QWidget *parent) : QTreeWidget(parent) {
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &List::show_items);
 }
 
-/*! @brief TBD */
+/*! @brief Adds a top-level element to the list, while ensuring that no more than a certain number 
+ *  of elements are displayed on the screen.  */
 void List::addTopLevelItem(QTreeWidgetItem *item) {
   items_counter++;
   top_level_items.append(item);
@@ -27,13 +24,15 @@ void List::addTopLevelItem(QTreeWidgetItem *item) {
   while (topLevelItemCount() > max_items_amount) takeTopLevelItem(0);
 }
 
+/*! @brief Clears the list of all elements. */
 void List::clear() {
   while (takeTopLevelItem(0)) {}
   items_counter = 0;
   top_level_items.clear();
 }
 
-/*! @brief TBD */
+/*! @brief Makes it so that when you add as many elements as you like, the most recent ones
+ *  are displayed on the screen.  */
 void List::scroll(int min, int max) {
   verticalScrollBar()->setValue(max);
 }

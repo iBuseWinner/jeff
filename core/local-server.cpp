@@ -1,18 +1,12 @@
 #include "local-server.h"
 
-/*!
- * @fn Server::Server
- * @brief The constructor.
- */
+/*! @brief The constructor. */
 Server::Server(Basis *_basis, QObject *parent) : QObject(parent), basis(_basis) {
   server = new QTcpServer(this);
   connect(server, &QTcpServer::newConnection, this, &Server::handle_connection);
 }
 
-/*!
- * @fn Server::start
- * @brief Starts the server at given @a address and @a port.
- */
+/*! @brief Starts the server at given @a address and @a port. */
 void Server::start(QHostAddress address, quint16 port) {
   if (not server->listen(address, port)) {
     emit server_error(
@@ -47,10 +41,7 @@ void Server::handle_connection() {
   });
 }
 
-/*!
- * @fn Server::authorize_connection
- * @brief If protection against malicious connections is enabled, authorizes the connection by key.
- */
+/*! @brief If protection against malicious connections is enabled, authorizes the connection by key. */
 bool Server::authorize_connection(const QString &key) {
   if (not (*basis)[basis->serverAuthorizationOnSt].toBool()) return true;
   if (key == (*basis)[basis->serverAuthKeySt]) return true;

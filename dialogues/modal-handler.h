@@ -6,9 +6,9 @@
 /*!
  * @class ModalHandler
  * @brief The class that is responsible for the state of the prisoner.
- * @details Allows a prisoner, regardless of class, to tell AMessage that he is
- * closed. In this case, AMessage will be expected to be hidden from ADisplay.
- * @sa AMessage, ADisplay
+ * @details Allows a prisoner, regardless of class, to tell Message that he is closed.
+ * In this case, Message will be expected to be hidden from Display.
+ * @sa Message, Display
  */
 class ModalHandler : public QObject {
   Q_OBJECT

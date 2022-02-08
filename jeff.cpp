@@ -1,7 +1,6 @@
 #include "jeff.h"
 
 /*!
- * @fn Jeff::Jeff
  * @brief The constructor.
  * @details Layout scheme:
  * <--------------->
@@ -33,11 +32,7 @@ Jeff::Jeff() : QMainWindow() {
   apply_settings();
 }
 
-/*!
- * @fn Jeff::keyPressEvent
- * @brief Handles keyboard shortcuts.
- * @param[in,out] event key event
- */
+/*! @brief Handles keyboard shortcuts. */
 void Jeff::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
     if (event->key() == Qt::Key_M) emit send("/mm");
@@ -61,15 +56,14 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
     clear();
 }
 
-/*!
- * @fn Jeff::apply_settings
- * @brief Reads the settings from the file and applies them.
- */
+/*! @brief Reads the settings from the file and applies them. */
 void Jeff::apply_settings() {
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
     emit send("/first");
+    basis->write(basis->isGreetingsEnabledSt, true);
+    basis->write(basis->greetingsMsg, tr("Hello!"));
     save_window_settings();
     return;
   }
@@ -80,10 +74,7 @@ void Jeff::apply_settings() {
   menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueEnabledSt].toBool());
 }
 
-/*!
- * @fn Jeff::save_window_settings
- * @brief Writes changes to window settings to a file.
- */
+/*! @brief Writes changes to window settings to a file. */
 void Jeff::save_window_settings() {
   if (not basis->accessible()) return;
   basis->write(basis->sizeSt, size());
@@ -93,10 +84,7 @@ void Jeff::save_window_settings() {
   basis->write(basis->isMonologueEnabledSt, menubar->enable_monologue_mode.isChecked());
 }
 
-/*!
- * @fn Jeff::connect_all
- * @brief Establishes communications for user interaction through the window.
- */
+/*! @brief Establishes communications for user interaction through the window. */
 void Jeff::connect_all() {
   // menubar
   connect(&(menubar->full_screen_action), &QAction::triggered, this, &Jeff::full_screen_handler);
@@ -112,28 +100,22 @@ void Jeff::connect_all() {
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
   // others
   connect(&(line->send_button), &Button::clicked, this, &Jeff::user_input_handler);
-  connect(this, &Jeff::ready_state, this, [this] { emit send(tr("Hello!")); });
+  connect(this, &Jeff::ready_state, core, &Core::start);
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
   connect(core, &Core::show, display, &Display::add_message_by_md);
   connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
   connect(core, &Core::show_status, display, &Display::update_status);
   connect(core, &Core::changeMenuBarMonologueCheckbox,
           &(menubar->enable_monologue_mode), &QAction::setChecked);
+  connect(history_processor, &HProcessor::history_loaded, display, &Display::start_by);
 }
 
-/*!
- * @fn Jeff::full_screen_handler
- * @brief Shows a window in full screen or in normal mode.
- */
+/*! @brief Shows a window in full screen or in normal mode. */
 void Jeff::full_screen_handler() {
   menubar->full_screen_action.isChecked() ? showFullScreen() : showNormal();
 }
 
-/*!
- * @fn Jeff::user_input_handler
- * @brief Sends a request to Core.
- * @sa Core
- */
+/*! @brief Sends a request to Core. */
 void Jeff::user_input_handler() {
   // If user sends a message, the display automatically scrolls to the end.
   display->set_scroll_enabled(true);
@@ -142,11 +124,7 @@ void Jeff::user_input_handler() {
   emit send(text);
 }
 
-/*!
- * @fn Jeff::export_message_history
- * @brief Calls the dialog, asks for @a filename and saves the message history
- * to it.
- */
+/*! @brief Calls the dialog, asks for @a filename and saves the message history to it. */
 void Jeff::export_message_history() {
   QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save history"), nullptr,
                                                   tr("JSON file") + "(*.json)");
@@ -154,26 +132,20 @@ void Jeff::export_message_history() {
   history_processor->save(filename);
 }
 
-/*!
- * @fn Jeff::import_message_history
- * @brief Calls the dialog, asks for @a filename and loads the message history from it.
- */
+/*! @brief Calls the dialog, asks for @a filename and loads the message history from it. */
 void Jeff::import_message_history() {
   if (QMessageBox::question(
-          this, tr("Import message history?"),
-          tr("Messages will be added to the beginning of the dialogue."),
-          QMessageBox::Ok | QMessageBox::Cancel,
-          QMessageBox::Ok) == QMessageBox::Ok) {
+    this, tr("Import message history?"),
+    tr("Messages will be added to the beginning of the dialogue."),
+    QMessageBox::Ok | QMessageBox::Cancel,
+    QMessageBox::Ok) == QMessageBox::Ok
+  ) {
     QString filename = QFileDialog::getOpenFileName(
       nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
     if (filename.isEmpty()) return;
-    display->start();
     history_processor->load(filename);
   }
 }
 
-/*!
- * @fn Jeff::clear
- * @brief Clears message history and display.
- */
+/*! @brief Clears message history and display. */
 void Jeff::clear() { history_processor->clear(); display->start(); }

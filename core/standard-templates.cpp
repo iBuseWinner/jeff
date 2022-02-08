@@ -1,12 +1,6 @@
 #include "standard-templates.h"
 
-/*!
- * @fn StandardTemplates::dialogues
- * @brief Looking for a command in the expression. If found, then shows an ASW
- * dialog box.
- * @param[in] expression processed string
- * @returns boolean variable, found or not
- */
+/*! @brief Looking for a command in the expression. If found, then shows a Jeff dialog box. */
 bool StandardTemplates::dialogues(const QString &expression) {
   if (expression == about_cmd) {
     auto *modal_handler = new ModalHandler(this);
@@ -46,12 +40,7 @@ bool StandardTemplates::dialogues(const QString &expression) {
   return false;
 }
 
-/*!
- * @fn StandardTemplates::fast_commands
- * @brief Looking for a fast command in the expression. If found, takes action.
- * @param[in] expression processed string
- * @returns boolean variable, found or not
- */
+/*! @brief Looking for a fast command in the expression. If found, takes an action. */
 bool StandardTemplates::fast_commands(const QString &expression) {
   if (expression == monologue_mode_cmd) {
     emit changeMonologueMode();

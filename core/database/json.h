@@ -26,11 +26,13 @@ public:
   Json(QString settingsPath, QObject *parent = nullptr);
   Sources  read_source_list     (SQLite *sql) ;
   Messages read_message_history (QFile *file) ;
+  Messages read_message_history ()            ;
   Cache    read_NLP_cache       ()            ;
   Scripts  read_scripts         ()            ;
   KeyStore read_memory          ()            ;
   void write_source_list     (SQLite *sql, Sources sources)          ;
   void write_message_history (Messages message_history, QFile *file) ;
+  void write_message_history (Messages message_history)              ;
   void write_NLP_cache       (Cache cache)                           ;
   void write_scripts         (Scripts scripts)                       ;
   void write_memory          (KeyStore memory)                       ;

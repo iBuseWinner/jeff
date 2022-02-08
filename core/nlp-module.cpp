@@ -1,12 +1,6 @@
 #include "nlp-module.h"
 
-/*!
- * @fn NLPmodule::select_candidates
- * @brief Matches candidates for each index of occurrence in the input expression.
- * @param[in] selection selected expressions
- * @param[in] input text string
- * @returns dictionary with indices and selected expressions
- */
+/*! @brief Matches candidates for each index of occurrence in the input expression. */
 CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QString input) {
   CacheWithIndices candidates;
   for (auto ewi : selection) {
@@ -53,14 +47,8 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
   return candidates;
 }
 
-/*!
- * @fn NLPmodule::compose_answer
- * @brief Builds an answer in the order of the indices of the occurrence and
- * sets the uncovered part of the expression.
- * @param[in,out] input (out as QPair::first) text input
- * @param[in] candidates to be printed
- * @returns QPair of @a input and @a output
- */
+/*! @brief Builds an answer in the order of the indices of the occurrence and
+ *  sets the uncovered part of the expression.  */
 QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndices candidates) {
   QString output;
   input = StringSearch::purify(input);
@@ -85,11 +73,7 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
   return QPair<QString, QString>(input, output);
 }
 
-/*!
- * @fn NLPmodule::search_for_suggests
- * @brief Matches the answer based on the input.
- * @param[in] input user input
- */
+/*! @brief Matches the answer based on the input. */
 void NLPmodule::search_for_suggests(const QString &input) {
   auto selection = select_from_cache(input);
   bool from_db = false;
@@ -110,12 +94,7 @@ void NLPmodule::search_for_suggests(const QString &input) {
   emit response(composition.second.trimmed());
 }
 
-/*!
- * @fn NLPmodule::select_from_cache
- * @brief Selects expressions to compose a response from the cache.
- * @param[in] input user input
- * @returns matching expressions
- */
+/*! @brief Selects expressions to compose a response from the cache. */
 CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   CacheWithIndices selection;
   Cache cache = basis->cacher->get();
@@ -137,12 +116,7 @@ CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   return selection;
 }
 
-/*!
- * @fn NLPmodule::select_from_db
- * @brief Selects expressions to compose a response from the database.
- * @param[in] input user input
- * @returns matching expressions
- */
+/*! @brief Selects expressions to compose a response from the database. */
 CacheWithIndices NLPmodule::select_from_db(const QString &input) {
   CacheWithIndices selection;
   Sources sources = basis->sources();
@@ -164,14 +138,7 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
   return selection;
 }
 
-/*!
- * @fn NLPmodule::load_cache
- * @brief Loads the cache into memory.
- */
+/*! @brief Loads the cache into memory. */
 void NLPmodule::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
-
-/*!
- * @fn NLPmodule::save_cache
- * @brief Saves the cache to disk.
- */
+/*! @brief Saves the cache to disk. */
 void NLPmodule::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }

@@ -1,9 +1,6 @@
 #include "python-module.h"
 
-/*!
- * @fn PythonModule::PythonModule
- * @brief The constructor.
- */
+/*! @brief The constructor. */
 PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
     : QObject(parent), hp(_hp), basis(_basis) {
   _scripts = basis->json->read_scripts();
@@ -14,15 +11,10 @@ PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
   PyRun_SimpleString(command.toStdString().c_str());
 }
 
-/*!
- * @fn PythonModule::~PythonModule
- * @brief The destructor.
- */
-PythonModule::~PythonModule() {
-  basis->json->write_scripts(_scripts);
-  Py_Finalize();
-}
+/*! @brief The destructor. */
+PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); Py_Finalize(); }
 
+/*! @brief */
 void PythonModule::fill_modules_data() {
   for (auto script : _scripts) {
     QFile f(script.path);
@@ -42,23 +34,13 @@ void PythonModule::fill_modules_data() {
   }
 }
 
-/*!
- * @fn PythonModule::startup
- * @brief Runs functions in scripts intended to start when Jeff starts.
- */
+/*! @brief Runs functions in scripts intended to start when Jeff starts. */
 void PythonModule::startup() {
   for (auto script : _scripts)
     if (script.startup) run(script.path, startup_name, QJsonObject::fromVariantMap(QVariantMap()));
 }
 
-/*!
- * @fn PythonModule::run
- * @brief Runs a function with parameters and returns the result.
- * @param[in] path to the script
- * @param[in] def_name of function in a script
- * @param[in] args to the function
- * @returns result of @a def_name 's execution
- */
+/*! @brief Runs a function with parameters and returns the result. */
 QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transport) {
   QFileInfo module_info(path);
   QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());
@@ -116,7 +98,6 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
 }
 
 /*!
- * @fn PythonModule::request_answer
  * @brief Processes the script configuration and gets the necessary information from it.
  * @details Handles next things:
  *   1. `get_hist` prop

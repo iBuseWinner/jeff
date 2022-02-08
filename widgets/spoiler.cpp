@@ -1,9 +1,6 @@
 #include "spoiler.h"
 
-/*!
- * @fn Spoiler::Spoiler
- * @brief The constructor.
- */
+/*! @brief The constructor. */
 Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *parent)
     : QWidget(parent), animation_duration(_animation_duration) {
   toggle_button.setStyleSheet("QToolButton { border: none; }");
@@ -41,10 +38,7 @@ Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *p
   });
 }
 
-/*!
- * @fn Spoiler::set_content_layout
- * @details Sets the correct values for animations to work.
- */
+/*! @details Sets the correct values for animations to work. */
 void Spoiler::set_content_layout(QLayout &content_layout) {
   delete content_area.layout();
   content_area.setLayout(&content_layout);

@@ -1,5 +1,6 @@
 #include "combobox.h"
 
+/*! @brief The constructor. */
 ComboBox::ComboBox(QWidget *parent) : QComboBox(parent) {
   setFocusPolicy(Qt::NoFocus);
   setStyleSheet(

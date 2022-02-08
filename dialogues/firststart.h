@@ -15,6 +15,7 @@
  * @sa ModalHandler
  */
 class FirstStart : public QWidget {
+  Q_OBJECT
   Q_DISABLE_COPY(FirstStart)
 public:
   // Functions described in `firststart.cpp`:
@@ -26,6 +27,7 @@ private:
 
   // Constants:
   inline static const QString object_name = "firststart";
+  static const int fixed_width = 400;
 };
 
 #endif

@@ -22,13 +22,7 @@ class StandardTemplates : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  /*!
-   * @fn StandardTemplates::StandardTemplates
-   * @brief The constructor.
-   * @param[in,out] _basis reference to the Basis instance
-   * @param[in,out] _hp reference to the HProcessor instance
-   * @param[in,out] parent QObject parent
-   */
+  /*! @brief The constructor. */
   StandardTemplates(Basis *_basis, HProcessor *_hp, QObject *parent = nullptr)
     : QObject(parent), basis(_basis), hp(_hp) {}
 
@@ -47,15 +41,9 @@ public:
   static QPair<QString, QStringList> inline_commands(const QString &expression);
 
 signals:
-  /*!
-   * @brief Sends a ModalHandler when the widget needs to be shown on the
-   * screen.
-   */
+  /*! @brief Sends a ModalHandler when the widget needs to be shown on the screen. */
   ModalHandler *showModalWidget(ModalHandler *handler);
-
-  /*!
-   * @brief Sends a signal to turn on/off monologue mode.
-   */
+  /*! @brief Sends a signal to turn on/off monologue mode. */
   void changeMonologueMode();
 
 private:

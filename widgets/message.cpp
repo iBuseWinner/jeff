@@ -1,10 +1,6 @@
 #include "message.h"
 
-/*!
- * @fn Message::Message
- * @brief The constructor.
- * @param[in,out] parent QObject parent
- */
+/*! @brief The constructor. */
 Message::Message() {
   QHBoxLayout *hbox_layout = new QHBoxLayout();
   hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
@@ -12,12 +8,7 @@ Message::Message() {
   setLayout(hbox_layout);
 }
 
-/*!
- * @fn Message::Message
- * @brief Creates an Message based on @a message.
- * @param[in] message message data
- * @sa MessageData
- */
+/*! @brief Creates a Message based on @a message. */
 Message::Message(MessageData _md) {
   QHBoxLayout *hbox_layout = new QHBoxLayout();
   hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
@@ -26,12 +17,7 @@ Message::Message(MessageData _md) {
   message_data(_md);
 }
 
-/*!
- * @fn Message::message_data
- * @brief Sets @a _message_data into the Message.
- * @param[in] _md message data
- * @sa MessageData
- */
+/*! @brief Sets @a _message_data into the Message. */
 void Message::message_data(MessageData _md) {
   if (_md.datetime.isNull()) return;
   md = _md;
@@ -40,11 +26,7 @@ void Message::message_data(MessageData _md) {
   // theme(md.theme);
 }
 
-/*!
- * @fn Message::widget
- * @brief Sets {modal_handler->getPrisoner()} into the Message.
- * @param[in,out] modal_handler reference to the ModalHandler instance
- */
+/*! @brief Sets {modal_handler->getPrisoner()} into the Message. */
 void Message::widget(ModalHandler *modal_handler) {
   if (w) return;
   w = modal_handler->getPrisoner();
@@ -52,12 +34,7 @@ void Message::widget(ModalHandler *modal_handler) {
   grid_layout->addWidget(w);
 }
 
-/*!
- * @fn Message::author
- * @brief Makes a message either left or right.
- * @param[in] _a author of the message
- * @sa Author
- */
+/*! @brief Makes a message either left or right. */
 void Message::author(Author _a) {
   if (_a == Author::Jeff) setup_jeff();
   else setup_user();
@@ -71,13 +48,7 @@ void Message::update_text(const QString &text) {
   setMaximumWidth(_width);
 }
 
-/*!
- * @fn Message::content_type
- * @brief Adjusts the message to the content type.
- * @param[in] _ct content type
- * @sa ContentType
- * TODO
- */
+/*! @brief Adjusts the message to the content type. */
 void Message::content_type(ContentType _ct) {
   if (_ct == ContentType::Text) setup_text(md.content);
   else if (_ct == ContentType::Markdown) setup_markdown(md.content);
@@ -88,39 +59,24 @@ void Message::content_type(ContentType _ct) {
   else prepare_to_widget();
 }
 
-/*!
- * @fn Message::theme
- * @brief Sets the message colors.
- * @details [constructing]
- * @param[in] _t theme
- */
+/*! @brief Sets the message colors. */
 // void Message::theme(Theme _t) {}
 
-/*!
- * @fn Message::setup_jeff
- * @brief Customizes layout of message from Jeff.
- */
+/*! @brief Customizes layout of message from Jeff. */
 void Message::setup_jeff() {
   QPair<QSpacerItem *, Board *> ws = make_layout();
   layout()->addWidget(ws.second);
   layout()->addItem(ws.first);
 }
 
-/*!
- * @fn Message::setup_user
- * @brief Customizes layout of message from user.
- */
+/*! @brief Customizes layout of message from user. */
 void Message::setup_user() {
   QPair<QSpacerItem *, Board *> ws = make_layout();
   layout()->addItem(ws.first);
   layout()->addWidget(ws.second);
 }
 
-/*!
- * @fn Message::setup_text
- * @brief Displays plain text.
- * @param[in] content text of the message
- */
+/*! @brief Displays plain text. */
 void Message::setup_text(const QString &content) {
   auto *label = new QLabel(content, this);
   w = label;
@@ -131,11 +87,7 @@ void Message::setup_text(const QString &content) {
   grid_layout->addWidget(w);
 }
 
-/*!
- * @fn Message::setup_markdown
- * @brief Displays markdown text.
- * @param[in] content text of the message
- */
+/*! @brief Displays markdown text. */
 void Message::setup_markdown(const QString &content) {
   setup_text(content);
   auto *label = static_cast<QLabel *>(w);
@@ -143,57 +95,32 @@ void Message::setup_markdown(const QString &content) {
   label->setText(label->text().replace("\n", "<br>"));
 }
 
-/*!
- * @fn Message::setup_picture
- * @brief Displays a picture with the path @a content.
- * @details TODO [constructing]
- * @param[in] content path to a picture
- */
+/*! @brief Displays a picture with the path @a content. */
 // void Message::setup_picture(QString path) {}
 
-/*!
- * @fn Message::setup_file
- * @brief Displays a file with the path @a content.
- * @details TODO [constructing]
- * @param[in] content path to a file
- */
+/*! @brief Displays a file with the path @a content. */
 // void Message::setup_file(QString path) {}
 
-/*!
- * @fn Message::setup_warning
- * @brief Displays a warning @a content.
- * @param content text of a warning
- */
+/*! @brief Displays a warning @a content. */
 void Message::setup_warning(const QString &content) {
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
   board->setStyleSheet(board->warning_style);
   setup_text(QString(tr("Warning: ") + content));
 }
 
-/*!
- * @fn Message::setup_error
- * @brief Displays an error @a content.
- * @param content text of an error
- */
+/*! @brief Displays an error @a content. */
 void Message::setup_error(const QString &content) {
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
   board->setStyleSheet(board->error_style);
   setup_text(QString(tr("Error: ") + content));
 }
 
-/*!
- * @fn Message::prepare_to_widget
- * @brief Prepares Message for widget installation.
- */
+/*! @brief Prepares Message for widget installation. */
 void Message::prepare_to_widget() {
   grid_layout->parentWidget()->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
-/*!
- * @fn Message::make_layout
- * @brief Creates a spacer and an Board to adjust the layout.
- * @returns QSpacerItem-Board pair
- */
+/*! @brief Creates a spacer and an Board to adjust the layout. */
 QPair<QSpacerItem *, Board *> Message::make_layout() {
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
   auto *board = new Board(this);

@@ -30,7 +30,7 @@ signals:
 
 protected:
   // Functions:
-  /*! Cancels source's creation. */
+  /*! @brief Cancels source's creation. */
   void closeEvent(QCloseEvent *event) override { emit cancelled(); event->accept(); }
 
 private:

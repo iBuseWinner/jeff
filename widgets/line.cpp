@@ -1,10 +1,6 @@
 #include "line.h"
 
-/*!
- * @fn Line::Line
- * @brief The constructor.
- * @param[in,out] parent QObject parent
- */
+/*! @brief The constructor. */
 Line::Line(QWidget *parent) : Board(parent) {
   send_button.setText("");
   send_button.setIcon(QIcon::fromTheme("mail-send", QIcon(":/arts/icons/16/send.svg")));

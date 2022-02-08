@@ -27,10 +27,7 @@ class Jeff : public QMainWindow {
   Q_DISABLE_COPY(Jeff)
 public:
   // Functions:
-  /*!
-   * @fn Jeff::~Jeff
-   * @brief Saves window settings.
-   */
+  /*! @brief Saves window settings. */
   ~Jeff() override { save_window_settings(); }
 
   // Functions described in `jeff.cpp`:
@@ -38,16 +35,9 @@ public:
   void greeting();
 
 signals:
-  /*!
-   * @brief Indicates that the window is complete and ready for user
-   * interaction.
-   */
+  /*! @brief Indicates that the window is complete and ready for user interaction. */
   void ready_state();
-
-  /*!
-   * @brief Sends a request to Core.
-   * @sa Core
-   */
+  /*! @brief Sends a request to Core. */
   QString send(QString user_expression);
 
 protected:
@@ -58,7 +48,7 @@ private:
   // Objects:
   Core *core = new Core(this);
   Basis *basis = core->basis;
-  HProcessor *history_processor = core->history_processor;
+  HProcessor *history_processor = core->hp;
   Line *line = new Line(this);
   Display *display = new Display(25, this);
   MenuBar *menubar = new MenuBar(line, this);

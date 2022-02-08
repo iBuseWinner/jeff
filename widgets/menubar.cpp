@@ -1,11 +1,6 @@
 #include "menubar.h"
 
-/*!
- * @fn MenuBar::MenuBar
- * @brief The constructor.
- * @param[in,out] line reference to the Line instance
- * @param[in,out] parent QObject parent
- */
+/*! @brief The constructor. */
 MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   // File
   file_menu.setTitle(tr("File"));

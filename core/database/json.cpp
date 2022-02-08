@@ -5,7 +5,7 @@ Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_p
 
 /*! @brief Reads the store and loads a list of connected sources. */
 Sources Json::read_source_list(SQLite *sql) {
-  QFile store = QFile(_settings_path + QDir::separator() + sources_store_filename, this);
+  QFile store = QFile(_settings_path + QDir::separator() + sources_store_filename);
   if (not store.exists()) return Sources();
   QJsonArray sources_json = read_json(&store);
   Sources sources;
@@ -24,9 +24,15 @@ Messages Json::read_message_history(QFile *file) {
   return message_history;
 }
 
+/*! @brief Restores message history from default storage. */
+Messages Json::read_message_history() {
+  QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
+  return read_message_history(&store);
+}
+
 /*! @brief Reads the expressions most commonly used in Jeff's answers. */
 Cache Json::read_NLP_cache() {
-  QFile store = QFile(_settings_path + QDir::separator() + cache_store_filename, this);
+  QFile store = QFile(_settings_path + QDir::separator() + cache_store_filename);
   if (not store.exists()) return Cache();
   QJsonArray cache_json = read_json(&store);
   Cache cache;
@@ -66,7 +72,7 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
     // Jeff writes them there.
     sql->write_source(sources[i]);
   }
-  QFile file = QFile(_settings_path + QDir::separator() + sources_store_filename, this);
+  QFile file = QFile(_settings_path + QDir::separator() + sources_store_filename);
   write_json(&file, sources_json);
 }
 
@@ -75,6 +81,12 @@ void Json::write_message_history(Messages message_history, QFile *file) {
   QJsonArray message_history_json;
   for (auto message : message_history) message_history_json.append(message.to_json());
   write_json(file, message_history_json);
+}
+
+/*! @brief Saves message history at the default storage. */
+void Json::write_message_history(Messages message_history) {
+  QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
+  write_message_history(message_history, &store);
 }
 
 /*! @brief Saves NLPmodule's cache. */

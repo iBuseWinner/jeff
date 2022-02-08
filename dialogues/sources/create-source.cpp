@@ -1,11 +1,6 @@
 #include "create-source.h"
 
-/*!
- * @fn CreateSourceDialog::CreateSourceDialog
- * @brief The constructor.
- * @param _basis reference to Basis instance
- * @param parent QObject parent
- */
+/*! @brief The constructor. */
 CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
     : QWidget(parent), basis(_basis) {
   auto *grid_layout = new QGridLayout();
@@ -29,30 +24,21 @@ CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
   selStart();
 }
 
-/*!
- * @fn CreateSourceDialog::connector
- * @brief Establishes communications for user interaction through the widget.
- */
+/*! @brief Establishes communications for user interaction through the widget. */
 void CreateSourceDialog::connector() {
   connect(selectFileBtn, &Button::clicked, this, &CreateSourceDialog::select);
   connect(saveBtn, &Button::clicked, this, &CreateSourceDialog::save);
   connect(cancelBtn, &Button::clicked, this, &QWidget::close);
 }
 
-/*!
- * @fn CreateSourceDialog::selStart
- * @brief Turns the faceless button into a button for selecting a database.
- */
+/*! @brief Turns the faceless button into a button for selecting a database. */
 void CreateSourceDialog::selStart() {
   selectFileBtn->setText(tr("Select database file..."));
   selectFileBtn->setIcon(
     QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/document-open.svg")));
 }
 
-/*!
- * @fn CreateSourceDialog::select
- * @brief Opens the database selection window and customizes the button.
- */
+/*! @brief Opens the database selection window and customizes the button. */
 void CreateSourceDialog::select() {
   m_dbpath = QFileDialog::getSaveFileName(
       nullptr, tr("Select database..."), "", tr("Jeff database") + "(*.j.db)",
@@ -64,10 +50,7 @@ void CreateSourceDialog::select() {
   } else selStart();
 }
 
-/*!
- * @fn CreateSourceDialog::save
- * @brief Finishes configuring the future source.
- */
+/*! @brief Finishes configuring the future source. */
 void CreateSourceDialog::save() {
   if ((m_dbpath.isEmpty()) or (titleInput->text().isEmpty())) close();
   Source source;

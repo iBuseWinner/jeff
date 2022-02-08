@@ -20,16 +20,13 @@ class Display : public QScrollArea {
   Q_DISABLE_COPY(Display)
 public:
   // Functions:
-  /*!
-   * @fn Display::set_scroll_enabled
-   * @brief Sets the scroll state.
-   * @param[in] _scroll_enabled boolean value of whether scroll is enabled or not
-   */
+  /*! @brief Sets the scroll state. */
   void set_scroll_enabled(bool _scroll_enabled) { scroll_enabled = _scroll_enabled; }
 
   // Functions described in `display.cpp`:
   Display(short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
+  void start_by(Messages history);
   void add_message(Message *message);
   void add_message_by_md(MessageData message_data);
   void update_status(QPair<QString, MessageData> id_and_message_data);
@@ -52,9 +49,9 @@ private:
     "#display, #box { background-color: rgba(255, 255, 255, 0); }";
 
   // Functions described in `display.cpp`:
-  void connector();
   void scroll_down(int min, int max);
   void scroll_tumbler(int value);
+  void prepare_message(Message *message);
   void show_widgets(int value = 0);
   void remove_message(Message *message);
   void resizeEvent(QResizeEvent *event) override;

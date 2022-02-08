@@ -47,7 +47,7 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   fill_databases();
 }
 
-/*! @brief TBD */
+/*! @brief Populates the list of databases. */
 void ExpressionEditor::fill_databases() {
   disconnect(&databases, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
   auto selected = databases.currentData();
@@ -67,7 +67,7 @@ void ExpressionEditor::fill_databases() {
   });
 }
 
-/*! @brief TBD */
+/*! @brief Populates the list of tables in the database. */
 void ExpressionEditor::fill_tables(const Sources &sources) {
   disconnect(&tables, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
   auto selected = tables.currentData();
@@ -87,7 +87,7 @@ void ExpressionEditor::fill_tables(const Sources &sources) {
   });
 }
 
-/*! @brief TBD */
+/*! @brief Populates a list of expressions from the source. */
 void ExpressionEditor::fill_expressions(const Sources &sources) {
   Source selected;
   for (auto candidate : sources) {
@@ -103,7 +103,7 @@ void ExpressionEditor::fill_expressions(const Sources &sources) {
   QTreeWidgetItem *parent = expressions.invisibleRootItem();
   expressions.clear();
   for (auto pair : selector_data) {
-    expressions.addTopLevelItem(new QTreeWidgetItem(parent, 
+    expressions.addTopLevelItem(new QTreeWidgetItem(parent,
                                                     {QString::number(pair.first), pair.second}));
   }
 }

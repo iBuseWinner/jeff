@@ -22,6 +22,7 @@
  * @sa ModalHandler
  */
 class About : public QWidget {
+  Q_OBJECT
   Q_DISABLE_COPY(About)
 public:
   // Functions described in `about.cpp`:
@@ -34,7 +35,6 @@ private:
   // Constants:
   inline static const QString object_name = "about";
   static const int fixed_width = 320;
-  static const int fixed_height = 230;
 };
 
 #endif

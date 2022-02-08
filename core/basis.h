@@ -53,12 +53,13 @@ public:
   const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  const char *isMonologueEnabledSt = "core/ismonologuemodeenabled";
-  const char *isDelayEnabledSt     = "core/isdelayenabled";
-  const char *minDelaySt           = "core/mindelay";
-  const char *maxDelaySt           = "core/maxdelay";
-  const char *isKeepingEnabledSt   = "core/iskeepingenabled";
-  const char *isHintsEnabledSt     = "core/ishintsenabled";
+  const char *isMonologueEnabledSt      = "core/ismonologuemodeenabled";
+  const char *isDelayEnabledSt          = "core/isdelayenabled";
+  const char *minDelaySt                = "core/mindelay";
+  const char *maxDelaySt                = "core/maxdelay";
+  const char *isHistoryKeepingEnabledSt = "core/ishistorykeepingenabled";
+  const char *isGreetingsEnabledSt      = "core/isgreetingsenabled";
+  const char *greetingsMsg              = "core/greetings";
   
   const char *defaultSourcePath      = "sources/defaultsourcepath";
   const char *defaultSourceContainer = "sources/defaultsourcecontainer";
