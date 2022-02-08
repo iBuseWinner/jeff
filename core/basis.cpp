@@ -188,7 +188,7 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
       emit send(message);
     } else if (object.contains(searchAgainWk)) {
       QString rephrased_message = object[searchAgainWk].toString();
-      emit send(rephrased_message);
+      emit search_again(rephrased_message);
     } else if (object.contains(sendAsUserWk)) {
       QString outter_message = object[sendAsUserWk].toString();
       emit send_as_user(outter_message);

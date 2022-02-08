@@ -1,1 +1,3 @@
 arts/.directory
+examples/vosk-voice-input/models
+*.pyc
