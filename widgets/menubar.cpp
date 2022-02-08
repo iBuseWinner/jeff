@@ -41,6 +41,12 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   });
   connect(&export_history_action, &QAction::triggered, this, [this] { emit export_triggered(); });
   connect(&import_history_action, &QAction::triggered, this, [this] { emit import_triggered(); });
+  connect(&enable_monologue_mode, &QAction::toggled, this, [this] {
+    if (enable_monologue_mode.isChecked())
+      enable_monologue_mode.setText(tr("Disable monologue mode") + " (/mm)");
+    else
+      enable_monologue_mode.setText(tr("Enable monologue mode") + " (/mm)");
+  });
   addMenu(&file_menu);
   // Edit
   edit_menu.setTitle(tr("Edit"));

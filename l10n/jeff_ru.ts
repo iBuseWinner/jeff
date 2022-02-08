@@ -256,6 +256,10 @@
         <source>Expression editor</source>
         <translation>Редактор выражений</translation>
     </message>
+    <message>
+        <source>Disable monologue mode</source>
+        <translation>Отключить режим монолога</translation>
+    </message>
 </context>
 <context>
     <name>Message</name>
