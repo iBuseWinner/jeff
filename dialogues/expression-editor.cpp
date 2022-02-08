@@ -15,7 +15,6 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   _m_handler->setPrisoner(this);
   expressions.setHeaderLabels({tr("Address"), tr("Expression")});
   expressions.setWordWrap(true);
-  expressions.setRootIsDecorated(false);
   new_expression.setText(tr("New expression"));
   close_editor.setText(tr("Close"));
   new_expression.setIcon(

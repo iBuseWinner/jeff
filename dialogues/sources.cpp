@@ -44,6 +44,7 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_han
   add_source_menu->addAction(remove_source);
   source_actions->setMenu(add_source_menu);
   source_list = new List(this);
+  source_list->setRootIsDecorated(true);
   source_list->setHeaderLabel(tr("Sources"));
   grid_layout->addWidget(source_list, 0, 0, 1, 0);
   grid_layout->addWidget(source_actions, 1, 0);

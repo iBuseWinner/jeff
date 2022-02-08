@@ -3,6 +3,8 @@
 /*! @brief The constructor. */
 List::List(QWidget *parent) : QTreeWidget(parent) {
   setAnimated(false);
+  setFocusPolicy(Qt::NoFocus);
+  setRootIsDecorated(false);
   setTextElideMode(Qt::ElideLeft);
   setStyleSheet(
     QString(
