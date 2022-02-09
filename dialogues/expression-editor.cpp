@@ -25,6 +25,9 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   // Sets up selector widget.
   expressions.setHeaderLabels({tr("Address"), tr("Expression")});
   expressions.setWordWrap(true);
+  expressions.setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(&expressions, &List::customContextMenuRequested, this,
+          &ExpressionEditor::show_selector_expr_context_menu);
   connect(&expressions, &List::itemDoubleClicked, this, &ExpressionEditor::open_brief);
   connect(basis, &Basis::sources_changed, this, &ExpressionEditor::fill_databases);
   double_click_explain.setText(tr("Double click on the desired expression to edit it."));
@@ -44,6 +47,14 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   selector_layout.addWidget(&new_expression, 4, 0);
   selector_layout.addWidget(&close_editor, 4, 1);
   selector.setLayout(&selector_layout);
+  edit_expression_action.setText(tr("Edit this expression..."));
+  edit_expression_action.setIcon(
+    QIcon::fromTheme("edit", QIcon(":/arts/icons/16/document-edit.svg")));
+  remove_expression_action.setText(tr("Delete this expression"));
+  remove_expression_action.setIcon(
+    QIcon::fromTheme("list-remove", QIcon(":/arts/icons/16/list-remove.svg")));
+  expressions_context_menu.addAction(&edit_expression_action);
+  expressions_context_menu.addAction(&remove_expression_action);
   // Sets up brief widget.
   auto brief_header_font = QApplication::font();
   brief_header_font.setPointSize(14);
@@ -132,24 +143,41 @@ void ExpressionEditor::fill_expressions(const Sources &sources) {
   QTreeWidgetItem *parent = expressions.invisibleRootItem();
   expressions.clear();
   for (auto pair : selector_data) {
-    expressions.addTopLevelItem(new QTreeWidgetItem(parent,
-                                                    {QString::number(pair.first), pair.second}));
+    expressions.addTopLevelItem(new QTreeWidgetItem(parent, {QString::number(pair.first), pair.second}));
   }
 }
 
 /*! @brief Opens information about the expression. */
 void ExpressionEditor::open_brief(QTreeWidgetItem *item, int column) {
   Q_UNUSED(column)
+  if (not mode_mutex.try_lock()) return;
+  brief_area.setFixedWidth(selector.width());
   brief_area.setFixedHeight(selector.height());
   selector.hide();
   editor_layout.replaceWidget(&selector, &brief_area);
   brief_header.setText(item->text(1));
   brief_area.show();
+  mode = BriefMode;
+  mode_mutex.unlock();
 }
 
 /*! @brief Returns to the list of expressions. */
 void ExpressionEditor::close_brief() {
+  if (not mode_mutex.try_lock()) return;
   brief_area.hide();
   editor_layout.replaceWidget(&brief_area, &selector);
   selector.show();
+  mode = SelectorMode;
+  mode_mutex.unlock();
+}
+
+/*! @brief */
+void ExpressionEditor::show_selector_expr_context_menu(const QPoint &pos) {
+  QTreeWidgetItem *selected_item = expressions.itemAt(pos);
+  disconnect(&edit_expression_action);
+  disconnect(&remove_expression_action);
+  connect(&edit_expression_action, &QAction::triggered, this, [this, selected_item] {
+    open_brief(selected_item, 0);
+  });
+  expressions_context_menu.exec(QCursor::pos());
 }
