@@ -67,7 +67,6 @@ private:
   const char *go_action_name = "go_action";
 
   // Functions described in `python-module.cpp`:
-  void fill_modules_data();
   QJsonObject run(QString path, QString def_name, QJsonObject values);
 };
 

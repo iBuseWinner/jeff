@@ -4,7 +4,6 @@
 PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
     : QObject(parent), hp(_hp), basis(_basis) {
   _scripts = basis->json->read_scripts();
-  fill_modules_data();
   Py_Initialize();
   _current_path = QDir::toNativeSeparators(QDir::currentPath());
   QString command = "import sys; sys.path.append('" + _current_path + "')";
@@ -12,27 +11,7 @@ PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
 }
 
 /*! @brief The destructor. */
-PythonModule::~PythonModule() { basis->json->write_scripts(_scripts); Py_Finalize(); }
-
-/*! @brief */
-void PythonModule::fill_modules_data() {
-  for (auto script : _scripts) {
-    QFile f(script.path);
-    if (not f.open(QIODevice::ReadOnly)) {
-      emit script_exception(tr("The module with path ") + script.path + tr(" cannot be opened."));
-      continue;
-    }
-    auto str = QString(f.readAll());
-    f.close();
-    if (QString(f.readAll()).contains("def startup("))
-      _mdata.startup_paths.append(script.path);
-    if (QString(f.readAll()).contains("def custom_scan("))
-      _mdata.custom_scan_paths.append(script.path);
-    if (QString(f.readAll()).contains("def action_provider(")) {
-    //  auto vals = run(script.path, 
-    }
-  }
-}
+PythonModule::~PythonModule() { Py_Finalize(); basis->json->write_scripts(_scripts); }
 
 /*! @brief Runs functions in scripts intended to start when Jeff starts. */
 void PythonModule::startup() {

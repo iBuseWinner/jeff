@@ -8,7 +8,7 @@ SHUTDOWN = False
 ATTENTION_WORDS = ['эй', 'хэй', 'хай']
 
 
-def list_subdirs(path):
+def list_subdirs(path) -> list:
   """Lists the subfolders of the 'path' folder."""
   from os import listdir
   from os.path import isdir, join

@@ -2,8 +2,8 @@
 
 /*!
  * @details All short named objects and their explanations:
- * @a tli2 <- top-level item index <- @a SourcesDialog::append,
- *                                    @a SourcesDialog::sncl
+ * @a tli2 < top-level item index < @a SourcesDialog::append,
+ *                                  @a SourcesDialog::sncl
  */
 
 /*!
@@ -17,7 +17,7 @@
  * <----------------------->
  */
 SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
-    : QWidget(parent), basis(_basis), _m_handler(m_handler) {
+    : ScrollFreezerWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   setObjectName(object_name);
   grid_layout = new QGridLayout();

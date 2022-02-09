@@ -3,6 +3,7 @@
 
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
+#include "widgets/scrollfreezerwidget.h"
 #include "widgets/styling.h"
 #include <QApplication>
 #include <QCoreApplication>
@@ -21,7 +22,7 @@
  * @brief Contains information about the program and the authors.
  * @sa ModalHandler
  */
-class About : public QWidget {
+class About : public ScrollFreezerWidget {
   Q_OBJECT
   Q_DISABLE_COPY(About)
 public:

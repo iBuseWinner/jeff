@@ -6,6 +6,7 @@
 #include "widgets/button.h"
 #include "widgets/menu.h"
 #include "widgets/list.h"
+#include "widgets/scrollfreezerwidget.h"
 #include <QApplication>
 #include <QDialog>
 #include <QFileDialog>
@@ -19,7 +20,7 @@
  * @class SourcesDialog
  * @brief Manages NLP module's sources.
  */
-class SourcesDialog : public QWidget {
+class SourcesDialog : public ScrollFreezerWidget {
   Q_OBJECT
   Q_DISABLE_COPY(SourcesDialog)
 public:

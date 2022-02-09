@@ -2,46 +2,76 @@
 
 /*! 
  * @brief The constructor. 
- * @details Layout scheme:
+ * @details Selector layout scheme:
  * <--------------->
  * {   Select db   }
  * { Select  table }
  * [Expression list]
+ * <      Tip      >
  * [ New ] [ Close ]
+ * <--------------->
+ * @details Brief layout scheme:
+ * <--------------->
+ * {Expression text}
+ * [ Edit this one ]
+ * [ Pre- ][ Post- ]
+ * [Add...][ Add...]
+ * [    <  Back    ]
  * <--------------->
  */
 ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
-    : QWidget(parent), basis(_basis), _m_handler(m_handler) {
+    : ScrollFreezerWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
+  // Sets up selector widget.
   expressions.setHeaderLabels({tr("Address"), tr("Expression")});
   expressions.setWordWrap(true);
+  connect(&expressions, &List::itemDoubleClicked, this, &ExpressionEditor::open_brief);
+  connect(basis, &Basis::sources_changed, this, &ExpressionEditor::fill_databases);
+  double_click_explain.setText(tr("Double click on the desired expression to edit it."));
   new_expression.setText(tr("New expression"));
-  close_editor.setText(tr("Close"));
   new_expression.setIcon(
     QIcon::fromTheme("list-add", QIcon(":/arts/icons/16/list-add.svg")));
+  close_editor.setText(tr("Close"));
   close_editor.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
+  connect(&close_editor, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
   selector_layout.setSpacing(0);
   selector_layout.setMargin(0);
   selector_layout.addWidget(&databases, 0, 0, 1, 0);
   selector_layout.addWidget(&tables, 1, 0, 1, 0);
   selector_layout.addWidget(&expressions, 2, 0, 1, 0);
-  selector_layout.addWidget(&new_expression, 3, 0);
-  selector_layout.addWidget(&close_editor, 3, 1);
-  connect(basis, &Basis::sources_changed, this, &ExpressionEditor::fill_databases);
-  connect(&close_editor, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
-  auto *lt = new QGridLayout();
-  lt->setSpacing(0);
-  lt->setMargin(0);
+  selector_layout.addWidget(&double_click_explain, 3, 0, 1, 0);
+  selector_layout.addWidget(&new_expression, 4, 0);
+  selector_layout.addWidget(&close_editor, 4, 1);
   selector.setLayout(&selector_layout);
-  area.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  area.setFocusPolicy(Qt::NoFocus);
-  area.setFrameStyle(QFrame::NoFrame);
-  area.setFrameShadow(QFrame::Plain);
-  area.setWidgetResizable(true);
-  area.setWidget(&selector);
-  lt->addWidget(&area);
-  setLayout(lt);
+  // Sets up brief widget.
+  auto brief_header_font = QApplication::font();
+  brief_header_font.setPointSize(14);
+  brief_header_font.setBold(true);
+  brief_header.setFont(brief_header_font);
+  brief_header.setWordWrap(true);
+  back_to_selector.setText(tr("Back"));
+  back_to_selector.setIcon(
+    QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
+  connect(&back_to_selector, &Button::clicked, this, &ExpressionEditor::close_brief);
+  brief_area_layout.setSpacing(0);
+  brief_area_layout.setMargin(0);
+  brief_area_layout.addWidget(&brief_header, 0, 0);
+  brief_area_layout.addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding), 1, 0);
+  brief_area_layout.addWidget(&back_to_selector, 2, 0);
+  brief_area_widget.setLayout(&brief_area_layout);
+  brief_area.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  brief_area.setFocusPolicy(Qt::NoFocus);
+  brief_area.setFrameStyle(QFrame::NoFrame);
+  brief_area.setFrameShadow(QFrame::Plain);
+  brief_area.setWidgetResizable(true);
+  brief_area.setWidget(&brief_area_widget);
+  brief_area.hide();
+  // Shows selector.
+  editor_layout.setSpacing(0);
+  editor_layout.setMargin(0);
+  editor_layout.addWidget(&selector);
+  setLayout(&editor_layout);
   setFixedWidth(480);
   fill_databases();
 }
@@ -105,4 +135,21 @@ void ExpressionEditor::fill_expressions(const Sources &sources) {
     expressions.addTopLevelItem(new QTreeWidgetItem(parent,
                                                     {QString::number(pair.first), pair.second}));
   }
+}
+
+/*! @brief Opens information about the expression. */
+void ExpressionEditor::open_brief(QTreeWidgetItem *item, int column) {
+  Q_UNUSED(column)
+  brief_area.setFixedHeight(selector.height());
+  selector.hide();
+  editor_layout.replaceWidget(&selector, &brief_area);
+  brief_header.setText(item->text(1));
+  brief_area.show();
+}
+
+/*! @brief Returns to the list of expressions. */
+void ExpressionEditor::close_brief() {
+  brief_area.hide();
+  editor_layout.replaceWidget(&brief_area, &selector);
+  selector.show();
 }

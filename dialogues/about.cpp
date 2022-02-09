@@ -10,7 +10,7 @@
  * {<->}[Close btn]
  * <-------------->
  */
-About::About(QWidget *parent, ModalHandler *m_handler) : QWidget(parent), _m_handler(m_handler) {
+About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(parent), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   setObjectName(object_name);
   setFixedWidth(fixed_width);

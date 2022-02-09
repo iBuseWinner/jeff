@@ -13,6 +13,7 @@ class ExplanationLabel : public QLabel {
 public:
   // Functions described in `explanationlabel.cpp`:
   ExplanationLabel(const QString &text = "", QWidget *parent = nullptr);
+  void setText(const QString &text);
 };
 
 #endif

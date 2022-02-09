@@ -96,6 +96,7 @@ set (SRCS
   widgets/menubar.h
   widgets/message.cpp
   widgets/message.h
+  widgets/scrollfreezerwidget.h
   widgets/spoiler.cpp
   widgets/spoiler.h
   widgets/styling.cpp

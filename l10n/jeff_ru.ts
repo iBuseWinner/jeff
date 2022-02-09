@@ -104,6 +104,14 @@
         <source>Expression</source>
         <translation>Выражение</translation>
     </message>
+    <message>
+        <source>Double click on the desired expression to edit it.</source>
+        <translation>Дважды нажмите на нужное выражение, чтобы отредактировать его.</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Назад</translation>
+    </message>
 </context>
 <context>
     <name>FirstStart</name>
