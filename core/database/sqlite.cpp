@@ -609,7 +609,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       break;
     case WriteOptions:
-      query->prepare("insert into sources values (:s, :t, :ro, :pv, :ch, :zr)");
+      query->prepare("insert or replace into sources values (:s, :t, :ro, :pv, :ch, :zr)");
       query->bindValue(":s", values[0]);
       query->bindValue(":t", values[1]);
       query->bindValue(":ro", values[2].toInt());
