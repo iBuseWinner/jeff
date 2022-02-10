@@ -68,12 +68,7 @@ class SQLite : public QObject {
   Q_OBJECT
 public:
   // Functions:
-  /*!
-   * @fn SQLite::SQLite
-   * @brief The constructor.
-   * @details Initializes SQLite database.
-   * @param[in,out] parent QObject parent
-   */
+  /*! @brief The constructor. */
   SQLite(QObject *parent = nullptr) : QObject(parent) { QSqlDatabase::addDatabase("QSQLITE"); }
 
   // Functions described in `sqlite.cpp`:
@@ -89,6 +84,7 @@ public:
   Expression get_expression_by_address(const Source &source, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
   QString generate_uuid();
+  int create_new_expression(const Source &source, const QString &text);
 
 signals:
   /*! @brief Reports an error in the database. */

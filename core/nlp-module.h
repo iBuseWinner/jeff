@@ -27,18 +27,9 @@ class NLPmodule : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(NLPmodule)
 public:
-  // Functions:
-  /*! @brief The constructor. */
-  NLPmodule(Basis *_basis, PythonModule *_pm, QObject *parent = nullptr) 
-      : QObject(parent), basis(_basis), pm(_pm) {
-    gen = new QRandomGenerator(QTime::currentTime().msec());
-    load_cache();
-  }
-
-  /*! @brief The destructor. */
-  ~NLPmodule() { save_cache(); delete gen; }
-
   // Functions described in `nlp-module.cpp`:
+  NLPmodule(Basis *_basis, PythonModule *_pm, HProcessor *_hp, QObject *parent = nullptr);
+  ~NLPmodule();
   void load_cache();
   void save_cache();
   void search_for_suggests(const QString &input);
@@ -51,6 +42,7 @@ private:
   // Objects:
   Basis *basis = nullptr;
   PythonModule *pm = nullptr;
+  HProcessor *hp = nullptr;
   QRandomGenerator *gen = nullptr;
 
   // Constants:

@@ -34,6 +34,7 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   new_expression.setText(tr("New expression"));
   new_expression.setIcon(
     QIcon::fromTheme("list-add", QIcon(":/arts/icons/16/list-add.svg")));
+  connect(&new_expression, &Button::clicked, this, &ExpressionEditor::add_new_expression);
   close_editor.setText(tr("Close"));
   close_editor.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
@@ -61,6 +62,11 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   brief_header_font.setBold(true);
   brief_header.setFont(brief_header_font);
   brief_header.setWordWrap(true);
+  accept_expression_text.setIcon(
+    QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
+  connect(&accept_expression_text, &Button::clicked, this, &ExpressionEditor::save_expression_text);
+  expression_edit_line_layout.addWidget(&expression_edit);
+  expression_edit_line_layout.addWidget(&accept_expression_text);
   back_to_selector.setText(tr("Back"));
   back_to_selector.setIcon(
     QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
@@ -127,10 +133,10 @@ void ExpressionEditor::fill_tables(const Sources &sources) {
   });
 }
 
-/*! @brief Populates a list of expressions from the source. */
-void ExpressionEditor::fill_expressions(const Sources &sources) {
+/*! @brief Gets the selected source from the widget. */
+Source ExpressionEditor::selected_source() {
   Source selected;
-  for (auto candidate : sources) {
+  for (auto candidate : current_sources) {
     if (
       candidate.path == databases.currentData().toString() and 
       candidate.table_name == tables.currentData().toString()
@@ -139,7 +145,13 @@ void ExpressionEditor::fill_expressions(const Sources &sources) {
       break;
     }
   }
-  selector_data = basis->sql->select_all(selected);
+  return selected;
+}
+
+/*! @brief Populates a list of expressions from the source. */
+void ExpressionEditor::fill_expressions(const Sources &sources) {
+  current_sources = sources;
+  selector_data = basis->sql->select_all(selected_source());
   QTreeWidgetItem *parent = expressions.invisibleRootItem();
   expressions.clear();
   for (auto pair : selector_data) {
@@ -171,7 +183,7 @@ void ExpressionEditor::close_brief() {
   mode_mutex.unlock();
 }
 
-/*! @brief */
+/*! @brief Displays the context menu of the list of expressions. */
 void ExpressionEditor::show_selector_expr_context_menu(const QPoint &pos) {
   QTreeWidgetItem *selected_item = expressions.itemAt(pos);
   disconnect(&edit_expression_action);
@@ -180,4 +192,19 @@ void ExpressionEditor::show_selector_expr_context_menu(const QPoint &pos) {
     open_brief(selected_item, 0);
   });
   expressions_context_menu.exec(QCursor::pos());
+}
+
+/*! @brief Adds a new expression and opens the editor. */
+void ExpressionEditor::add_new_expression() {
+  auto id = basis->sql->create_new_expression(selected_source(), tr("New expression"));
+  if (id == -1) return;
+  auto *expression_item = new QTreeWidgetItem(
+    expressions.invisibleRootItem(), {QString::number(id), tr("New expression")});
+  expressions.addTopLevelItem(expression_item);
+  open_brief(expression_item, 0);
+}
+
+/*! @brief Saves new text of an expression. */
+void ExpressionEditor::save_expression_text() {
+  
 }

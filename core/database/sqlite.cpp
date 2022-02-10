@@ -1,29 +1,19 @@
 #include "sqlite.h"
 
-/*!
- * @fn SQLite::create_source
- * @brief Creates source.
- * @param[in] source source properties
- * @param[in,out] *uuid pointer to source's table name
- * @returns boolean value of source creation success
- */
+/*! @brief Creates source. */
 bool SQLite::create_source(const Source &source, QString *uuid) {
   /*! The source is created even if the database itself does not exist. */
-  bool correct = true;
+  bool correct;
   sql_mutex.lock();
-  auto db = prepare(source.path, Correct, &correct);
-  if (db.databaseName().isEmpty()) return false;
+  auto db = prepare(source.path, Openable, &correct, true);
   QSqlQuery query(db);
-  if (not correct) {
-    if (not create_base_structure(&query)) {
-      emit sqlite_error("Could not create main table.");
-      db.close();
-      sql_mutex.unlock();
-      return false;
-    }
+  if (not create_base_structure(&query)) {
+    emit sqlite_error("Could not create main table.");
+    db.close();
+    sql_mutex.unlock();
+    return false;
   }
-  /*! Generates a table name. User-entered name may be incorrect for SQLite
-   * database. */
+  /*! Generates a table name. User-entered name may be incorrect for SQLite database. */
   QString uuid_to_verify;
   char cntr = 0;
   auto tables = db.tables();
@@ -51,12 +41,17 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   /*! The following queries write the parameters about the table being created
    * (the source with the @a source parameters) to the main table and create
    * the source table with the name generated in the form of UUID @a *uuid. */
-  if (not(exec(&query, WriteOptions,
-               {*uuid, source.table_title, QString::number(source.is_read_only),
-                QString::number(source.is_private),
-                QString::number(source.is_catching),
-                QString::number(source.is_prioritised)}) and
-          exec(&query, CreateSourceTable, QStringList(*uuid)))) {
+  if (not
+    (exec(
+      &query, WriteOptions, {
+        *uuid, source.table_title, 
+        QString::number(source.is_read_only),
+        QString::number(source.is_private),
+        QString::number(source.is_catching),
+        QString::number(source.is_prioritised)
+      }) and 
+     exec(&query, CreateSourceTable, QStringList(*uuid)))
+      ) {
     emit sqlite_error("Could not write options and create source table.");
     db.close();
     sql_mutex.unlock();
@@ -67,13 +62,8 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   return true;
 }
 
-/*!
- * @fn SQLite::create_base_structure
- * @brief The following queries create a source table if it does not exist, or
- * recreate it if it is incorrect.
- * @param query reference to the QSqlQuery instance
- * @returns
- */
+/*! @brief The following queries create a source table if it does not exist, or
+ *  recreate it if it is incorrect.  */
 bool SQLite::create_base_structure(QSqlQuery *query) {
   bool result = true;
   result &= exec(query, RemoveMainTableIfExists);
@@ -81,12 +71,7 @@ bool SQLite::create_base_structure(QSqlQuery *query) {
   return result;
 }
 
-/*!
- * @fn SQLite::sources
- * @brief Searches for database sources of activators and reagents.
- * @param[in] path path to database
- * @returns list of sources @a sources
- */
+/*! @brief Searches for database sources of activators and reagents. */
 Sources SQLite::sources(const QString &path) {
   sql_mutex.lock();
   auto db = prepare(path, Openable);
@@ -116,12 +101,7 @@ Sources SQLite::sources(const QString &path) {
   return sources;
 }
 
-/*!
- * @fn SQLite::load_source
- * @brief Loads source properties from the database.
- * @param[in] source incomplete source data (database and table name)
- * @returns complete source properties
- */
+/*! @brief Loads source properties from the database. */
 Source SQLite::load_source(Source source) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -142,18 +122,12 @@ Source SQLite::load_source(Source source) {
   return source;
 }
 
-/*!
- * @fn SQLite::write_source
- * @brief Writes source properties into the database.
- * @param[in] source source properties
- */
+/*! @brief Writes source properties into the database. */
 bool SQLite::write_source(const Source &source) {
   sql_mutex.lock();
   auto db = prepare(source.path, Openable);
   if (db.databaseName().isEmpty()) return false;
   QSqlQuery query(db);
-  exec(&query, CreateMainTableIfNotExists);
-  exec(&query, WithDraw, QStringList(source.table_name));
   auto result = exec(&query, WriteOptions,
                      {source.table_name, source.table_title,
                       QString::number(source.is_read_only),
@@ -214,15 +188,9 @@ bool SQLite::insert_expression(
   return result;
 }
 
-/*!
- * @fn SQLite::insert_expression
- * @brief Inserts a new expression into the source.
- * @details If the expressions are already in the database, just adds a link 
- * from one expression to another.
- * @param[in] source properties
- * @param[in] expression to be added
- * @returns result of addition
- */
+/*! @brief Inserts a new expression into the source.
+ *  @details If the expressions are already in the database, just adds a link 
+ *  from one expression to another.  */
 bool SQLite::insert_expression(const Source &source, const Expression &expression) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -234,12 +202,9 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
   QSqlQuery query(db);
   exec(&query, CountExpressions, {source.table_name});
   query.first();
-  if (not query.isValid()) {
-    db.close();
-    sql_mutex.unlock();
-    return false;
-  }
-  auto new_address = query.value(0).toInt();
+  int new_address;
+  if (not query.isValid()) new_address = 0;
+  else new_address = query.value(0).toInt();
   exec(&query, SelectAddressesByExpression, {source.table_name, expression.activator_text});
   query.first();
   int activator_expr_addr = 0;
@@ -294,13 +259,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
   return result;
 }
 
-/*!
- * @fn SQLite::get_expression
- * @brief Finds an expression and links by address.
- * @param[in] source source properties
- * @param[in] address address of expression
- * @returns expression-links pair
- */
+/*! @brief Finds an expression and links by address. */
 Expression SQLite::get_expression_by_address(const Source &source, int address) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -318,13 +277,7 @@ Expression SQLite::get_expression_by_address(const Source &source, int address) 
   return expr;
 }
 
-/*!
- * @fn SQLite::scan_source
- * @brief Finds all activators for the expression.
- * @param[in] source source properties
- * @param[in] expression expression
- * @returns selection for given input
- */
+/*! @brief Finds all activators for the expression. */
 CacheWithIndices SQLite::scan_source(const Source &source, const QString &input) {
   sql_mutex.unlock();
   auto db = prepare(source.path);
@@ -369,17 +322,7 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
   return selection;
 }
 
-/*!
- * @fn SQLite::prepare
- * @brief Prepares a database for work.
- * @param[in] path path to database
- * @param[in] option option to check database
- * @param[in,out] result pointer to a variable that should contain the result of
- * the check
- * @param[in] quiet tells whether to display error messages
- * @returns opened QSqlDatabase @a db with @a path
- * @sa Check
- */
+/*! @brief Prepares a database for work. */
 QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result, bool quiet) {
   auto db = QSqlDatabase::database();
   switch (option) {
@@ -445,16 +388,10 @@ QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result, bo
   return db;
 }
 
-/*!
- * @fn SQLite::validate
- * @brief Validates the database.
- * @param[in,out] db reference to the database
- * @param[in] recursive tells whether to check all containers in the database
- * @param[in] quiet tells whether to display error messages
- * @returns result of validation
- * @retval true validation successful, no errors found
- * @retval false error was encountered, the database is invalid
- */
+/*! @brief Validates the database.
+ *  @returns result of validation
+ *  @retval true validation successful, no errors found
+ *  @retval false error was encountered, the database is invalid  */
 bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
   auto db_suffix = tr("Database \"%1\".").arg(db->databaseName());
   auto query = QSqlQuery(*db);
@@ -569,16 +506,10 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
   return true;
 }
 
-/*!
- * @fn SQLite::validate
- * @brief Validates the database source.
- * @param[in,out] db reference to the database
- * @param[in] source_table source name
- * @param[in] quiet tells whether to display error messages
- * @returns result of validation
- * @retval true validation successful, no errors found
- * @retval false error was encountered, the source is invalid
- */
+/*! @brief Validates the database source.
+ *  @returns result of validation
+ *  @retval true validation successful, no errors found
+ *  @retval false error was encountered, the source is invalid  */
 bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet) {
   auto db_source_suffix = tr("Database \"%1\", source \"%2\".").arg(db->databaseName(), source_table);
   auto query = QSqlQuery(*db);
@@ -652,21 +583,15 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   return true;
 }
 
-/*!
- * @fn SQLite::exec
- * @brief Performs a database query.
- * @param[in,out] query SQL query
- * @param[in] option query type
- * @param[in] values values for query
- * @returns SQL query result
- * @retval true SQL query executed successfully
- * @retval false SQL query was not executed correctly
- */
+/*! @brief Performs a database query.
+ *  @returns SQL query result
+ *  @retval true SQL query executed successfully
+ *  @retval false SQL query was not executed correctly  */
 bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   switch (option) {
     case CreateMainTableIfNotExists:
       query->prepare(
-        "create table if not exists sources (source text not null unique, title text, isReadOnly integer not null, isPrivate integer not null, isCatching integer not null, isPrioritised integer not null);"
+        "create table if not exists sources (source text not null unique, title text, isReadOnly integer, isPrivate integer, isCatching integer, isPrioritised integer);"
       );
       break;
     case CreateSourceTable:
@@ -675,8 +600,8 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       break;
     case WithDraw:
-      query->prepare("delete from sources where source=:c");
-      query->bindValue(":c", values[0]);
+      query->prepare("delete from sources where source=:s");
+      query->bindValue(":s", values[0]);
       break;
     case LoadOptions:
       query->prepare(
@@ -684,13 +609,13 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       break;
     case WriteOptions:
-      query->prepare("insert into sources values (:c, :t, :ro, :pv, :ch, :pr)");
-      query->bindValue(":c", values[0]);
+      query->prepare("insert into sources values (:s, :t, :ro, :pv, :ch, :zr)");
+      query->bindValue(":s", values[0]);
       query->bindValue(":t", values[1]);
       query->bindValue(":ro", values[2].toInt());
       query->bindValue(":pv", values[3].toInt());
       query->bindValue(":ch", values[4].toInt());
-      query->bindValue(":pr", values[5].toInt());
+      query->bindValue(":zr", values[5].toInt());
       break;
     case SelectSources:
       query->prepare("select * from sources");
@@ -782,14 +707,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   return true;
 }
 
-/*!
- * @fn SQLite::get_additional_properties
- * @brief Gets additional properties of the expression by @a address.
- * @param[in,out] reference to the QSqlDatabase instance
- * @param[in] source source properties
- * @param[in] address address of expression
- * @returns key-value map of properties
- */
+/*! @brief Gets additional properties of the expression by @a address. */
 Options SQLite::get_additional_properties(QSqlDatabase *db, const Source &source, int address) {
   Options props;
   QSqlQuery query(*db);
@@ -801,12 +719,7 @@ Options SQLite::get_additional_properties(QSqlDatabase *db, const Source &source
   return props;
 }
 
-/*!
- * @fn SQLite::unpack_links
- * @brief Unpacks references from a string into a set of indices.
- * @param links references in @a QString
- * @returns unpacked references
- */
+/*! @brief Unpacks references from a string into a set of indices. */
 QSet<int> SQLite::unpack_links(const QString &links) {
   QSet<int> unpacked;
   QStringList splitted = links.split(",");
@@ -821,15 +734,41 @@ QString SQLite::pack_links(const QSet<int> &links) {
   return packed;
 }
 
-/*!
- * @fn SQLite::generate_uuid
- * @brief Generates a UUID based on the current time.
- * @returns generated uuid
- */
+/*! @brief Generates a UUID based on the current time. */
 QString SQLite::generate_uuid() {
   QRandomGenerator rand(quint32(QTime::currentTime().msec()));
   return QUuid(uint(rand.generate()),       ushort(rand.generate()),     ushort(rand.generate()),
                uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)),
                uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)),
                uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256))).toString();
+}
+
+/*! @brief Creates a stub for a new expression and returns its identifier. 
+ *  @details In fact, it reserves an identifier for creating a new expression in the GUI.  */
+int SQLite::create_new_expression(const Source &source, const QString &text) {
+  sql_mutex.lock();
+  auto db = prepare(source.path);
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return -1;
+  }
+  QSqlQuery query(db);
+  exec(&query, CountExpressions, {source.table_name});
+  query.first();
+  if (not query.isValid()) {
+    db.close();
+    sql_mutex.unlock();
+    return -1;
+  }
+  auto new_id = query.value(0).toInt() + 1;
+  auto result = exec(
+    &query, InsertExpression,
+    {
+      source.table_name, QString::number(new_id), text, "", QString::number(0)
+    }
+  );
+  db.close();
+  sql_mutex.unlock();
+  return result ? new_id : -1;
 }

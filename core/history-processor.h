@@ -27,7 +27,7 @@ public:
   void remove_one(MessageData message);
   void save(const QString &filename = QString());
   Messages recent(int amount);
-  QString last_user_message();
+  QString last_user_message(int i = 0);
 
 signals:
   /*! @brief Sends message history to Display. */

@@ -61,7 +61,7 @@ void Jeff::apply_settings() {
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
-    emit send("/first");
+    emit send("/firststart");
     basis->write(basis->isGreetingsEnabledSt, true);
     basis->write(basis->greetingsMsg, tr("Hello!"));
     save_window_settings();

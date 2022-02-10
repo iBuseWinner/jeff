@@ -56,10 +56,9 @@ void CreateSourceDialog::save() {
   Source source;
   source.path = m_dbpath;
   source.table_title = titleInput->text();
-  QString *table_name = new QString;
+  QString *table_name = new QString();
   basis->sql->create_source(source, table_name);
   source.table_name = *table_name;
-  delete table_name;
   emit add(source);
   close();
 }

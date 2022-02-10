@@ -1,5 +1,15 @@
 #include "nlp-module.h"
 
+/*! @brief The constructor. */
+  NLPmodule::NLPmodule(Basis *_basis, PythonModule *_pm, HProcessor *_hp, QObject *parent) 
+      : QObject(parent), basis(_basis), pm(_pm), hp(_hp) {
+    gen = new QRandomGenerator(QTime::currentTime().msec());
+    load_cache();
+  }
+
+  /*! @brief The destructor. */
+  NLPmodule::~NLPmodule() { save_cache(); delete gen; }
+
 /*! @brief Matches candidates for each index of occurrence in the input expression. */
 CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QString input) {
   CacheWithIndices candidates;
@@ -75,11 +85,26 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
 
 /*! @brief Matches the answer based on the input. */
 void NLPmodule::search_for_suggests(const QString &input) {
-  auto selection = select_from_cache(input);
+  CacheWithIndices selection;
   bool from_db = false;
-  if (selection.keys().isEmpty()) {
+  /*! If user sent the same message as previous one, we should update cache from database
+   *  and unset use cases counter.  */
+  if (hp->last_user_message(1) == input) {
     selection = select_from_db(input);
+    auto *cache = basis->cacher->get_ptr();
+    for (auto expr : selection) {
+      if (cache->contains(expr.second)) {
+        auto i = cache->indexOf(expr.second);
+        (*cache)[i].use_cases = 0;
+      }
+    }
     from_db = true;
+  } else {
+    selection = select_from_cache(input);
+    if (selection.keys().isEmpty()) {
+      selection = select_from_db(input);
+      from_db = true;
+    }
   }
   if (selection.keys().isEmpty()) return;
   auto sorted = select_candidates(selection, input);

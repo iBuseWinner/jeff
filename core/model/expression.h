@@ -38,8 +38,9 @@ public:
   // Functions:
   /*! @brief Compares two expressions. */
   friend bool operator==(Expression e1, Expression e2) {
-    return e1.activator_text == e2.activator_text and e1.reagent_text == e2.reagent_text and
-           e1.properties == e2.properties and e1.exec == e2.exec;
+    return e1.activator_text == e2.activator_text and
+           e1.reagent_text == e2.reagent_text and
+           e1.exec == e2.exec;
   }
   
   /*! @brief Turns @an expresson into a JSON object. */

@@ -51,7 +51,7 @@ private:
   // Functions described in `sources.cpp`:
   void connector();
   void append(Sources sources);
-  void appendSingle(const Source &source);
+  void appendSingle(Source source);
   void sncl();
   void openCS();
   void closeCS();

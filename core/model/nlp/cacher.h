@@ -5,6 +5,10 @@
 #include <QMutex>
 #include <QObject>
 
+/*!
+ * @class Cacher
+ * @brief TBD
+ */
 class Cacher : public QObject {
   Q_OBJECT
 public:
@@ -14,6 +18,7 @@ public:
   void append(Expression expression);
   void append(Cache _cache);
   const Cache get();
+  Cache *get_ptr();
 
 private:
   // Objects:

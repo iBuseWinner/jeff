@@ -60,13 +60,14 @@ Messages HProcessor::recent(int amount) {
 }
 
 /*! @brief Returns the last user message that did not include a template, or an empty string. */
-QString HProcessor::last_user_message() {
-  QString msg;
+QString HProcessor::last_user_message(int i) {
+  QString msg = "";
   message_mutex.lock();
-  for (int i = message_history.length() - 1; i >= 0; i--) {
-    if ((message_history[i].author == Author::User) and 
-        (not message_history[i].content.startsWith("/"))) {
-      msg = message_history[i].content;
+  for (int j = message_history.length() - 1; j >= 0; j--) {
+    if ((message_history[j].author == Author::User) and 
+        (not message_history[j].content.startsWith("/"))) {
+      if (i-- > 0) continue; 
+      msg = message_history[j].content;
       break;
     }
   }

@@ -6,12 +6,11 @@
 
 /*!
  * @class Source
- * @brief Contains data about the source of regular expressions for the
- * NLPmodule.
+ * @brief Contains data about the source of regular expressions for the NLPmodule.
  */
 class Source {
 public:
-  /*! Constructors. */
+  /*! @brief Constructors. */
   Source() {}
   Source(const QJsonObject &json_object) {
     path = json_object["path"].toString();
@@ -35,17 +34,12 @@ public:
   bool is_catching = false;
   /*! Means that the input is first validated using this source. */
   bool is_prioritised = false;
-  /*! Compares two sources. They are identical if they have the same table name
-   * and are in the same database. */
+  /*! @brief Compares two sources. They are identical if they have the same table name
+   *  and are in the same database.  */
   friend bool operator==(Source s1, Source s2) {
     return s1.table_name == s2.table_name and s1.path == s2.path;
   }
-  /*!
-   * @fn to_json
-   * @brief Turns @a source into a JSON object.
-   * @param[in] source source parameters
-   * @returns converted properties of @a source
-   */
+  /*! @brief Turns @a source into a JSON object. */
   static QJsonObject to_json(const Source &s) {
     return {{"container", s.table_name},
             {"disabled", s.is_disabled},

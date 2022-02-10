@@ -139,12 +139,13 @@ void Message::setWidth(int width) {
     return;
   }
   QTextDocument textDocument;
-  if (md.content_type == ContentType::Markdown)
-    textDocument.setHtml(label->text());
-  else if (md.content_type == ContentType::Text)
-    textDocument.setPlainText(label->text());
-  else
-    return;
+  if (md.content_type == ContentType::Markdown) textDocument.setHtml(label->text());
+  else if (
+    md.content_type == ContentType::Widget or 
+    md.content_type == ContentType::File or
+    md.content_type == ContentType::Picture
+  ) return;
+  else textDocument.setPlainText(label->text());
   if (textDocument.idealWidth() < width)
     label->setWordWrap(false);
   else {

@@ -62,7 +62,7 @@ signals:
 private:
   // Objects:
   bool monologue_enabled = false;
-  NLPmodule *nlp = new NLPmodule(basis, pm);
+  NLPmodule *nlp = new NLPmodule(basis, pm, hp);
   StandardTemplates *std_templates = new StandardTemplates(basis, hp);
 };
 

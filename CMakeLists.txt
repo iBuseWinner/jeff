@@ -36,8 +36,6 @@ set (SRCS
   core/nlp-module.h
   core/python-module.cpp
   core/python-module.h
-  core/scenery.cpp
-  core/scenery.h
   core/standard-templates.cpp
   core/standard-templates.h
   core/database/json.cpp

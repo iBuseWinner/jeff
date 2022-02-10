@@ -26,7 +26,7 @@ signals:
   /*! @brief Sends a signal that the user did not want to create a source. */
   void cancelled();
   /*! @brief Sends source's data to create it. */
-  const Source add(const Source &source);
+  Source add(Source source);
 
 protected:
   // Functions:

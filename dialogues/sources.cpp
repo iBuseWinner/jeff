@@ -122,7 +122,7 @@ void SourcesDialog::append(Sources sources) {
 }
 
 /*!@brief Adds source to the selection. */
-void SourcesDialog::appendSingle(const Source &source) {
+void SourcesDialog::appendSingle(Source source) {
   QList<Source> sources;
   sources.append(source);
   append(sources);
