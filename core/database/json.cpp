@@ -67,7 +67,7 @@ KeyStore Json::read_memory() {
 void Json::write_source_list(SQLite *sql, Sources sources) {
   QJsonArray sources_json;
   for (int i = 0; i < sources.length(); i++) {
-    sources_json.append(Source::to_json(sources[i]));
+    sources_json.append(sources[i].to_json());
     // Some properties of sources are stored directly in the database itself in "tables".
     // Jeff writes them there.
     sql->write_source(sources[i]);

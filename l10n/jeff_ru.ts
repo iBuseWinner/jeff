@@ -87,33 +87,6 @@
     </message>
 </context>
 <context>
-    <name>ExpressionEditor</name>
-    <message>
-        <source>New expression</source>
-        <translation>Новое выражение</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>Закрыть</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Адрес</translation>
-    </message>
-    <message>
-        <source>Expression</source>
-        <translation>Выражение</translation>
-    </message>
-    <message>
-        <source>Double click on the desired expression to edit it.</source>
-        <translation>Дважды нажмите на нужное выражение, чтобы отредактировать его.</translation>
-    </message>
-    <message>
-        <source>Back</source>
-        <translation>Назад</translation>
-    </message>
-</context>
-<context>
     <name>FirstStart</name>
     <message>
         <source>Jeff</source>
@@ -261,12 +234,12 @@
         <translation>О Qt</translation>
     </message>
     <message>
-        <source>Expression editor</source>
-        <translation>Редактор выражений</translation>
-    </message>
-    <message>
         <source>Disable monologue mode</source>
         <translation>Отключить режим монолога</translation>
+    </message>
+    <message>
+        <source>Phrase editor</source>
+        <translation>Редактор фраз</translation>
     </message>
 </context>
 <context>
@@ -281,15 +254,42 @@
     </message>
 </context>
 <context>
+    <name>PhraseEditor</name>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Expression</source>
+        <translation>Выражение</translation>
+    </message>
+    <message>
+        <source>Double click on the desired phrase to edit it.</source>
+        <translation>Дважды кликните на нужную фразу, чтобы редактировать её.</translation>
+    </message>
+    <message>
+        <source>New phrase</source>
+        <translation>Новая фраза</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
+    </message>
+    <message>
+        <source>Edit this phrase...</source>
+        <translation>Редактировать эту фразу...</translation>
+    </message>
+    <message>
+        <source>Delete this phrase</source>
+        <translation>Удалить эту фразу</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Назад</translation>
+    </message>
+</context>
+<context>
     <name>PythonModule</name>
-    <message>
-        <source>The module with path </source>
-        <translation>Модуль по пути </translation>
-    </message>
-    <message>
-        <source> cannot be opened.</source>
-        <translation> не может быть открыт.</translation>
-    </message>
     <message>
         <source>Failed to connect the module.</source>
         <translation>Не удалось подключить модуль.</translation>

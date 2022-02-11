@@ -1,4 +1,4 @@
-#include "expression-editor.h"
+#include "phrase-editor.h"
 
 /*! 
  * @brief The constructor. 
@@ -6,35 +6,35 @@
  * <--------------->
  * {   Select db   }
  * { Select  table }
- * [Expression list]
+ * [  Phrase list  ]
  * <      Tip      >
  * [ New ] [ Close ]
  * <--------------->
  * @details Brief layout scheme:
  * <--------------->
- * {Expression text}
+ * {  Phrase text  }
  * [ Edit this one ]
  * [ Pre- ][ Post- ]
  * [Add...][ Add...]
  * [    <  Back    ]
  * <--------------->
  */
-ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
+PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : ScrollFreezerWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   // Sets up selector widget.
-  expressions.setHeaderLabels({tr("Address"), tr("Expression")});
-  expressions.setWordWrap(true);
-  expressions.setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(&expressions, &List::customContextMenuRequested, this,
-          &ExpressionEditor::show_selector_expr_context_menu);
-  connect(&expressions, &List::itemDoubleClicked, this, &ExpressionEditor::open_brief);
-  connect(basis, &Basis::sources_changed, this, &ExpressionEditor::fill_databases);
-  double_click_explain.setText(tr("Double click on the desired expression to edit it."));
-  new_expression.setText(tr("New expression"));
-  new_expression.setIcon(
+  phrases.setHeaderLabels({tr("Address"), tr("Expression")});
+  phrases.setWordWrap(true);
+  phrases.setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(&phrases, &List::customContextMenuRequested, this,
+          &PhraseEditor::show_selector_phrase_context_menu);
+  connect(&phrases, &List::itemDoubleClicked, this, &PhraseEditor::open_brief);
+  connect(basis, &Basis::sources_changed, this, &PhraseEditor::fill_databases);
+  double_click_explain.setText(tr("Double click on the desired phrase to edit it."));
+  new_phrase.setText(tr("New phrase"));
+  new_phrase.setIcon(
     QIcon::fromTheme("list-add", QIcon(":/arts/icons/16/list-add.svg")));
-  connect(&new_expression, &Button::clicked, this, &ExpressionEditor::add_new_expression);
+  connect(&new_phrase, &Button::clicked, this, &PhraseEditor::add_new_phrase);
   close_editor.setText(tr("Close"));
   close_editor.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
@@ -43,34 +43,34 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
   selector_layout.setMargin(0);
   selector_layout.addWidget(&databases, 0, 0, 1, 0);
   selector_layout.addWidget(&tables, 1, 0, 1, 0);
-  selector_layout.addWidget(&expressions, 2, 0, 1, 0);
+  selector_layout.addWidget(&phrases, 2, 0, 1, 0);
   selector_layout.addWidget(&double_click_explain, 3, 0, 1, 0);
-  selector_layout.addWidget(&new_expression, 4, 0);
+  selector_layout.addWidget(&new_phrase, 4, 0);
   selector_layout.addWidget(&close_editor, 4, 1);
   selector.setLayout(&selector_layout);
-  edit_expression_action.setText(tr("Edit this expression..."));
-  edit_expression_action.setIcon(
+  edit_phrase_action.setText(tr("Edit this phrase..."));
+  edit_phrase_action.setIcon(
     QIcon::fromTheme("edit", QIcon(":/arts/icons/16/document-edit.svg")));
-  remove_expression_action.setText(tr("Delete this expression"));
-  remove_expression_action.setIcon(
+  remove_phrase_action.setText(tr("Delete this phrase"));
+  remove_phrase_action.setIcon(
     QIcon::fromTheme("list-remove", QIcon(":/arts/icons/16/list-remove.svg")));
-  expressions_context_menu.addAction(&edit_expression_action);
-  expressions_context_menu.addAction(&remove_expression_action);
+  phrase_context_menu.addAction(&edit_phrase_action);
+  phrase_context_menu.addAction(&remove_phrase_action);
   // Sets up brief widget.
   auto brief_header_font = QApplication::font();
   brief_header_font.setPointSize(14);
   brief_header_font.setBold(true);
   brief_header.setFont(brief_header_font);
   brief_header.setWordWrap(true);
-  accept_expression_text.setIcon(
+  accept_phrase_text.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
-  connect(&accept_expression_text, &Button::clicked, this, &ExpressionEditor::save_expression_text);
-  expression_edit_line_layout.addWidget(&expression_edit);
-  expression_edit_line_layout.addWidget(&accept_expression_text);
+  connect(&accept_phrase_text, &Button::clicked, this, &PhraseEditor::save_phrase_text);
+  phrase_edit_line_layout.addWidget(&phrase_edit);
+  phrase_edit_line_layout.addWidget(&accept_phrase_text);
   back_to_selector.setText(tr("Back"));
   back_to_selector.setIcon(
     QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
-  connect(&back_to_selector, &Button::clicked, this, &ExpressionEditor::close_brief);
+  connect(&back_to_selector, &Button::clicked, this, &PhraseEditor::close_brief);
   brief_area_layout.setSpacing(0);
   brief_area_layout.setMargin(0);
   brief_area_layout.addWidget(&brief_header, 0, 0);
@@ -94,7 +94,7 @@ ExpressionEditor::ExpressionEditor(Basis *_basis, QWidget *parent, ModalHandler 
 }
 
 /*! @brief Populates the list of databases. */
-void ExpressionEditor::fill_databases() {
+void PhraseEditor::fill_databases() {
   disconnect(&databases, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
   auto selected = databases.currentData();
   auto sources = basis->sources();
@@ -114,7 +114,7 @@ void ExpressionEditor::fill_databases() {
 }
 
 /*! @brief Populates the list of tables in the database. */
-void ExpressionEditor::fill_tables(const Sources &sources) {
+void PhraseEditor::fill_tables(const Sources &sources) {
   disconnect(&tables, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
   auto selected = tables.currentData();
   for (auto source : sources) {
@@ -127,14 +127,14 @@ void ExpressionEditor::fill_tables(const Sources &sources) {
     if ((id = tables.findData(selected)) != -1)
       tables.setCurrentIndex(id);
   }
-  fill_expressions(sources);
+  fill_phrases(sources);
   connect(&tables, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, sources] {
-    fill_expressions(sources);
+    fill_phrases(sources);
   });
 }
 
 /*! @brief Gets the selected source from the widget. */
-Source ExpressionEditor::selected_source() {
+Source PhraseEditor::selected_source() {
   Source selected;
   for (auto candidate : current_sources) {
     if (
@@ -148,33 +148,36 @@ Source ExpressionEditor::selected_source() {
   return selected;
 }
 
-/*! @brief Populates a list of expressions from the source. */
-void ExpressionEditor::fill_expressions(const Sources &sources) {
+/*! @brief Populates a list of phrases from the source. */
+void PhraseEditor::fill_phrases(const Sources &sources) {
   current_sources = sources;
   selector_data = basis->sql->select_all(selected_source());
-  QTreeWidgetItem *parent = expressions.invisibleRootItem();
-  expressions.clear();
-  for (auto pair : selector_data) {
-    expressions.addTopLevelItem(new QTreeWidgetItem(parent, {QString::number(pair.first), pair.second}));
+  QTreeWidgetItem *parent = phrases.invisibleRootItem();
+  phrases.clear();
+  for (auto phrase : selector_data) {
+    phrases.addTopLevelItem(
+      new QTreeWidgetItem(parent, {QString::number(phrase.address), phrase.expression})
+    );
   }
 }
 
-/*! @brief Opens information about the expression. */
-void ExpressionEditor::open_brief(QTreeWidgetItem *item, int column) {
+/*! @brief Opens information about the phrase. */
+void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
   Q_UNUSED(column)
   if (not mode_mutex.try_lock()) return;
+  current_phrase = basis->sql->get_phrase_by_address(selected_source(), item->text(0).toInt());
   brief_area.setFixedWidth(selector.width());
   brief_area.setFixedHeight(selector.height());
   selector.hide();
   editor_layout.replaceWidget(&selector, &brief_area);
-  brief_header.setText(item->text(1));
+  brief_header.setText(current_phrase.expression);
   brief_area.show();
   mode = BriefMode;
   mode_mutex.unlock();
 }
 
 /*! @brief Returns to the list of expressions. */
-void ExpressionEditor::close_brief() {
+void PhraseEditor::close_brief() {
   if (not mode_mutex.try_lock()) return;
   brief_area.hide();
   editor_layout.replaceWidget(&brief_area, &selector);
@@ -183,28 +186,27 @@ void ExpressionEditor::close_brief() {
   mode_mutex.unlock();
 }
 
-/*! @brief Displays the context menu of the list of expressions. */
-void ExpressionEditor::show_selector_expr_context_menu(const QPoint &pos) {
-  QTreeWidgetItem *selected_item = expressions.itemAt(pos);
-  disconnect(&edit_expression_action);
-  disconnect(&remove_expression_action);
-  connect(&edit_expression_action, &QAction::triggered, this, [this, selected_item] {
+/*! @brief Displays the context menu of the list of phrases. */
+void PhraseEditor::show_selector_phrase_context_menu(const QPoint &pos) {
+  QTreeWidgetItem *selected_item = phrases.itemAt(pos);
+  if (not selected_item) return;
+  disconnect(&edit_phrase_action);
+  disconnect(&remove_phrase_action);
+  connect(&edit_phrase_action, &QAction::triggered, this, [this, selected_item] {
     open_brief(selected_item, 0);
   });
-  expressions_context_menu.exec(QCursor::pos());
+  phrase_context_menu.exec(QCursor::pos());
 }
 
-/*! @brief Adds a new expression and opens the editor. */
-void ExpressionEditor::add_new_expression() {
-  auto id = basis->sql->create_new_expression(selected_source(), tr("New expression"));
+/*! @brief Adds a new phrase and opens the editor. */
+void PhraseEditor::add_new_phrase() {
+  auto id = basis->sql->create_new_phrase(selected_source(), tr("New phrase"));
   if (id == -1) return;
-  auto *expression_item = new QTreeWidgetItem(
-    expressions.invisibleRootItem(), {QString::number(id), tr("New expression")});
-  expressions.addTopLevelItem(expression_item);
-  open_brief(expression_item, 0);
+  auto *phrase_item = new QTreeWidgetItem(
+    phrases.invisibleRootItem(), {QString::number(id), tr("New phrase")});
+  phrases.addTopLevelItem(phrase_item);
+  open_brief(phrase_item, 0);
 }
 
-/*! @brief Saves new text of an expression. */
-void ExpressionEditor::save_expression_text() {
-  
-}
+/*! @brief Saves new text of an phrase. */
+void PhraseEditor::save_phrase_text() {}

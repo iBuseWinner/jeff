@@ -30,10 +30,10 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == expression_editor_cmd) {
+  if (expression == phrase_editor_cmd) {
     auto *modal_handler = new ModalHandler(this);
-    auto *expression_editor = new ExpressionEditor(basis, nullptr, modal_handler);
-    Q_UNUSED(expression_editor)
+    auto *phrase_editor = new PhraseEditor(basis, nullptr, modal_handler);
+    Q_UNUSED(phrase_editor)
     emit showModalWidget(modal_handler);
     return true;
   }

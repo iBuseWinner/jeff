@@ -6,5 +6,6 @@ LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {
     style_sheet.arg(styling.css_bg_color).arg(styling.css_fg_color)
   );
   setPlaceholderText(tr("Enter your message..."));
+  setContextMenuPolicy(Qt::NoContextMenu);
   setFrame(false);
 }

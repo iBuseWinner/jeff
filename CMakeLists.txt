@@ -46,6 +46,7 @@ set (SRCS
   core/model/expression.h
   core/model/keystore.h
   core/model/message.h
+  core/model/phrase.h
   core/model/source.h
   core/model/aiml/aiml-parser.h
   core/model/nlp/cache.h
@@ -59,13 +60,13 @@ set (SRCS
   core/model/python/script.h
   dialogues/about.cpp
   dialogues/about.h
-  dialogues/expression-editor.cpp
-  dialogues/expression-editor.h
   dialogues/firststart.cpp
   dialogues/firststart.h
   dialogues/help.cpp
   dialogues/help.h
   dialogues/modal-handler.h
+  dialogues/phrase-editor.cpp
+  dialogues/phrase-editor.h
   dialogues/settings.cpp
   dialogues/settings.h
   dialogues/sources.cpp

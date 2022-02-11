@@ -10,14 +10,7 @@
  */
 class Source {
 public:
-  /*! @brief Constructors. */
-  Source() {}
-  Source(const QJsonObject &json_object) {
-    path = json_object["path"].toString();
-    table_name = json_object["container"].toString();
-    table_title = json_object["title"].toString();
-    is_disabled = json_object["disabled"].toBool();
-  }
+  // Objects:
   /*! Path to database. */
   QString path = "";
   /*! Table name [UUID, name of database table]. */
@@ -34,17 +27,29 @@ public:
   bool is_catching = false;
   /*! Means that the input is first validated using this source. */
   bool is_prioritised = false;
+  
+  // Constructors:
+  Source() {}
+  Source(const QJsonObject &json_object) {
+    path = json_object["path"].toString();
+    table_name = json_object["container"].toString();
+    table_title = json_object["title"].toString();
+    is_disabled = json_object["disabled"].toBool();
+  }
+  
+  // Functions:
   /*! @brief Compares two sources. They are identical if they have the same table name
    *  and are in the same database.  */
   friend bool operator==(Source s1, Source s2) {
     return s1.table_name == s2.table_name and s1.path == s2.path;
   }
+  
   /*! @brief Turns @a source into a JSON object. */
-  static QJsonObject to_json(const Source &s) {
-    return {{"container", s.table_name},
-            {"disabled", s.is_disabled},
-            {"path", s.path},
-            {"title", s.table_title}};
+  QJsonObject to_json() {
+    return {{"container", table_name},
+            {"disabled", is_disabled},
+            {"path", path},
+            {"title", table_title}};
   }
 };
 

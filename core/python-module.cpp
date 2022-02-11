@@ -112,7 +112,7 @@ QJsonObject PythonModule::request_answer(Expression &expression) {
     }
   }
   if (not expression.properties.isEmpty()) {
-    transport[basis->exprPropsWk] = Expression::pack_props(expression.properties);
+    transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }
   if (not requirements.contains(basis->scriptPathWk)) {
     emit script_exception(tr("The path to the module was not received."));

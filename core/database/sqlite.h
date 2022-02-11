@@ -3,6 +3,8 @@
 
 #include "core/model/nlp/cache.h"
 #include "core/model/nlp/stringssearch.h"
+#include "core/model/expression.h"
+#include "core/model/phrase.h"
 #include "core/model/source.h"
 #include <QFile>
 #include <QJsonObject>
@@ -36,27 +38,23 @@ enum ToDo {
   NoneToDo,
   CreateMainTableIfNotExists,
   CreateSourceTable,
-  WithDraw,
   LoadOptions,
   WriteOptions,
   SelectSources,
-  CountExpressions,
-  InsertExpression,
-  SelectExpressions,
+  CountPhrases,
+  InsertPhrase,
+  SelectPhrases,
   SelectAddressesByExpression,
   SelectAddressesByExpressionAndExec,
   SelectLinksByAddress,
   UpdateLinksAtAddress,
   SelectExpressionAndExecByAddress,
-  SelectAEL,         /*!< Address, expression and links. */
-  SelectELByAddress, /*!< Expression and links. */
-  SelectAPByAddress, /*!< Additional properties. */
+  SelectPhraseByAddress,
   IfMainTableExists,
   IfMainTableCorrect,
   IfSourceTableExists,
   IfSourceTableCorrect,
   RemoveMainTableIfExists,
-  RemoveSourceTableIfExists
 };
 
 /*!
@@ -77,14 +75,13 @@ public:
   Sources sources(const QString &path);
   Source load_source(Source source);
   bool write_source(const Source &source);
-  QList<QPair<int, QString>> select_all(const Source &source);
-  bool insert_expression(const Source &source, int address, const QString &expression, 
-                         const QSet<int> &links, bool ex);
+  Phrases select_all(const Source &source);
   bool insert_expression(const Source &source, const Expression &expression);
-  Expression get_expression_by_address(const Source &source, int address);
+  bool insert_phrase(const Source &source, const Phrase &phrase);
+  int create_new_phrase(const Source &source, const QString &text);
+  Phrase get_phrase_by_address(const Source &source, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
   QString generate_uuid();
-  int create_new_expression(const Source &source, const QString &text);
 
 signals:
   /*! @brief Reports an error in the database. */
@@ -106,10 +103,7 @@ private:
   bool validate(QSqlDatabase *db, bool recursive = false, bool quiet = false);
   bool validate(QSqlDatabase *db, const QString &source_table, bool quiet = false);
   bool exec(QSqlQuery *query, ToDo option, QStringList values = {});
-  Options get_additional_properties(QSqlDatabase *db, const Source &source, int address);
-  QSet<int> unpack_links(const QString &links);
-  QString pack_links(const QSet<int> &links);
-  
+  Options get_additional_properties(QSqlQuery *query);
 };
 
 #endif

@@ -92,9 +92,7 @@ void Jeff::connect_all() {
   connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
   connect(menubar, &MenuBar::about_triggered, this, [this] { emit send("/about"); });
   connect(menubar, &MenuBar::sources_triggered, this, [this] { emit send("/sourcemanager"); });
-  connect(menubar, &MenuBar::expression_editor_triggered, this, [this] {
-    emit send("/expressioneditor");
-  });
+  connect(menubar, &MenuBar::phrase_editor_triggered, this, [this] { emit send("/phraseeditor"); });
   connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send("/settings"); });
   connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);

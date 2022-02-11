@@ -3,7 +3,7 @@
 
 #include "core/basis.h"
 #include "dialogues/about.h"
-#include "dialogues/expression-editor.h"
+#include "dialogues/phrase-editor.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"
 #include "dialogues/modal-handler.h"
@@ -12,7 +12,6 @@
 #include "core/history-processor.h"
 #include "core/standard-templates.h"
 #include <QString>
-#include <QTime>
 
 /*!
  * @class StandardTemplates
@@ -32,7 +31,7 @@ public:
   static inline const QString about_cmd = "/about";
   static inline const QString settings_cmd = "/settings";
   static inline const QString fast_append_cmd = "/+ ";
-  static inline const QString expression_editor_cmd = "/expressioneditor";
+  static inline const QString phrase_editor_cmd = "/phraseeditor";
   static inline const QString monologue_mode_cmd = "/mm";
 
   // Functions described in `standard-templates.cpp`:

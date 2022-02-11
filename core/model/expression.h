@@ -2,6 +2,7 @@
 #define EXPRESSION_H
 
 #include "core/model/nlp/options.h"
+#include "core/model/phrase.h"
 #include "core/model/source.h"
 #include <QList>
 #include <QMap>
@@ -30,7 +31,7 @@ public:
   Expression(const QJsonObject &json_object) {
     activator_text = json_object["activator_text"].toString();
     reagent_text = json_object["reagent_text"].toString();
-    properties = parse_props(json_object["properties"]);
+    properties = Phrase::parse_props(json_object["properties"]);
     use_cases = json_object["use_cases"].toInt();
     exec = json_object["exec"].toBool();
   }
@@ -47,7 +48,7 @@ public:
   QJsonObject to_json() {
     return {{"activator_text", activator_text},
             {"reagent_text", reagent_text},
-            {"properties", pack_props(properties)},
+            {"properties", Phrase::pack_props(properties)},
             {"use_cases", use_cases},
             {"exec", exec}};
   }
@@ -56,20 +57,6 @@ public:
   int weight() { return properties.value("weight").toInt(); }
   /*! @brief Tells whether the expression can be answered together with other expressions. */
   bool consonant() { return bool(properties.value("consonant").toInt()); }
-
-  /*! @brief Properties' parser. */
-  static Options parse_props(QJsonValue _aps) {
-    Options aps;
-    for (auto _ap_key : _aps.toObject().keys()) aps[_ap_key] = _aps[_ap_key].toString();
-    return aps;
-  }
-  
-  /*! @brief Properties' packer. */
-  static QJsonObject pack_props(Options aps) {
-    QJsonObject _aps;
-    for (auto ap_key : aps.keys()) _aps.insert(ap_key, aps[ap_key]);
-    return _aps;
-  }
 };
 
 typedef QList<Expression> Expressions;
