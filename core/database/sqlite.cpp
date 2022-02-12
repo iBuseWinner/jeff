@@ -203,7 +203,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
       query.first();
       auto links = Phrase::unpack_links(query.value(0).toString());
       links.insert(reagent_expr_address);
-      result = exec(&query, UpdateLinksAtAddress, {source.table_name, 
+      result = exec(&query, UpdateLinksByAddress, {source.table_name, 
                                                   QString::number(activator_expr_addr),
                                                   Phrase::pack_links(links)});
     } else {
@@ -211,7 +211,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
       query.first();
       auto links = Phrase::unpack_links(query.value(0).toString());
       links.insert(new_address);
-      result = exec(&query, UpdateLinksAtAddress, {source.table_name, 
+      result = exec(&query, UpdateLinksByAddress, {source.table_name, 
                                                   QString::number(activator_expr_addr),
                                                   Phrase::pack_links(links)});
       result &= exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
@@ -309,6 +309,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   return result ? new_id : -1;
 }
 
+/*! @brief TBD */
 bool SQLite::update_expression(const Source &source, const QString &expression, int address) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -320,6 +321,42 @@ bool SQLite::update_expression(const Source &source, const QString &expression, 
   QSqlQuery query(db);
   auto result = exec(
     &query, UpdateExpressionByAddress, {source.table_name, expression, QString::number(address)}
+  );
+  db.close();
+  sql_mutex.unlock();
+  return result;
+}
+
+/*! @brief TBD */
+bool SQLite::update_exec(const Source &source, bool ex, int address) {
+  sql_mutex.lock();
+  auto db = prepare(source.path);
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return false;
+  }
+  QSqlQuery query(db);
+  auto result = exec(
+    &query, UpdateExecByAddress, {source.table_name, QString::number(ex), QString::number(address)}
+  );
+  db.close();
+  sql_mutex.unlock();
+  return result;
+}
+
+/*! @brief TBD */
+bool SQLite::remove_phrase(const Source &source, int address) {
+  sql_mutex.lock();
+  auto db = prepare(source.path);
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return false;
+  }
+  QSqlQuery query(db);
+  auto result = exec(
+    &query, RemovePhraseByAddress, {source.table_name, QString::number(address)}
   );
   db.close();
   sql_mutex.unlock();
@@ -698,7 +735,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       query->bindValue(":a", values[1].toInt());
       break;
-    case UpdateLinksAtAddress:
+    case UpdateLinksByAddress:
       query->prepare(QString("update \"%1\" set links = :ls where address = :a").arg(values[0]));
       query->bindValue(":ls", values[1]);
       query->bindValue(":a", values[2].toInt());
@@ -721,6 +758,19 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       query->bindValue(":ex", values[1]);
       query->bindValue(":a", values[2].toInt());
+      break;
+    case UpdateExecByAddress:
+      query->prepare(QString(
+        "update \"%1\" set exec = :e where address = :a").arg(values[0])
+      );
+      query->bindValue(":e", values[1].toInt());
+      query->bindValue(":a", values[2].toInt());
+      break;
+    case RemovePhraseByAddress:
+      query->prepare(QString(
+        "delete from \"%1\" where address = :a").arg(values[0])
+      );
+      query->bindValue(":a", values[1].toInt());
       break;
     case IfMainTableExists:
       query->prepare("select name from sqlite_master where type='table' and name='sources';");

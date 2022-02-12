@@ -55,6 +55,7 @@ void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
     basis->sql->get_phrase_by_address(selector->selected_source(), item->text(0).toInt())
   );
   brief->set_current_source(selector->selected_source());
+  brief->set_phrases(selector->phrases);
   brief->show();
   mode = BriefMode;
   mode_mutex.unlock();
@@ -65,6 +66,7 @@ void PhraseEditor::close_brief() {
   if (not mode_mutex.try_lock()) return;
   brief->hide();
   editor_layout.replaceWidget(brief, selector);
+  selector->update_phrases();
   selector->show();
   mode = SelectorMode;
   mode_mutex.unlock();

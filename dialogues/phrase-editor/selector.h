@@ -23,11 +23,13 @@ public:
   // Objects:
   Button new_phrase, close_editor;
   List phrases_list;
+  Phrases phrases;
   
   // Functions described in `selector.cpp`:
   PhraseEditorSelector(Basis *_basis, QWidget *parent = nullptr);
   void fill_databases();
   Source selected_source();
+  void update_phrases();
 
 signals:
   QTreeWidgetItem *open_brief(QTreeWidgetItem *item);
@@ -44,7 +46,7 @@ private:
   // Functions described in `selector.cpp`:
   void show_context_menu(const QPoint &pos);
   void fill_tables(const Sources &sources);
-  void fill_phrases(const Sources &sources);
+  void fill_phrases();
 };
 
 #endif

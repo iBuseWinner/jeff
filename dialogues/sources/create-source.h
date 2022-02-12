@@ -13,7 +13,6 @@
 /*!
  * @class CreateSourceDialog
  * @brief Creates sources in databases.
- * @sa Basis, LineEdit, Button
  */
 class CreateSourceDialog : public QWidget {
   Q_OBJECT
@@ -35,18 +34,16 @@ protected:
 
 private:
   // Objects:
-  QString m_dbpath = "";
+  QString path = "";
   Basis *basis = nullptr;
-  LineEdit *titleInput = nullptr;
-  Button *selectFileBtn = nullptr;
-  Button *saveBtn = nullptr;
-  Button *cancelBtn = nullptr;
+  QGridLayout layout;
+  LineEdit title_edit;
+  Button select, save, cancel;
 
   // Functions described in `create-source.cpp`:
-  void connector();
-  void selStart();
-  void select();
-  void save();
+  void fill_select_file_btn();
+  void select_file();
+  void create_source();
 };
 
 #endif

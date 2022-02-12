@@ -36,12 +36,17 @@ PhraseEditorSelector::PhraseEditorSelector(Basis *_basis, QWidget *parent)
 
 /*! @brief Displays the context menu of the list of phrases. */
 void PhraseEditorSelector::show_context_menu(const QPoint &pos) {
-  QTreeWidgetItem *selected_item = phrases_list.itemAt(pos);
+  auto *selected_item = phrases_list.itemAt(pos);
   if (not selected_item) return;
   disconnect(&edit_phrase_action);
   disconnect(&remove_phrase_action);
   connect(&edit_phrase_action, &QAction::triggered, this, [this, selected_item] {
     emit open_brief(selected_item);
+  });
+  connect(&remove_phrase_action, &QAction::triggered, this, [this, selected_item] {
+    if (not basis->sql->remove_phrase(selected_source(), selected_item->text(0).toInt())) return;
+    auto *item = phrases_list.takeTopLevelItem(phrases_list.indexOfTopLevelItem(selected_item));
+    if (item) delete item;
   });
   phrase_context_menu.exec(QCursor::pos());
 }
@@ -80,9 +85,9 @@ void PhraseEditorSelector::fill_tables(const Sources &sources) {
     if ((id = tables.findData(selected)) != -1)
       tables.setCurrentIndex(id);
   }
-  fill_phrases(sources);
+  fill_phrases();
   connect(&tables, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this, sources] {
-    fill_phrases(sources);
+    fill_phrases();
   });
 }
 
@@ -94,12 +99,15 @@ Source PhraseEditorSelector::selected_source() {
   return selected;
 }
 
+/*! @brief TBD */
+void PhraseEditorSelector::update_phrases() { fill_phrases(); }
+
 /*! @brief Populates a list of phrases from the source. */
-void PhraseEditorSelector::fill_phrases(const Sources &sources) {
-  auto selector_data = basis->sql->select_all(selected_source());
+void PhraseEditorSelector::fill_phrases() {
+  phrases = basis->sql->select_all(selected_source());
   QTreeWidgetItem *parent = phrases_list.invisibleRootItem();
   phrases_list.clear();
-  for (auto phrase : selector_data) {
+  for (auto phrase : phrases) {
     phrases_list.addTopLevelItem(
       new QTreeWidgetItem(parent, {QString::number(phrase.address), phrase.expression})
     );

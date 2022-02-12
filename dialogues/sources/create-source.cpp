@@ -1,64 +1,48 @@
 #include "create-source.h"
 
 /*! @brief The constructor. */
-CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent)
-    : QWidget(parent), basis(_basis) {
-  auto *grid_layout = new QGridLayout();
-  titleInput = new LineEdit(this);
-  selectFileBtn = new Button("", this);
-  saveBtn = new Button(tr("Save"), this);
-  cancelBtn = new Button(tr("Cancel"), this);
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
-  titleInput->setPlaceholderText(tr("Enter source name"));
-  saveBtn->setIcon(
-    QIcon::fromTheme("document-save", QIcon(":/arts/icons/16/document-save.svg")));
-  cancelBtn->setIcon(
-    QIcon::fromTheme("window-close", QIcon(":/arts/icons/16/window-close.svg")));
-  grid_layout->addWidget(titleInput, 0, 0, 1, 0);
-  grid_layout->addWidget(selectFileBtn, 1, 0, 1, 0);
-  grid_layout->addItem(spacer, 2, 0);
-  grid_layout->addWidget(saveBtn, 2, 1);
-  grid_layout->addWidget(cancelBtn, 2, 2);
-  setLayout(grid_layout);
-  connector();
-  selStart();
-}
-
-/*! @brief Establishes communications for user interaction through the widget. */
-void CreateSourceDialog::connector() {
-  connect(selectFileBtn, &Button::clicked, this, &CreateSourceDialog::select);
-  connect(saveBtn, &Button::clicked, this, &CreateSourceDialog::save);
-  connect(cancelBtn, &Button::clicked, this, &QWidget::close);
+CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent) : QWidget(parent), basis(_basis) {
+  title_edit.setPlaceholderText(tr("Enter source name"));
+  connect(&select, &Button::clicked, this, &CreateSourceDialog::select_file);
+  save.setText(tr("Save"));
+  save.setIcon(QIcon::fromTheme("document-save", QIcon(":/arts/icons/16/document-save.svg")));
+  connect(&save, &Button::clicked, this, &CreateSourceDialog::create_source);
+  cancel.setText(tr("Cancel"));
+  cancel.setIcon(QIcon::fromTheme("window-close", QIcon(":/arts/icons/16/window-close.svg")));
+  connect(&cancel, &Button::clicked, this, &QWidget::close);
+  layout.addWidget(&title_edit, 0, 0, 1, 0);
+  layout.addWidget(&select, 1, 0, 1, 0);
+  layout.addItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed), 2, 0);
+  layout.addWidget(&save, 2, 1);
+  layout.addWidget(&cancel, 2, 2);
+  setLayout(&layout);
+  fill_select_file_btn();
 }
 
 /*! @brief Turns the faceless button into a button for selecting a database. */
-void CreateSourceDialog::selStart() {
-  selectFileBtn->setText(tr("Select database file..."));
-  selectFileBtn->setIcon(
-    QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/document-open.svg")));
+void CreateSourceDialog::fill_select_file_btn() {
+  select.setText(tr("Select database file..."));
+  select.setIcon(QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/document-open.svg")));
 }
 
 /*! @brief Opens the database selection window and customizes the button. */
-void CreateSourceDialog::select() {
-  m_dbpath = QFileDialog::getSaveFileName(
+void CreateSourceDialog::select_file() {
+  path = QFileDialog::getSaveFileName(
       nullptr, tr("Select database..."), "", tr("Jeff database") + "(*.j.db)",
       nullptr, QFileDialog::DontConfirmOverwrite);
-  if (!m_dbpath.isEmpty()) {
-    selectFileBtn->setText(m_dbpath);
-    selectFileBtn->setIcon(
-      QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/db-file.svg")));
-  } else selStart();
+  if (not path.isEmpty()) {
+    select.setText(path);
+    select.setIcon(QIcon::fromTheme("document-open", QIcon(":/arts/icons/16/db-file.svg")));
+  } else fill_select_file_btn();
 }
 
 /*! @brief Finishes configuring the future source. */
-void CreateSourceDialog::save() {
-  if ((m_dbpath.isEmpty()) or (titleInput->text().isEmpty())) close();
+void CreateSourceDialog::create_source() {
+  if (path.isEmpty() or title_edit.text().isEmpty()) close();
   Source source;
-  source.path = m_dbpath;
-  source.table_title = titleInput->text();
-  QString *table_name = new QString();
-  basis->sql->create_source(source, table_name);
-  source.table_name = *table_name;
+  source.path = path;
+  source.table_title = title_edit.text();
+  basis->sql->create_source(source, &(source.table_name));
   emit add(source);
   close();
 }

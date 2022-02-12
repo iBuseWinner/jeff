@@ -47,10 +47,12 @@ enum ToDo {
   SelectAddressesByExpression,
   SelectAddressesByExpressionAndExec,
   SelectLinksByAddress,
-  UpdateLinksAtAddress,
+  UpdateLinksByAddress,
   SelectExpressionAndExecByAddress,
   SelectPhraseByAddress,
   UpdateExpressionByAddress,
+  UpdateExecByAddress,
+  RemovePhraseByAddress,
   IfMainTableExists,
   IfMainTableCorrect,
   IfSourceTableExists,
@@ -82,6 +84,8 @@ public:
   Phrase get_phrase_by_address(const Source &source, int address);
   int create_new_phrase(const Source &source, const QString &text);
   bool update_expression(const Source &source, const QString &expression, int address);
+  bool update_exec(const Source &source, bool ex, int address);
+  bool remove_phrase(const Source &source, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
   QString generate_uuid();
 

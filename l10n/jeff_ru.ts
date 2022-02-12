@@ -270,6 +270,14 @@
         <source>Back</source>
         <translation>Назад</translation>
     </message>
+    <message>
+        <source>Process via script</source>
+        <translation>Обработать в скрипте</translation>
+    </message>
+    <message>
+        <source>The address of the phrase is %1.</source>
+        <translation>Адрес фразы - %1.</translation>
+    </message>
 </context>
 <context>
     <name>PhraseEditorSelector</name>
