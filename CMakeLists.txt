@@ -71,6 +71,10 @@ set (SRCS
   dialogues/settings.h
   dialogues/sources.cpp
   dialogues/sources.h
+  dialogues/phrase-editor/brief.cpp
+  dialogues/phrase-editor/brief.h
+  dialogues/phrase-editor/selector.cpp
+  dialogues/phrase-editor/selector.h
   dialogues/sources/create-source.cpp
   dialogues/sources/create-source.h
   widgets/board.cpp

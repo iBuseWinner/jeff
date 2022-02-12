@@ -297,12 +297,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   QSqlQuery query(db);
   exec(&query, CountPhrases, {source.table_name});
   query.first();
-  if (not query.isValid()) {
-    db.close();
-    sql_mutex.unlock();
-    return -1;
-  }
-  auto new_id = query.value(0).toInt() + 1;
+  auto new_id = query.isValid() ? query.value(0).toInt() + 1 : 0;
   auto result = exec(
     &query, InsertPhrase,
     {
@@ -314,9 +309,26 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   return result ? new_id : -1;
 }
 
+bool SQLite::update_expression(const Source &source, const QString &expression, int address) {
+  sql_mutex.lock();
+  auto db = prepare(source.path);
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return false;
+  }
+  QSqlQuery query(db);
+  auto result = exec(
+    &query, UpdateExpressionByAddress, {source.table_name, expression, QString::number(address)}
+  );
+  db.close();
+  sql_mutex.unlock();
+  return result;
+}
+
 /*! @brief Finds all activators for the expression. */
 CacheWithIndices SQLite::scan_source(const Source &source, const QString &input) {
-  sql_mutex.unlock();
+  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
@@ -702,6 +714,13 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
         "select * from \"%1\" where address = :a").arg(values[0])
       );
       query->bindValue(":a", values[1].toInt());
+      break;
+    case UpdateExpressionByAddress:
+      query->prepare(QString(
+        "update \"%1\" set expression = :ex where address = :a").arg(values[0])
+      );
+      query->bindValue(":ex", values[1]);
+      query->bindValue(":a", values[2].toInt());
       break;
     case IfMainTableExists:
       query->prepare("select name from sqlite_master where type='table' and name='sources';");

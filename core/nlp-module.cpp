@@ -19,7 +19,7 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
       continue;
     }
     bool to_add = false;
-    if (not ewi.second.consonant()) { to_add = true; }
+    if (ewi.second.consonant()) { to_add = true; }
     else {
       for (auto rival : candidates.keys()) {
         auto intersection_and_weight = StringSearch::intersects(ewi.first, candidates[rival].first);
@@ -93,9 +93,9 @@ void NLPmodule::search_for_suggests(const QString &input) {
     selection = select_from_db(input);
     auto *cache = basis->cacher->get_ptr();
     for (auto expr : selection) {
-      if (cache->contains(expr.second)) {
-        auto i = cache->indexOf(expr.second);
-        (*cache)[i].use_cases = 0;
+      for (int i = 0; i < cache->length(); i++) {
+        if (expr.second.activator_text == (*cache)[i].activator_text)
+          (*cache)[i].use_cases = 0;
       }
     }
     from_db = true;

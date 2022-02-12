@@ -50,6 +50,7 @@ enum ToDo {
   UpdateLinksAtAddress,
   SelectExpressionAndExecByAddress,
   SelectPhraseByAddress,
+  UpdateExpressionByAddress,
   IfMainTableExists,
   IfMainTableCorrect,
   IfSourceTableExists,
@@ -78,8 +79,9 @@ public:
   Phrases select_all(const Source &source);
   bool insert_expression(const Source &source, const Expression &expression);
   bool insert_phrase(const Source &source, const Phrase &phrase);
-  int create_new_phrase(const Source &source, const QString &text);
   Phrase get_phrase_by_address(const Source &source, int address);
+  int create_new_phrase(const Source &source, const QString &text);
+  bool update_expression(const Source &source, const QString &expression, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
   QString generate_uuid();
 

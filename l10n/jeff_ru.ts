@@ -256,12 +256,26 @@
 <context>
     <name>PhraseEditor</name>
     <message>
-        <source>Address</source>
-        <translation>Адрес</translation>
+        <source>New phrase</source>
+        <translation>Новая фраза</translation>
+    </message>
+</context>
+<context>
+    <name>PhraseEditorBrief</name>
+    <message>
+        <source>Edit text</source>
+        <translation>Редактировать текст</translation>
     </message>
     <message>
-        <source>Expression</source>
-        <translation>Выражение</translation>
+        <source>Back</source>
+        <translation>Назад</translation>
+    </message>
+</context>
+<context>
+    <name>PhraseEditorSelector</name>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
     </message>
     <message>
         <source>Double click on the desired phrase to edit it.</source>
@@ -284,8 +298,8 @@
         <translation>Удалить эту фразу</translation>
     </message>
     <message>
-        <source>Back</source>
-        <translation>Назад</translation>
+        <source>Phrase</source>
+        <translation>Фраза</translation>
     </message>
 </context>
 <context>
