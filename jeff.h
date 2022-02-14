@@ -2,73 +2,35 @@
 #define JEFF_H
 
 #include "core/core.h"
-#include "widgets/board.h"
-#include "widgets/button.h"
-#include "widgets/display.h"
-#include "widgets/line.h"
-#include "widgets/menubar.h"
-#include "widgets/styling.h"
-#include <QApplication>
-#include <QLayout>
-#include <QLineEdit>
-#include <QList>
-#include <QMainWindow>
-#include <QMessageBox>
-#include <QPair>
-#include <QResizeEvent>
-#include <QWidget>
+#include <QCoreApplication>
+#include <QString>
+#include <curses.h>
+#include <iostream>
 
 /*!
  * @mainclass Jeff
- * @brief Application window class.
+ * @brief Application class.
  */
-class Jeff : public QMainWindow {
+class Jeff : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Jeff)
 public:
-  // Functions:
-  /*! @brief Saves window settings. */
-  ~Jeff() override { save_window_settings(); }
-
   // Functions described in `jeff.cpp`:
-  Jeff();
-  void greeting();
-
+  Jeff(int argc, char *argv[]);
+  
 signals:
-  /*! @brief Indicates that the window is complete and ready for user interaction. */
   void ready_state();
-  /*! @brief Sends a request to Core. */
-  QString send(QString user_expression);
-
-protected:
-  // Functions described in `jeff.cpp`:
-  void keyPressEvent(QKeyEvent *event) override;
-
+  QString send(QString user_input);
+  
 private:
   // Objects:
   Core *core = new Core(this);
   Basis *basis = core->basis;
   HProcessor *history_processor = core->hp;
-  Line *line = new Line(this);
-  Display *display = new Display(25, this);
-  MenuBar *menubar = new MenuBar(line, this);
-
-  // Constants:
-  static const int minimalWidth = 600;
-  static const int minimalHeight = 370;
-  static const int defaultWidth = 800;
-  static const int defaultHeight = 496;
-
+  
   // Functions described in `jeff.cpp`:
-  void apply_settings();
-  void save_window_settings();
-  void connect_all();
-  void full_screen_handler();
-  void user_input_handler();
-  void export_message_history();
-  void import_message_history();
-  void clear();
-  void help() { emit send("/help"); }
+  void start_by(Messages messages);
+  void add_message_by_md(MessageData message);
 };
 
 #endif

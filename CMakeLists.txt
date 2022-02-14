@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cc-jeff)
+project(jeff)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets Xml REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
-add_compile_definitions(QT)
 
 include_directories(
   .
@@ -19,11 +18,12 @@ include_directories(
   core/model/nlp
   core/model/python
   dialogues
+  dialogues/phrase-editor
   dialogues/sources
   widgets
 )
 
-set (SRCS
+set(SRCS
   core/basis.cpp
   core/basis.h
   core/core.cpp
@@ -58,6 +58,21 @@ set (SRCS
   core/model/python/modulesdata.h
   core/model/python/object.h
   core/model/python/script.h
+  main.cpp
+)
+
+add_executable(jeff ${SRCS} jeff.cpp jeff.h resources.qrc)
+
+target_link_libraries(
+  jeff PRIVATE
+    Python::Python
+    Qt5::Core
+    Qt5::Network
+    Qt5::Sql
+    Qt5::Xml
+)
+
+set(SRCS_UI
   dialogues/about.cpp
   dialogues/about.h
   dialogues/firststart.cpp
@@ -104,15 +119,16 @@ set (SRCS
   widgets/spoiler.h
   widgets/styling.cpp
   widgets/styling.h
-  jeff.cpp
-  jeff.h
-  main.cpp
+  jeff-ui.cpp
+  jeff-ui.h
 )
 
-add_executable(${CMAKE_PROJECT_NAME} ${SRCS} resources.qrc)
+add_executable(jeff-ui ${SRCS} ${SRCS_UI} resources.qrc ui-resources.qrc)
+
+target_compile_definitions(jeff-ui PRIVATE JEFF_WITH_QT_WIDGETS)
 
 target_link_libraries(
-  ${CMAKE_PROJECT_NAME} PRIVATE
+  jeff-ui PRIVATE
     Python::Python
     Qt5::Core
     Qt5::Gui

@@ -1,5 +1,6 @@
 #include "standard-templates.h"
 
+#ifdef JEFF_WITH_QT_WIDGETS
 /*! @brief Looking for a command in the expression. If found, then shows a Jeff dialog box. */
 bool StandardTemplates::dialogues(const QString &expression) {
   if (expression == about_cmd) {
@@ -39,6 +40,7 @@ bool StandardTemplates::dialogues(const QString &expression) {
   }
   return false;
 }
+#endif
 
 /*! @brief Looking for a fast command in the expression. If found, takes an action. */
 bool StandardTemplates::fast_commands(const QString &expression) {

@@ -1,0 +1,38 @@
+<RCC>
+  <qresource prefix="/">
+    <file>arts/shots/menufile.png</file>
+    <file>arts/icons/16/send.svg</file>
+    <file>arts/icons/16/dialog-ok-apply.svg</file>
+    <file>arts/icons/16/document-new.svg</file>
+    <file>arts/icons/16/document-save.svg</file>
+    <file>arts/icons/16/help-about.svg</file>
+    <file>arts/icons/16/insert-link.svg</file>
+    <file>arts/icons/16/remove-link.svg</file>
+    <file>arts/icons/16/window-close.svg</file>
+    <file>arts/icons/16/database-manager.svg</file>
+    <file>arts/icons/16/application-exit.svg</file>
+    <file>arts/icons/16/clear.svg</file>
+    <file>arts/icons/16/copy.svg</file>
+    <file>arts/icons/16/cut.svg</file>
+    <file>arts/icons/16/paste.svg</file>
+    <file>arts/icons/16/select-all.svg</file>
+    <file>arts/icons/16/clear-history.svg</file>
+    <file>arts/icons/16/show-menu.svg</file>
+    <file>arts/icons/16/view-fullscreen.svg</file>
+    <file>arts/icons/16/qt.svg</file>
+    <file>arts/icons/16/document-open.svg</file>
+    <file>arts/icons/16/db-file.svg</file>
+    <file>arts/icons/16/document-export.svg</file>
+    <file>arts/icons/16/document-import.svg</file>
+    <file>arts/icons/16/configure.svg</file>
+    <file>arts/icons/16/monologue.svg</file>
+    <file>arts/icons/16/list-add.svg</file>
+    <file>arts/icons/16/format-add-node.svg</file>
+    <file>arts/icons/16/go-previous.svg</file>
+    <file>arts/icons/16/document-edit.svg</file>
+    <file>arts/icons/16/list-remove.svg</file>
+    <file>arts/shots/addsource.png</file>
+    <file>arts/icons/2000/icon.png</file>
+    <file>arts/jeff.png</file>
+  </qresource>
+</RCC>

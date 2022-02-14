@@ -13,7 +13,9 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(pm, &PythonModule::script_exception, this, &Core::got_warning);
   connect(pm, &PythonModule::send, this, &Core::got_message_from_script);
   connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);
+#ifdef JEFF_WITH_QT_WIDGETS
   connect(std_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
+#endif
   connect(nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
@@ -43,7 +45,9 @@ void Core::got_message_from_user(const QString &user_expression) {
   hp->append(message);
   emit show(message);
   /*! If a user has entered the command, there is no need to run other modules. */
-  if (std_templates->dialogues(user_expression)) return;
+#ifdef JEFF_WITH_QT_WIDGETS
+  if (std_templates->dialogues(message)) return;
+#endif
   if (std_templates->fast_commands(user_expression)) return;
   nlp->search_for_suggests(user_expression);
 }
@@ -88,7 +92,9 @@ void Core::got_message_from_script(const QString &message) {
 /*! @brief Searches again. */
 void Core::got_message_to_search_again(const QString &rephrased_message) {
   if (rephrased_message.isEmpty()) return;
-  if (std_templates->dialogues(rephrased_message)) return;
+#ifdef JEFF_WITH_QT_WIDGETS
+  if (std_templates->dialogues(message)) return;
+#endif
   if (std_templates->fast_commands(rephrased_message)) return;
   nlp->search_for_suggests(rephrased_message);
 }
@@ -102,7 +108,9 @@ void Core::got_message_from_script_as_user(const QString &message) {
   hp->append(mdata);
   emit show(mdata);
   /*! If a user has entered the command, there is no need to run other modules. */
+#ifdef JEFF_WITH_QT_WIDGETS
   if (std_templates->dialogues(message)) return;
+#endif
   if (std_templates->fast_commands(message)) return;
   nlp->search_for_suggests(message);
 }
@@ -142,6 +150,7 @@ void Core::got_error(const QString &error_text) {
   emit show(message);
 }
 
+#ifdef JEFF_WITH_QT_WIDGETS
 /*! @brief Creates Message @a message_widget, inserts a widget into it and displays a message. */
 void Core::got_modal(ModalHandler *m_handler) {
   MessageData message = get_message(m_handler->getPrisoner()->objectName(),
@@ -149,6 +158,7 @@ void Core::got_modal(ModalHandler *m_handler) {
   hp->append(message);
   emit show_modal(message, m_handler);
 }
+#endif
 
 /*! @brief Creates @a message. */
 MessageData Core::get_message(const QString &content, Author author,
@@ -165,7 +175,9 @@ MessageData Core::get_message(const QString &content, Author author,
 /*! @brief Sets the status of the monologue mode. */
 void Core::set_monologue_enabled(const bool enabled) {
   monologue_enabled = enabled;
+#ifdef JEFF_WITH_QT_WIDGETS
   emit changeMenuBarMonologueCheckbox(enabled);
+#endif
 }
 
 /*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */

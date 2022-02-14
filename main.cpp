@@ -1,5 +1,10 @@
-#include "jeff.h"
+#ifdef JEFF_WITH_QT_WIDGETS
+#include "jeff-ui.h"
 #include "widgets/styling.h"
+#else
+#include "jeff.h"
+#endif
+
 #include <QTranslator>
 
 /*!
@@ -26,29 +31,33 @@
  *    1) public objects, variables, functions and their arguments must have
  * clear names, private objects or those objects that are used within one
  * function may have abbreviated names;
- *    2) all short named objects and variables must be explained in the file
- * with class function declarations;
- *    3) it is recommended serving for objects and variables the same purpose
+ *    2) it is recommended serving for objects and variables the same purpose
  * throughout the code to give the same names.
  */
 
-/*!
- * @fn main
- * @brief Starts Jeff.
- * @param argc transmitted automatically by system
- * @param argv transmitted automatically by system
- * @returns 0 if the program was executed successfully
- */
+/*! @fn main
+ *  @brief Starts Jeff.  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("0.5.1");
+  QCoreApplication::setApplicationVersion("0.5.2");
+#ifdef JEFF_WITH_QT_WIDGETS
   QApplication jeff(argc, argv);
   styling.calculate_colors();
+#else
+  QCoreApplication jeff(argc, argv);
+#endif
   auto *jeff_locals = new QTranslator(&jeff);
   jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());
   jeff.installTranslator(jeff_locals);
+#ifdef JEFF_WITH_QT_WIDGETS
   class Jeff jeff_window;
   emit jeff_window.ready_state();
   jeff_window.show();
   return QApplication::exec();
+#else
+  auto *jeff_daemon = new class Jeff(argc, argv);
+  auto result = QCoreApplication::exec();
+  if (jeff_daemon) delete jeff_daemon;
+  return result;
+#endif
 }

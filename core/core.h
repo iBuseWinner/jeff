@@ -16,9 +16,8 @@
 /*!
  * @class Core
  * @brief Controls I/O.
- * @details Manages objects associated with receiving messages from different
- * sources.
- * @sa Basis, HProcessor, NLPmodule, StdTemplates, Message
+ * @details Manages objects associated with receiving messages from different sources.
+ * @sa Basis, HProcessor, NLPmodule, StdTemplates, MessageData
  */
 class Core : public QObject {
   Q_OBJECT
@@ -41,23 +40,25 @@ public:
   void got_status_from_script(QPair<QString, QString> id_and_message);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
+#ifdef JEFF_WITH_QT_WIDGETS
   void got_modal(ModalHandler *m_handler);
+#endif
   void set_monologue_enabled(const bool enabled);
   MessageData get_message(const QString &content, Author author, 
                           ContentType content_type, Theme theme);
   void start();
 
 signals:
-#ifdef QT
+#ifdef JEFF_WITH_QT_WIDGETS
   /*! @brief Sends a message to Display. */
   ModalHandler *show_modal(MessageData message_data, ModalHandler *handler);
+  /*! @brief Sets the monologue mode in MenuBar. */
+  bool changeMenuBarMonologueCheckbox(bool enabled);
 #endif
   /*! @brief Sends a message. */
   MessageData show(MessageData message_data);
   /*! @brief Sends an updateable message. */
   QPair<QString, MessageData> show_status(QPair<QString, MessageData> id_and_message_data);
-  /*! @brief Sets the monologue mode. */
-  bool changeMenuBarMonologueCheckbox(bool enabled);
 
 private:
   // Objects:

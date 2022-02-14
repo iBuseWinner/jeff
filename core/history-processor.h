@@ -2,8 +2,6 @@
 #define HISTORY_PROCESSOR_H
 
 #include "core/basis.h"
-#include "widgets/message.h"
-#include <QFileDialog>
 #include <QList>
 #include <QMutex>
 #include <QStringList>
