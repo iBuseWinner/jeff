@@ -473,7 +473,7 @@
     </message>
     <message>
         <source>Validation error: the fourth column of the source does not fit the description of &quot;exec&quot; INTEGER NOT NULL.</source>
-        <translation>Ошибка в ходе проверки: третий столбец источника не соответствует описанию &quot;exec&quot; INTEGER NOT NULL.</translation>
+        <translation>Ошибка в ходе проверки: четвёртый столбец источника не соответствует описанию &quot;exec&quot; INTEGER NOT NULL.</translation>
     </message>
 </context>
 <context>
