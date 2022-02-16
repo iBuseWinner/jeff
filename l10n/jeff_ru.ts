@@ -143,6 +143,14 @@
         <source>Load history</source>
         <translation>Загрузить историю сообщений</translation>
     </message>
+    <message>
+        <source>You</source>
+        <translation>Вы</translation>
+    </message>
+    <message>
+        <source>Enter your message (/q to quit or Enter to update): </source>
+        <translation>Введите ваше сообщение (/q для выхода или Enter для обновления): </translation>
+    </message>
 </context>
 <context>
     <name>LineEdit</name>

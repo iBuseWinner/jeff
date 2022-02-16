@@ -46,7 +46,7 @@ void Core::got_message_from_user(const QString &user_expression) {
   emit show(message);
   /*! If a user has entered the command, there is no need to run other modules. */
 #ifdef JEFF_WITH_QT_WIDGETS
-  if (std_templates->dialogues(message)) return;
+  if (std_templates->dialogues(user_expression)) return;
 #endif
   if (std_templates->fast_commands(user_expression)) return;
   nlp->search_for_suggests(user_expression);
@@ -93,7 +93,7 @@ void Core::got_message_from_script(const QString &message) {
 void Core::got_message_to_search_again(const QString &rephrased_message) {
   if (rephrased_message.isEmpty()) return;
 #ifdef JEFF_WITH_QT_WIDGETS
-  if (std_templates->dialogues(message)) return;
+  if (std_templates->dialogues(rephrased_message)) return;
 #endif
   if (std_templates->fast_commands(rephrased_message)) return;
   nlp->search_for_suggests(rephrased_message);

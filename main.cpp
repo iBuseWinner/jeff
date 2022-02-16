@@ -56,7 +56,8 @@ int main(int argc, char *argv[]) {
   return QApplication::exec();
 #else
   auto *jeff_daemon = new class Jeff(argc, argv);
-  auto result = QCoreApplication::exec();
+  emit jeff_daemon->ready_state();
+  auto result = jeff.exec();
   if (jeff_daemon) delete jeff_daemon;
   return result;
 #endif

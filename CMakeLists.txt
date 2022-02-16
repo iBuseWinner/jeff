@@ -70,6 +70,7 @@ target_link_libraries(
     Qt5::Network
     Qt5::Sql
     Qt5::Xml
+    ncurses
 )
 
 set(SRCS_UI
