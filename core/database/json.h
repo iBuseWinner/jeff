@@ -39,11 +39,12 @@ public:
 
 private:
   // Constants:
-  const char *sources_store_filename = "jeff_sources.json"   ;
-  const char *cache_store_filename   = "jeff_nlp_cache.json" ;
-  const char *history_store_filename = "jeff_history.json"   ;
-  const char *scripts_store_filename = "jeff_scripts.json"   ;
-  const char *memory_store_filename  = "jeff_memory.json"    ;
+  const char *sources_store_filename = "jeff_sources.json"    ;
+  const char *aiml_store_filename    = "jeff_aiml_files.json" ;
+  const char *cache_store_filename   = "jeff_nlp_cache.json"  ;
+  const char *history_store_filename = "jeff_history.json"    ;
+  const char *scripts_store_filename = "jeff_scripts.json"    ;
+  const char *memory_store_filename  = "jeff_memory.json"     ;
 
   // Objects:
   QString _settings_path;

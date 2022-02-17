@@ -1,14 +1,52 @@
 #include "nlp-module.h"
 
 /*! @brief The constructor. */
-  NLPmodule::NLPmodule(Basis *_basis, PythonModule *_pm, HProcessor *_hp, QObject *parent) 
-      : QObject(parent), basis(_basis), pm(_pm), hp(_hp) {
-    gen = new QRandomGenerator(QTime::currentTime().msec());
-    load_cache();
-  }
+NLPmodule::NLPmodule(Basis *_basis, PythonModule *_pm, HProcessor *_hp, QObject *parent) 
+    : QObject(parent), basis(_basis), pm(_pm), hp(_hp) {
+  gen = new QRandomGenerator(QTime::currentTime().msec());
+  load_cache();
+}
 
-  /*! @brief The destructor. */
-  NLPmodule::~NLPmodule() { save_cache(); delete gen; }
+/*! @brief The destructor. */
+NLPmodule::~NLPmodule() { save_cache(); delete gen; }
+
+/*! @brief Matches the answer based on the input. */
+void NLPmodule::search_for_suggests(const QString &input) {
+  CacheWithIndices selection;
+  bool from_db = false;
+  /*! If user sent the same message as previous one, we should update cache from database
+   *  and unset use cases counter.  */
+  if (hp->last_user_message(1) == input) {
+    selection = select_from_db(input);
+    reset_cache_use_cases(selection);
+    from_db = true;
+  } else {
+    selection = select_from_cache(input);
+    if (selection.keys().isEmpty()) {
+      selection = select_from_db(input);
+      from_db = true;
+    }
+  }
+  if (selection.keys().isEmpty()) return;
+  auto sorted = select_candidates(selection, input);
+  auto composition = compose_answer(input, sorted);
+  if (composition.first.length() / input.length() > 0.33 and not from_db) {
+    selection = select_from_db(input);
+    if (selection.keys().isEmpty())
+      return;
+    sorted = select_candidates(selection, input);
+    composition = compose_answer(input, sorted);
+  }
+  emit response(composition.second.trimmed());
+}
+
+/*! @brief Resets the expression usage counter. */
+void NLPmodule::reset_cache_use_cases(CacheWithIndices &selection) {
+  auto *cache = basis->cacher->get_ptr();
+  for (auto expr : selection)
+    for (int i = 0; i < cache->length(); i++)
+      if (expr.second.activator_text == (*cache)[i].activator_text) (*cache)[i].use_cases = 0;
+}
 
 /*! @brief Matches candidates for each index of occurrence in the input expression. */
 CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QString input) {
@@ -61,7 +99,7 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
  *  sets the uncovered part of the expression.  */
 QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndices candidates) {
   QString output;
-  input = StringSearch::purify(input);
+  input = StringSearch::lemmatize(input);
   for (auto ewi : candidates) {
     if (ewi.second.exec) {
       // On a such moment we need to figure out, what kind of expression we have.
@@ -83,42 +121,6 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
   return QPair<QString, QString>(input, output);
 }
 
-/*! @brief Matches the answer based on the input. */
-void NLPmodule::search_for_suggests(const QString &input) {
-  CacheWithIndices selection;
-  bool from_db = false;
-  /*! If user sent the same message as previous one, we should update cache from database
-   *  and unset use cases counter.  */
-  if (hp->last_user_message(1) == input) {
-    selection = select_from_db(input);
-    auto *cache = basis->cacher->get_ptr();
-    for (auto expr : selection) {
-      for (int i = 0; i < cache->length(); i++) {
-        if (expr.second.activator_text == (*cache)[i].activator_text)
-          (*cache)[i].use_cases = 0;
-      }
-    }
-    from_db = true;
-  } else {
-    selection = select_from_cache(input);
-    if (selection.keys().isEmpty()) {
-      selection = select_from_db(input);
-      from_db = true;
-    }
-  }
-  if (selection.keys().isEmpty()) return;
-  auto sorted = select_candidates(selection, input);
-  auto composition = compose_answer(input, sorted);
-  if (composition.first.length() / input.length() > 0.33 and not from_db) {
-    selection = select_from_db(input);
-    if (selection.keys().isEmpty())
-      return;
-    sorted = select_candidates(selection, input);
-    composition = compose_answer(input, sorted);
-  }
-  emit response(composition.second.trimmed());
-}
-
 /*! @brief Selects expressions to compose a response from the cache. */
 CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   CacheWithIndices selection;
@@ -126,16 +128,9 @@ CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
   for (int i = 0; i < cache.length(); i++) {
     auto x = StringSearch::contains(input, cache[i].activator_text);
     if (x[0] != 0) {
-      bool is_in = false;
-      for (auto ewi : selection)
-        if (ewi.second == cache[i])
-          is_in = true;
-      if (is_in)
-        continue;
-      if (selection.keys().length() == 0)
-        selection[0] = ExpressionWithIndices(x, cache[i]);
-      else
-        selection[selection.lastKey() + 1] = ExpressionWithIndices(x, cache[i]);
+      for (auto ewi : selection) if (ewi.second == cache[i]) continue;
+      if (selection.keys().length() == 0) selection[0] = ExpressionWithIndices(x, cache[i]);
+      else selection[selection.lastKey() + 1] = ExpressionWithIndices(x, cache[i]);
     }
   }
   return selection;
@@ -148,16 +143,9 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
   for (int i = 0; i < sources.length(); i++) {
     auto cwi = basis->sql->scan_source(sources[i], input);
     for (auto ewi : cwi) {
-      bool is_in = false;
-      for (auto _ewi : selection)
-        if (_ewi.second == ewi.second)
-          is_in = true;
-      if (is_in)
-        continue;
-      if (selection.keys().length() == 0)
-        selection[0] = ewi;
-      else
-        selection[selection.lastKey() + 1] = ewi;
+      for (auto _ewi : selection) if (_ewi.second == ewi.second) continue; 
+      if (selection.keys().length() == 0) selection[0] = ewi;
+      else selection[selection.lastKey() + 1] = ewi;
     }
   }
   return selection;

@@ -6,8 +6,9 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
-#include <ncurses.h>
 #include <iostream>
+#include <locale>
+#include <ncurses.h>
 
 /*!
  * @mainclass Jeff
@@ -34,12 +35,14 @@ private:
   QStringList messages;
   QMutex once_mutex;
   bool once = false;
+  std::string locale;
   
   // Functions described in `jeff.cpp`:
-  void draw();
+  void ncurses_draw();
+  QString ncurses_getstr(int y, int x, int available_space);
+  void qt_shutdown();
   void start_by(Messages _messages);
   void add_message_by_md(MessageData message);
-  void shutdown();
   void handle_once(MessageData message);
 };
 

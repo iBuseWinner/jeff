@@ -16,7 +16,6 @@
 #include <QRandomGenerator>
 #include <QStringList>
 #include <QTime>
-#include <future>
 
 /*!
  * @class NLPmodule
@@ -53,6 +52,7 @@ private:
   CacheWithIndices select_from_db(const QString &input);
   CacheWithIndices select_candidates(CacheWithIndices selection, QString input);
   QPair<QString, QString> compose_answer(QString input, CacheWithIndices candidates);
+  void reset_cache_use_cases(CacheWithIndices &selection);
 };
 
 #endif

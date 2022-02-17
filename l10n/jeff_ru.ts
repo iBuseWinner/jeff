@@ -148,8 +148,12 @@
         <translation>Вы</translation>
     </message>
     <message>
-        <source>Enter your message (/q to quit or Enter to update): </source>
-        <translation>Введите ваше сообщение (/q для выхода или Enter для обновления): </translation>
+        <source>Answer not found.</source>
+        <translation>Ответ не найден.</translation>
+    </message>
+    <message>
+        <source>Enter /q to quit or press Enter to update</source>
+        <translation>Введите /q для выхода или нажмите Enter, чтобы обновить</translation>
     </message>
 </context>
 <context>

@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets Xml REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
 include_directories(
@@ -42,12 +42,12 @@ set(SRCS
   core/database/json.h
   core/database/sqlite.cpp
   core/database/sqlite.h
-  core/database/xml.h
   core/model/expression.h
   core/model/keystore.h
   core/model/message.h
   core/model/phrase.h
   core/model/source.h
+  core/model/aiml/aiml-parser.cpp
   core/model/aiml/aiml-parser.h
   core/model/nlp/cache.h
   core/model/nlp/cacher.cpp
@@ -69,8 +69,7 @@ target_link_libraries(
     Qt5::Core
     Qt5::Network
     Qt5::Sql
-    Qt5::Xml
-    ncurses
+    ncursesw
 )
 
 set(SRCS_UI
@@ -136,5 +135,4 @@ target_link_libraries(
     Qt5::Network
     Qt5::Sql
     Qt5::Widgets
-    Qt5::Xml
 )
