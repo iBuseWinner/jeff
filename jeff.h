@@ -32,14 +32,15 @@ private:
   Core *core = new Core(this);
   Basis *basis = core->basis;
   HProcessor *history_processor = core->hp;
+  std::wstring buffer;
+  bool buffer_changed = true;
   QStringList messages;
   QMutex once_mutex;
   bool once = false;
-  std::string locale;
   
   // Functions described in `jeff.cpp`:
   void ncurses_draw();
-  QString ncurses_getstr(int y, int x, int available_space);
+  bool ncurses_getstr(int y, int x, int available_space);
   void qt_shutdown();
   void start_by(Messages _messages);
   void add_message_by_md(MessageData message);

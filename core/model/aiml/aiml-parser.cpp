@@ -5,12 +5,12 @@ AimlParser::AimlParser(Basis *_basis, QObject *parent) : QObject(parent), basis(
 
 /*! @brief TBD */
 CacheWithIndices AimlParser::select_from_aiml(const QString &input) {
-  auto aiml_files = basis->json->read_aiml_list();
+  QStringList aiml_files; /*! = basis->json->read_aiml_list(); */
   CacheWithIndices selection;
   for (auto filepath : aiml_files) {
     QFile file(filepath);
     if (not file.open(QIODevice::ReadOnly | QIODevice::Text)) continue;
-    QXmlStreamReader xml(file);
+    QXmlStreamReader xml(&file);
     while (not xml.atEnd() and not xml.hasError()) {
       auto token = xml.readNext();
       if (token == QXmlStreamReader::StartDocument) continue;
@@ -42,15 +42,23 @@ QString AimlParser::evaluate(const QString &aiml_expr) {
 
 /*! @brief TBD */
 Cache AimlParser::extract_expressions_from_category(QXmlStreamReader &xml, const QString &input) {
-//   QMap<QString, QString> person;
-//   if(xml.tokenType() != QXmlStreamReader::StartElement && xml.name() == "person") return person;
+  Cache cache;
+  if (xml.tokenType() != QXmlStreamReader::StartElement and xml.name() == "category") return cache;
+  xml.readNext();
+  if (xml.tokenType() == QXmlStreamReader::StartElement and xml.name() != "pattern") return cache;
+  auto expr_pattern = xml.text().toString();
+  xml.readNext();
+  if (xml.tokenType() != QXmlStreamReader::EndElement and xml.name() == "pattern") return cache;
+  xml.readNext();
+  if (xml.tokenType() != QXmlStreamReader::StartElement or xml.name() != "template") return cache;
+  auto expr_template = xml.text().toString();
+  Expression expression;
+  expression.aiml = true;
+  expression.activator_text = expr_pattern;
+  expression.reagent_text = expr_template;
+  cache.append(expression);
 //   QXmlStreamAttributes attributes = xml.attributes();
 //   if(attributes.hasAttribute("id")) person["id"] = attributes.value("id").toString();
-//   xml.readNext();
-//   if(xml.tokenType() != QXmlStreamReader::StartElement) return;
-//   QString elementName = xml.name().toString();
-//   xml.readNext();
 //   if(xml.tokenType() != QXmlStreamReader::Characters) return;
-//   map.insert(elementName, xml.text().toString());
-  return Cache();
+  return cache;
 }

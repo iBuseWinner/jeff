@@ -63,7 +63,7 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
         auto intersection_and_weight = StringSearch::intersects(ewi.first, candidates[rival].first);
         auto x = intersection_and_weight.first;
         auto weight_sub = intersection_and_weight.second;
-        if (x == Intersects::No) to_add = true;
+        if (x == StringSearch::Intersects::No) to_add = true;
         else {
           weight_sub += ewi.second.weight() - candidates[rival].second.weight();
           if (weight_sub > 0) {

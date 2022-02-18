@@ -153,7 +153,11 @@
     </message>
     <message>
         <source>Enter /q to quit or press Enter to update</source>
-        <translation>Введите /q для выхода или нажмите Enter, чтобы обновить</translation>
+        <translation type="vanished">Введите /q для выхода или нажмите Enter, чтобы обновить</translation>
+    </message>
+    <message>
+        <source>Enter /q to quit</source>
+        <translation>Введите /q для выхода</translation>
     </message>
 </context>
 <context>

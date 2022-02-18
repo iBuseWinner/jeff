@@ -88,7 +88,7 @@ float StringSearch::get_POC(const QString &e1, const QString &e2) {
 }
 
 /*! @brief Returns the intersection of expressions, calculating which one covers more text. */
-QPair<Intersects, int> StringSearch::intersects(QMap<int, int> first, QMap<int, int> second) {
+QPair<StringSearch::Intersects, int> StringSearch::intersects(QMap<int, int> first, QMap<int, int> second) {
   int first_total = 0;
   bool is_intersects = false;
   for (auto i : first.keys()) {
@@ -106,10 +106,11 @@ QPair<Intersects, int> StringSearch::intersects(QMap<int, int> first, QMap<int, 
       }
     }
   }
-  if (not is_intersects) return QPair<Intersects, int>(Intersects::No, 0);
-  else if (first_total == 0) return QPair<Intersects, int>(Intersects::Equal, 0);
-  else if (first_total > 0) return QPair<Intersects, int>(Intersects::FirstBetter, first_total);
-  else return QPair<Intersects, int>(Intersects::SecondBetter, first_total);
+  if (not is_intersects) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::No, 0);
+  else if (first_total == 0) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::Equal, 0);
+  else if (first_total > 0)
+    return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::FirstBetter, first_total);
+  else return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::SecondBetter, first_total);
 }
 
 /*! @brief Replaces an expression in a string with another, given an accuracy and inaccuracy search. */

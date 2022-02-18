@@ -2,7 +2,7 @@
 
 /*! @brief The constructor. */
 Jeff::Jeff(int argc, char *argv[]) : QObject() {
-  locale = setlocale(LC_ALL, "");
+  setlocale(LC_ALL, "");
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     basis->write(basis->isGreetingsEnabledSt, true);
@@ -43,6 +43,7 @@ void Jeff::ncurses_draw() {
   initscr();
   raw();
   keypad(stdscr, TRUE);
+  nodelay(stdscr, TRUE);
   noecho();
   while (true) {
     int h, w;
@@ -51,59 +52,64 @@ void Jeff::ncurses_draw() {
     mvwprintw(stdscr, 0, 2, "%s", tr("Jeff").toStdString().c_str());
     int y0, x0;
     getyx(stdscr, y0, x0);
-    mvwprintw(stdscr, 0, x0 + 2, "%s",
-              tr("Enter /q to quit or press Enter to update").toStdString().c_str());
+    mvwprintw(stdscr, 0, x0 + 2, "%s", tr("Enter /q to quit").toStdString().c_str());
     char *filler = new char[w - 1];
     for (int i = 0; i < w - 2; i++) { filler[i] = ' '; }
     filler[w - 2] = '\0';
-    for (int i = 1; i < h - 1; i++) { mvwprintw(stdscr, i, 1, "%s", filler); }
-    delete filler;
+    for (int i = 1; i < h - 2; i++) { mvwprintw(stdscr, i, 1, "%s", filler); }
     auto l = messages.length();
     for (int i = 0; i < l; i++) {
       mvwprintw(stdscr, h - 3 - i, 1, "%s", messages[l - i - 1].toStdString().c_str());
     }
-    mvwprintw(stdscr, h - 2, 1, "%s", ">>> ");
+    move(h - 2, 5 + buffer.size());
+    if (buffer_changed) {
+      mvwprintw(stdscr, h - 2, 1, "%s", filler);
+      mvwprintw(stdscr, h - 2, 1, "%s", ">>> ");
+      wprintw(stdscr, "%S", buffer.c_str());
+      buffer_changed = false;
+    }
+    delete filler;
     refresh();
     int y1, x1;
     getyx(stdscr, y1, x1);
-    QString user_message = ncurses_getstr(y1, x1, w - x1 - 2);
-    if (user_message == "/q") {
-      qt_shutdown();
-      break;
+    if (ncurses_getstr(y1, x1, w - x1 - 2)) {
+      QString user_message = QString::fromStdWString(buffer);
+      buffer.clear();
+      if (user_message == "/q") {
+        qt_shutdown();
+        break;
+      }
+      emit send(user_message);
     }
-    else { QCoreApplication::instance()->processEvents(); }
-    emit send(user_message);
+    QCoreApplication::instance()->processEvents();
   }
   endwin();
 }
 
 /*! @brief Reads a string, correctly handling UTF-8 characters. */
-QString Jeff::ncurses_getstr(int y, int x, int available_space) {
-  char *filler = new char[available_space];
-  for (int i = 0; i < available_space - 1; i++) { filler[i] = ' '; }
-  filler[available_space - 1] = '\0';
-  std::wstring input;
+bool Jeff::ncurses_getstr(int y, int x, int available_space) {
   wint_t ch;
-  while (true) {
-    get_wch(&ch);
-    if (input.size() >= available_space) break;
-    if ((ch == KEY_BACKSPACE) or (ch == 127) or (ch == 8)) {
-      if (input.size()) input.pop_back();
-      mvwprintw(stdscr, y, x, "%s", filler);
-      mvwprintw(stdscr, y, x, "%S", input.c_str());
-      refresh();
-    } else if (std::iswprint(ch)) {
-      input.push_back(ch);
-      mvwprintw(stdscr, y, x, "%s", filler);
-      mvwprintw(stdscr, y, x, "%S", input.c_str());
-      refresh();
-    } else if ((ch == KEY_ENTER) or (ch == '\n') or (ch == '\r')) {
-      break;
-    }
-    flushinp();
+  bool res = false;
+  get_wch(&ch);
+  if (buffer.length() >= available_space) {
+    res = true;
+    buffer_changed = true;
   }
-  delete filler;
-  return QString::fromStdWString(input);
+  else if ((ch == KEY_ENTER) or (ch == '\n') or (ch == '\r')) {
+    res = true;
+    buffer_changed = true;
+  }
+  else if ((ch == KEY_BACKSPACE) or (ch == 127) or (ch == 8)) {
+    if (buffer.size()) buffer.pop_back();
+    buffer_changed = true;
+    refresh();
+  } else if (std::iswprint(ch)) {
+    buffer.push_back(ch);
+    buffer_changed = true;
+    refresh();
+  }
+  flushinp();
+  return res;
 }
 
 /*! @brief Adds several messages to the screen. */
