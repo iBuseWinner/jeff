@@ -85,6 +85,7 @@ public:
   int create_new_phrase(const Source &source, const QString &text);
   bool update_expression(const Source &source, const QString &expression, int address);
   bool update_exec(const Source &source, bool ex, int address);
+  bool update_links(const Source &source, QSet<int> links, int address);
   bool remove_phrase(const Source &source, int address);
   CacheWithIndices scan_source(const Source &source, const QString &input);
   QString generate_uuid();

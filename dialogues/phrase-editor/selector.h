@@ -10,10 +10,12 @@
 #include "widgets/list.h"
 #include "widgets/menu.h"
 #include <QAction>
+#include <QApplication>
 #include <QCursor>
-#include <QGridLayout>
+#include <QLabel>
 #include <QPoint>
 #include <QTreeWidgetItem>
+#include <QVBoxLayout>
 #include <QWidget>
 
 class PhraseEditorSelector : public QWidget {
@@ -21,32 +23,23 @@ class PhraseEditorSelector : public QWidget {
   Q_DISABLE_COPY(PhraseEditorSelector)
 public:
   // Objects:
-  Button new_phrase, close_editor;
   List phrases_list;
   Phrases phrases;
+  Button back_to_brief;
   
   // Functions described in `selector.cpp`:
   PhraseEditorSelector(Basis *_basis, QWidget *parent = nullptr);
-  void fill_databases();
-  Source selected_source();
-  void update_phrases();
+  void set_phrases(Phrases _phrases);
 
 signals:
-  QTreeWidgetItem *open_brief(QTreeWidgetItem *item);
+  int selected(int address);
+  void back();
   
 private:
   // Objects:
   Basis *basis = nullptr;
-  QGridLayout selector_layout; /*!< Top-level widgets. */
-  ComboBox databases, tables;
-  ExplanationLabel double_click_explain;
-  Menu phrase_context_menu; /*!< Context menu. */
-  QAction edit_phrase_action, remove_phrase_action;
-  
-  // Functions described in `selector.cpp`:
-  void show_context_menu(const QPoint &pos);
-  void fill_tables(const Sources &sources);
-  void fill_phrases();
+  QVBoxLayout selector_layout;
+  QLabel header;
 };
 
 #endif

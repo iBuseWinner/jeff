@@ -88,6 +88,8 @@ set(SRCS_UI
   dialogues/sources.h
   dialogues/phrase-editor/brief.cpp
   dialogues/phrase-editor/brief.h
+  dialogues/phrase-editor/overview.cpp
+  dialogues/phrase-editor/overview.h
   dialogues/phrase-editor/selector.cpp
   dialogues/phrase-editor/selector.h
   dialogues/sources/create-source.cpp

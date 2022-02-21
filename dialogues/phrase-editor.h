@@ -5,6 +5,7 @@
 #include "core/model/phrase.h"
 #include "core/model/source.h"
 #include "dialogues/phrase-editor/brief.h"
+#include "dialogues/phrase-editor/overview.h"
 #include "dialogues/phrase-editor/selector.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/scrollfreezerwidget.h"
@@ -17,7 +18,7 @@
  * @enum PhraseEditorCurrentMode
  * @brief Tells whether the widget is currently showing either a list of expressions, or an expression editor.
  */
-enum PhraseEditorCurrentMode { SelectorMode, BriefMode };
+enum PhraseEditorCurrentMode { OverviewMode, BriefMode, SelectorMode };
 
 /*!
  * @class PhraseEditor
@@ -35,13 +36,17 @@ private:
   ModalHandler *_m_handler = nullptr;
   Basis *basis = nullptr;
   QMutex mode_mutex;
-  PhraseEditorCurrentMode mode = SelectorMode;
+  PhraseEditorCurrentMode mode = OverviewMode;
   QGridLayout editor_layout;
-  PhraseEditorSelector *selector = nullptr;
+  PhraseEditorOverview *overview = nullptr;
   PhraseEditorBrief *brief = nullptr;
+  PhraseEditorSelector *selector = nullptr;
   
   // Functions described in `phrase-editor.cpp`:
   void open_brief(QTreeWidgetItem *item, int column = 0);
+  void open_brief_by_address(int address);
+  void open_selector();
+  void close_selector();
   void close_brief();
   void add_new_phrase();
 };

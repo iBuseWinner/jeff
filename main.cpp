@@ -39,7 +39,7 @@
  *  @brief Starts Jeff.  */
 int main(int argc, char *argv[]) {
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("0.6.0");
+  QCoreApplication::setApplicationVersion("0.6.1");
 #ifdef JEFF_WITH_QT_WIDGETS
   QApplication jeff(argc, argv);
   styling.calculate_colors();

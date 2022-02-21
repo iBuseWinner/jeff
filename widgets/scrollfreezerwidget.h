@@ -18,11 +18,8 @@ public:
   ScrollFreezerWidget(QWidget *parent = nullptr) : QWidget(parent) {}
   /*! @brief Accepts the event, which prevents the event from passing to parent widgets. */
   void wheelEvent(QWheelEvent *event) {
-    if (!event->pixelDelta().isNull()) {
-      event->ignore();
-    } else if (!event->angleDelta().isNull()) {
-      event->accept();
-    }
+    if (not event->pixelDelta().isNull()) event->accept();
+    else if (not event->angleDelta().isNull()) event->ignore();
   }
 };
 

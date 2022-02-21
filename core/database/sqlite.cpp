@@ -181,11 +181,11 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
   exec(&query, CountPhrases, {source.table_name});
   query.first();
   int new_address;
-  if (not query.isValid()) new_address = 0;
-  else new_address = query.value(0).toInt();
+  if (not query.isValid()) new_address = 1;
+  else new_address = query.value(0).toInt() + 1;
   exec(&query, SelectAddressesByExpression, {source.table_name, expression.activator_text});
   query.first();
-  int activator_expr_addr = 0;
+  int activator_expr_addr = -1;
   if (query.isValid()) {
     activator_expr_addr = query.value(0).toInt();
   }
@@ -297,7 +297,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   QSqlQuery query(db);
   exec(&query, CountPhrases, {source.table_name});
   query.first();
-  auto new_id = query.isValid() ? query.value(0).toInt() + 1 : 0;
+  auto new_id = query.isValid() ? query.value(0).toInt() + 1 : 1;
   auto result = exec(
     &query, InsertPhrase,
     {
@@ -339,6 +339,24 @@ bool SQLite::update_exec(const Source &source, bool ex, int address) {
   QSqlQuery query(db);
   auto result = exec(
     &query, UpdateExecByAddress, {source.table_name, QString::number(ex), QString::number(address)}
+  );
+  db.close();
+  sql_mutex.unlock();
+  return result;
+}
+
+/*! @brief TBD */
+bool SQLite::update_links(const Source &source, QSet<int> links, int address) {
+  sql_mutex.lock();
+  auto db = prepare(source.path);
+  if (db.databaseName().isEmpty()) {
+    db.close();
+    sql_mutex.unlock();
+    return false;
+  }
+  QSqlQuery query(db);
+  auto result = exec(
+    &query, UpdateLinksByAddress, {source.table_name, Phrase::pack_links(links), QString::number(address)}
   );
   db.close();
   sql_mutex.unlock();

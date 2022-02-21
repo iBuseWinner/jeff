@@ -152,10 +152,6 @@
         <translation>Ответ не найден.</translation>
     </message>
     <message>
-        <source>Enter /q to quit or press Enter to update</source>
-        <translation type="vanished">Введите /q для выхода или нажмите Enter, чтобы обновить</translation>
-    </message>
-    <message>
         <source>Enter /q to quit</source>
         <translation>Введите /q для выхода</translation>
     </message>
@@ -294,12 +290,48 @@
         <source>The address of the phrase is %1.</source>
         <translation>Адрес фразы - %1.</translation>
     </message>
+    <message>
+        <source>Addresses</source>
+        <translation>Адреса</translation>
+    </message>
+    <message>
+        <source>Activators</source>
+        <translation>Активаторы</translation>
+    </message>
+    <message>
+        <source>Reagents</source>
+        <translation>Реагенты</translation>
+    </message>
+    <message>
+        <source>New phrase</source>
+        <translation>Новая фраза</translation>
+    </message>
+    <message>
+        <source>Connect another phrase</source>
+        <translation>Присоединить фразу</translation>
+    </message>
+    <message>
+        <source>Disconnect phrase</source>
+        <translation>Отключить эту фразу</translation>
+    </message>
+    <message>
+        <source>Edit this phrase...</source>
+        <translation>Редактировать эту фразу...</translation>
+    </message>
+    <message>
+        <source>Delete this phrase</source>
+        <translation>Удалить эту фразу</translation>
+    </message>
 </context>
 <context>
-    <name>PhraseEditorSelector</name>
+    <name>PhraseEditorOverview</name>
     <message>
         <source>Address</source>
         <translation>Адрес</translation>
+    </message>
+    <message>
+        <source>Phrase</source>
+        <translation>Фраза</translation>
     </message>
     <message>
         <source>Double click on the desired phrase to edit it.</source>
@@ -321,9 +353,24 @@
         <source>Delete this phrase</source>
         <translation>Удалить эту фразу</translation>
     </message>
+</context>
+<context>
+    <name>PhraseEditorSelector</name>
+    <message>
+        <source>Address</source>
+        <translation>Адрес</translation>
+    </message>
     <message>
         <source>Phrase</source>
         <translation>Фраза</translation>
+    </message>
+    <message>
+        <source>Select a phrase...</source>
+        <translation>Выберите фразу...</translation>
+    </message>
+    <message>
+        <source>Back</source>
+        <translation>Назад</translation>
     </message>
 </context>
 <context>
