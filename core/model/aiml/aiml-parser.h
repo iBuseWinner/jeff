@@ -8,7 +8,7 @@
 
 /*!
  * @class AimlParser
- * @brief TBD
+ * @brief Handles AIML expressions.
  */
 class AimlParser : public QObject {
   Q_OBJECT
@@ -20,7 +20,7 @@ public:
   QString evaluate(const QString &aiml_expr);
   
 signals:
-  /*! @brief TBD */
+  /*! @brief Indicates a parsing error. */
   QString aiml_parse_error(QString error);
   
 private:

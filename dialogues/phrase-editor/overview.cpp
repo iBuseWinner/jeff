@@ -102,7 +102,7 @@ Source PhraseEditorOverview::selected_source() {
   return selected;
 }
 
-/*! @brief TBD */
+/*! @brief @sa @a PhraseEditorOverview::fill_phrases */
 void PhraseEditorOverview::update_phrases() { fill_phrases(); }
 
 /*! @brief Populates a list of phrases from the source. */

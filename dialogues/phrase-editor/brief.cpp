@@ -149,7 +149,7 @@ void PhraseEditorBrief::save_phrase_text() {
   back_to_overview.setEnabled(true);
 }
 
-/*! @brief TBD */
+/*! @brief Changes the state of the exec field, saving the changes to the database. */
 void PhraseEditorBrief::change_exec(int state) {
   exec_checkbox.setEnabled(false);
   bool exec = (state == Qt::Checked ? true : false);
@@ -164,7 +164,7 @@ void PhraseEditorBrief::change_exec(int state) {
   exec_checkbox.setEnabled(true);
 }
 
-/*! @brief TBD */
+/*! @brief Shows the context menu for the list of activators. */
 void PhraseEditorBrief::context_menu_for_activators(const QPoint &pos) {
   auto *selected_item = activators_list.itemAt(pos);
   bool added = false;
@@ -218,7 +218,7 @@ void PhraseEditorBrief::context_menu_for_activators(const QPoint &pos) {
   }
 }
 
-/*! @brief TBD */
+/*! @brief Shows the context menu for the list of reagents. */
 void PhraseEditorBrief::context_menu_for_reagents(const QPoint &pos) {
   auto *selected_item = reagents_list.itemAt(pos);
   bool added = false;
@@ -272,7 +272,7 @@ void PhraseEditorBrief::context_menu_for_reagents(const QPoint &pos) {
   }
 }
 
-/*! @brief TBD */
+/*! @brief Adds a phrase to the list of activators or reagents and saves the changes to the database. */
 void PhraseEditorBrief::waits_for_choosed(int address) {
   if (waits_for == PhraseEditorBriefWaitsFor::Nothing) return;
   List *widget = nullptr;

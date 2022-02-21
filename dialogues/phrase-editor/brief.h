@@ -20,13 +20,13 @@
 
 /*!
  * @enum PhraseEditorBriefWaitsFor
- * @brief TBD
+ * @brief Indicates what the phrase editor expects from the selector widget.
  */
 enum PhraseEditorBriefWaitsFor { Nothing, Activator, Reagent };
 
 /*!
  * @class PhraseEditorBrief
- * @brief TBD
+ * @brief Displays all phrase properties.
  */
 class PhraseEditorBrief : public QScrollArea {
   Q_OBJECT
@@ -41,11 +41,11 @@ public:
   void waits_for_choosed(int address);
   
 signals:
-  /*! @brief TBD */
+  /*! @brief Opens another phrase. */
   QTreeWidgetItem *open_brief(QTreeWidgetItem *item);
-  /*! @brief TBD */
+  /*! @brief Opens selector to connect another phrase to this one. */
   void open_selector();
-  /*! @brief TBD */
+  /*! @brief Forces the list of expressions held in memory to be updated. */
   void update_phrases();
   
 private:

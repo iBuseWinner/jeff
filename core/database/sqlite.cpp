@@ -309,7 +309,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   return result ? new_id : -1;
 }
 
-/*! @brief TBD */
+/*! @brief Edits the content of a phrase. */
 bool SQLite::update_expression(const Source &source, const QString &expression, int address) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -327,7 +327,7 @@ bool SQLite::update_expression(const Source &source, const QString &expression, 
   return result;
 }
 
-/*! @brief TBD */
+/*! @brief Edits whether an expression is executable in a script. */
 bool SQLite::update_exec(const Source &source, bool ex, int address) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -345,7 +345,7 @@ bool SQLite::update_exec(const Source &source, bool ex, int address) {
   return result;
 }
 
-/*! @brief TBD */
+/*! @brief Edits links to other phrases. */
 bool SQLite::update_links(const Source &source, QSet<int> links, int address) {
   sql_mutex.lock();
   auto db = prepare(source.path);
@@ -363,7 +363,7 @@ bool SQLite::update_links(const Source &source, QSet<int> links, int address) {
   return result;
 }
 
-/*! @brief TBD */
+/*! @brief Removes a phrase from a table. */
 bool SQLite::remove_phrase(const Source &source, int address) {
   sql_mutex.lock();
   auto db = prepare(source.path);

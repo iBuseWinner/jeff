@@ -74,7 +74,7 @@ void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
   mode_mutex.unlock();
 }
 
-/*! @brief TBD */
+/*! @brief Opens the phrase editor at its address in the source. */
 void PhraseEditor::open_brief_by_address(int address) {
   if (not mode_mutex.try_lock()) return;
   brief->setFixedWidth(overview->width());
@@ -87,7 +87,7 @@ void PhraseEditor::open_brief_by_address(int address) {
   mode_mutex.unlock();
 }
 
-/*! @brief TBD */
+/*! @brief Opens a list of phrases to choose from. */
 void PhraseEditor::open_selector() {
   if (not mode_mutex.try_lock()) return;
   selector->setFixedWidth(overview->width());
@@ -100,7 +100,7 @@ void PhraseEditor::open_selector() {
   mode_mutex.unlock();
 }
 
-/*! @brief TBD */
+/*! @brief Closes the phrase list and returns to the phrase editor. */
 void PhraseEditor::close_selector() {
   if (not mode_mutex.try_lock()) return;
   selector->hide();

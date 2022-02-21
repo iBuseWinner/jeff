@@ -26,7 +26,7 @@ PhraseEditorSelector::PhraseEditorSelector(Basis *_basis, QWidget *parent)
   setLayout(&selector_layout);
 }
 
-/*! @brief TBD */
+/*! @brief Puts phrases from the source into the phrase list. */
 void PhraseEditorSelector::set_phrases(Phrases _phrases) {
   phrases = _phrases;
   phrases_list.clear();

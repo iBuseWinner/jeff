@@ -7,7 +7,7 @@
 
 /*!
  * @class Cacher
- * @brief TBD
+ * @brief Manages the expression cache.
  */
 class Cacher : public QObject {
   Q_OBJECT

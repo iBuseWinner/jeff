@@ -3,7 +3,7 @@
 /*! @brief The constructor. */
 AimlParser::AimlParser(Basis *_basis, QObject *parent) : QObject(parent), basis(_basis) {}
 
-/*! @brief TBD */
+/*! @brief Looks for matching expressions in AIML files. */
 CacheWithIndices AimlParser::select_from_aiml(const QString &input) {
   QStringList aiml_files; /*! = basis->json->read_aiml_list(); */
   CacheWithIndices selection;
@@ -35,12 +35,12 @@ CacheWithIndices AimlParser::select_from_aiml(const QString &input) {
   return selection;
 }
 
-/*! @brief TBD */
+/*! @brief Turns an AIML expression into text for the user. */
 QString AimlParser::evaluate(const QString &aiml_expr) {
   return QString();
 }
 
-/*! @brief TBD */
+/*! @brief Parses expressions from the "category" tag. */
 Cache AimlParser::extract_expressions_from_category(QXmlStreamReader &xml, const QString &input) {
   Cache cache;
   if (xml.tokenType() != QXmlStreamReader::StartElement and xml.name() == "category") return cache;
