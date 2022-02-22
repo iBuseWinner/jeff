@@ -6,9 +6,11 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
+#include <chrono>
 #include <iostream>
 #include <locale>
 #include <ncurses.h>
+#include <thread>
 
 /*!
  * @mainclass Jeff

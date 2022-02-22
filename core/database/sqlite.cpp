@@ -404,7 +404,7 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
       auto activator_text = query.value(1).toString();
       QSqlQuery subquery(db);
       for (auto link : links) {
-        if (link == 0) break;
+        if (link == 0) continue;
         Expression expr;
         expr.activator_text = activator_text;
         exec(&subquery, SelectExpressionAndExecByAddress, {source.table_name, QString::number(link)});

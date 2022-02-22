@@ -40,6 +40,7 @@ Jeff::Jeff(int argc, char *argv[]) : QObject() {
 
 /*! @brief Draws a console window, asks for an input string, and handles Jeff's events. */
 void Jeff::ncurses_draw() {
+  using namespace std::chrono_literals;
   initscr();
   raw();
   keypad(stdscr, TRUE);
@@ -82,6 +83,7 @@ void Jeff::ncurses_draw() {
       emit send(user_message);
     }
     QCoreApplication::instance()->processEvents();
+    std::this_thread::sleep_for(50ms);
   }
   endwin();
 }

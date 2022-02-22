@@ -59,12 +59,12 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, boo
 
 /*! @brief Removes punctuation. */
 QString StringSearch::remove_symbols(QString str) {
-  for (auto symbol : ".!?;:,-'\"") str.remove(symbol);
+  for (auto symbol : ".!?;:,-+='\"") str.remove(symbol);
   return str;
 }
 
 /*! @brief Purifies @a str. */
-QString StringSearch::lemmatize(const QString &str) { return remove_symbols(str.simplified().toLower()); }
+QString StringSearch::lemmatize(const QString &str) { return remove_symbols(str.toLower()).simplified(); }
 
 /*! @brief Calculates the percentage of the second word in the first. */
 float StringSearch::get_POC(const QString &e1, const QString &e2) {

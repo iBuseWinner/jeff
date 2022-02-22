@@ -67,6 +67,7 @@ public:
   /*! @brief Unpacks references from a string into a set of indices. */
   static QSet<int> unpack_links(const QString &links) {
     QSet<int> unpacked;
+    if (links.isEmpty()) return QSet<int>();
     QStringList splitted = links.split(",");
     for (auto link : splitted) unpacked.insert(link.toInt());
     return unpacked;
