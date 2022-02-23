@@ -50,9 +50,17 @@ void Message::update_text(const QString &text) {
 
 /*! @brief Adjusts the message to the content type. */
 void Message::content_type(ContentType _ct) {
-  if (_ct == ContentType::Text) setup_text(md.content);
+  if (_ct == ContentType::Picture or 
+      md.content.toLower().endsWith(".jpg") or 
+      md.content.toLower().endsWith(".png")) {
+    auto info = QFileInfo(md.content);
+    if (info.exists() and info.isFile()) {
+      md.content_type = ContentType::Picture;
+      setup_picture(md.content);
+    }
+  }
+  else if (_ct == ContentType::Text) setup_text(md.content);
   else if (_ct == ContentType::Markdown) setup_markdown(md.content);
-  // else if (_ct == ContentType::Picture) setup_picture(md.content);
   // else if (_ct == ContentType::File) setup_file(md.content);
   else if (_ct == ContentType::Warning) setup_warning(md.content);
   else if (_ct == ContentType::Error) setup_error(md.content);
@@ -96,7 +104,15 @@ void Message::setup_markdown(const QString &content) {
 }
 
 /*! @brief Displays a picture with the path @a content. */
-// void Message::setup_picture(QString path) {}
+void Message::setup_picture(const QString &content) {
+  auto *label = new QLabel(content, this);
+  w = label;
+  auto pix = QPixmap(content);
+  if (pix.isNull()) return;
+  label->setScaledContents(true);
+  label->setPixmap(pix.scaledToWidth(320, Qt::SmoothTransformation));
+  grid_layout->addWidget(w);
+}
 
 /*! @brief Displays a file with the path @a content. */
 // void Message::setup_file(QString path) {}

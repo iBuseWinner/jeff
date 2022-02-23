@@ -7,8 +7,8 @@
 #include "core/nlp-module.h"
 #include "core/python-module.h"
 #include "core/standard-templates.h"
-#include "dialogues/modal-handler.h"
 #include "core/database/sqlite.h"
+#include "dialogues/modal-handler.h"
 #include <QObject>
 #include <QPair>
 #include <QTimer>

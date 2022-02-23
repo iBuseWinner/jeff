@@ -4,6 +4,7 @@
 #include "core/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/board.h"
+#include <QFileInfo>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
@@ -61,7 +62,7 @@ private:
   void setup_user();
   void setup_text(const QString &content);
   void setup_markdown(const QString &content);
-  // void setup_picture(const QString &content);
+  void setup_picture(const QString &content);
   // void setup_file(const QString &content);
   void setup_warning(const QString &content);
   void setup_error(const QString &content);

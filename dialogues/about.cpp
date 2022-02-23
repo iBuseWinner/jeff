@@ -37,10 +37,10 @@ About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(par
   auto *tab1 = new QLabel(this);
   tab1->setText(
     tr("Jeff - chat bot and automatization tool") + "<br><br>© 2018-2022 " +
-    tr("Jeff Authors") + "<br><br><a href=\"https://github.com/markcda/cc-jeff\">"
-    "https://github.com/markcda/cc-jeff</a><br><a href=\"https://raw.githubusercontent"
-    ".com/markcda/cc-jeff/master/LICENSE\">" + tr("License") +
-    ": GNU General Public License, " + tr("version") + " 3</a>"
+    tr("Jeff Authors") + "<br><br><a href=\"https://github.com/markcda/jeff\">"
+    "https://github.com/markcda/jeff</a><br><a href=\"https://raw.githubusercontent"
+    ".com/markcda/jeff/master/LICENSE\">" + tr("License") +
+    ": MIT License"
   );
   tab1->setOpenExternalLinks(true);
   tab1->setAlignment(Qt::AlignTop | Qt::AlignLeft);
