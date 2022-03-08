@@ -3,35 +3,35 @@
 #ifdef JEFF_WITH_QT_WIDGETS
 /*! @brief Looking for a command in the expression. If found, then shows a Jeff dialog box. */
 bool StandardTemplates::dialogues(const QString &expression) {
-  if (expression == about_cmd) {
+  if (expression == basis->about_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *about = new About(nullptr, modal_handler);
     Q_UNUSED(about)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == source_manager_cmd) {
+  if (expression == basis->source_manager_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *sources = new SourcesDialog(basis, nullptr, modal_handler);
     Q_UNUSED(sources)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == first_start_cmd) {
+  if (expression == basis->first_start_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *first_start = new FirstStart(nullptr, modal_handler);
     Q_UNUSED(first_start)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == settings_cmd) {
+  if (expression == basis->settings_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *settings = new Settings(basis, nullptr, modal_handler);
     Q_UNUSED(settings)
     emit showModalWidget(modal_handler);
     return true;
   }
-  if (expression == phrase_editor_cmd) {
+  if (expression == basis->phrase_editor_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *phrase_editor = new PhraseEditor(basis, nullptr, modal_handler);
     Q_UNUSED(phrase_editor)
@@ -44,14 +44,14 @@ bool StandardTemplates::dialogues(const QString &expression) {
 
 /*! @brief Looking for a fast command in the expression. If found, takes an action. */
 bool StandardTemplates::fast_commands(const QString &expression) {
-  if (expression == monologue_mode_cmd) {
+  if (expression == basis->monologue_mode_cmd) {
     emit changeMonologueMode();
     return true;
   }
-  if (expression.startsWith(fast_append_cmd)) {
-    if (expression.length() > fast_append_cmd.length()) {
+  if (expression.startsWith(basis->fast_append_cmd)) {
+    if (expression.length() > QString(basis->fast_append_cmd).length()) {
       QString reagent_text = expression;
-      reagent_text.remove(0, fast_append_cmd.length());
+      reagent_text.remove(0, QString(basis->fast_append_cmd).length());
       QString activator_text = hp->last_user_message();
       if (not activator_text.isEmpty()) {
         Expression e;

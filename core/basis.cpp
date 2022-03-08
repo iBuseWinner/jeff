@@ -11,7 +11,7 @@ void Basis::check_settings_file() {
 }
 
 /*! @brief Checks if there is a standard source, and otherwise sets the first source in the list 
- * as standard. */
+ *  as standard.  */
 void Basis::check_default_source() {
   QVariant path = read(defaultSourcePath);
   QVariant container = read(defaultSourceContainer);

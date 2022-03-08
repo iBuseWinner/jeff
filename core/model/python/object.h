@@ -18,7 +18,6 @@ public:
   operator PyObject*() { return o; }
   PyObject* operator->() { return o; }
 	PyObject* operator=(PyObject* o2) { o = o2; return o; }
-	PyObject* pure() { return o; }
 	bool is() { return o ? true : false; }
 	operator bool() { return o ? true : false; }
   

@@ -50,7 +50,7 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
     return {{basis->errorTypeWk, 4}};
   }
   /*! If we pack in tuple our beautiful Object instead of PyObject, a segmentation fault will */
-  Object args = PyTuple_Pack(1, arg.pure());    /*!< come out. Instead we send pure PyObject. */
+  Object args = PyTuple_Pack(1, *arg);          /*!< come out. Instead we send pure PyObject. */
   if (not args) {
     emit script_exception(tr("Failed to construct a tuple from a string."));
     return {{basis->errorTypeWk, 5}};

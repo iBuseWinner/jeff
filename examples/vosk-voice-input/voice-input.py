@@ -8,7 +8,7 @@ SHUTDOWN = False
 ATTENTION_WORDS = ['эй', 'хэй', 'хай']
 
 
-def list_subdirs(path) -> list:
+def list_subdirs(path: str) -> list:
   """Lists the subfolders of the 'path' folder."""
   from os import listdir
   from os.path import isdir, join
@@ -20,7 +20,7 @@ def shutdown() -> None:
   SHUTDOWN = True
 
 
-def try_import(t) -> bool:
+def try_import(t: transport.Transport) -> bool:
   """Checks if required modules are installed and installs otherwise."""
   try:
     import sounddevice, vosk
@@ -55,7 +55,7 @@ def try_import(t) -> bool:
   return True
 
 
-def main(t) -> None:
+def main(t: transport.Transport) -> None:
   """Starts speech recognition."""
   import sounddevice, vosk, locale, queue, os.path, json
   

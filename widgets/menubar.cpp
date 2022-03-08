@@ -2,13 +2,15 @@
 
 /*! @brief The constructor. */
 MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
+  QString space = " ";
   // File
   file_menu.setTitle(tr("File"));
-  source_manager_action.setText(tr("Source manager") + " (/sourcemanager)");
-  phrase_editor_action.setText(tr("Phrase editor") + " (/phraseeditor)");
+  source_manager_action.setText(tr("Source manager") + space + basis->source_manager_cmd);
+  phrase_editor_action.setText(tr("Phrase editor") + space + basis->phrase_editor_cmd);
+  script_manager_action.setText(tr("Scripts' manager") + space + basis->source_manager_cmd);
   export_history_action.setText(tr("Export message history"));
   import_history_action.setText(tr("Import message history"));
-  enable_monologue_mode.setText(tr("Enable monologue mode") + " (/mm)");
+  enable_monologue_mode.setText(tr("Enable monologue mode") + space + basis->monologue_mode_cmd);
   enable_monologue_mode.setCheckable(true);
   source_manager_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_M));
   phrase_editor_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_P));
@@ -39,11 +41,11 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   connect(&phrase_editor_action, &QAction::triggered, this, [this] { emit phrase_editor_triggered(); });
   connect(&export_history_action, &QAction::triggered, this, [this] { emit export_triggered(); });
   connect(&import_history_action, &QAction::triggered, this, [this] { emit import_triggered(); });
-  connect(&enable_monologue_mode, &QAction::toggled, this, [this] {
+  connect(&enable_monologue_mode, &QAction::toggled, this, [this, space] {
     if (enable_monologue_mode.isChecked())
-      enable_monologue_mode.setText(tr("Disable monologue mode") + " (/mm)");
+      enable_monologue_mode.setText(tr("Disable monologue mode") + space + basis->monologue_mode_cmd);
     else
-      enable_monologue_mode.setText(tr("Enable monologue mode") + " (/mm)");
+      enable_monologue_mode.setText(tr("Enable monologue mode") + space + basis->monologue_mode_cmd);
   });
   addMenu(&file_menu);
   // Edit
@@ -92,7 +94,7 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   hide_menubar_action.setText(tr("Hide menubar"));
   full_screen_action.setText(tr("Full screen"));
   full_screen_action.setCheckable(true);
-  settings_action.setText(tr("Settings...") + " (/settings)");
+  settings_action.setText(tr("Settings...") + space + basis->settings_cmd);
   hide_menubar_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_H));
   full_screen_action.setShortcut(Qt::Key_F11);
   settings_action.setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_Comma);
@@ -111,7 +113,7 @@ MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
   addMenu(&tools_menu);
   // Help
   help_menu.setTitle(tr("Help"));
-  about_action.setText(tr("About") + " (/about)");
+  about_action.setText(tr("About") + space + basis->about_cmd);
   about_action.setIcon(
     QIcon::fromTheme("help-about", QIcon(":/arts/icons/16/help-about.svg")));
   help_menu.addAction(&about_action);

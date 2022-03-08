@@ -84,6 +84,17 @@ public:
   const char *sendAsUserWk   = "send_as_user";
   const char *sendStatusWk   = "send_status";
   const char *authKeyWk      = "auth_key";
+  
+#ifdef JEFF_WITH_QT_WIDGETS
+  const char *source_manager_cmd = "/sources";
+  const char *script_manager_cmd = "/scripts";
+  const char *first_start_cmd = "/first";
+  const char *about_cmd = "/about";
+  const char *settings_cmd = "/settings";
+  const char *phrase_editor_cmd = "/phrases";
+#endif
+  const char *fast_append_cmd = "/+ ";
+  const char *monologue_mode_cmd = "/mm";
 
   // Functions:
   /*! @brief The constructor. */
