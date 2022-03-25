@@ -49,6 +49,7 @@ private:
   void close_selector();
   void close_brief();
   void add_new_phrase();
+  void add_phrase_and_send_id();
 };
 
 #endif

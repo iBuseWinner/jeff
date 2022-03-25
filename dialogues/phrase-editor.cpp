@@ -41,6 +41,7 @@ PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handl
   connect(brief, &PhraseEditorBrief::open_brief, this, [this](QTreeWidgetItem *item) {
     open_brief(item);
   });
+  connect(brief, &PhraseEditorBrief::add_phrase_and_send_id, this, &PhraseEditor::add_phrase_and_send_id);
   connect(brief, &PhraseEditorBrief::open_selector, this, &PhraseEditor::open_selector);
   connect(brief, &PhraseEditorBrief::update_phrases, overview, &PhraseEditorOverview::update_phrases);
   brief->hide();
@@ -127,5 +128,15 @@ void PhraseEditor::add_new_phrase() {
   if (source.path.isEmpty()) return;
   auto id = basis->sql->create_new_phrase(source, tr("New phrase"));
   if (id == -1) return;
+  open_brief_by_address(id);
+}
+
+/*! @brief TBD */
+void PhraseEditor::add_phrase_and_send_id() {
+  auto source = overview->selected_source();
+  if (source.path.isEmpty()) return;
+  auto id = basis->sql->create_new_phrase(source, tr("New phrase"));
+  if (id == -1) return;
+  brief->waits_for_choosed(id);
   open_brief_by_address(id);
 }

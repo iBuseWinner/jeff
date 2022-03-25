@@ -253,6 +253,10 @@
         <source>Phrase editor</source>
         <translation>Редактор фраз</translation>
     </message>
+    <message>
+        <source>Scripts&apos; manager</source>
+        <translation>Менеджер скриптов</translation>
+    </message>
 </context>
 <context>
     <name>Message</name>
@@ -321,6 +325,45 @@
     <message>
         <source>Delete this phrase</source>
         <translation>Удалить эту фразу</translation>
+    </message>
+</context>
+<context>
+    <name>PhraseEditorEditAsPython</name>
+    <message>
+        <source>Choose script path:</source>
+        <translation>Укажите путь к скрипту:</translation>
+    </message>
+    <message>
+        <source>Specify function name:</source>
+        <translation>Укажите название функции:</translation>
+    </message>
+    <message>
+        <source>Specify amount of message history to be sent:</source>
+        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
+    </message>
+    <message>
+        <source>Specify memory cells values to be sent:</source>
+        <translation>Укажите ячейки памяти, значения которых нужно отправить:</translation>
+    </message>
+    <message>
+        <source>Select a file...</source>
+        <translation>Выберите файл...</translation>
+    </message>
+    <message>
+        <source>Add memory cell</source>
+        <translation>Добавить ячейку памяти</translation>
+    </message>
+    <message>
+        <source>Remove this cell</source>
+        <translation>Убрать эту ячейку</translation>
+    </message>
+    <message>
+        <source>Select file...</source>
+        <translation>Выбрать файл...</translation>
+    </message>
+    <message>
+        <source>Python script</source>
+        <translation>Скрипт Python</translation>
     </message>
 </context>
 <context>

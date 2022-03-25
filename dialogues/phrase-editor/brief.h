@@ -43,6 +43,8 @@ public:
 signals:
   /*! @brief Opens another phrase. */
   QTreeWidgetItem *open_brief(QTreeWidgetItem *item);
+  /*! @brief Adds new phrase and appends it for activator's/reagent's list. */
+  void add_phrase_and_send_id();
   /*! @brief Opens selector to connect another phrase to this one. */
   void open_selector();
   /*! @brief Forces the list of expressions held in memory to be updated. */

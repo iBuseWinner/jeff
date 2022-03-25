@@ -168,7 +168,12 @@ void PhraseEditorBrief::change_exec(int state) {
 void PhraseEditorBrief::context_menu_for_activators(const QPoint &pos) {
   auto *selected_item = activators_list.itemAt(pos);
   bool added = false;
+  add_phrase_action.disconnect();
   connect_phrase_action.disconnect();
+  connect(&add_phrase_action, &QAction::triggered, this, [this] {
+    waits_for = PhraseEditorBriefWaitsFor::Activator;
+    emit add_phrase_and_send_id();
+  });
   connect(&connect_phrase_action, &QAction::triggered, this, [this] {
     waits_for = PhraseEditorBriefWaitsFor::Activator;
     emit open_selector();
@@ -222,7 +227,12 @@ void PhraseEditorBrief::context_menu_for_activators(const QPoint &pos) {
 void PhraseEditorBrief::context_menu_for_reagents(const QPoint &pos) {
   auto *selected_item = reagents_list.itemAt(pos);
   bool added = false;
+  add_phrase_action.disconnect();
   connect_phrase_action.disconnect();
+  connect(&add_phrase_action, &QAction::triggered, this, [this] {
+    waits_for = PhraseEditorBriefWaitsFor::Reagent;
+    emit add_phrase_and_send_id();
+  });
   connect(&connect_phrase_action, &QAction::triggered, this, [this] {
     waits_for = PhraseEditorBriefWaitsFor::Reagent;
     emit open_selector();
