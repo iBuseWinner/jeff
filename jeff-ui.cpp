@@ -35,15 +35,15 @@ Jeff::Jeff() : QMainWindow() {
 /*! @brief Handles keyboard shortcuts. */
 void Jeff::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-    if (event->key() == Qt::Key_M) emit send("/mm");
-    if (event->key() == Qt::Key_Less) emit send("/settings");
+    if (event->key() == Qt::Key_M) emit send(basis->monologue_mode_cmd);
+    if (event->key() == Qt::Key_Less) emit send(basis->settings_cmd);
   }
   if (event->key() == Qt::Key_Return)
     event->modifiers() == Qt::ControlModifier ? line->line_edit.insert("\n")
                                               : line->send_button.click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H) menubar->setVisible(not menubar->isVisible());
-    if (event->key() == Qt::Key_M) emit send("/sm");
+    if (event->key() == Qt::Key_M) emit send(basis->source_manager_cmd);
     if (event->key() == Qt::Key_E) export_message_history();
     if (event->key() == Qt::Key_I) import_message_history();
   }
@@ -61,7 +61,7 @@ void Jeff::apply_settings() {
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
-    emit send("/firststart");
+    emit send(basis->first_start_cmd);
     basis->write(basis->isGreetingsEnabledSt, true);
     basis->write(basis->greetingsMsg, tr("Hello!"));
     save_window_settings();
@@ -88,12 +88,14 @@ void Jeff::save_window_settings() {
 void Jeff::connect_all() {
   // menubar
   connect(&(menubar->full_screen_action), &QAction::triggered, this, &Jeff::full_screen_handler);
-  connect(&(menubar->enable_monologue_mode), &QAction::triggered, this, [this] { emit send("/mm"); });
+  connect(&(menubar->enable_monologue_mode), &QAction::triggered, this, [this] {
+    emit send(basis->monologue_mode_cmd);
+  });
   connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
-  connect(menubar, &MenuBar::about_triggered, this, [this] { emit send("/about"); });
-  connect(menubar, &MenuBar::sources_triggered, this, [this] { emit send("/sourcemanager"); });
-  connect(menubar, &MenuBar::phrase_editor_triggered, this, [this] { emit send("/phraseeditor"); });
-  connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send("/settings"); });
+  connect(menubar, &MenuBar::about_triggered, this, [this] { emit send(basis->about_cmd); });
+  connect(menubar, &MenuBar::sources_triggered, this, [this] { emit send(basis->source_manager_cmd); });
+  connect(menubar, &MenuBar::phrase_editor_triggered, this, [this] { emit send(basis->phrase_editor_cmd); });
+  connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send(basis->settings_cmd); });
   connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
   // others

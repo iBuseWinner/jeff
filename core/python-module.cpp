@@ -5,6 +5,7 @@ PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
     : QObject(parent), hp(_hp), basis(_basis) {
   _scripts = basis->json->read_scripts();
   Py_Initialize();
+  // Adds current path to sys.path for importing scripts from this directory.
   _current_path = QDir::toNativeSeparators(QDir::currentPath());
   QString command = "import sys; sys.path.append('" + _current_path + "')";
   PyRun_SimpleString(command.toStdString().c_str());
@@ -16,7 +17,8 @@ PythonModule::~PythonModule() { Py_Finalize(); basis->json->write_scripts(_scrip
 /*! @brief Runs functions in scripts intended to start when Jeff starts. */
 void PythonModule::startup() {
   for (auto script : _scripts)
-    if (script.startup) run(script.path, startup_name, QJsonObject::fromVariantMap(QVariantMap()));
+    if (script.action == ScriptActions::Startup)
+      run(script.path, script.fn_name, QJsonObject::fromVariantMap(QVariantMap()));
 }
 
 /*! @brief Runs a function with parameters and returns the result. */

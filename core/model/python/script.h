@@ -5,7 +5,7 @@
 
 /*! @enum ScriptActions
  *  @brief TBD  */
-enum ScriptActions { NoAction, Reagent, Startup, CustomScan, CustomCompose };
+enum ScriptActions { NoAction, React, Startup, CustomScan, CustomCompose };
 
 /*! @class ScriptMetadata
  *  @brief Contains metadata about a script.  */
@@ -15,29 +15,28 @@ public:
   ScriptMetadata() {}
   ScriptMetadata(const QJsonObject &json_object) {
     path = json_object["path"].toString();
+    action = ScriptActions(json_object["action"].toInt());
+    fn_name = json_object["fn_name"].toString();
   }
   /*! The path to the script on disk. */
   QString path;
+  /*! TBD */
+  ScriptActions action;
+  /*! TBD */
+  QString fn_name;
   
-  /*!
-   * @fn ScriptMetadata::to_json
-   * @brief Turns @a script into a JSON object.
-   * @param[in] script
-   * @returns converted properties of @a script
-   */
+  /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
-    return {{"path", path},
-            {"startup", startup},
-            {"custom_scan", custom_scan},
-            {"answer", answer},
-            {"dynamic_status", dynamic_status}};
+    return {
+      {"path", path},
+      {"action", int(action)},
+      {"fn_name", fn_name}
+    };
   }
 };
 
-/*!
- * @typedef Scripts
- * @brief Contains metadata about multiple scripts.
- */
+/*! @typedef Scripts
+ *  @brief Contains metadata about multiple scripts.  */
 typedef QList<ScriptMetadata> Scripts;
 
 #endif

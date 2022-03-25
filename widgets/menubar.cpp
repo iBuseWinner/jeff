@@ -1,7 +1,7 @@
 #include "menubar.h"
 
 /*! @brief The constructor. */
-MenuBar::MenuBar(Line *line, QWidget *parent) : QMenuBar(parent) {
+MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent), basis(_basis) {
   QString space = " ";
   // File
   file_menu.setTitle(tr("File"));

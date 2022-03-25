@@ -111,7 +111,10 @@ Source SQLite::load_source(Source source) {
   }
   QSqlQuery query(db);
   exec(&query, LoadOptions, {source.table_name});
-  if (not query.first()) return source;
+  if (not query.first()) {
+    sql_mutex.unlock();
+    return source;
+  }
   source.table_title = query.value(0).toString();
   source.is_read_only = query.value(1).toBool();
   source.is_private = query.value(2).toBool();

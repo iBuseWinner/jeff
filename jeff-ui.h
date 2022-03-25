@@ -18,10 +18,8 @@
 #include <QResizeEvent>
 #include <QWidget>
 
-/*!
- * @mainclass Jeff
- * @brief Application window class.
- */
+/*! @class Jeff
+ *  @brief Application window class.  */
 class Jeff : public QMainWindow {
   Q_OBJECT
   Q_DISABLE_COPY(Jeff)
@@ -50,7 +48,7 @@ private:
   HProcessor *history_processor = core->hp;
   Line *line = new Line(this);
   Display *display = new Display(25, this);
-  MenuBar *menubar = new MenuBar(line, this);
+  MenuBar *menubar = new MenuBar(basis, line, this);
 
   // Constants:
   static const int minimalWidth = 600;

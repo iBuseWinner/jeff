@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-find_package(Qt6 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
 include_directories(
@@ -66,9 +66,9 @@ add_executable(jeff ${SRCS} jeff.cpp jeff.h resources.qrc)
 target_link_libraries(
   jeff PRIVATE
     Python::Python
-    Qt6::Core
-    Qt6::Network
-    Qt6::Sql
+    Qt5::Core
+    Qt5::Network
+    Qt5::Sql
     ncursesw
 )
 
@@ -134,9 +134,9 @@ target_compile_definitions(jeff-ui PRIVATE JEFF_WITH_QT_WIDGETS)
 target_link_libraries(
   jeff-ui PRIVATE
     Python::Python
-    Qt6::Core
-    Qt6::Gui
-    Qt6::Network
-    Qt6::Sql
-    Qt6::Widgets
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Network
+    Qt5::Sql
+    Qt5::Widgets
 )

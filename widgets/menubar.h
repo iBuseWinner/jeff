@@ -1,6 +1,7 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
+#include "core/basis.h"
 #include "widgets/line.h"
 #include "widgets/menu.h"
 #include <QAction>
@@ -23,7 +24,7 @@ public:
   QAction enable_monologue_mode;
 
   // Functions described in `menubar.cpp`:
-  MenuBar(Line *line, QWidget *parent = nullptr);
+  MenuBar(Basis *_basis, Line *line, QWidget *parent = nullptr);
 
 signals:
   /*! @brief Informs about clicking on the "Clear history" action. */
@@ -46,10 +47,12 @@ signals:
 
 private:
   // Objects:
+  Basis *basis = nullptr;
   Menu file_menu, edit_menu, tools_menu, help_menu;
   QAction 
     /*! `File`  menu. */
-    source_manager_action, phrase_editor_action, export_history_action, import_history_action,
+    source_manager_action, script_manager_action, phrase_editor_action, export_history_action,
+    import_history_action,
     /*! `Edit`  menu. */
     clear_history_action, delete_text_action, cut_text_action, copy_text_action, paste_text_action,
     select_all_text_action,
