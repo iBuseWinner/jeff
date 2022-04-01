@@ -9,10 +9,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-/*!
- * @class Server
- * @brief Manages incoming connections and receives messages.
- */
+/*! @class Server
+ *  @brief Manages incoming connections and receives messages.  */
 class Server : public QObject {
   Q_OBJECT
 public:

@@ -48,7 +48,7 @@ public:
     content = json_object["content"].toString();
     datetime = QDateTime::fromString(json_object["datetime"].toString(), Qt::ISODateWithMs);
     author = Author(json_object["author"].toInt());
-    content_type = ContentType(json_object["contentType"].toInt());
+    content_type = ContentType(json_object["content_type"].toInt());
     theme = Theme(json_object["theme"].toInt());
   }
   /*! Content. */
@@ -67,17 +67,12 @@ public:
     return m1.author == m2.author and m1.content_type == m2.content_type and
            m1.content == m2.content and m1.datetime == m2.datetime;
   }
-  /*!
-   * @fn to_json
-   * @brief Turns @a message into a JSON object.
-   * @param[in] message message data
-   * @returns converted properties of @a message
-   */
+  /*! @brief Turns @a message into a JSON object.  */
   QJsonObject to_json() {
     return {{"content", content},
             {"datetime", datetime.toString(Qt::ISODateWithMs)},
             {"author", int(author)},
-            {"contentType", int(content_type)},
+            {"content_type", int(content_type)},
             {"theme", int(theme)}};
   }
 };

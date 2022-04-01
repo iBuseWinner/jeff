@@ -47,8 +47,6 @@ set(SRCS
   core/model/message.h
   core/model/phrase.h
   core/model/source.h
-  core/model/aiml/aiml-parser.cpp
-  core/model/aiml/aiml-parser.h
   core/model/nlp/cache.h
   core/model/nlp/cacher.cpp
   core/model/nlp/cacher.h

@@ -415,7 +415,7 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
         if (not subquery.isValid()) continue;
         expr.reagent_text = subquery.value(0).toString();
         expr.exec = subquery.value(1).toBool();
-        expr.properties = get_additional_properties(&subquery);
+        expr.properties = get_additional_properties(subquery.value(3).toString());
         if (selection.keys().length() == 0)
           selection[0] = ExpressionWithIndices(x, expr);
         else

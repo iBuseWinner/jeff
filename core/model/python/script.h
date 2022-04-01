@@ -1,11 +1,16 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
+#include <QHostAddress>
 #include <QMap>
 
 /*! @enum ScriptActions
  *  @brief TBD  */
 enum ScriptActions { NoAction, React, Startup, CustomScan, CustomCompose };
+
+/*! @enum ToNotify
+ *  @brief TBD  */
+enum ToNotify { NoNotify, NotifyAtTCP };
 
 /*! @class ScriptMetadata
  *  @brief Contains metadata about a script.  */
@@ -24,6 +29,10 @@ public:
   ScriptActions action;
   /*! TBD */
   QString fn_name;
+  /*! TBD */
+  ToNotify notify;
+  QHostAddress server_addr;
+  quint16 server_port;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
