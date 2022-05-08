@@ -26,6 +26,10 @@ public:
     path = json_object["path"].toString();
     action = ScriptActions(json_object["action"].toInt());
     fn_name = json_object["fn_name"].toString();
+    notify = ToNotify(json_object["notify"].toBool());
+    daemonize = ToDaemonize(json_object["daemonize"].toBool());
+    server_addr = QHostAddress(json_object["server_addr"].toString());
+    server_port = quint16(json_object["server_port"].toInt());
   }
   /*! The path to the script on disk. */
   QString path;
@@ -34,9 +38,12 @@ public:
   /*! TBD */
   QString fn_name;
   /*! TBD */
-  ToNotify notify;
   ToDaemonize daemonize;
+  /*! TBD */
+  ToNotify notify;
+  /*! TBD */
   QHostAddress server_addr;
+  /*! TBD */
   quint16 server_port;
   
   /*! @brief Turns @a script into a JSON object. */
@@ -44,7 +51,11 @@ public:
     return {
       {"path", path},
       {"action", int(action)},
-      {"fn_name", fn_name}
+      {"fn_name", fn_name},
+      {"notify", bool(notify)},
+      {"daemonize", bool(daemonize)},
+      {"server_addr", server_addr.toString()},
+      {"server_port", int(server_port)}
     };
   }
 };
