@@ -12,6 +12,10 @@ enum ScriptActions { NoAction, React, Startup, CustomScan, CustomCompose };
  *  @brief TBD  */
 enum ToNotify { NoNotify, NotifyAtTCP };
 
+/*! @enum ToDaemonize
+ *  @brief TBD  */
+enum ToDaemonize { NotDaemon, Daemonize };
+
 /*! @class ScriptMetadata
  *  @brief Contains metadata about a script.  */
 class ScriptMetadata {
@@ -31,6 +35,7 @@ public:
   QString fn_name;
   /*! TBD */
   ToNotify notify;
+  ToDaemonize daemonize;
   QHostAddress server_addr;
   quint16 server_port;
   

@@ -28,6 +28,10 @@
 #include <Python.h>
 #pragma pop_macro("slots")
 
+/*! @typedef Daemons
+ *  @brief List of processes running in background.  */
+typedef QList<QProcess *> Daemons;
+
 /*!
  * @class PythonModule
  * @brief Contains methods of working with Python scripts.
@@ -57,6 +61,7 @@ private:
   Scripts _scripts;
   ModulesData _mdata;
   QString _current_path;
+  Daemons _daemons;
 
   // Constants:
   const char *startup_name = "startup";

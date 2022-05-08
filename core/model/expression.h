@@ -8,10 +8,8 @@
 #include <QMap>
 #include <QString>
 
-/*!
- * @class Expression
- * @brief Contains information about a single expression of NLPmodule.
- */
+/*! @class Expression
+ *  @brief Contains information about a single expression of NLPmodule.  */
 class Expression {
 public:
   // Objects:
@@ -64,7 +62,6 @@ public:
 };
 
 typedef QList<Expression> Expressions;
-
 typedef QPair<QMap<int, int>, Expression> ExpressionWithIndices;
 
 #endif

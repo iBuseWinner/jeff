@@ -12,13 +12,28 @@ PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
 }
 
 /*! @brief The destructor. */
-PythonModule::~PythonModule() { Py_Finalize(); basis->json->write_scripts(_scripts); }
+PythonModule::~PythonModule() {
+  Py_Finalize();
+  for (auto *proc : _daemons) proc->terminate();
+  basis->json->write_scripts(_scripts);
+}
 
 /*! @brief Runs functions in scripts intended to start when Jeff starts. */
 void PythonModule::startup() {
-  for (auto script : _scripts)
+  for (auto script : _scripts) {
     if (script.action == ScriptActions::Startup)
       run(script.path, script.fn_name, QJsonObject::fromVariantMap(QVariantMap()));
+    if (script.daemonize == ToDaemonize::Daemonize) {
+      auto *proc = new QProcess(this);
+      connect(proc, &QProcess::errorOccurred, this, [this, script]() {
+        emit script_exception(
+          tr("An error occurred during script execution") + " (" + script.path + ")"
+        );
+      });
+      proc->start("python", script.path);
+      _daemons.append(proc);
+    }
+  }
 }
 
 /*! @brief Runs a function with parameters and returns the result. */

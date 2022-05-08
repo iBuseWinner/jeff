@@ -182,6 +182,7 @@ void Core::set_monologue_enabled(const bool enabled) {
 
 /*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */
 void Core::start() {
+  pm->startup();
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool())
     hp->load();
   if ((*basis)[basis->isGreetingsEnabledSt].toBool())
