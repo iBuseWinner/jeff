@@ -7,7 +7,6 @@
 #include "core/model/phrase.h"
 #include "core/model/source.h"
 #include <QFile>
-#include <QJsonObject>
 #include <QMap>
 #include <QMutex>
 #include <QObject>
@@ -48,7 +47,7 @@ enum ToDo {
   SelectAddressesByExpressionAndExec,
   SelectLinksByAddress,
   UpdateLinksByAddress,
-  SelectExpressionAndExecByAddress,
+  SelectEEPByAddress,
   SelectPhraseByAddress,
   UpdateExpressionByAddress,
   UpdateExecByAddress,
@@ -110,7 +109,6 @@ private:
   bool validate(QSqlDatabase *db, bool recursive = false, bool quiet = false);
   bool validate(QSqlDatabase *db, const QString &source_table, bool quiet = false);
   bool exec(QSqlQuery *query, ToDo option, QStringList values = {});
-  Options get_additional_properties(QSqlQuery *query);
 };
 
 #endif

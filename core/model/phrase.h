@@ -3,7 +3,9 @@
 
 #include "core/model/nlp/options.h"
 #include <QList>
+#include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonParseError>
 #include <QSet>
 #include <QString>
 
@@ -62,6 +64,25 @@ public:
     QJsonObject _aps;
     for (auto ap_key : aps.keys()) _aps.insert(ap_key, aps[ap_key]);
     return _aps;
+  }
+  
+  /*! @brief Parse properties from string. */
+  static Options parse_props(QString json_str) {
+    Options props;
+    QJsonParseError errors;
+    QJsonDocument document = QJsonDocument::fromJson(json_str.toUtf8(), &errors);
+    if (errors.error != QJsonParseError::NoError) return props;
+    auto object = document.object();
+    for (auto key : object.keys()) props[key] = object[key].toString();
+    return props;
+  }
+  
+  /*! @brief Pack properties into string. */
+  static QString text_props(Options aps) {
+    QJsonObject object;
+    for (auto key : aps.keys()) object[key] = aps[key];
+    QJsonDocument document(object);
+    return QString::fromUtf8(document.toJson());
   }
   
   /*! @brief Unpacks references from a string into a set of indices. */

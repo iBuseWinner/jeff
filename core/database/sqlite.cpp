@@ -161,7 +161,7 @@ Phrases SQLite::select_all(const Source &source) {
     phrase.expression = query.value(1).toString();
     phrase.links = Phrase::unpack_links(query.value(2).toString());
     phrase.exec = bool(query.value(3).toInt());
-    phrase.properties = get_additional_properties(&query);
+    phrase.properties = Phrase::parse_props(query.value(4).toString());
     phrases.append(phrase);
     query.next();
   }
@@ -219,20 +219,24 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
                                                   Phrase::pack_links(links)});
       result &= exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
                                                expression.reagent_text, "",
-                                               QString::number(int(expression.exec))});
+                                               QString::number(int(expression.exec)),
+                                               Phrase::text_props(expression.properties)});
     }
   } else {
     if (reagent_expr_address > 0) {
       result = exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
                                               expression.activator_text,
-                                              QString::number(reagent_expr_address), "0"});
+                                              QString::number(reagent_expr_address), "0",
+                                              Phrase::text_props(expression.properties)});
     } else {
       result = exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
                                               expression.activator_text,
-                                              QString::number(new_address + 1), "0"});
+                                              QString::number(new_address + 1), "0",
+                                              Phrase::text_props(expression.properties)});
       result &= exec(&query, InsertPhrase, {source.table_name, QString::number(new_address + 1),
                                                expression.reagent_text, "",
-                                               QString::number(int(expression.exec))});
+                                               QString::number(int(expression.exec)),
+                                               Phrase::text_props(expression.properties)});
     }
   }
   db.close();
@@ -254,7 +258,8 @@ bool SQLite::insert_phrase(const Source &source, const Phrase &phrase) {
     &query, InsertPhrase,
     {
       source.table_name, QString::number(phrase.address), phrase.expression,
-      Phrase::pack_links(phrase.links), QString::number(int(phrase.exec))
+      Phrase::pack_links(phrase.links), QString::number(int(phrase.exec)),
+      Phrase::text_props(phrase.properties)
     }
   );
   db.close();
@@ -280,7 +285,7 @@ Phrase SQLite::get_phrase_by_address(const Source &source, int address) {
     phrase.expression = query.value(1).toString();
     phrase.links = Phrase::unpack_links(query.value(2).toString());
     phrase.exec = bool(query.value(3).toInt());
-    phrase.properties = get_additional_properties(&query);
+    phrase.properties = Phrase::parse_props(query.value(4).toString());
   }
   db.close();
   sql_mutex.unlock();
@@ -304,7 +309,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   auto result = exec(
     &query, InsertPhrase,
     {
-      source.table_name, QString::number(new_id), text, "", QString::number(0)
+      source.table_name, QString::number(new_id), text, "", QString::number(0), "{}"
     }
   );
   db.close();
@@ -410,12 +415,12 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
         if (link == 0) continue;
         Expression expr;
         expr.activator_text = activator_text;
-        exec(&subquery, SelectExpressionAndExecByAddress, {source.table_name, QString::number(link)});
+        exec(&subquery, SelectEEPByAddress, {source.table_name, QString::number(link)});
         subquery.first();
         if (not subquery.isValid()) continue;
         expr.reagent_text = subquery.value(0).toString();
         expr.exec = subquery.value(1).toBool();
-        expr.properties = get_additional_properties(subquery.value(3).toString());
+        expr.properties = Phrase::parse_props(subquery.value(2).toString());
         if (selection.keys().length() == 0)
           selection[0] = ExpressionWithIndices(x, expr);
         else
@@ -687,6 +692,21 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
     );
     return false;
   }
+  if (not query.next() and not quiet) {
+    emit sqlite_error(
+      tr("Validation error: the source contains only four columns.") + " " + db_source_suffix
+    );
+    return false;
+  }
+  auto adpropsColumnValid = true;
+  adpropsColumnValid &= query.value(1).toString() == "adprops";
+  adpropsColumnValid &= query.value(2).toString() == "TEXT";
+  if (not adpropsColumnValid and not quiet) {
+    emit sqlite_error(
+      tr("Validation error: the fourth column of the source does not fit the description of \"adprops\" TEXT.") + " " + db_source_suffix
+    );
+    return false;
+  }
   return true;
 }
 
@@ -703,7 +723,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       break;
     case CreateSourceTable:
       query->prepare(
-        QString("create table \"%1\" (address integer not null primary key autoincrement unique, expression text, links text, exec integer not null)").arg(values[0])
+        QString("create table \"%1\" (address integer not null primary key autoincrement unique, expression text, links text, exec integer not null, adprops text)").arg(values[0])
       );
       break;
     case LoadOptions:
@@ -729,12 +749,13 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       break;
     case InsertPhrase:
       query->prepare(
-        QString("insert or replace into \"%1\" values (:a, :x, :ls, :e)").arg(values[0])
+        QString("insert or replace into \"%1\" values (:a, :x, :ls, :e, :adp)").arg(values[0])
       );
       query->bindValue(":a", values[1].toInt());
       query->bindValue(":x", values[2]);
       query->bindValue(":ls", values[3]);
       query->bindValue(":e", values[4].toInt());
+      query->bindValue(":adp", values[5]);
       break;
     case SelectPhrases:
       query->prepare(QString("select * from \"%1\"").arg(values[0]));
@@ -761,9 +782,9 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       query->bindValue(":ls", values[1]);
       query->bindValue(":a", values[2].toInt());
       break;
-    case SelectExpressionAndExecByAddress:
+    case SelectEEPByAddress:
       query->prepare(QString(
-        "select expression, exec from \"%1\" where address = :a").arg(values[0])
+        "select expression, exec, adprops from \"%1\" where address = :a").arg(values[0])
       );
       query->bindValue(":a", values[1].toInt());
       break;
@@ -817,16 +838,6 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
     return false;
   }
   return true;
-}
-
-/*! @brief Gets additional properties of the expression by @a address. */
-Options SQLite::get_additional_properties(QSqlQuery *query) {
-  Options props;
-  auto record = query->record();
-  for (auto row = init_additionals_rows; not record.isNull(row); row++) {
-    props.insert(record.fieldName(row), record.value(row).toString());
-  }
-  return props;
 }
 
 /*! @brief Generates a UUID based on the current time. */

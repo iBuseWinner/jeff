@@ -20,6 +20,7 @@
 #include <QList>
 #include <QMutex>
 #include <QObject>
+#include <QProcess>
 #include <QString>
 #include <QVariantMap>
 

@@ -30,7 +30,7 @@ void PythonModule::startup() {
           tr("An error occurred during script execution") + " (" + script.path + ")"
         );
       });
-      proc->start("python", script.path);
+      proc->start(QString("python"), QStringList(script.path));
       _daemons.append(proc);
     }
   }
