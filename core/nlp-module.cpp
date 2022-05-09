@@ -155,3 +155,7 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
 void NLPmodule::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
 /*! @brief Saves the cache to disk. */
 void NLPmodule::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }
+/*! @brief Sets up Jeff's default composer. */
+void NLPmodule::set_default_composer() { composer = nullptr; }
+/*! @brief Sets up custom composer. */
+void NLPmodule::set_custom_composer(ScriptMetadata *custom_composer) { composer = custom_composer; }

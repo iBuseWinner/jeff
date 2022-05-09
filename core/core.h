@@ -8,6 +8,7 @@
 #include "core/python-module.h"
 #include "core/standard-templates.h"
 #include "core/database/sqlite.h"
+#include "core/model/python/script.h"
 #include "dialogues/modal-handler.h"
 #include <QObject>
 #include <QPair>
@@ -65,6 +66,7 @@ private:
   bool monologue_enabled = false;
   NLPmodule *nlp = new NLPmodule(basis, pm, hp);
   StandardTemplates *std_templates = new StandardTemplates(basis, hp);
+  ScriptMetadata *custom_composer = nullptr;
 };
 
 #endif
