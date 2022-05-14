@@ -103,10 +103,8 @@ public:
   }
 };
 
-/*!
- * @typedef Phrases
- * @brief Contains list of phrases.
- */
+/*! @typedef Phrases
+ *  @brief Contains list of phrases.  */
 typedef QList<Phrase> Phrases;
 
 #endif

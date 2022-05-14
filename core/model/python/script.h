@@ -208,7 +208,38 @@ namespace ScriptsCast {
     QJsonDocument document = QJsonDocument::fromJson(expression.toUtf8(), &errors);
     if (errors.error != QJsonParseError::NoError) return nullptr;
     auto json_object = document.object();
-    return to_script(json_object);
+    return ScriptsCast::to_script(json_object);
+  }
+  
+  /*! @brief Turns @a script into a JSON object. */
+  QJsonObject to_json(ScriptMetadata *script) {
+    auto stype = script->stype;
+    if (stype == ScriptType::React) {
+      auto *s = dynamic_cast<ReactScript *>(script);
+      return s->to_json();
+    } else if (stype == ScriptType::Startup) {
+      auto *s = dynamic_cast<StartupScript *>(script);
+      return s->to_json();
+    } else if (stype == ScriptType::Daemon) {
+      auto *s = dynamic_cast<DaemonScript *>(script);
+      return s->to_json();
+    } else if (stype == ScriptType::Server) {
+      auto *s = dynamic_cast<ServerScript *>(script);
+      return s->to_json();
+    } else if (stype == ScriptType::CustomScan) {
+      auto *s = dynamic_cast<CustomScanScript *>(script);
+      return s->to_json();
+    } else if (stype == ScriptType::CustomCompose) {
+      auto *s = dynamic_cast<CustomComposeScript *>(script);
+      return s->to_json();
+    } else return QJsonObject();
+  }
+  
+  /*! @brief Turns @a script into a string. */
+  QString to_string(ScriptMetadata *script) {
+    auto object = ScriptsCast::to_json(script);
+    QJsonDocument document(object);
+    return QString::fromUtf8(document.toJson());
   }
 }
 

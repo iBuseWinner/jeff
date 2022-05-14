@@ -7,7 +7,6 @@
 #include "core/model/expression.h"
 #include "core/model/keystore.h"
 #include "core/model/message.h"
-#include "core/model/python/modulesdata.h"
 #include "core/model/python/object.h"
 #include "core/model/python/script.h"
 #include <QDir>
@@ -60,7 +59,6 @@ private:
   HProcessor *hp = nullptr;
   Basis *basis = nullptr;
   Scripts _scripts;
-  ModulesData _mdata;
   QString _current_path;
   Daemons _daemons;
 

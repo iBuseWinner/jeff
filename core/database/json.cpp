@@ -104,7 +104,7 @@ void Json::write_NLP_cache(Cache cache) {
 /*! @brief Saves scripts' metadata. */
 void Json::write_scripts(Scripts scripts) {
   QJsonArray scripts_json;
-  for (auto script : scripts) scripts_json.append(script.to_json());
+  for (auto *script : scripts) scripts_json.append(ScriptsCast::to_json(script));
   QFile file = QFile(_settings_path + QDir::separator() + scripts_store_filename);
   write_json(&file, scripts_json);
 }
