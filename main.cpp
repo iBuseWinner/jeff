@@ -1,6 +1,8 @@
 #ifdef JEFF_WITH_QT_WIDGETS
+#ifndef Q_OS_ANDROID
 #include "jeff-ui.h"
 #include "widgets/styling.h"
+#endif
 #else
 #include "jeff.h"
 #endif
