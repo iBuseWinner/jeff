@@ -177,13 +177,9 @@ public:
 
 /*! @namespace ScriptsCast
  *  @brief Set of methods for casting script types.  */
-namespace ScriptsCast {
-  /*! @brief Translates a string into a script. */
-  ScriptMetadata *to_script(QString expression) {
-    QJsonParseError errors;
-    QJsonDocument document = QJsonDocument::fromJson(expression.toUtf8(), &errors);
-    if (errors.error != QJsonParseError::NoError) return nullptr;
-    auto json_object = document.object();
+namespace ScriptsCast {  
+  /*! @brief Translates @a json_object into a script. */
+  ScriptMetadata *to_script(const QJsonObject &json_object) {
     ScriptType stype = ScriptType(json_object["stype"].toInt());
     if (stype == ScriptType::React) {
       auto *script = new ReactScript(json_object);
@@ -204,6 +200,15 @@ namespace ScriptsCast {
       auto *script = new CustomComposeScript(json_object);
       return script;
     } else return nullptr;
+  }
+  
+  /*! @brief Translates @a expression into a script. */
+  ScriptMetadata *to_script(QString expression) {
+    QJsonParseError errors;
+    QJsonDocument document = QJsonDocument::fromJson(expression.toUtf8(), &errors);
+    if (errors.error != QJsonParseError::NoError) return nullptr;
+    auto json_object = document.object();
+    return to_script(json_object);
   }
 }
 

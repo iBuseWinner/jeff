@@ -46,7 +46,11 @@ Scripts Json::read_scripts() {
   if (not store.exists()) return Scripts();
   QJsonArray scripts_json = read_json(&store);
   Scripts scripts;
-  for (auto obj : scripts_json) scripts.append(ScriptMetadata(obj.toObject()));
+  for (auto obj : scripts_json) {
+    auto *script = ScriptsCast::to_script(obj.toObject());
+    if (not script) continue;
+    scripts.append(script);
+  }
   return scripts;
 }
 
