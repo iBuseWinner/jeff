@@ -1,10 +1,11 @@
 #include "python-module.h"
 
 /*! @brief The constructor. */
-PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent)
-    : QObject(parent), hp(_hp), basis(_basis) {
+PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent)
+    : QObject(parent), hp(_hp), basis(_basis), notifier(_notifier) {
   _scripts = basis->json->read_scripts();
-  Py_Initialize();
+  Py_InitializeEx(1);
+  PyEval_InitThreads();
   // Adds current path to sys.path for importing scripts from this directory.
   _current_path = QDir::toNativeSeparators(QDir::currentPath());
   QString command = "import sys; sys.path.append('" + _current_path + "')";
@@ -16,22 +17,45 @@ PythonModule::~PythonModule() {
   Py_Finalize();
   for (auto *proc : _daemons) proc->terminate();
   basis->json->write_scripts(_scripts);
+  notifier->unsubscribe_all();
 }
 
 /*! @brief Runs functions in scripts intended to start when Jeff starts. */
 void PythonModule::startup() {
-  for (auto script : _scripts) {
-    if (script.action == ScriptActions::Startup)
-      run(script.path, script.fn_name, QJsonObject::fromVariantMap(QVariantMap()));
-    if (script.daemonize == ToDaemonize::Daemonize) {
+  for (auto *script : _scripts) {
+    if (script->stype == ScriptType::Startup) {
+      auto *startup_script = dynamic_cast<StartupScript *>(script);
+      if (not startup_script) continue;
+      QJsonObject transport;
+      if (not startup_script->memory_cells.isEmpty()) {
+        QJsonObject memory_cells;
+        for (auto key : startup_script->memory_cells) memory_cells[key] = basis->memory(key);
+        transport[basis->memoryValuesWk] = memory_cells;
+      }
+      run(startup_script->path, startup_script->fn_name, transport);
+    } else if (script->stype == ScriptType::Daemon) {
+      auto *daemon_script = dynamic_cast<DaemonScript *>(script);
+      if (not daemon_script) continue;
       auto *proc = new QProcess(this);
-      connect(proc, &QProcess::errorOccurred, this, [this, script]() {
+      connect(proc, &QProcess::errorOccurred, this, [this, daemon_script]() {
         emit script_exception(
-          tr("An error occurred during script execution") + " (" + script.path + ")"
+          tr("An error occurred during script execution") + " (" + daemon_script->path + ")"
         );
       });
-      proc->start(QString("python"), QStringList(script.path));
+      proc->start(QString("python"), QStringList(daemon_script->path));
       _daemons.append(proc);
+    } else if (script->stype == ScriptType::Server) {
+      auto *server_script = dynamic_cast<ServerScript *>(script);
+      if (not server_script) continue;
+      auto *proc = new QProcess(this);
+      connect(proc, &QProcess::errorOccurred, this, [this, server_script]() {
+        emit script_exception(
+          tr("An error occurred during script execution") + " (" + server_script->path + ")"
+        );
+      });
+      proc->start(QString("python"), QStringList(server_script->path));
+      _daemons.append(proc);
+      notifier->subscribe(server_script);
     }
   }
 }
@@ -72,7 +96,11 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
     emit script_exception(tr("Failed to construct a tuple from a string."));
     return {{basis->errorTypeWk, 5}};
   }
-  Object answer_result = PyObject_CallObject(answer_func, args);
+  auto f = std::async(&PythonModule::async_runner, this, answer_func, args);
+  PyThreadState *_state = PyEval_SaveThread();
+  if (f.wait_for(3000) != std::future_status::ready) return QJsonObject();
+  Object answer_func = f.get();
+  PyEval_RestoreThread(_state);
   if (not answer_result) {
     emit script_exception(tr(
       "The function could not execute correctly because it did not return a result."
@@ -91,6 +119,14 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
     return {{basis->errorTypeWk, 8}};
   }
   return recv_doc.object();
+}
+
+/*! @brief TBD */
+Object PythonModule::async_runner(Object func, Object args) {
+  PyGILState_STATE _state = PyGILState_Ensure();
+  Object answer_result = PyObject_CallObject(func, args);
+  PyGILState_Release(_state);
+  return answer_result;
 }
 
 /*!
@@ -133,4 +169,32 @@ QJsonObject PythonModule::request_answer(ReactScript *script, Expression &expres
   QJsonObject result = run(script->path, script->fn_name, transport);
   basis->handle_from_script(result, true);
   return result;
+}
+
+/*! @brief TBD */
+QJsonObject PythonModule::request_scan(CustomScanScript *script, const QString &user_expression) {
+  QJsonObject transport;
+  transport["user_expression"] = user_expression;
+  return run(script->path, script->fn_name, transport);
+}
+
+/*! @brief TBD */
+QJsonObject PythonModule::request_compose(
+  CustomComposeScript *script, QString user_expression, CacheWithIndices sorted
+) {
+  QJsonObject transport;
+  transport["user_expression"] = user_expression;
+  QJsonArray candidates;
+  for (auto key : sorted.keys()) {
+    QJsonObject candidate;
+    QJsonObject indices;
+    for (auto first_indice : sorted[key].first.keys()) {
+      indices[QString::number(first_indice)] = sorted[key].first[first_indice];
+    }
+    candidate["indices"] = indices;
+    candidate["reagent_expression"] = sorted[key].second.to_json();
+    candidates.append(candidate);
+  }
+  transport["candidates"] = candidates;
+  return run(script->path, script->fn_name, transport);
 }

@@ -5,6 +5,7 @@
 #include "core/history-processor.h"
 #include "core/local-server.h"
 #include "core/nlp-module.h"
+#include "core/notify-client.h"
 #include "core/python-module.h"
 #include "core/standard-templates.h"
 #include "core/database/sqlite.h"
@@ -27,8 +28,9 @@ public:
   // Objects:
   Basis *basis = new Basis();
   HProcessor *hp = new HProcessor(basis);
-  PythonModule *pm = new PythonModule(hp, basis);
   Server *server = new Server(basis);
+  NotifyClient *notifier = new NotifyClient();
+  PythonModule *pm = new PythonModule(hp, basis, notifier);
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
@@ -66,7 +68,8 @@ private:
   bool monologue_enabled = false;
   NLPmodule *nlp = new NLPmodule(basis, pm, hp);
   StandardTemplates *std_templates = new StandardTemplates(basis, hp);
-  ScriptMetadata *custom_composer = nullptr;
+  CustomScanScript *custom_scaner = nullptr;
+  CustomComposeScript *custom_composer = nullptr;
 };
 
 #endif

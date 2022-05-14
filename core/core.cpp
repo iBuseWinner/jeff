@@ -27,12 +27,15 @@ Core::Core(QObject *parent) : QObject(parent) {
 Core::~Core() {
   delete nlp;
   delete pm;
+  delete notifier;
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->save();
   delete hp;
   delete std_templates;
   server->stop();
   delete server;
   delete basis;
+  if (custom_scaner) delete custom_scaner;
+  if (custom_composer) delete custom_composer;
 }
 
 /*! @brief Handles input @a user_expression, displays a message on the screen and
@@ -43,6 +46,7 @@ void Core::got_message_from_user(const QString &user_expression) {
   /*! Displays the entered message on the screen. */
   MessageData message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   hp->append(message);
+  notifier->notify(message);
   emit show(message);
   /*! If a user has entered the command, there is no need to run other modules. */
 #ifdef JEFF_WITH_QT_WIDGETS
@@ -65,6 +69,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
           : 0,
       this, [this, mdata, result_expression] {
         hp->append(mdata);
+        notifier->notify(mdata);
         emit show(mdata);
         /*! Search again if monologue mode enabled. */
         if (monologue_enabled) nlp->search_for_suggests(result_expression);
@@ -83,6 +88,7 @@ void Core::got_message_from_script(const QString &message) {
           : 0,
       this, [this, mdata, message] {
         hp->append(mdata);
+        notifier->notify(mdata);
         emit show(mdata);
         /*! Search again if monologue mode enabled. */
         if (monologue_enabled) nlp->search_for_suggests(message);
@@ -106,6 +112,7 @@ void Core::got_message_from_script_as_user(const QString &message) {
   /*! Displays the entered message on the screen. */
   MessageData mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Blue);
   hp->append(mdata);
+  notifier->notify(mdata);
   emit show(mdata);
   /*! If a user has entered the command, there is no need to run other modules. */
 #ifdef JEFF_WITH_QT_WIDGETS
@@ -129,6 +136,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
           : 0,
       this, [this, mdata, id_and_message] {
         hp->append(mdata);
+        notifier->notify(mdata);
         QPair<QString, MessageData> id_and_message_data(id_and_message.first, mdata);
         emit show_status(id_and_message_data);
       });
@@ -139,6 +147,7 @@ void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
   MessageData message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
   hp->append(message);
+  notifier->notify(message);
   emit show(message);
 }
 
@@ -147,6 +156,7 @@ void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
   MessageData message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   hp->append(message);
+  notifier->notify(message);
   emit show(message);
 }
 
@@ -156,6 +166,7 @@ void Core::got_modal(ModalHandler *m_handler) {
   MessageData message = get_message(m_handler->getPrisoner()->objectName(),
                                     Author::Jeff, ContentType::Widget, Theme::Std);
   hp->append(message);
+  notifier->notify(message);
   emit show_modal(message, m_handler);
 }
 #endif
@@ -185,6 +196,12 @@ void Core::start() {
   pm->startup();
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool())
     hp->load();
+  if ((*basis)[basis->customScanerSt].toString() != "") {
+    custom_scaner = new CustomScanScript();
+    custom_scaner->stype = ScriptType::CustomScan;
+    custom_scaner->path = (*basis)[basis->customScanerSt].toString();
+    nlp->set_custom_scaner(custom_scaner);
+  }
   if ((*basis)[basis->isGreetingsEnabledSt].toBool())
     got_message_from_user((*basis)[basis->greetingsMsg].toString());
 }

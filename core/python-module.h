@@ -3,10 +3,12 @@
 
 #include "core/basis.h"
 #include "core/history-processor.h"
+#include "core/notify-client.h"
 #include "core/database/json.h"
 #include "core/model/expression.h"
 #include "core/model/keystore.h"
 #include "core/model/message.h"
+#include "core/model/nlp/cache.h"
 #include "core/model/python/object.h"
 #include "core/model/python/script.h"
 #include <QDir>
@@ -22,6 +24,8 @@
 #include <QProcess>
 #include <QString>
 #include <QVariantMap>
+#include <future>
+#include <thread>
 
 #pragma push_macro("slots")
 #undef slots
@@ -40,13 +44,17 @@ class PythonModule : public QObject {
   Q_OBJECT
 public:
   // Functions described in `python-module.cpp`:
-  PythonModule(HProcessor *_hp, Basis *_basis, QObject *parent = nullptr);
+  PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent = nullptr);
   ~PythonModule();
   bool add_script(ScriptMetadata script);
   bool remove_script(ScriptMetadata script);
   Scripts get_scripts();
   void startup();
   QJsonObject request_answer(ReactScript *script);
+  QJsonObject request_scan(CustomScanScript *script, QString user_expression);
+  QJsonObject request_compose(
+    CustomComposeScript *script, QString user_expression, CacheWithIndices sorted
+  );
 
 signals:
   QString script_exception(QString error);
@@ -58,6 +66,7 @@ private:
   // Objects:
   HProcessor *hp = nullptr;
   Basis *basis = nullptr;
+  NotifyClient *notifier = nullptr;
   Scripts _scripts;
   QString _current_path;
   Daemons _daemons;
@@ -72,6 +81,7 @@ private:
 
   // Functions described in `python-module.cpp`:
   QJsonObject run(QString path, QString def_name, QJsonObject values);
+  Object async_runner(Object func, Object args);
 };
 
 #endif

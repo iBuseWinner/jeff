@@ -24,21 +24,17 @@ public:
   ScriptMetadata(const QJsonObject &json_object) {
     path = json_object["path"].toString();
     stype = ScriptType(json_object["stype"].toInt());
-    fn_name = json_object["fn_name"].toString();
   }
   /*! Script path. */
   QString path;
   /*! Script type. */
   ScriptType stype = ScriptType::NoAction;
-  /*! Name of function inside the script. */
-  QString fn_name;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
     return {
       {"path", path},
-      {"stype", int(stype)},
-      {"fn_name", fn_name}
+      {"stype", int(stype)}
     };
   }
 };
@@ -58,9 +54,14 @@ public:
       for (auto key : array) memory_cells.append(key.toString());
     }
     number_of_hist_messages = json_object["number_of_hist_messages"].toInt();
+    fn_name = json_object["fn_name"].toString();
   }
+  /*! TBD */
   QStringList memory_cells;
+  /*! TBD */
   int number_of_hist_messages = 0;
+  /*! Name of function inside the script. */
+  QString fn_name;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
@@ -87,8 +88,12 @@ public:
       auto array = json_object["memory_cells"].toArray();
       for (auto key : array) memory_cells.append(key.toString());
     }
+    fn_name = json_object["fn_name"].toString();
   }
+  /*! TBD */
   QStringList memory_cells;
+  /*! Name of function inside the script. */
+  QString fn_name;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
@@ -134,7 +139,6 @@ public:
     return {
       {"path", path},
       {"stype", int(stype)},
-      {"fn_name", fn_name},
       {"server_addr", server_addr.toString()},
       {"server_port", int(server_port)}
     };
@@ -147,7 +151,20 @@ class CustomScanScript : public ScriptMetadata {
 public:
   /*! Constructors. */
   CustomScanScript() : ScriptMetadata() {}
-  CustomScanScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {}
+  CustomScanScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    fn_name = json_object["fn_name"].toString();
+  }
+  /*! Name of function inside the script. */
+  QString fn_name;
+  
+  /*! @brief Turns @a script into a JSON object. */
+  QJsonObject to_json() {
+    return {
+      {"path", path},
+      {"stype", int(stype)},
+      {"fn_name", fn_name}
+    };
+  }
 }
 
 /*! @class CustomComposeScript
@@ -158,9 +175,12 @@ public:
   CustomComposeScript() : ScriptMetadata() {}
   CustomComposeScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     send_adprops = json_object["send_adprops"].toBool();
+    fn_name = json_object["fn_name"].toString();
   }
   /*! Whether to send additional properties of selected phrases to the script. */
   bool send_adprops = false;
+  /*! Name of function inside the script. */
+  QString fn_name;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {

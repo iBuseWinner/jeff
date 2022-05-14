@@ -34,6 +34,8 @@ set(SRCS
   core/local-server.h
   core/nlp-module.cpp
   core/nlp-module.h
+  core/notify-client.cpp
+  core/notify-client.h
   core/python-module.cpp
   core/python-module.h
   core/standard-templates.cpp

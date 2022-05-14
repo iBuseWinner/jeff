@@ -1,7 +1,6 @@
 #ifndef NOTIFY_CLIENT
 #define NOTIFY_CLIENT
 
-#include "core/basis.h"
 #include "core/model/message.h"
 #include "core/model/python/script.h"
 #include <QHostAddress>
@@ -15,14 +14,18 @@ class NotifyClient : public QObject {
   Q_OBJECT
 public:
   // Functions described in `notify-client.cpp`:
-  NotifyClient(Basis *_basis, QObject *parent = nullptr);
+  NotifyClient(QObject *parent = nullptr);
+  void subscribe(ServerScript *script);
+  void unsubscribe(ServerScript *script);
+  void unsubscribe_all();
+  void notify(MessageData mdata);
   
 private:
   // Objects:
-  Basis *basis = nullptr;
+  QList<ServerScript *> scripts;
   
   // Functions described in `notify-client.cpp`:
-  void send_event(MessageData)
+  void send_event(MessageData mdata, QHostAddress addr, quint16 port);
 };
 
 #endif

@@ -23,8 +23,6 @@ public:
   ushort use_cases = 0;
   /*! Is the reagent a script to be executed? */
   bool exec = false;
-  /*! Is this expression comes from AIML file? */
-  bool aiml = false;
   
   // Constructors:
   Expression() {}
@@ -34,7 +32,6 @@ public:
     properties = Phrase::parse_props(json_object["properties"]);
     use_cases = json_object["use_cases"].toInt();
     exec = json_object["exec"].toBool();
-    aiml = json_object["aiml"].toBool();
   }
   
   // Functions:
@@ -51,8 +48,7 @@ public:
             {"reagent_text", reagent_text},
             {"properties", Phrase::pack_props(properties)},
             {"use_cases", use_cases},
-            {"exec", exec},
-            {"aiml", aiml}};
+            {"exec", exec}};
   }
 
   /*! @brief Returns @a weight of expression. */
