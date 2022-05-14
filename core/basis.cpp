@@ -127,34 +127,34 @@ QJsonValue Basis::memory(const QString &key) {
 }
 
 /*! @brief Prepares @a transport to send into script. */
-// QJsonObject Basis::handle_to_script(const QJsonObject &object) {
-//   QJsonObject transport;
-//   if (object.contains(readMemoryWk)) {
-//     QJsonArray val_keys = object[readMemoryWk].toArray();
-//     if (not val_keys.isEmpty()) {
-//       QJsonObject obj;
-//       for (auto key : val_keys) {
-//         if (not key.isString()) continue;
-//         QString k = key.toString();
-//         obj[k] = memory(k);
-//       }
-//       transport[valuesWk] = obj;
-//     }
-//   }
-//   if (object.contains(readContextWk)) {
-//     QJsonArray val_keys = object[readContextWk].toArray();
-//     if (not val_keys.isEmpty()) {
-//       QJsonObject obj;
-//       for (auto key : val_keys) {
-//         if (not key.isString()) continue;
-//         QString k = key.toString();
-//         obj[k] = context(k);
-//       }
-//       transport[contextWk] = obj;
-//     }
-//   }
-//   return transport;
-// }
+QJsonObject Basis::handle_to_script(const QJsonObject &object) {
+  QJsonObject transport;
+  if (object.contains(readMemoryWk)) {
+    QJsonArray val_keys = object[readMemoryWk].toArray();
+    if (not val_keys.isEmpty()) {
+      QJsonObject obj;
+      for (auto key : val_keys) {
+        if (not key.isString()) continue;
+        QString k = key.toString();
+        obj[k] = memory(k);
+      }
+      transport[memoryValuesWk] = obj;
+    }
+  }
+  if (object.contains(readContextWk)) {
+    QJsonArray val_keys = object[readContextWk].toArray();
+    if (not val_keys.isEmpty()) {
+      QJsonObject obj;
+      for (auto key : val_keys) {
+        if (not key.isString()) continue;
+        QString k = key.toString();
+        obj[k] = context(k);
+      }
+      transport[contextWk] = obj;
+    }
+  }
+  return transport;
+}
 
 /*! @brief Handles @a object that came from script. */
 void Basis::handle_from_script(const QJsonObject &object, bool except_send) {

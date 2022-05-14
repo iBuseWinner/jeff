@@ -56,6 +56,7 @@ set(SRCS
   core/model/nlp/stringssearch.cpp
   core/model/nlp/stringssearch.h
   core/model/python/object.h
+  core/model/python/script.cpp
   core/model/python/script.h
   main.cpp
 )

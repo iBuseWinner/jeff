@@ -202,6 +202,12 @@ void Core::start() {
     custom_scaner->path = (*basis)[basis->customScanerSt].toString();
     nlp->set_custom_scaner(custom_scaner);
   }
+  if ((*basis)[basis->customComposerSt].toString() != "") {
+    custom_composer = new CustomComposeScript();
+    custom_composer->stype = ScriptType::CustomCompose;
+    custom_composer->path = (*basis)[basis->customComposerSt].toString();
+    nlp->set_custom_composer(custom_composer);
+  }
   if ((*basis)[basis->isGreetingsEnabledSt].toBool())
     got_message_from_user((*basis)[basis->greetingsMsg].toString());
 }

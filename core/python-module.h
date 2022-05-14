@@ -24,6 +24,7 @@
 #include <QProcess>
 #include <QString>
 #include <QVariantMap>
+#include <chrono>
 #include <future>
 #include <thread>
 
@@ -50,10 +51,10 @@ public:
   bool remove_script(ScriptMetadata script);
   Scripts get_scripts();
   void startup();
-  QJsonObject request_answer(ReactScript *script);
-  QJsonObject request_scan(CustomScanScript *script, QString user_expression);
+  QJsonObject request_answer(ReactScript *script, const Expression &expression);
+  QJsonObject request_scan(CustomScanScript *script, const QString &user_expression);
   QJsonObject request_compose(
-    CustomComposeScript *script, QString user_expression, CacheWithIndices sorted
+    CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
   );
 
 signals:

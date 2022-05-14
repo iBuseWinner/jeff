@@ -28,7 +28,7 @@ public:
   // Objects:
   Basis *basis = new Basis();
   HProcessor *hp = new HProcessor(basis);
-  Server *server = new Server(basis);
+  class Server *server = new class Server(basis);
   NotifyClient *notifier = new NotifyClient();
   PythonModule *pm = new PythonModule(hp, basis, notifier);
 

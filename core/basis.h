@@ -67,6 +67,9 @@ public:
   const char *serverAuthorizationOnSt = "server/authorize";
   const char *serverAuthKeySt         = "server/auth_key";
   
+  const char *customScanerSt   = "scripts/custom_scaner";
+  const char *customComposerSt = "scripts/custom_composer";
+  
   const char *scriptPathWk     = "path";
   const char *funcNameWk       = "fn_name";
   const char *getHistWk        = "number_of_hist_messages";
@@ -139,7 +142,7 @@ public:
   void memory(const QString &key, QJsonValue data);
   QString context(const QString &key);
   QJsonValue memory(const QString &key);
-  // QJsonObject handle_to_script(const QJsonObject &object);
+  QJsonObject handle_to_script(const QJsonObject &object);
   void handle_from_script(const QJsonObject &object, bool except_send = false);
 
 signals:

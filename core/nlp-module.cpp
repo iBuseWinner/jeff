@@ -174,8 +174,10 @@ void NLPmodule::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()
 /*! @brief Sets up Jeff's default scaner. */
 void NLPmodule::set_default_scaner() { scaner = nullptr; }
 /*! @brief Sets up custom scaner. */
-void NLPmodule::set_custom_scaner(ScriptMetadata *custom_scaner) { scaner = custom_scaner; }
+void NLPmodule::set_custom_scaner(CustomScanScript *custom_scaner) { scaner = custom_scaner; }
 /*! @brief Sets up Jeff's default composer. */
 void NLPmodule::set_default_composer() { composer = nullptr; }
 /*! @brief Sets up custom composer. */
-void NLPmodule::set_custom_composer(ScriptMetadata *custom_composer) { composer = custom_composer; }
+void NLPmodule::set_custom_composer(CustomComposeScript *custom_composer) {
+  composer = custom_composer;
+}

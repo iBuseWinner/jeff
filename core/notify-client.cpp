@@ -12,17 +12,17 @@ void NotifyClient::notify(MessageData mdata) {
 void NotifyClient::subscribe(ServerScript *script) { scripts.append(script); }
 
 /*! @brief TBD */
-void NotifyClient::unsubscribe(ServerScript *script) { scripts.remove(script); }
+void NotifyClient::unsubscribe(ServerScript *script) { scripts.removeOne(script); }
 
 /*! @brief TBD */
 void NotifyClient::unsubscribe_all() { scripts.clear(); }
 
 /*! @brief TBD */
-void NotifyClient::send_event(const MessageData &mdata, QHostAddress addr, quint16 port) {
+void NotifyClient::send_event(MessageData mdata, QHostAddress addr, quint16 port) {
   auto socket = new QTcpSocket(this);
   socket->connectToHost(addr, port);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
-  connect(socket, &QTcpSocket::connected, this, [this, mdata] {
+  connect(socket, &QTcpSocket::connected, this, [this, &mdata, socket] {
     auto transport = mdata.to_json();
     QJsonDocument doc_to_script(transport);
     auto bytes_to_send = doc_to_script.toJson();

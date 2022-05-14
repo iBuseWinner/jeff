@@ -2,6 +2,10 @@
 #define SCRIPT_H
 
 #include <QHostAddress>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 #include <QMap>
 
 /*! @enum ScriptType
@@ -31,7 +35,7 @@ public:
   ScriptType stype = ScriptType::NoAction;
   
   /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
+  virtual QJsonObject to_json() {
     return {
       {"path", path},
       {"stype", int(stype)}
@@ -50,7 +54,7 @@ public:
   ReactScript() : ScriptMetadata() {}
   ReactScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     if (json_object["memory_cells"].isArray()) {
-      auto array = json_object["memory_cells"].toArray();
+      QJsonArray array = json_object["memory_cells"].toArray();
       for (auto key : array) memory_cells.append(key.toString());
     }
     number_of_hist_messages = json_object["number_of_hist_messages"].toInt();
@@ -75,7 +79,7 @@ public:
       {"number_of_hist_messages", number_of_hist_messages}
     };
   }
-}
+};
 
 /*! @class StartupScript
  *  @brief Contains metadata about startup script.  */
@@ -106,7 +110,7 @@ public:
       {"memory_cells", memory_cells_array}
     };
   }
-}
+};
 
 /*! @class DaemonScript
  *  @brief Contains metadata about daemon script.  */
@@ -115,7 +119,7 @@ public:
   /*! Constructors. */
   DaemonScript() : ScriptMetadata() {}
   DaemonScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {}
-}
+};
 
 /*! @class ServerScript
  *  @brief Contains metadata about server script.  */
@@ -134,8 +138,6 @@ public:
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
-    QJsonArray memory_cells_array;
-    for (auto str : memory_cells) memory_cells_array.append(str);
     return {
       {"path", path},
       {"stype", int(stype)},
@@ -143,7 +145,7 @@ public:
       {"server_port", int(server_port)}
     };
   }
-}
+};
 
 /*! @class CustomScanScript
  *  @brief Contains metadata about custom scanner.  */
@@ -165,7 +167,7 @@ public:
       {"fn_name", fn_name}
     };
   }
-}
+};
 
 /*! @class CustomComposeScript
  *  @brief Contains metadata about custom composer.  */
@@ -184,8 +186,6 @@ public:
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
-    QJsonArray memory_cells_array;
-    for (auto str : memory_cells) memory_cells_array.append(str);
     return {
       {"path", path},
       {"stype", int(stype)},
@@ -193,74 +193,16 @@ public:
       {"send_adprops", send_adprops}
     };
   }
-}
+};
 
 /*! @namespace ScriptsCast
  *  @brief Set of methods for casting script types.  */
 namespace ScriptsCast {  
-  /*! @brief Translates @a json_object into a script. */
-  ScriptMetadata *to_script(const QJsonObject &json_object) {
-    ScriptType stype = ScriptType(json_object["stype"].toInt());
-    if (stype == ScriptType::React) {
-      auto *script = new ReactScript(json_object);
-      return script;
-    } else if (stype == ScriptType::Startup) {
-      auto *script = new StartupScript(json_object);
-      return script;
-    } else if (stype == ScriptType::Daemon) {
-      auto *script = new DaemonScript(json_object);
-      return script;
-    } else if (stype == ScriptType::Server) {
-      auto *script = new ServerScript(json_object);
-      return script;
-    } else if (stype == ScriptType::CustomScan) {
-      auto *script = new CustomScanScript(json_object);
-      return script;
-    } else if (stype == ScriptType::CustomCompose) {
-      auto *script = new CustomComposeScript(json_object);
-      return script;
-    } else return nullptr;
-  }
-  
-  /*! @brief Translates @a expression into a script. */
-  ScriptMetadata *to_script(QString expression) {
-    QJsonParseError errors;
-    QJsonDocument document = QJsonDocument::fromJson(expression.toUtf8(), &errors);
-    if (errors.error != QJsonParseError::NoError) return nullptr;
-    auto json_object = document.object();
-    return ScriptsCast::to_script(json_object);
-  }
-  
-  /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json(ScriptMetadata *script) {
-    auto stype = script->stype;
-    if (stype == ScriptType::React) {
-      auto *s = dynamic_cast<ReactScript *>(script);
-      return s->to_json();
-    } else if (stype == ScriptType::Startup) {
-      auto *s = dynamic_cast<StartupScript *>(script);
-      return s->to_json();
-    } else if (stype == ScriptType::Daemon) {
-      auto *s = dynamic_cast<DaemonScript *>(script);
-      return s->to_json();
-    } else if (stype == ScriptType::Server) {
-      auto *s = dynamic_cast<ServerScript *>(script);
-      return s->to_json();
-    } else if (stype == ScriptType::CustomScan) {
-      auto *s = dynamic_cast<CustomScanScript *>(script);
-      return s->to_json();
-    } else if (stype == ScriptType::CustomCompose) {
-      auto *s = dynamic_cast<CustomComposeScript *>(script);
-      return s->to_json();
-    } else return QJsonObject();
-  }
-  
-  /*! @brief Turns @a script into a string. */
-  QString to_string(ScriptMetadata *script) {
-    auto object = ScriptsCast::to_json(script);
-    QJsonDocument document(object);
-    return QString::fromUtf8(document.toJson());
-  }
+  // Functions described in `script.cpp`:
+  ScriptMetadata *to_script(const QJsonObject &json_object);
+  ScriptMetadata *to_script(QString expression);
+  QJsonObject to_json(ScriptMetadata *script);
+  QString to_string(ScriptMetadata *script);
 }
 
 #endif

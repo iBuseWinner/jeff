@@ -1,11 +1,12 @@
 #include "python-module.h"
 
+using namespace std::chrono_literals;
+
 /*! @brief The constructor. */
 PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent)
     : QObject(parent), hp(_hp), basis(_basis), notifier(_notifier) {
   _scripts = basis->json->read_scripts();
   Py_InitializeEx(1);
-  PyEval_InitThreads();
   // Adds current path to sys.path for importing scripts from this directory.
   _current_path = QDir::toNativeSeparators(QDir::currentPath());
   QString command = "import sys; sys.path.append('" + _current_path + "')";
@@ -98,8 +99,8 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
   }
   auto f = std::async(&PythonModule::async_runner, this, answer_func, args);
   PyThreadState *_state = PyEval_SaveThread();
-  if (f.wait_for(3000) != std::future_status::ready) return QJsonObject();
-  Object answer_func = f.get();
+  if (f.wait_for(3s) != std::future_status::ready) return QJsonObject();
+  Object answer_result = f.get();
   PyEval_RestoreThread(_state);
   if (not answer_result) {
     emit script_exception(tr(
@@ -139,7 +140,7 @@ Object PythonModule::async_runner(Object func, Object args) {
  *   5. <!-- script runs -->
  *   6. `store_in_memory` prop from script
  */
-QJsonObject PythonModule::request_answer(ReactScript *script, Expression &expression) {
+QJsonObject PythonModule::request_answer(ReactScript *script, const Expression &expression) {
   QJsonObject transport;
   if (not script->memory_cells.isEmpty()) {
     QJsonObject memory_cells;
@@ -180,7 +181,7 @@ QJsonObject PythonModule::request_scan(CustomScanScript *script, const QString &
 
 /*! @brief TBD */
 QJsonObject PythonModule::request_compose(
-  CustomComposeScript *script, QString user_expression, CacheWithIndices sorted
+  CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
 ) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
