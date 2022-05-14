@@ -47,7 +47,7 @@ public:
   bool remove_script(ScriptMetadata script);
   Scripts get_scripts();
   void startup();
-  QJsonObject request_answer(Expression &expression);
+  QJsonObject request_answer(ReactScript *script);
 
 signals:
   QString script_exception(QString error);

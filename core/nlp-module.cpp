@@ -102,9 +102,15 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
   input = StringSearch::lemmatize(input);
   for (auto ewi : candidates) {
     if (ewi.second.exec) {
-      // On a such moment we need to figure out, what kind of expression we have.
-      // If we have executable expression, we must evaluate it.
-      auto obj = pm->request_answer(ewi.second);
+      ScriptMetadata *script = ScriptsCast::to_script(ewi.second.reagent_text);
+      if (not script) continue;
+      ReactScript *react_script = dynamic_cast<ReactScript *>(script);
+      if (not react_script) {
+        delete script;
+        continue;
+      }
+      auto obj = pm->request_answer(react_script, ewi.second);
+      delete react_script;
       if (obj.contains(basis->errorTypeWk)) continue;
       if (obj.contains(basis->sendWk)) {
         ewi.second.use_cases += 1;

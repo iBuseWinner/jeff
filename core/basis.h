@@ -67,23 +67,23 @@ public:
   const char *serverAuthorizationOnSt = "server/authorize";
   const char *serverAuthKeySt         = "server/auth_key";
   
-  const char *scriptPathWk   = "script_path";
-  const char *funcNameWk     = "func_name";
-  const char *getHistWk      = "get_hist";
-  const char *errorTypeWk    = "error_type";
-  const char *recentWk       = "recent";
-  const char *readMemoryWk   = "need_values";
-  const char *readContextWk  = "need_context";
-  const char *valuesWk       = "values";
-  const char *contextWk      = "context";
-  const char *exprPropsWk    = "expression_properties";
-  const char *writeMemoryWk  = "store_values";
-  const char *writeContextWk = "store_context";
-  const char *sendWk         = "send";
-  const char *searchAgainWk  = "search_again";
-  const char *sendAsUserWk   = "send_as_user";
-  const char *sendStatusWk   = "send_status";
-  const char *authKeyWk      = "auth_key";
+  const char *scriptPathWk     = "path";
+  const char *funcNameWk       = "fn_name";
+  const char *getHistWk        = "number_of_hist_messages";
+  const char *errorTypeWk      = "error_type";
+  const char *recentMessagesWk = "recent_messages";
+  const char *readMemoryWk     = "memory_cells";
+  const char *readContextWk    = "need_context";
+  const char *memoryValuesWk   = "memory_values";
+  const char *contextWk        = "context";
+  const char *exprPropsWk      = "expression_properties";
+  const char *writeMemoryWk    = "store_in_memory";
+  const char *writeContextWk   = "store_context";
+  const char *sendWk           = "send";
+  const char *searchAgainWk    = "search_again";
+  const char *sendAsUserWk     = "send_as_user";
+  const char *sendStatusWk     = "send_status";
+  const char *authKeyWk        = "auth_key";
   
 #ifdef JEFF_WITH_QT_WIDGETS
   const char *source_manager_cmd = "/sources";
@@ -139,7 +139,7 @@ public:
   void memory(const QString &key, QJsonValue data);
   QString context(const QString &key);
   QJsonValue memory(const QString &key);
-  QJsonObject handle_to_script(const QJsonObject &object);
+  // QJsonObject handle_to_script(const QJsonObject &object);
   void handle_from_script(const QJsonObject &object, bool except_send = false);
 
 signals:

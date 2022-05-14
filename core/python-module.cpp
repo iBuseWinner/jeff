@@ -96,60 +96,41 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
 /*!
  * @brief Processes the script configuration and gets the necessary information from it.
  * @details Handles next things:
- *   1. `get_hist` prop
- *   2. `need_values` prop
+ *   1. `number_of_hist_messages` prop
+ *   2. `memory_cells` prop
  *   3. `properties` from @a expression
- *   4. `script_path` and `func_name` props
+ *   4. `path` and `fn_name` props
  *   5. <!-- script runs -->
- *   6. `store_values` prop from script
+ *   6. `store_in_memory` prop from script
  */
-QJsonObject PythonModule::request_answer(Expression &expression) {
-  auto doc = QJsonDocument::fromJson(expression.reagent_text.toUtf8());
-  if (doc.isNull()) {
-    emit script_exception(tr("No valid JSON received."));
-    return {{basis->errorTypeWk, 7}};
+QJsonObject PythonModule::request_answer(ReactScript *script, Expression &expression) {
+  QJsonObject transport;
+  if (not script->memory_cells.isEmpty()) {
+    QJsonObject memory_cells;
+    for (auto key : script->memory_cells) memory_cells[key] = basis->memory(key);
+    transport[basis->memoryValuesWk] = memory_cells;
   }
-  if (not doc.isObject()) {
-    emit script_exception(tr("No JSON object received."));
-    return {{basis->errorTypeWk, 8}};
-  }
-  auto requirements = doc.object();
-  auto transport = basis->handle_to_script(requirements);
-  if (requirements.contains(basis->getHistWk)) {
-    int number = requirements[basis->getHistWk].toInt(0);
-    if (number > 0) {
-      transport[basis->recentWk] = QJsonArray();
-      auto history = hp->recent(number);
-      for (auto msg : history) {
-        transport[basis->recentWk].toArray()
-                                  .append(QString("%1: %2")
-                                  .arg(msg.author == Author::User ? "User" : "Jeff")
-                                  .arg(msg.content));
-      }
-    }
+  if (script->number_of_hist_messages) {
+    QJsonArray history_array;
+    auto history = hp->recent(script->number_of_hist_messages);
+    for (auto msg : history) 
+      history_array.append(
+        QString("%1: %2").arg(msg.author == Author::User ? "User" : "Jeff").arg(msg.content)
+      );
+    transport[basis->recentMessagesWk] = history_array;
   }
   if (not expression.properties.isEmpty()) {
     transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }
-  if (not requirements.contains(basis->scriptPathWk)) {
-    emit script_exception(tr("The path to the module was not received."));
-    return {{basis->errorTypeWk, 9}};
-  }
-  QString path = requirements[basis->scriptPathWk].toString();
-  if (not path.length()) {
+  if (not script->path.length()) {
     emit script_exception(tr("The path to the module is empty."));
     return {{basis->errorTypeWk, 10}};
   }
-  if (not requirements.contains(basis->funcNameWk)) {
-    emit script_exception(tr("The name of the function was not received."));
-    return {{basis->errorTypeWk, 11}};
-  }
-  QString func = requirements[basis->funcNameWk].toString();
-  if (not func.length()) {
+  if (not script->fn_name.length()) {
     emit script_exception(tr("The function name is empty."));
     return {{basis->errorTypeWk, 12}};
   }
-  QJsonObject result = run(path, func, transport);
+  QJsonObject result = run(script->path, script->fn_name, transport);
   basis->handle_from_script(result, true);
   return result;
 }

@@ -43,6 +43,9 @@ public:
   }
 };
 
+/*! @brief Container for scripts of different types. */
+typedef QList<ScriptMetadata *> Scripts;
+
 /*! @class ReactScript
  *  @brief Contains metadata about reagent script.  */
 class ReactScript : public ScriptMetadata {
@@ -57,7 +60,7 @@ public:
     number_of_hist_messages = json_object["number_of_hist_messages"].toInt();
   }
   QStringList memory_cells;
-  int number_of_hist_messages;
+  int number_of_hist_messages = 0;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
@@ -65,7 +68,7 @@ public:
     for (auto str : memory_cells) memory_cells_array.append(str);
     return {
       {"path", path},
-      {"action", int(action)},
+      {"stype", int(stype)},
       {"fn_name", fn_name},
       {"memory_cells", memory_cells_array},
       {"number_of_hist_messages", number_of_hist_messages}
@@ -93,7 +96,7 @@ public:
     for (auto str : memory_cells) memory_cells_array.append(str);
     return {
       {"path", path},
-      {"action", int(action)},
+      {"stype", int(stype)},
       {"fn_name", fn_name},
       {"memory_cells", memory_cells_array}
     };
@@ -130,7 +133,7 @@ public:
     for (auto str : memory_cells) memory_cells_array.append(str);
     return {
       {"path", path},
-      {"action", int(action)},
+      {"stype", int(stype)},
       {"fn_name", fn_name},
       {"server_addr", server_addr.toString()},
       {"server_port", int(server_port)}
@@ -153,7 +156,55 @@ class CustomComposeScript : public ScriptMetadata {
 public:
   /*! Constructors. */
   CustomComposeScript() : ScriptMetadata() {}
-  CustomComposeScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {}
+  CustomComposeScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    send_adprops = json_object["send_adprops"].toBool();
+  }
+  /*! Whether to send additional properties of selected phrases to the script. */
+  bool send_adprops = false;
+  
+  /*! @brief Turns @a script into a JSON object. */
+  QJsonObject to_json() {
+    QJsonArray memory_cells_array;
+    for (auto str : memory_cells) memory_cells_array.append(str);
+    return {
+      {"path", path},
+      {"stype", int(stype)},
+      {"fn_name", fn_name},
+      {"send_adprops", send_adprops}
+    };
+  }
+}
+
+/*! @namespace ScriptsCast
+ *  @brief Set of methods for casting script types.  */
+namespace ScriptsCast {
+  /*! @brief Translates a string into a script. */
+  ScriptMetadata *to_script(QString expression) {
+    QJsonParseError errors;
+    QJsonDocument document = QJsonDocument::fromJson(expression.toUtf8(), &errors);
+    if (errors.error != QJsonParseError::NoError) return nullptr;
+    auto json_object = document.object();
+    ScriptType stype = ScriptType(json_object["stype"].toInt());
+    if (stype == ScriptType::React) {
+      auto *script = new ReactScript(json_object);
+      return script;
+    } else if (stype == ScriptType::Startup) {
+      auto *script = new StartupScript(json_object);
+      return script;
+    } else if (stype == ScriptType::Daemon) {
+      auto *script = new DaemonScript(json_object);
+      return script;
+    } else if (stype == ScriptType::Server) {
+      auto *script = new ServerScript(json_object);
+      return script;
+    } else if (stype == ScriptType::CustomScan) {
+      auto *script = new CustomScanScript(json_object);
+      return script;
+    } else if (stype == ScriptType::CustomCompose) {
+      auto *script = new CustomComposeScript(json_object);
+      return script;
+    } else return nullptr;
+  }
 }
 
 #endif
