@@ -326,9 +326,13 @@
         <source>Delete this phrase</source>
         <translation>Удалить эту фразу</translation>
     </message>
+    <message>
+        <source>Edit script</source>
+        <translation>Редактировать скрипт</translation>
+    </message>
 </context>
 <context>
-    <name>PhraseEditorEditAsPython</name>
+    <name>PhraseEditorEditAsReactScript</name>
     <message>
         <source>Choose script path:</source>
         <translation>Укажите путь к скрипту:</translation>
@@ -452,7 +456,7 @@
     </message>
     <message>
         <source>The path to the module was not received.</source>
-        <translation>Не получен путь до модуля.</translation>
+        <translation type="vanished">Не получен путь до модуля.</translation>
     </message>
     <message>
         <source>The path to the module is empty.</source>
@@ -460,11 +464,15 @@
     </message>
     <message>
         <source>The name of the function was not received.</source>
-        <translation>Не получено имя функции.</translation>
+        <translation type="vanished">Не получено имя функции.</translation>
     </message>
     <message>
         <source>The function name is empty.</source>
         <translation>Имя функции пустое.</translation>
+    </message>
+    <message>
+        <source>An error occurred during script execution</source>
+        <translation>Произошла ошибка в процессе выполнения скрипта</translation>
     </message>
 </context>
 <context>
@@ -572,6 +580,14 @@
     <message>
         <source>Validation error: the fourth column of the source does not fit the description of &quot;exec&quot; INTEGER NOT NULL.</source>
         <translation>Ошибка в ходе проверки: четвёртый столбец источника не соответствует описанию &quot;exec&quot; INTEGER NOT NULL.</translation>
+    </message>
+    <message>
+        <source>Validation error: the source contains only four columns.</source>
+        <translation>Ошибка в ходе проверки: источник содержит всего лишь четыре столбца.</translation>
+    </message>
+    <message>
+        <source>Validation error: the fifth column of the source does not fit the description of &quot;adprops&quot; TEXT.</source>
+        <translation>Ошибка в ходе проверки: пятый столбец источника не соответствует описанию &quot;adprops&quot; TEXT.</translation>
     </message>
 </context>
 <context>

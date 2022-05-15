@@ -703,7 +703,7 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   adpropsColumnValid &= query.value(2).toString() == "TEXT";
   if (not adpropsColumnValid and not quiet) {
     emit sqlite_error(
-      tr("Validation error: the fourth column of the source does not fit the description of \"adprops\" TEXT.") + " " + db_source_suffix
+      tr("Validation error: the fifth column of the source does not fit the description of \"adprops\" TEXT.") + " " + db_source_suffix
     );
     return false;
   }

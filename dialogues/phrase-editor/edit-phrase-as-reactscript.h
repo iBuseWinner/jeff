@@ -2,6 +2,7 @@
 #define PHRASE_EDITOR_EXEC_H
 
 #include "core/basis.h"
+#include "core/model/python/script.h"
 #include "widgets/button.h"
 #include "widgets/lineedit.h"
 #include "widgets/list.h"
@@ -14,23 +15,23 @@
 #include <QWidget>
 
 /*!
- * @class PhraseEditorEditAsPython
+ * @class PhraseEditorEditAsReactScript
  * @brief TBD
  */
-class PhraseEditorEditAsPython : public QWidget {
+class PhraseEditorEditAsReactScript : public QWidget {
   Q_OBJECT
-  Q_DISABLE_COPY(PhraseEditorEditAsPython)
+  Q_DISABLE_COPY(PhraseEditorEditAsReactScript)
 public:
   // Objects:
   QString address;
   
-  // Functions described in `edit-phrase-as-python-script.cpp`:
-  PhraseEditorEditAsPython(Basis *_basis, QWidget *parent = nullptr);
+  // Functions described in `edit-phrase-as-reactscript.cpp`:
+  PhraseEditorEditAsReactScript(Basis *_basis, QWidget *parent = nullptr);
   void clear();
   
 signals:
   /*! @brief TBD */
-  void save();
+  void save(QString expression);
   
 private:
   // Objects:
@@ -41,6 +42,10 @@ private:
   Spoiler other_props;
   QSpinBox history_amount;
   List memory_cells;
+  ReactScript *script = nullptr;
+  
+  // Functions described in `edit-phrase-as-reactscript.cpp`:
+  void select_file();
 };
 
 #endif

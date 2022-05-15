@@ -1,4 +1,5 @@
 #include "brief.h"
+#include <iostream>
 
 /*! @brief The constructor. */
 PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent) : QScrollArea(parent), basis(_basis) {
@@ -12,6 +13,10 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent) : QScrollAr
   edit_expression.setIcon(QIcon::fromTheme("edit", QIcon(":/arts/icons/16/document-edit.svg")));
   connect(&edit_expression, &Button::clicked, this, &PhraseEditorBrief::edit_phrase_text);
   exec_checkbox.setText(tr("Process via script"));
+  connect(&exec_checkbox, &QCheckBox::toggled, this, [this]() {
+    if (exec_checkbox.isChecked()) edit_expression.setText(tr("Edit script"));
+    else edit_expression.setText(tr("Edit text"));
+  });
   back_to_overview.setText(tr("Back"));
   back_to_overview.setIcon(QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
   activators_list.setHeaderLabels({tr("Addresses"), tr("Activators")});
