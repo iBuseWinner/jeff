@@ -61,5 +61,5 @@ QJsonObject ScriptsCast::to_json(ScriptMetadata *script) {
 QString ScriptsCast::to_string(ScriptMetadata *script) {
   auto object = ScriptsCast::to_json(script);
   QJsonDocument document(object);
-  return QString::fromUtf8(document.toJson());
+  return QString::fromUtf8(document.toJson(QJsonDocument::Compact));
 }

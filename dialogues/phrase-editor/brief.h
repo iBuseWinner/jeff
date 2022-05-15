@@ -2,6 +2,7 @@
 #define PHRASE_EDITOR_BRIEF_H
 
 #include "core/basis.h"
+#include "dialogues/phrase-editor/edit-phrase-as-reactscript.h"
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"
 #include "widgets/lineedit.h"
@@ -67,6 +68,7 @@ private:
   QHBoxLayout phrase_expression_edit_layout;
   LineEdit phrase_expression_edit_line;
   Button phrase_expression_edit_save;
+  PhraseEditorEditAsReactScript *script_editor = nullptr;
   Menu phrases_context_menu; /*! Context menus. */
   QAction
     add_phrase_action, connect_phrase_action, edit_phrase_action, 
@@ -76,6 +78,7 @@ private:
   // Functions described in `brief.cpp`:
   void edit_phrase_text();
   void save_phrase_text();
+  void save_script(QString script_json);
   void change_exec(int state);
   void context_menu_for_activators(const QPoint &pos);
   void context_menu_for_reagents(const QPoint &pos);

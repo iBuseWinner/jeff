@@ -1,8 +1,8 @@
 #include "brief.h"
-#include <iostream>
 
 /*! @brief The constructor. */
-PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent) : QScrollArea(parent), basis(_basis) {
+PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent) 
+  : QScrollArea(parent), basis(_basis) {
   // Top-level widgets.
   auto header_font = QApplication::font();
   header_font.setPointSize(14);
@@ -132,11 +132,25 @@ bool PhraseEditorBrief::setup(Source _source, Phrases _phrases, int address) {
 void PhraseEditorBrief::edit_phrase_text() {
   edit_expression.setEnabled(false);
   back_to_overview.setEnabled(false);
+  exec_checkbox.setEnabled(false);
   edit_expression.hide();
   header.hide();
-  phrase_expression_edit_line.setText(header.text());
-  widget_layout.replaceWidget(&header, &phrase_expression_edit_widget);
-  phrase_expression_edit_widget.show();
+  if (exec_checkbox.isChecked()) {
+    if (not script_editor) {
+      script_editor = new PhraseEditorEditAsReactScript(basis);
+      script_editor->setMaximumWidth(maximumWidth());
+    }
+    script_editor->load_from_text(header.text());
+    connect(
+      script_editor, &PhraseEditorEditAsReactScript::save, this, &PhraseEditorBrief::save_script
+    );
+    widget_layout.replaceWidget(&header, script_editor);
+    script_editor->show();
+  } else {
+    phrase_expression_edit_line.setText(header.text());
+    widget_layout.replaceWidget(&header, &phrase_expression_edit_widget);
+    phrase_expression_edit_widget.show();
+  }
 }
 
 /*! @brief Saves new text of a phrase. */
@@ -150,6 +164,23 @@ void PhraseEditorBrief::save_phrase_text() {
   widget_layout.replaceWidget(&phrase_expression_edit_widget, &header);
   header.show();
   edit_expression.show();
+  exec_checkbox.setEnabled(true);
+  edit_expression.setEnabled(true);
+  back_to_overview.setEnabled(true);
+}
+
+/*! @brief TBD */
+void PhraseEditorBrief::save_script(QString script_json) {
+  phrase.expression = script_json;
+  if (not basis->sql->update_expression(source, phrase.expression, phrase.address)) return;
+  script_editor->hide();
+  header.setText(script_json);
+  widget_layout.replaceWidget(script_editor, &header);
+  disconnect(script_editor, &PhraseEditorEditAsReactScript::save, nullptr, nullptr);
+  script_editor->setParent(nullptr);
+  header.show();
+  edit_expression.show();
+  exec_checkbox.setEnabled(true);
   edit_expression.setEnabled(true);
   back_to_overview.setEnabled(true);
 }

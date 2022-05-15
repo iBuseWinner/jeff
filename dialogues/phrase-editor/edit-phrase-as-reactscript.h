@@ -11,7 +11,9 @@
 #include <QGridLayout>
 #include <QJsonObject>
 #include <QLabel>
+#include <QList>
 #include <QSpinBox>
+#include <QTreeWidgetItem>
 #include <QWidget>
 
 /*!
@@ -21,13 +23,11 @@
 class PhraseEditorEditAsReactScript : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(PhraseEditorEditAsReactScript)
-public:
-  // Objects:
-  QString address;
-  
+public:  
   // Functions described in `edit-phrase-as-reactscript.cpp`:
   PhraseEditorEditAsReactScript(Basis *_basis, QWidget *parent = nullptr);
-  void clear();
+  ~PhraseEditorEditAsReactScript();
+  void load_from_text(QString expression);
   
 signals:
   /*! @brief TBD */
@@ -37,15 +37,20 @@ private:
   // Objects:
   Basis *basis = nullptr;
   QLabel choose_path, specify_func_name, specify_amount_of_history, specify_memory_cells;
-  Button path, add_memory_cell, remove_memory_cell, save_script;
+  Button path, add_memory_cell_btn, remove_memory_cell_btn, save_script_btn;
   LineEdit func_name;
-  Spoiler other_props;
   QSpinBox history_amount;
+  Spoiler other_props_widget;
+  QGridLayout memory_cells_manager_layout, other_props_widget_layout, editor_layout;
+  QWidget memory_cells_manager_widget;
   List memory_cells;
+  QList<QTreeWidgetItem *> memory_cells_items;
   ReactScript *script = nullptr;
   
   // Functions described in `edit-phrase-as-reactscript.cpp`:
   void select_file();
+  void clear();
+  void save_script();
 };
 
 #endif

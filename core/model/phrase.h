@@ -82,7 +82,7 @@ public:
     QJsonObject object;
     for (auto key : aps.keys()) object[key] = aps[key];
     QJsonDocument document(object);
-    return QString::fromUtf8(document.toJson());
+    return QString::fromUtf8(document.toJson(QJsonDocument::Compact));
   }
   
   /*! @brief Unpacks references from a string into a set of indices. */

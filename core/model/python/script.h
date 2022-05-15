@@ -51,7 +51,9 @@ typedef QList<ScriptMetadata *> Scripts;
 class ReactScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  ReactScript() : ScriptMetadata() {}
+  ReactScript() : ScriptMetadata() {
+    stype = ScriptType::React;
+  }
   ReactScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     if (json_object["memory_cells"].isArray()) {
       QJsonArray array = json_object["memory_cells"].toArray();
@@ -59,6 +61,7 @@ public:
     }
     number_of_hist_messages = json_object["number_of_hist_messages"].toInt();
     fn_name = json_object["fn_name"].toString();
+    stype = ScriptType::React;
   }
   /*! TBD */
   QStringList memory_cells;
@@ -86,13 +89,16 @@ public:
 class StartupScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  StartupScript() : ScriptMetadata() {}
+  StartupScript() : ScriptMetadata() {
+    stype = ScriptType::Startup;
+  }
   StartupScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     if (json_object["memory_cells"].isArray()) {
       auto array = json_object["memory_cells"].toArray();
       for (auto key : array) memory_cells.append(key.toString());
     }
     fn_name = json_object["fn_name"].toString();
+    stype = ScriptType::Startup;
   }
   /*! TBD */
   QStringList memory_cells;
@@ -117,8 +123,12 @@ public:
 class DaemonScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  DaemonScript() : ScriptMetadata() {}
-  DaemonScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {}
+  DaemonScript() : ScriptMetadata() {
+    stype = ScriptType::Daemon;
+  }
+  DaemonScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    stype = ScriptType::Daemon;
+  }
 };
 
 /*! @class ServerScript
@@ -126,10 +136,13 @@ public:
 class ServerScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  ServerScript() : ScriptMetadata() {}
+  ServerScript() : ScriptMetadata() {
+    stype = ScriptType::Server;
+  }
   ServerScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     server_addr = QHostAddress(json_object["server_addr"].toString());
     server_port = quint16(json_object["server_port"].toInt());
+    stype = ScriptType::Server;
   }
   /*! Server address. */
   QHostAddress server_addr;
@@ -152,9 +165,12 @@ public:
 class CustomScanScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  CustomScanScript() : ScriptMetadata() {}
+  CustomScanScript() : ScriptMetadata() {
+    stype = ScriptType::CustomScan;
+  }
   CustomScanScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     fn_name = json_object["fn_name"].toString();
+    stype = ScriptType::CustomScan;
   }
   /*! Name of function inside the script. */
   QString fn_name;
@@ -174,10 +190,13 @@ public:
 class CustomComposeScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  CustomComposeScript() : ScriptMetadata() {}
+  CustomComposeScript() : ScriptMetadata() {
+    stype = ScriptType::CustomCompose;
+  }
   CustomComposeScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     send_adprops = json_object["send_adprops"].toBool();
     fn_name = json_object["fn_name"].toString();
+    stype = ScriptType::CustomCompose;
   }
   /*! Whether to send additional properties of selected phrases to the script. */
   bool send_adprops = false;

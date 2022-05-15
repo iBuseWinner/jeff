@@ -12,7 +12,7 @@ Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *p
   header_line.setFrameShape(QFrame::HLine);
   header_line.setFrameShadow(QFrame::Sunken);
   header_line.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-  content_area.setStyleSheet("QScrollArea { background-color: white; border: none; }");
+  content_area.setStyleSheet("QScrollArea { border: none; }");
   content_area.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
   // start out collapsed
   content_area.setMaximumHeight(0);
@@ -39,11 +39,11 @@ Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *p
 }
 
 /*! @details Sets the correct values for animations to work. */
-void Spoiler::set_content_layout(QLayout &content_layout) {
+void Spoiler::set_content_layout(QLayout *content_layout) {
   delete content_area.layout();
-  content_area.setLayout(&content_layout);
+  content_area.setLayout(content_layout);
   const auto collapsed_height = sizeHint().height() - content_area.maximumHeight();
-  auto content_height = content_layout.sizeHint().height();
+  auto content_height = content_layout->sizeHint().height();
   for (int i = 0; i < toggle_animation.animationCount() - 1; ++i) {
     auto *spoiler_animation = static_cast<QPropertyAnimation *>(toggle_animation.animationAt(i));
     spoiler_animation->setDuration(animation_duration);
