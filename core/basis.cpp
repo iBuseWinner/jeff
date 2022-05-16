@@ -80,21 +80,6 @@ void Basis::sources(Sources s) {
   emit sources_changed();
 }
 
-/*! @brief Writes @a value to context by @a key. */
-void Basis::context(const QString &key, const QString &value) {
-  context_mutex.lock();
-  _context[key] = value;
-  context_mutex.unlock();
-}
-
-/*! @brief Reads @a value from context by @a key. */
-QString Basis::context(const QString &key) {
-  context_mutex.lock();
-  auto value = _context[key];
-  context_mutex.unlock();
-  return value;
-}
-
 /*! @brief Loads @a _memory from file. */
 void Basis::load_memory() {
   KeyStore m = json->read_memory();

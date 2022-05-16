@@ -7,6 +7,7 @@
 #include "widgets/lineedit.h"
 #include "widgets/list.h"
 #include "widgets/spoiler.h"
+#include <QCheckBox>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QJsonObject>
@@ -40,6 +41,7 @@ private:
   Button path, add_memory_cell_btn, remove_memory_cell_btn, save_script_btn;
   LineEdit func_name;
   QSpinBox history_amount;
+  QCheckBox needs_user_input;
   Spoiler other_props_widget;
   QGridLayout memory_cells_manager_layout, other_props_widget_layout, editor_layout;
   QWidget memory_cells_manager_widget;

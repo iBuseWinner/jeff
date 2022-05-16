@@ -1,13 +1,13 @@
 #include "edit-phrase-as-reactscript.h"
-#include <iostream>
 
 /*! @brief The constructor. */
 PhraseEditorEditAsReactScript::PhraseEditorEditAsReactScript(Basis *_basis, QWidget *parent)
     : QWidget(parent), basis(_basis) {
-  choose_path.setText(tr("Choose script path:"));
+  choose_path.setText(tr("Specify script path:"));
   specify_func_name.setText(tr("Specify function name:"));
   specify_amount_of_history.setText(tr("Specify amount of message history to be sent:"));
   specify_amount_of_history.setWordWrap(true);
+  needs_user_input.setText(tr("Check if script needs whole user input:"));
   specify_memory_cells.setText(tr("Specify memory cells values to be sent:"));
   path.setText(tr("Select a file..."));
   connect(&path, &Button::clicked, this, &PhraseEditorEditAsReactScript::select_file);
@@ -37,8 +37,9 @@ PhraseEditorEditAsReactScript::PhraseEditorEditAsReactScript(Basis *_basis, QWid
   editor_layout.addWidget(&func_name, 1, 1);
   editor_layout.addWidget(&specify_amount_of_history, 2, 0);
   editor_layout.addWidget(&history_amount, 2, 1);
-  editor_layout.addWidget(&other_props_widget, 3, 0, 1, 2);
-  editor_layout.addWidget(&save_script_btn, 3, 0, 1, 2);
+  editor_layout.addWidget(&needs_user_input, 3, 0, 1, 2);
+  editor_layout.addWidget(&other_props_widget, 4, 0, 1, 2);
+  editor_layout.addWidget(&save_script_btn, 5, 0, 1, 2);
   setLayout(&editor_layout);
 }
 
@@ -58,6 +59,7 @@ void PhraseEditorEditAsReactScript::load_from_text(QString expression) {
   path.setText(script->path);
   func_name.setText(script->fn_name);
   history_amount.setValue(script->number_of_hist_messages);
+  needs_user_input.setChecked(script->needs_user_input);
   for (auto memory_cell : script->memory_cells) {
     auto *item = new QTreeWidgetItem(QStringList(memory_cell));
     memory_cells_items.append(item);
@@ -71,6 +73,7 @@ void PhraseEditorEditAsReactScript::clear() {
   func_name.setText("");
   history_amount.setValue(0);
   memory_cells.clear();
+  needs_user_input.setChecked(false);
   for (auto *item : memory_cells_items) if (item) delete item;
   memory_cells_items.clear();
 }
@@ -91,6 +94,7 @@ void PhraseEditorEditAsReactScript::save_script() {
   script->stype = ScriptType::React;
   script->fn_name = func_name.text();
   script->number_of_hist_messages = history_amount.value();
+  script->needs_user_input = needs_user_input.isChecked();
   for (auto *item : memory_cells_items) script->memory_cells.append(item->text(0));
   clear();
   emit save(ScriptsCast::to_string(script));

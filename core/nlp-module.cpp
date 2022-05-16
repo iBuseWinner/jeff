@@ -119,7 +119,7 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
         delete script;
         continue;
       }
-      auto obj = pm->request_answer(react_script, ewi.second);
+      auto obj = pm->request_answer(react_script, ewi.second, input);
       delete react_script;
       if (obj.contains(basis->errorTypeWk)) continue;
       if (obj.contains(basis->sendWk)) {

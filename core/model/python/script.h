@@ -60,6 +60,7 @@ public:
       for (auto key : array) memory_cells.append(key.toString());
     }
     number_of_hist_messages = json_object["number_of_hist_messages"].toInt();
+    needs_user_input = json_object["needs_user_input"].toBool();
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::React;
   }
@@ -69,6 +70,8 @@ public:
   int number_of_hist_messages = 0;
   /*! Name of function inside the script. */
   QString fn_name;
+  /*! TBD */
+  bool needs_user_input;
   
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() {
@@ -79,7 +82,8 @@ public:
       {"stype", int(stype)},
       {"fn_name", fn_name},
       {"memory_cells", memory_cells_array},
-      {"number_of_hist_messages", number_of_hist_messages}
+      {"number_of_hist_messages", number_of_hist_messages},
+      {"needs_user_input", needs_user_input}
     };
   }
 };

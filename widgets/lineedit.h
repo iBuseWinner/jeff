@@ -18,7 +18,7 @@ public:
 
 private:
   // Constants:
-  inline static const QString style_sheet = "background-color: %1; color: %2;";
+  inline static const QString style_sheet = "background-color: %1; color: %2; border-width: 1px; border-style: solid; border-color: %3; border-radius: 6px;";
 };
 
 #endif

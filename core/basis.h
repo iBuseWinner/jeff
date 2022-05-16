@@ -138,9 +138,7 @@ public:
   void save_memory();
   Sources sources();
   void sources(Sources s);
-  void context(const QString &key, const QString &value);
   void memory(const QString &key, QJsonValue data);
-  QString context(const QString &key);
   QJsonValue memory(const QString &key);
   QJsonObject handle_to_script(const QJsonObject &object);
   void handle_from_script(const QJsonObject &object, bool except_send = false);
@@ -161,7 +159,6 @@ private:
   QMutex context_mutex;
   QMutex memory_mutex;
   Sources _sources; /*!< List of sources for @a NLPmodule. */
-  Options _context; /*!< Context values (@sa AIML). */
   KeyStore _memory; /*!< Long-life memory. */
   
   /*! Qt settings object. */

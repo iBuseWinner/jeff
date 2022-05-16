@@ -51,7 +51,9 @@ public:
   bool remove_script(ScriptMetadata script);
   Scripts get_scripts();
   void startup();
-  QJsonObject request_answer(ReactScript *script, const Expression &expression);
+  QJsonObject request_answer(
+    ReactScript *script, const Expression &expression, const QString &user_expression
+  );
   QJsonObject request_scan(CustomScanScript *script, const QString &user_expression);
   QJsonObject request_compose(
     CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted

@@ -137,10 +137,13 @@ Object PythonModule::async_runner(Object func, Object args) {
  *   2. `memory_cells` prop
  *   3. `properties` from @a expression
  *   4. `path` and `fn_name` props
- *   5. <!-- script runs -->
- *   6. `store_in_memory` prop from script
+ *   5. `user_expression` prop
+ *   6. <!-- script runs -->
+ *   7. `store_in_memory` prop from script
  */
-QJsonObject PythonModule::request_answer(ReactScript *script, const Expression &expression) {
+QJsonObject PythonModule::request_answer(
+  ReactScript *script, const Expression &expression, const QString &user_expression
+) {
   QJsonObject transport;
   if (not script->memory_cells.isEmpty()) {
     QJsonObject memory_cells;
@@ -156,6 +159,7 @@ QJsonObject PythonModule::request_answer(ReactScript *script, const Expression &
       );
     transport[basis->recentMessagesWk] = history_array;
   }
+  if (script->needs_user_input) transport["user_expression"] = user_expression;
   if (not expression.properties.isEmpty()) {
     transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }
