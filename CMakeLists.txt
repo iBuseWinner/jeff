@@ -75,6 +75,8 @@ target_link_libraries(
 set(SRCS_UI
   dialogues/about.cpp
   dialogues/about.h
+  dialogues/add-script.cpp
+  dialogues/add-script.h
   dialogues/firststart.cpp
   dialogues/firststart.h
   dialogues/help.cpp
@@ -104,6 +106,8 @@ set(SRCS_UI
   widgets/combobox.h
   widgets/display.cpp
   widgets/display.h
+  widgets/editlist.cpp
+  widgets/editlist.h
   widgets/explanationlabel.cpp
   widgets/explanationlabel.h
   widgets/line.cpp

@@ -66,7 +66,7 @@ PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handl
 void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
   Q_UNUSED(column)
   if (not mode_mutex.try_lock()) return;
-  brief->setFixedWidth(overview->width());
+  brief->setFixedWidth(overview->width() - 6);
   overview->hide();
   editor_layout.replaceWidget(overview, brief);
   brief->setup(overview->selected_source(), overview->phrases, item->text(0).toInt());

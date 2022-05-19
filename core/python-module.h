@@ -47,8 +47,8 @@ public:
   // Functions described in `python-module.cpp`:
   PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent = nullptr);
   ~PythonModule();
-  bool add_script(ScriptMetadata script);
-  bool remove_script(ScriptMetadata script);
+  bool add_script(ScriptMetadata *script);
+  bool remove_script(ScriptMetadata *script);
   Scripts get_scripts();
   void startup();
   QJsonObject request_answer(

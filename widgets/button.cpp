@@ -6,7 +6,7 @@ Button::Button(const QString &text, QWidget *parent) : QPushButton(parent) {
   setFocusPolicy(Qt::NoFocus);
   setText(text);
   setStyleSheet(QString(
-    "Button { text-align: center; border-width: 3px; border-style: solid; border-radius: 3px;"
+    "Button { text-align: center; border-width: 1px; border-style: solid; border-radius: 6px;"
     "border-color: %1; background-color: %1; color: %2; padding: 2px; } Button:pressed, Button:open"
     " { color: %2; border-color: %3; }"
   ).arg(styling.css_bg_color).arg(styling.css_fg_color).arg(styling.css_hl_color));

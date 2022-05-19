@@ -94,6 +94,11 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   setWidget(area_widget);
 }
 
+/*! @brief The destructor. */
+PhraseEditorBrief::~PhraseEditorBrief() {
+  if (script_editor) script_editor->setParent(nullptr);
+}
+
 /*! @brief Sets up brief widget. */
 bool PhraseEditorBrief::setup(Source _source, Phrases _phrases, int address) {
   source = _source;
@@ -138,7 +143,7 @@ void PhraseEditorBrief::edit_phrase_text() {
   if (exec_checkbox.isChecked()) {
     if (not script_editor) {
       script_editor = new PhraseEditorEditAsReactScript(basis);
-      script_editor->setMaximumWidth(maximumWidth());
+      script_editor->setMaximumWidth(maximumWidth() - 6);
     }
     script_editor->load_from_text(header.text());
     connect(

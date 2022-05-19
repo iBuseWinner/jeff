@@ -38,6 +38,13 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
+  if (expression == basis->add_script_cmd) {
+    auto *modal_handler = new ModalHandler(this);
+    auto *add_script = new AddScriptDialog(nullptr, basis, pm, modal_handler);
+    Q_UNUSED(add_script)
+    emit showModalWidget(modal_handler);
+    return true;
+  }
   return false;
 }
 #endif
@@ -57,6 +64,25 @@ bool StandardTemplates::fast_commands(const QString &expression) {
         Expression e;
         e.activator_text = activator_text;
         e.reagent_text = reagent_text;
+        Source s;
+        s.path = basis->read(basis->defaultSourcePath).toString();
+        s.table_name = basis->read(basis->defaultSourceContainer).toString();
+        basis->sql->insert_expression(s, e);
+        basis->cacher->append(e);
+      }
+    }
+    return true;
+  }
+  if (expression.startsWith(basis->fast_append_script_cmd)) {
+    if (expression.length() > QString(basis->fast_append_script_cmd).length()) {
+      QString reagent_text = expression;
+      reagent_text.remove(0, QString(basis->fast_append_script_cmd).length());
+      QString activator_text = hp->last_user_message();
+      if (not activator_text.isEmpty()) {
+        Expression e;
+        e.activator_text = activator_text;
+        e.reagent_text = reagent_text;
+        e.exec = true;
         Source s;
         s.path = basis->read(basis->defaultSourcePath).toString();
         s.table_name = basis->read(basis->defaultSourceContainer).toString();

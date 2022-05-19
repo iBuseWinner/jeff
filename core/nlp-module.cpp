@@ -12,8 +12,8 @@ NLPmodule::~NLPmodule() { save_cache(); delete gen; }
 
 /*! @brief Matches the answer based on the input. */
 void NLPmodule::search_for_suggests(const QString &input) {
-  if (scaner) {
-    auto json_object = pm->request_scan(scaner, input);
+  if (scanner) {
+    auto json_object = pm->request_scan(scanner, input);
     if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
     return;
   }
@@ -171,10 +171,10 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
 void NLPmodule::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
 /*! @brief Saves the cache to disk. */
 void NLPmodule::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }
-/*! @brief Sets up Jeff's default scaner. */
-void NLPmodule::set_default_scaner() { scaner = nullptr; }
-/*! @brief Sets up custom scaner. */
-void NLPmodule::set_custom_scaner(CustomScanScript *custom_scaner) { scaner = custom_scaner; }
+/*! @brief Sets up Jeff's default scanner. */
+void NLPmodule::set_default_scanner() { scanner = nullptr; }
+/*! @brief Sets up custom scanner. */
+void NLPmodule::set_custom_scanner(CustomScanScript *custom_scanner) { scanner = custom_scanner; }
 /*! @brief Sets up Jeff's default composer. */
 void NLPmodule::set_default_composer() { composer = nullptr; }
 /*! @brief Sets up custom composer. */

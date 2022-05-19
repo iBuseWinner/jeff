@@ -67,8 +67,11 @@ public:
   const char *serverAuthorizationOnSt = "server/authorize";
   const char *serverAuthKeySt         = "server/auth_key";
   
-  const char *customScanerSt   = "scripts/custom_scaner";
-  const char *customComposerSt = "scripts/custom_composer";
+  const char *customScannerSt    = "scripts/custom_scanner";
+  const char *customScannerFnSt  = "scripts/custom_scanner_fn_name";
+  const char *customComposerSt   = "scripts/custom_composer";
+  const char *customComposerFnSt = "scripts/custom_composer_fn_name";
+  const char *customComposerSASt = "scripts/custom_composer_send_adprops";
   
   const char *scriptPathWk     = "path";
   const char *funcNameWk       = "fn_name";
@@ -76,12 +79,10 @@ public:
   const char *errorTypeWk      = "error_type";
   const char *recentMessagesWk = "recent_messages";
   const char *readMemoryWk     = "memory_cells";
-  const char *readContextWk    = "need_context";
   const char *memoryValuesWk   = "memory_values";
   const char *contextWk        = "context";
   const char *exprPropsWk      = "expression_properties";
   const char *writeMemoryWk    = "store_in_memory";
-  const char *writeContextWk   = "store_context";
   const char *sendWk           = "send";
   const char *searchAgainWk    = "search_again";
   const char *sendAsUserWk     = "send_as_user";
@@ -91,13 +92,15 @@ public:
 #ifdef JEFF_WITH_QT_WIDGETS
   const char *source_manager_cmd = "/sources";
   const char *script_manager_cmd = "/scripts";
-  const char *first_start_cmd = "/first";
-  const char *about_cmd = "/about";
-  const char *settings_cmd = "/settings";
-  const char *phrase_editor_cmd = "/phrases";
+  const char *first_start_cmd    = "/first";
+  const char *about_cmd          = "/about";
+  const char *settings_cmd       = "/settings";
+  const char *phrase_editor_cmd  = "/phrases";
+  const char *add_script_cmd     = "/#";
 #endif
-  const char *fast_append_cmd = "/+ ";
-  const char *monologue_mode_cmd = "/mm";
+  const char *fast_append_cmd        = "/+ ";
+  const char *fast_append_script_cmd = "/++ ";
+  const char *monologue_mode_cmd     = "/mm";
 
   // Functions:
   /*! @brief The constructor. */

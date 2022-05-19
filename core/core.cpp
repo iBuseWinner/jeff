@@ -34,7 +34,7 @@ Core::~Core() {
   server->stop();
   delete server;
   delete basis;
-  if (custom_scaner) delete custom_scaner;
+  if (custom_scanner) delete custom_scanner;
   if (custom_composer) delete custom_composer;
 }
 
@@ -196,16 +196,17 @@ void Core::start() {
   pm->startup();
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool())
     hp->load();
-  if ((*basis)[basis->customScanerSt].toString() != "") {
-    custom_scaner = new CustomScanScript();
-    custom_scaner->stype = ScriptType::CustomScan;
-    custom_scaner->path = (*basis)[basis->customScanerSt].toString();
-    nlp->set_custom_scaner(custom_scaner);
+  if (not (*basis)[basis->customScannerSt].toString().isEmpty()) {
+    custom_scanner = new CustomScanScript();
+    custom_scanner->path = (*basis)[basis->customScannerSt].toString();
+    custom_scanner->fn_name = (*basis)[basis->customScannerFnSt].toString();
+    nlp->set_custom_scanner(custom_scanner);
   }
-  if ((*basis)[basis->customComposerSt].toString() != "") {
+  if (not (*basis)[basis->customComposerSt].toString().isEmpty()) {
     custom_composer = new CustomComposeScript();
-    custom_composer->stype = ScriptType::CustomCompose;
     custom_composer->path = (*basis)[basis->customComposerSt].toString();
+    custom_composer->fn_name = (*basis)[basis->customComposerFnSt].toString();
+    custom_composer->send_adprops = (*basis)[basis->customComposerSASt].toBool();
     nlp->set_custom_composer(custom_composer);
   }
   if ((*basis)[basis->isGreetingsEnabledSt].toBool())

@@ -126,18 +126,6 @@ QJsonObject Basis::handle_to_script(const QJsonObject &object) {
       transport[memoryValuesWk] = obj;
     }
   }
-  if (object.contains(readContextWk)) {
-    QJsonArray val_keys = object[readContextWk].toArray();
-    if (not val_keys.isEmpty()) {
-      QJsonObject obj;
-      for (auto key : val_keys) {
-        if (not key.isString()) continue;
-        QString k = key.toString();
-        obj[k] = context(k);
-      }
-      transport[contextWk] = obj;
-    }
-  }
   return transport;
 }
 
@@ -152,18 +140,6 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
         if (not pair_obj.contains("key") or not pair_obj.contains("value")) continue;
         if (not pair_obj["key"].isString()) continue;
         memory(pair_obj["key"].toString(), pair_obj["value"]);
-      }
-    }
-  }
-  if (object.contains(writeContextWk)) {
-    QJsonArray to_store = object[writeContextWk].toArray();
-    if (not to_store.isEmpty()) {
-      for (auto pair : to_store) {
-        if (not pair.isObject()) continue;
-        auto pair_obj = pair.toObject();
-        if (not pair_obj.contains("key") or not pair_obj.contains("value")) continue;
-        if (not pair_obj["key"].isString()) continue;
-        context(pair_obj["key"].toString(), pair_obj["value"].toString());
       }
     }
   }

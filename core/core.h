@@ -67,8 +67,8 @@ private:
   // Objects:
   bool monologue_enabled = false;
   NLPmodule *nlp = new NLPmodule(basis, pm, hp);
-  StandardTemplates *std_templates = new StandardTemplates(basis, hp);
-  CustomScanScript *custom_scaner = nullptr;
+  StandardTemplates *std_templates = new StandardTemplates(basis, hp, pm);
+  CustomScanScript *custom_scanner = nullptr;
   CustomComposeScript *custom_composer = nullptr;
 };
 

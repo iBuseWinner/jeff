@@ -38,6 +38,7 @@ public:
   
   // Functions described in `brief.cpp`:
   PhraseEditorBrief(Basis *_basis, QWidget *parent = nullptr);
+  ~PhraseEditorBrief();
   bool setup(Source _source, Phrases _phrases, int address);
   void waits_for_choosed(int address);
   

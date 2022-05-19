@@ -21,6 +21,7 @@ class Spoiler : public QWidget {
 public:
   // Functions described in `spoiler.cpp`:
   Spoiler(const QString &title = "", const int _animation_duration = 300, QWidget *parent = nullptr);
+  void set_title(QString title);
   void set_content_layout(QLayout *content_layout);
   
 private:

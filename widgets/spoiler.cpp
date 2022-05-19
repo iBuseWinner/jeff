@@ -14,14 +14,11 @@ Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *p
   header_line.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
   content_area.setStyleSheet("QScrollArea { border: none; }");
   content_area.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-  // start out collapsed
   content_area.setMaximumHeight(0);
   content_area.setMinimumHeight(0);
-  // let the entire widget grow and shrink with its content
   toggle_animation.addAnimation(new QPropertyAnimation(this, "minimumHeight"));
   toggle_animation.addAnimation(new QPropertyAnimation(this, "maximumHeight"));
   toggle_animation.addAnimation(new QPropertyAnimation(&content_area, "maximumHeight"));
-  // don't waste space
   main_layout.setVerticalSpacing(0);
   main_layout.setContentsMargins(0, 0, 0, 0);
   int row = 0;
@@ -38,9 +35,9 @@ Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *p
   });
 }
 
-/*! @details Sets the correct values for animations to work. */
+/*! @brief Sets the correct values for animations to work. */
 void Spoiler::set_content_layout(QLayout *content_layout) {
-  delete content_area.layout();
+  if (content_area.layout()) delete content_area.layout();
   content_area.setLayout(content_layout);
   const auto collapsed_height = sizeHint().height() - content_area.maximumHeight();
   auto content_height = content_layout->sizeHint().height();
@@ -57,3 +54,6 @@ void Spoiler::set_content_layout(QLayout *content_layout) {
   content_animation->setStartValue(0);
   content_animation->setEndValue(content_height);
 }
+
+/*! @brief TBD */
+void Spoiler::set_title(QString title) { toggle_button.setText(title); }

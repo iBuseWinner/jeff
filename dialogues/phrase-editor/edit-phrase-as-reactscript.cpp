@@ -7,7 +7,7 @@ PhraseEditorEditAsReactScript::PhraseEditorEditAsReactScript(Basis *_basis, QWid
   specify_func_name.setText(tr("Specify function name:"));
   specify_amount_of_history.setText(tr("Specify amount of message history to be sent:"));
   specify_amount_of_history.setWordWrap(true);
-  needs_user_input.setText(tr("Check if script needs whole user input:"));
+  needs_user_input.setText(tr("Check if script needs whole user input"));
   specify_memory_cells.setText(tr("Specify memory cells values to be sent:"));
   path.setText(tr("Select a file..."));
   connect(&path, &Button::clicked, this, &PhraseEditorEditAsReactScript::select_file);
@@ -18,6 +18,7 @@ PhraseEditorEditAsReactScript::PhraseEditorEditAsReactScript(Basis *_basis, QWid
   save_script_btn.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
   connect(&save_script_btn, &Button::clicked, this, &PhraseEditorEditAsReactScript::save_script);
+  memory_cells.setHeaderLabels({tr("Memory cell key")});
   memory_cells_manager_layout.setSpacing(0);
   memory_cells_manager_layout.setMargin(0);
   memory_cells_manager_layout.addWidget(&memory_cells, 0, 0, 2, 1);
@@ -29,6 +30,7 @@ PhraseEditorEditAsReactScript::PhraseEditorEditAsReactScript(Basis *_basis, QWid
   other_props_widget_layout.setMargin(0);
   other_props_widget_layout.addWidget(&specify_memory_cells, 0, 0);
   other_props_widget_layout.addWidget(&memory_cells_manager_widget, 1, 0);
+  other_props_widget.set_title(tr("Expand other properties"));
   other_props_widget.set_content_layout(&other_props_widget_layout);
   editor_layout.setMargin(0);
   editor_layout.addWidget(&choose_path, 0, 0);

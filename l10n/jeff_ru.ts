@@ -49,6 +49,57 @@
     </message>
 </context>
 <context>
+    <name>AddScriptDialog</name>
+    <message>
+        <source>Specify script path:</source>
+        <translation>Укажите путь к скрипту:</translation>
+    </message>
+    <message>
+        <source>Select a file...</source>
+        <translation>Выберите файл...</translation>
+    </message>
+    <message>
+        <source>Specify script type:</source>
+        <translation>Укажите тип скрипта:</translation>
+    </message>
+    <message>
+        <source>Startup script (suitable for startup prompts)</source>
+        <translation>Сценарий запуска (подходит для приглашений при запуске)</translation>
+    </message>
+    <message>
+        <source>Daemon (works in background with Jeff&apos;s server)</source>
+        <translation>Демон (работает в фоновом режиме с сервером Джеффа)</translation>
+    </message>
+    <message>
+        <source>Server (works in background and receives all messages)</source>
+        <translation>Сервер (работает в фоновом режиме и получает все сообщения)</translation>
+    </message>
+    <message>
+        <source>Custom scanner (another answering system)</source>
+        <translation>Пользовательский сканер (другой автоответчик)</translation>
+    </message>
+    <message>
+        <source>Custom composer (receives chosed variants and answers on them in another manner)</source>
+        <translation>Пользовательский композитор (получает выбранные варианты и отвечает на них другим способом)</translation>
+    </message>
+    <message>
+        <source>Specify function name:</source>
+        <translation>Укажите название функции:</translation>
+    </message>
+    <message>
+        <source>Function name...</source>
+        <translation>Название функции...</translation>
+    </message>
+    <message>
+        <source>Specify memory cells values to be sent:</source>
+        <translation>Укажите ячейки памяти, значения которых нужно отправить:</translation>
+    </message>
+    <message>
+        <source>Memory cell key</source>
+        <translation>Ключ ячейки памяти</translation>
+    </message>
+</context>
+<context>
     <name>Basis</name>
     <message>
         <source>An access error occurred (e.g. trying to write to a read-only file).</source>
@@ -334,10 +385,6 @@
 <context>
     <name>PhraseEditorEditAsReactScript</name>
     <message>
-        <source>Choose script path:</source>
-        <translation>Укажите путь к скрипту:</translation>
-    </message>
-    <message>
         <source>Specify function name:</source>
         <translation>Укажите название функции:</translation>
     </message>
@@ -358,16 +405,40 @@
         <translation>Добавить ячейку памяти</translation>
     </message>
     <message>
-        <source>Remove this cell</source>
-        <translation>Убрать эту ячейку</translation>
-    </message>
-    <message>
         <source>Select file...</source>
         <translation>Выбрать файл...</translation>
     </message>
     <message>
         <source>Python script</source>
         <translation>Скрипт Python</translation>
+    </message>
+    <message>
+        <source>Specify script path:</source>
+        <translation>Укажите путь к скрипту:</translation>
+    </message>
+    <message>
+        <source>Check if script needs whole user input:</source>
+        <translation>Отметьте, если скрипту нужен весь ввод:</translation>
+    </message>
+    <message>
+        <source>Function name...</source>
+        <translation>Название функции...</translation>
+    </message>
+    <message>
+        <source>Remove selected cell</source>
+        <translation>Удалить выбранную ячейку</translation>
+    </message>
+    <message>
+        <source>Save script</source>
+        <translation>Сохранить скрипт</translation>
+    </message>
+    <message>
+        <source>Expand other properties</source>
+        <translation>Развернуть другие свойства</translation>
+    </message>
+    <message>
+        <source>Memory cell key</source>
+        <translation>Ключ ячейки памяти</translation>
     </message>
 </context>
 <context>
@@ -455,16 +526,8 @@
         <translation>Не получен объект JSON.</translation>
     </message>
     <message>
-        <source>The path to the module was not received.</source>
-        <translation type="vanished">Не получен путь до модуля.</translation>
-    </message>
-    <message>
         <source>The path to the module is empty.</source>
         <translation>Путь до модуля пустой.</translation>
-    </message>
-    <message>
-        <source>The name of the function was not received.</source>
-        <translation type="vanished">Не получено имя функции.</translation>
     </message>
     <message>
         <source>The function name is empty.</source>

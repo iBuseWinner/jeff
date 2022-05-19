@@ -32,8 +32,8 @@ public:
   void load_cache();
   void save_cache();
   void search_for_suggests(const QString &input);
-  void set_default_scaner();
-  void set_custom_scaner(CustomScanScript *custom_scaner);
+  void set_default_scanner();
+  void set_custom_scanner(CustomScanScript *custom_scanner);
   void set_default_composer();
   void set_custom_composer(CustomComposeScript *custom_composer);
 
@@ -47,7 +47,7 @@ private:
   PythonModule *pm = nullptr;
   HProcessor *hp = nullptr;
   QRandomGenerator *gen = nullptr;
-  CustomScanScript *scaner = nullptr;
+  CustomScanScript *scanner = nullptr;
   CustomComposeScript *composer = nullptr;
 
   // Constants:

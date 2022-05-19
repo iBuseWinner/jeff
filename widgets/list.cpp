@@ -35,9 +35,7 @@ void List::clear() {
 
 /*! @brief Makes it so that when you add as many elements as you like, the most recent ones
  *  are displayed on the screen.  */
-void List::scroll(int min, int max) {
-  verticalScrollBar()->setValue(max);
-}
+void List::scroll(int min, int max) { verticalScrollBar()->setValue(max); }
 
 /*! @brief Shows neccessary widgets when scrolling. */
 void List::show_items(int value) {
