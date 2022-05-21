@@ -21,7 +21,7 @@ class AddScriptDialog : public QWidget {
   Q_DISABLE_COPY(AddScriptDialog)
 public:
   // Objects:
-  ComboBox stype_input;
+  ComboBox *stype_input = nullptr;
   
   // Functions described in `add-script.cpp`:
   AddScriptDialog(QWidget *parent, Basis *_basis, PythonModule *_pm, ModalHandler *m_handler);
@@ -36,15 +36,8 @@ private:
   Basis *basis = nullptr;
   PythonModule *pm = nullptr;
   ModalHandler *_m_handler = nullptr;
-  QLabel path_info, stype_info;
-  Button path_input;
-  QLabel fn_name_info, send_adprops_info, server_addr_info, server_port_info, memory_cells_info;
-  QCheckBox send_adprops_input;
-  LineEdit fn_name_input, server_addr_input, server_port_input;
-  EditListWidget edit_list;
-  Button cancel_btn, save_btn;
-  QWidget dynamic_properties_widget, buttons_widget;
-  QGridLayout main_layout, dynamic_properties_layout, buttons_layout;
+  Button *path_input = nullptr;
+  QGridLayout *dynamic_properties_layout = nullptr;
   
   // Functions described in `add-script.cpp`:
   ScriptMetadata *get_script_from_metadata();
