@@ -94,6 +94,9 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   setWidget(area_widget);
 }
 
+/*! @brief TBD */
+void PhraseEditorBrief::resizeEvent(QResizeEvent *event) { header.setMaximumWidth(width() - 10); }
+
 /*! @brief The destructor. */
 PhraseEditorBrief::~PhraseEditorBrief() {
   if (script_editor) script_editor->setParent(nullptr);

@@ -83,6 +83,7 @@ private:
   void change_exec(int state);
   void context_menu_for_activators(const QPoint &pos);
   void context_menu_for_reagents(const QPoint &pos);
+  void resizeEvent(QResizeEvent *event) override;
 };
 
 #endif
