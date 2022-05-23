@@ -9,14 +9,15 @@
 #include "widgets/editlist.h"
 #include "widgets/lineedit.h"
 #include "widgets/list.h"
+#include "widgets/scrollfreezerwidget.h"
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <QWidget>
+#include <QLayoutItem>
 
 /*! @class AddScriptDialog
  *  @brief TBD  */
-class AddScriptDialog : public QWidget {
+class AddScriptDialog : public ScrollFreezerWidget {
   Q_OBJECT
   Q_DISABLE_COPY(AddScriptDialog)
 public:
@@ -25,6 +26,7 @@ public:
   
   // Functions described in `add-script.cpp`:
   AddScriptDialog(QWidget *parent, Basis *_basis, PythonModule *_pm, ModalHandler *m_handler);
+  ~AddScriptDialog();
   void change_stype();
   
 signals:
@@ -36,7 +38,7 @@ private:
   Basis *basis = nullptr;
   PythonModule *pm = nullptr;
   ModalHandler *_m_handler = nullptr;
-  Button *path_input = nullptr;
+  Button *path_input = nullptr, *save_btn = nullptr;
   QGridLayout *dynamic_properties_layout = nullptr;
   
   // Functions described in `add-script.cpp`:

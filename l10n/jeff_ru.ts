@@ -91,12 +91,36 @@
         <translation>Название функции...</translation>
     </message>
     <message>
-        <source>Specify memory cells values to be sent:</source>
-        <translation>Укажите ячейки памяти, значения которых нужно отправить:</translation>
-    </message>
-    <message>
         <source>Memory cell key</source>
         <translation>Ключ ячейки памяти</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отменить</translation>
+    </message>
+    <message>
+        <source>Add script</source>
+        <translation>Добавить скрипт</translation>
+    </message>
+    <message>
+        <source>Save script</source>
+        <translation>Сохранить скрипт</translation>
+    </message>
+    <message>
+        <source>Add memory cell</source>
+        <translation>Добавить ячейку памяти</translation>
+    </message>
+    <message>
+        <source>Remove selected cell</source>
+        <translation>Удалить выбранную ячейку</translation>
+    </message>
+    <message>
+        <source>Memory cell name...</source>
+        <translation>Название ячейки памяти...</translation>
+    </message>
+    <message>
+        <source>Add the memory cells to be passed to the script:</source>
+        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
     </message>
 </context>
 <context>
@@ -417,10 +441,6 @@
         <translation>Укажите путь к скрипту:</translation>
     </message>
     <message>
-        <source>Check if script needs whole user input:</source>
-        <translation>Отметьте, если скрипту нужен весь ввод:</translation>
-    </message>
-    <message>
         <source>Function name...</source>
         <translation>Название функции...</translation>
     </message>
@@ -439,6 +459,10 @@
     <message>
         <source>Memory cell key</source>
         <translation>Ключ ячейки памяти</translation>
+    </message>
+    <message>
+        <source>Check if script needs whole user input</source>
+        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
     </message>
 </context>
 <context>

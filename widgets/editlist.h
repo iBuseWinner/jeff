@@ -26,12 +26,9 @@ public:
   
 private:
   // Objects:
-  List list_widget;
-  LineEdit line_edit;
-  Button add_btn, remove_selected_btn;
-  QWidget buttons_widget;
-  QVBoxLayout buttons_widget_layout;
-  QGridLayout main_layout;
+  List *list_widget;
+  LineEdit *line_edit;
+  Button *add_btn, *remove_selected_btn;
   
   // Functions described in `editlist.cpp`:
   void add_element();
