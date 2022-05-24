@@ -4,10 +4,8 @@
 #include <QHBoxLayout>
 #include <QWidget>
 
-/*!
- * @class PairWidget
- * @brief TBD
- */
+/*! @class PairWidget
+ *  @brief A simple wrapper for two widgets.  */
 class PairWidget : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(PairWidget)

@@ -1,11 +1,11 @@
 #include "editlist.h"
 
 /*! @brief The constructor. */
-EditListWidget::EditListWidget(QWidget *parent) : QWidget(parent) {
+EditList::EditList(QWidget *parent) : QWidget(parent) {
   list_widget = new List(this);
   line_edit = new LineEdit(this);
-  add_btn = new Button("", this);
-  remove_selected_btn = new Button("", this);
+  add_btn = new Button(QString(), this);
+  remove_selected_btn = new Button(QString(), this);
   add_btn->setIcon(QIcon::fromTheme("list-add", QIcon(":/arts/icons/16/list-add.svg")));
   remove_selected_btn->setIcon(
     QIcon::fromTheme("list-remove", QIcon(":/arts/icons/16/list-remove.svg")));
@@ -23,42 +23,43 @@ EditListWidget::EditListWidget(QWidget *parent) : QWidget(parent) {
   main_layout->addWidget(list_widget, 1, 0);
   main_layout->addWidget(buttons_widget, 1, 1);
   setLayout(main_layout);
-  connect(add_btn, &Button::clicked, this, &EditListWidget::add_element);
-  connect(remove_selected_btn, &Button::clicked, this, &EditListWidget::remove_element);
+  connect(add_btn, &Button::clicked, this, &EditList::add_element);
+  connect(remove_selected_btn, &Button::clicked, this, &EditList::remove_element);
 }
 
-/*! @brief TBD */
-QStringList EditListWidget::get_list() {
+/*! @brief Returns a list of elements as a list of strings. */
+QStringList EditList::get_list() {
   QStringList list;
   auto *root = list_widget->invisibleRootItem();
   for (int i = 0; i < root->childCount(); i++) list.append(root->child(i)->text(0));
   return list;
 }
 
-/*! @brief TBD */
-void EditListWidget::set_list(QStringList list) {
+/*! @brief Adds the given elements to the list. */
+void EditList::append(QStringList list) {
   auto *root = list_widget->invisibleRootItem();
   for (auto element : list) auto *list_widget_element = new QTreeWidgetItem(root, {element});
 }
 
-/*! @brief TBD */
-void EditListWidget::set_add_btn_text(QString text) { add_btn->setText(text); }
+/*! @brief Set the text on the buttons. */
+void EditList::set_add_btn_text(QString text) { add_btn->setText(text); }
+void EditList::set_rem_btn_text(QString text) { remove_selected_btn->setText(text); }
 
-/*! @brief TBD */
-void EditListWidget::set_rem_btn_text(QString text) { remove_selected_btn->setText(text); }
+/*! @brief Tells if the list is empty. */
+bool EditList::is_empty() { return list_widget->topLevelItemCount(); }
 
-/*! @brief TBD */
-void EditListWidget::set_lineedit_placeholder_text(QString placeholder_text) {
+/*! @brief Sets the placeholder text for the input line. */
+void EditList::set_lineedit_placeholder_text(QString placeholder_text) {
   line_edit->setPlaceholderText(placeholder_text);
 }
 
-/*! @brief TBD */
-void EditListWidget::set_list_headers(QStringList headers) {
+/*! @brief Sets headers to the list. */
+void EditList::set_list_headers(QStringList headers) {
   list_widget->setHeaderLabels(headers);
 }
 
-/*! @brief TBD */
-void EditListWidget::clear() {
+/*! @brief Clears the list. */
+void EditList::clear() {
   auto *root = list_widget->invisibleRootItem();
   while (root->childCount()) {
     auto *item = root->takeChild(0);
@@ -67,8 +68,8 @@ void EditListWidget::clear() {
   line_edit->setText(QString());
 }
 
-/*! @brief TBD */
-void EditListWidget::add_element() {
+/*! @brief Adds new element with a text from the input line. */
+void EditList::add_element() {
   auto element_text = line_edit->text();
   if (element_text.trimmed().isEmpty()) return;
   line_edit->setText(QString());
@@ -76,8 +77,9 @@ void EditListWidget::add_element() {
   auto *list_widget_element = new QTreeWidgetItem(root, {element_text});
 }
 
-/*! @brief TBD */
-void EditListWidget::remove_element() {
+/*! @brief Removes selected element. */
+void EditList::remove_element() {
   auto *root = list_widget->invisibleRootItem();
-  root->takeChildren();
+  auto selected = list_widget->selectedItems();
+  for (auto *item : selected) { root->removeChild(item); delete item; }
 }

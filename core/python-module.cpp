@@ -18,6 +18,8 @@ PythonModule::~PythonModule() {
   Py_Finalize();
   for (auto *proc : _daemons) proc->terminate();
   basis->json->write_scripts(_scripts);
+  for (auto *script : _scripts) delete script;
+  _scripts.clear();
   notifier->unsubscribe_all();
 }
 
@@ -122,7 +124,7 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
   return recv_doc.object();
 }
 
-/*! @brief TBD */
+/*! @brief Executes a Python function asynchronously. */
 Object PythonModule::async_runner(Object func, Object args) {
   PyGILState_STATE _state = PyGILState_Ensure();
   Object answer_result = PyObject_CallObject(func, args);
@@ -176,14 +178,14 @@ QJsonObject PythonModule::request_answer(
   return result;
 }
 
-/*! @brief TBD */
+/*! @brief Prepares data for custom scanning. */
 QJsonObject PythonModule::request_scan(CustomScanScript *script, const QString &user_expression) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
   return run(script->path, script->fn_name, transport);
 }
 
-/*! @brief TBD */
+/*! @brief Prepares data for custom composing. */
 QJsonObject PythonModule::request_compose(
   CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
 ) {
@@ -203,3 +205,13 @@ QJsonObject PythonModule::request_compose(
   transport["candidates"] = candidates;
   return run(script->path, script->fn_name, transport);
 }
+
+/*! @brief Adds a script to the general list.
+ *  @warning When the program ends, this module will delete the scripts from memory itself.
+ *  @sa ~PythonModule()  */
+void PythonModule::add_script(ScriptMetadata *script) { _scripts.append(script); }
+
+/*! @brief Removes a script from the general list. */
+bool PythonModule::remove_script(ScriptMetadata *script) { return _scripts.removeOne(script); }
+/*! @brief Returns the general list of scripts. */
+Scripts PythonModule::get_scripts() { return _scripts; }

@@ -22,10 +22,10 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
     cntr++;
   } while ((tables.contains(uuid_to_verify)) &&
            (cntr < maximum_number_of_attempts)); /*!< Generation is repeated
-                                                  * until a unique UUID is
-                                                  * found. */
+                                                  *   until a unique UUID is
+                                                  *   found. */
   if (tables.contains(uuid_to_verify)) {         /*!< If the generation is unsuccessful,
-                                                  * it throws an error. */
+                                                  *   it throws an error. */
     emit sqlite_error(
       "Could not create source, number of attempts exceeded " +
       QString::number(maximum_number_of_attempts) + "."
@@ -35,12 +35,12 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
     return false;
   }
   *uuid = uuid_to_verify; /*!< The UUID is passed by pointer to the object that
-                           * called this method.
-                           * @details This may be necessary for those objects
-                           * that want to continue editing a new table. */
+                           *   called this method.
+                           *   @details This may be necessary for those objects
+                           *   that want to continue editing a new table. */
   /*! The following queries write the parameters about the table being created
-   * (the source with the @a source parameters) to the main table and create
-   * the source table with the name generated in the form of UUID @a *uuid. */
+   *  (the source with the @a source parameters) to the main table and create
+   *  the source table with the name generated in the form of UUID @a *uuid. */
   if (not
     (exec(
       &query, WriteOptions, {

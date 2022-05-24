@@ -6,23 +6,21 @@
 #include <Python.h>
 #pragma pop_macro("slots")
 
-/*!
- * @class Object
- * @brief Helps manage memory when using Python objects.
- */
+/*! @class Object
+ *  @brief Helps manage memory when using Python objects.  */
 class Object {
 public:
-  Object(PyObject *_o) : o(_o) {}
-  ~Object() { if (o) Py_CLEAR(o); }
+  Object(PyObject *_object) : object(_object) {}
+  ~Object() { if (object) Py_CLEAR(object); }
   
-  operator PyObject*() { return o; }
-  PyObject* operator->() { return o; }
-	PyObject* operator=(PyObject* o2) { o = o2; return o; }
-	bool is() { return o ? true : false; }
-	operator bool() { return o ? true : false; }
+  operator PyObject*() { return object; }
+  PyObject* operator->() { return object; }
+	PyObject* operator=(PyObject* object2) { object = object2; return object; }
+	bool is() { return object ? true : false; }
+	operator bool() { return object ? true : false; }
   
 private:
-  PyObject *o = nullptr;
+  PyObject *object = nullptr;
 };
 
 #endif

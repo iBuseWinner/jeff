@@ -64,13 +64,13 @@ public:
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::React;
   }
-  /*! TBD */
+  /*! List of memory cells that will be passed to the script. */
   QStringList memory_cells;
-  /*! TBD */
+  /*! The number of previous messages that will be passed to the script to understand the context. */
   int number_of_hist_messages = 0;
   /*! Name of function inside the script. */
   QString fn_name;
-  /*! TBD */
+  /*! Indicates whether the script needs the entire text of the message entered by the user. */
   bool needs_user_input;
   
   /*! @brief Turns @a script into a JSON object. */
@@ -104,7 +104,7 @@ public:
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::Startup;
   }
-  /*! TBD */
+  /*! List of memory locations that will be passed to the script when Jeff starts. */
   QStringList memory_cells;
   /*! Name of function inside the script. */
   QString fn_name;

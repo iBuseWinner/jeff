@@ -11,38 +11,43 @@
 #include "widgets/list.h"
 #include "widgets/scrollfreezerwidget.h"
 #include <QCheckBox>
+#include <QFileDialog>
 #include <QGridLayout>
 #include <QLabel>
 #include <QLayoutItem>
 
 /*! @class AddScriptDialog
- *  @brief TBD  */
+ *  @brief Adds information about scripts to Jeff.  */
 class AddScriptDialog : public ScrollFreezerWidget {
   Q_OBJECT
   Q_DISABLE_COPY(AddScriptDialog)
-public:
-  // Objects:
-  ComboBox *stype_input = nullptr;
-  
+public:  
   // Functions described in `add-script.cpp`:
   AddScriptDialog(QWidget *parent, Basis *_basis, PythonModule *_pm, ModalHandler *m_handler);
   ~AddScriptDialog();
-  void change_stype();
+  bool load_from_text(QString json_text);
+  bool load_from_script(ScriptMetadata *script);
   
 signals:
-  /*! @brief TBD */
-  QString saved(QString json_script);
+  /*! @brief Notifies the parent that editing is complete (you can close the widget) 
+   *  and sends it information about the script.  */
+  QJsonObject saved(QJsonObject json_script);
   
 private:
   // Objects:
+  int stype = 0;
   Basis *basis = nullptr;
   PythonModule *pm = nullptr;
   ModalHandler *_m_handler = nullptr;
   Button *path_input = nullptr, *save_btn = nullptr;
+  QLabel *stype_info = nullptr;
+  ComboBox *stype_input = nullptr;
   QGridLayout *dynamic_properties_layout = nullptr;
   
   // Functions described in `add-script.cpp`:
-  ScriptMetadata *get_script_from_metadata();
+  void change_stype();
+  void change_stype(int _stype);
+  void set_stype(int _stype);
 };
 
 #endif

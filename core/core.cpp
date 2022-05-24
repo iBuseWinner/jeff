@@ -2,7 +2,7 @@
 
 /*! @brief The constructor. */
 Core::Core(QObject *parent) : QObject(parent) {
-  connect(basis, &Basis::settings_warning, this, &Core::got_warning);
+  connect(basis, &Basis::warn, this, &Core::got_warning);
   connect(basis, &Basis::send, this, &Core::got_message_from_script);
   connect(basis, &Basis::search_again, this, &Core::got_message_to_search_again);
   connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);

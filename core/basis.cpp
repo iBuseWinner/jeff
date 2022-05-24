@@ -3,12 +3,13 @@
 /*! @brief Checks the settings file for any errors. */
 void Basis::check_settings_file() {
   if (not accessible())
-    emit settings_warning(
-      tr("An access error occurred (e.g. trying to write to a read-only file).")
-    );
+    emit warn(tr("An access error occurred (e.g. trying to write to a read-only file)."));
   else if (not correct())
-    emit settings_warning(tr("A format error occurred (e.g. loading a malformed file)."));
+    emit warn(tr("A format error occurred (e.g. loading a malformed file)."));
 }
+
+/*! @brief Sends a warning to the screen. */
+void Basis::warn_about(QString warning_text) { emit warn(warning_text); }
 
 /*! @brief Checks if there is a standard source, and otherwise sets the first source in the list 
  *  as standard.  */

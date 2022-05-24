@@ -145,13 +145,20 @@ public:
   QJsonValue memory(const QString &key);
   QJsonObject handle_to_script(const QJsonObject &object);
   void handle_from_script(const QJsonObject &object, bool except_send = false);
+  void warn_about(QString warning_text);
 
 signals:
-  /*! @brief Reports a result of checking the settings file, if it is incorrect. */
-  QString settings_warning(QString warning_text);
+  /*! @brief Reports about something. */
+  QString warn(QString warning_text);
+  /*! @brief Notifies of a message from a script that should be shown on the screen. */
   QString send(QString outter_message);
+  /*! @brief Notifies of the need to repeat the search for the specified input. */
   QString search_again(QString rephrased_message);
+  /*! @brief Notifies of a message from a script that should be shown on the screen as a user message
+   *  (on the right side of the screen).  */
   QString send_as_user(QString outter_message);
+  /*! @brief Notifies of a message from a script that should be displayed on the screen 
+   *  and may change over time.  */
   QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
   /*! @brief Reports that sources has been changed. */
   void sources_changed();

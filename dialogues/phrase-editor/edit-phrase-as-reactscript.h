@@ -19,7 +19,7 @@
 
 /*!
  * @class PhraseEditorEditAsReactScript
- * @brief TBD
+ * @brief Edits a phrase like a script.
  */
 class PhraseEditorEditAsReactScript : public QWidget {
   Q_OBJECT
@@ -31,26 +31,23 @@ public:
   void load_from_text(QString expression);
   
 signals:
-  /*! @brief TBD */
+  /*! @brief Notifies that editing is complete and returns the text to be saved to the database. */
   void save(QString expression);
   
 private:
   // Objects:
   Basis *basis = nullptr;
   QLabel choose_path, specify_func_name, specify_amount_of_history, specify_memory_cells;
-  Button path, add_memory_cell_btn, remove_memory_cell_btn, save_script_btn;
+  Button path, save_script_btn;
   LineEdit func_name;
   QSpinBox history_amount;
   QCheckBox needs_user_input;
   Spoiler other_props_widget;
-  QGridLayout memory_cells_manager_layout, other_props_widget_layout, editor_layout;
-  QWidget memory_cells_manager_widget;
-  List memory_cells;
-  QList<QTreeWidgetItem *> memory_cells_items;
+  QGridLayout other_props_widget_layout, editor_layout;
+  EditList *memory_cells = nullptr;
   ReactScript *script = nullptr;
   
   // Functions described in `edit-phrase-as-reactscript.cpp`:
-  void select_file();
   void clear();
   void save_script();
 };

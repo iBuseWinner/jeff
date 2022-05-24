@@ -55,5 +55,5 @@ void Spoiler::set_content_layout(QLayout *content_layout) {
   content_animation->setEndValue(content_height);
 }
 
-/*! @brief TBD */
+/*! @brief Sets the title of the spoiler. */
 void Spoiler::set_title(QString title) { toggle_button.setText(title); }

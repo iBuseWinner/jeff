@@ -8,14 +8,14 @@
 #include "widgets/lineedit.h"
 #include "widgets/list.h"
 
-/*! @class EditListWidget
- *  @brief TBD  */
-class EditListWidget : public QWidget {
+/*! @class EditList
+ *  @brief Editable list of elements.  */
+class EditList : public QWidget {
   Q_OBJECT
-  Q_DISABLE_COPY(EditListWidget)
+  Q_DISABLE_COPY(EditList)
 public:
   // Functions described in `editlist.cpp`:
-  EditListWidget(QWidget *parent = nullptr);
+  EditList(QWidget *parent = nullptr);
   QStringList get_list();
   void set_list(QStringList list);
   void set_add_btn_text(QString text);
@@ -23,6 +23,7 @@ public:
   void set_lineedit_placeholder_text(QString placeholder_text);
   void set_list_headers(QStringList headers);
   void clear();
+  bool is_empty();
   
 private:
   // Objects:

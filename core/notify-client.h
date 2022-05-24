@@ -9,7 +9,7 @@
 #include <QTcpSocket>
 
 /*! @class NotifyClient
- *  @brief TBD  */
+ *  @brief Sends new messages over the network.  */
 class NotifyClient : public QObject {
   Q_OBJECT
 public:

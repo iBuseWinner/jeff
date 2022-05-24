@@ -92,7 +92,7 @@
     </message>
     <message>
         <source>Memory cell key</source>
-        <translation>Ключ ячейки памяти</translation>
+        <translation type="vanished">Ключ ячейки памяти</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -121,6 +121,22 @@
     <message>
         <source>Add the memory cells to be passed to the script:</source>
         <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
+    </message>
+    <message>
+        <source>Select file...</source>
+        <translation>Выбрать файл...</translation>
+    </message>
+    <message>
+        <source>Python script</source>
+        <translation>Скрипт Python</translation>
+    </message>
+    <message>
+        <source>Cells list</source>
+        <translation>Список ячеек</translation>
+    </message>
+    <message>
+        <source>Please complete all fields before saving.</source>
+        <translation>Пожалуйста, заполните все поля перед сохранением.</translation>
     </message>
 </context>
 <context>

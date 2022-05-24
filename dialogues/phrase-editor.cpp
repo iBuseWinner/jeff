@@ -131,12 +131,14 @@ void PhraseEditor::add_new_phrase() {
   open_brief_by_address(id);
 }
 
-/*! @brief TBD */
+/*! @brief Adds a new phrase, sends its ID to the list that the intent came from, 
+ *  and opens the editor.  */
 void PhraseEditor::add_phrase_and_send_id() {
   auto source = overview->selected_source();
   if (source.path.isEmpty()) return;
   auto id = basis->sql->create_new_phrase(source, tr("New phrase"));
   if (id == -1) return;
-  brief->waits_for_choosed(id);
+  brief->waits_for_choosed(id); /*!< @a brief widget asked us to create this phrase, and it needs 
+                                 *   its ID in order to associate it with another phrase. */
   open_brief_by_address(id);
 }

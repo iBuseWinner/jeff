@@ -10,7 +10,7 @@ LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {
   setFrame(false);
 }
 
-/*! @brief TBD */
+/*! @brief Sets a different widget style sheet so that its border is not displayed on the screen. */
 void LineEdit::hide_border() {
   setStyleSheet(
     wob_style_sheet.arg(styling.css_bg_color).arg(styling.css_fg_color)

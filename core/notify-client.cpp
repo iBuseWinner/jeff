@@ -3,21 +3,12 @@
 /*! @brief The constructor. */
 NotifyClient::NotifyClient(QObject *parent) : QObject(parent) {}
 
-/*! @brief TBD */
+/*! @brief Notifies all scripts that have subscribed to notifications about a new message. */
 void NotifyClient::notify(MessageData mdata) {
   for (auto *script : scripts) send_event(mdata, script->server_addr, script->server_port);
 }
 
-/*! @brief TBD */
-void NotifyClient::subscribe(ServerScript *script) { scripts.append(script); }
-
-/*! @brief TBD */
-void NotifyClient::unsubscribe(ServerScript *script) { scripts.removeOne(script); }
-
-/*! @brief TBD */
-void NotifyClient::unsubscribe_all() { scripts.clear(); }
-
-/*! @brief TBD */
+/*! @brief Sends a message to the server over TCP. */
 void NotifyClient::send_event(MessageData mdata, QHostAddress addr, quint16 port) {
   auto socket = new QTcpSocket(this);
   socket->connectToHost(addr, port);
@@ -30,3 +21,10 @@ void NotifyClient::send_event(MessageData mdata, QHostAddress addr, quint16 port
     socket->disconnectFromHost();
   });
 }
+
+/*! @brief Subscribes the script to notifications. */
+void NotifyClient::subscribe(ServerScript *script) { scripts.append(script); }
+/*! @brief Unsubscribes the script from notifications. */
+void NotifyClient::unsubscribe(ServerScript *script) { scripts.removeOne(script); }
+/*! @brief Unsubscribes all scripts from notifications. */
+void NotifyClient::unsubscribe_all() { scripts.clear(); }

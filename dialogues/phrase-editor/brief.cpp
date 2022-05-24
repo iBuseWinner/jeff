@@ -94,7 +94,7 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   setWidget(area_widget);
 }
 
-/*! @brief TBD */
+/*! @brief Limits the maximum size of the header so that long text does not stretch the editor. */
 void PhraseEditorBrief::resizeEvent(QResizeEvent *event) { header.setMaximumWidth(width() - 10); }
 
 /*! @brief The destructor. */
@@ -177,7 +177,7 @@ void PhraseEditorBrief::save_phrase_text() {
   back_to_overview.setEnabled(true);
 }
 
-/*! @brief TBD */
+/*! @brief Saves information about the script as JSON. */
 void PhraseEditorBrief::save_script(QString script_json) {
   phrase.expression = script_json;
   if (not basis->sql->update_expression(source, phrase.expression, phrase.address)) return;

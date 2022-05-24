@@ -43,11 +43,12 @@ typedef QList<QProcess *> Daemons;
  */
 class PythonModule : public QObject {
   Q_OBJECT
+  Q_DISABLE_COPY(PythonModule)
 public:
   // Functions described in `python-module.cpp`:
   PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent = nullptr);
   ~PythonModule();
-  bool add_script(ScriptMetadata *script);
+  void add_script(ScriptMetadata *script);
   bool remove_script(ScriptMetadata *script);
   Scripts get_scripts();
   void startup();
@@ -60,12 +61,12 @@ public:
   );
 
 signals:
+  /*! @brief Notifies of a script error. */
   QString script_exception(QString error);
+  /*! @brief Notifies of a message from a script that should be shown on the screen. */
   QString send(QString message);
   
 private:
-  Q_DISABLE_COPY(PythonModule)
-
   // Objects:
   HProcessor *hp = nullptr;
   Basis *basis = nullptr;
