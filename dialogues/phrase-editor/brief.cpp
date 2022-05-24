@@ -97,11 +97,6 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
 /*! @brief Limits the maximum size of the header so that long text does not stretch the editor. */
 void PhraseEditorBrief::resizeEvent(QResizeEvent *event) { header.setMaximumWidth(width() - 10); }
 
-/*! @brief The destructor. */
-PhraseEditorBrief::~PhraseEditorBrief() {
-  if (script_editor) script_editor->setParent(nullptr);
-}
-
 /*! @brief Sets up brief widget. */
 bool PhraseEditorBrief::setup(Source _source, Phrases _phrases, int address) {
   source = _source;
@@ -145,12 +140,16 @@ void PhraseEditorBrief::edit_phrase_text() {
   header.hide();
   if (exec_checkbox.isChecked()) {
     if (not script_editor) {
-      script_editor = new PhraseEditorEditAsReactScript(basis);
+      script_editor = new AddScriptDialog(nullptr, basis);
       script_editor->setMaximumWidth(maximumWidth() - 6);
     }
-    script_editor->load_from_text(header.text());
+    auto json_script = header.text();
+    script_editor->load_from_text(json_script);
     connect(
-      script_editor, &PhraseEditorEditAsReactScript::save, this, &PhraseEditorBrief::save_script
+      script_editor, &AddScriptDialog::saved, this, &PhraseEditorBrief::save_script
+    );
+    connect(
+      script_editor, &AddScriptDialog::closed, this, [this, json_script] { save_script(json_script); }
     );
     widget_layout.replaceWidget(&header, script_editor);
     script_editor->show();
@@ -184,7 +183,7 @@ void PhraseEditorBrief::save_script(QString script_json) {
   script_editor->hide();
   header.setText(script_json);
   widget_layout.replaceWidget(script_editor, &header);
-  disconnect(script_editor, &PhraseEditorEditAsReactScript::save, nullptr, nullptr);
+  disconnect(script_editor, &AddScriptDialog::saved, nullptr, nullptr);
   script_editor->setParent(nullptr);
   header.show();
   edit_expression.show();

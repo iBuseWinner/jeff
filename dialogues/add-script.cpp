@@ -1,12 +1,9 @@
 #include "add-script.h"
 
 /*! @brief The constructor. */
-AddScriptDialog::AddScriptDialog(
-  QWidget *parent = nullptr,
-  Basis *_basis = nullptr,
-  PythonModule *_pm = nullptr, 
-  ModalHandler *m_handler = nullptr
-) : ScrollFreezerWidget(parent), basis(_basis), pm(_pm), _m_handler(m_handler) {
+AddScriptDialog::AddScriptDialog(QWidget *parent, Basis *_basis, 
+                                 PythonModule *_pm, ModalHandler *m_handler) 
+: ScrollFreezerWidget(parent), basis(_basis), pm(_pm), _m_handler(m_handler) {
   if (_m_handler) {
     _m_handler->setPrisoner(this);
     setObjectName("add_script_dialog");
@@ -17,7 +14,7 @@ AddScriptDialog::AddScriptDialog(
   connect(path_input, &Button::clicked, this, [this]() {
     auto _path = 
       QFileDialog::getOpenFileName(nullptr, tr("Select file..."), "", tr("Python script") + "(*.py)");
-    if (not _path.isEmpty()) path_input->setText(_path); 
+    if (not _path.isEmpty()) path_input->setText(_path);
     else path_input->setText(tr("Select a file..."));
   });
   stype_input = new ComboBox(this);
@@ -59,6 +56,7 @@ AddScriptDialog::AddScriptDialog(
   main_layout->addWidget(buttons_widget, 3, 0, 1, 2);
   setLayout(main_layout);
   if (_m_handler) connect(cancel_btn, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
+  else connect(cancel_btn, &Button::clicked, this, [this] { emit closed(); });
   change_stype();
 }
 
@@ -100,10 +98,9 @@ void AddScriptDialog::change_stype() {
     connect(save_btn, &Button::clicked, this, [this, fn_name_input, memory_cells_list]() {
       if (
         path_input->text() == tr("Select a file...") or
-        fn_name_input->text().isEmpty() or
-        memory_cells_list->is_empty()
+        fn_name_input->text().isEmpty()
       ) {
-        basis->warn_about(tr("Please complete all fields before saving."));
+        basis->warn_about(tr("Please complete path and function name fields before saving."));
         return;
       }
       auto *startup_script = new StartupScript();
@@ -114,7 +111,7 @@ void AddScriptDialog::change_stype() {
         pm->add_script(startup_script);
         _m_handler->closePrisoner();
       } else {
-        emit saved(startup_script->toJson());
+        emit saved(ScriptsCast::to_string(startup_script));
         delete startup_script;
       }
     });
@@ -127,12 +124,63 @@ void AddScriptDialog::change_stype() {
   } else if (stype == 4) {
     // Custom composer (receives chosed variants and answers on them in another manner)
   } else if (stype == 5) {
-    /*! This option is not listed and is responsible for editing react scripts saved as 
+    // React script (runs when a pattern is found in user input)
+    /*! @details This option is not listed and is responsible for editing react scripts saved as 
      *  phrase text in the database. */
-    auto *specify_history_amount = 
-      new QLabel(tr("Specify amount of message history to be sent:"), this);
-    specify_history_amount->setWordWrap(true);
-    auto *history_amount = new QSpinBox(this);
+    auto *fn_name_info = new QLabel(tr("Specify function name:"));
+    auto *fn_name_input = new LineEdit();
+    fn_name_input->setPlaceholderText(tr("Function name..."));
+    auto *hist_amount_info = new QLabel(tr("Specify amount of message history to be sent:"));
+    hist_amount_info->setWordWrap(true);
+    auto *hist_amount_input = new QSpinBox();
+    auto *needs_ue_input = new QCheckBox(tr("Check if script needs whole user input"));
+    auto *memory_cells_info = new QLabel(tr("Add the memory cells to be passed to the script:"));
+    auto *memory_cells_list = new EditList();
+    memory_cells_list->set_add_btn_text(tr("Add memory cell"));
+    memory_cells_list->set_rem_btn_text(tr("Remove selected cell"));
+    memory_cells_list->set_lineedit_placeholder_text(tr("Memory cell name..."));
+    memory_cells_list->set_list_headers({tr("Cells list")});
+    dynamic_properties_layout->addWidget(fn_name_info, 0, 0);
+    dynamic_properties_layout->addWidget(fn_name_input, 0, 1);
+    dynamic_properties_layout->addWidget(hist_amount_info, 1, 0);
+    dynamic_properties_layout->addWidget(hist_amount_input, 1, 1);
+    dynamic_properties_layout->addWidget(needs_ue_input, 2, 0, 1, 2);
+    dynamic_properties_layout->addWidget(memory_cells_info, 3, 0);
+    dynamic_properties_layout->addWidget(memory_cells_list, 3, 1);
+    connect(
+      this, &AddScriptDialog::load, this,
+      [
+        this, fn_name_input, hist_amount_input, needs_ue_input, memory_cells_list
+      ](ScriptMetadata *script) {
+        if (script->stype == 5) {
+          auto *s = dynamic_cast<ReactScript *>(script);
+          if (not s) return;
+          path_input->setText(s->path);
+          fn_name_input->setText(s->fn_name);
+          hist_amount_input->setValue(s->number_of_hist_messages);
+          needs_ue_input->setChecked(s->needs_user_input);
+          memory_cells_list->append(s->memory_cells);
+        }
+      }
+    );
+    connect(save_btn, &Button::clicked, this, 
+            [this, fn_name_input, hist_amount_input, needs_ue_input, memory_cells_list]() {
+      if (
+        path_input->text() == tr("Select a file...") or
+        fn_name_input->text().isEmpty()
+      ) {
+        basis->warn_about(tr("Please complete path and function name fields before saving."));
+        return;
+      }
+      auto *react_script = new ReactScript();
+      react_script->path = path_input->text();
+      react_script->memory_cells = memory_cells_list->get_list();
+      react_script->fn_name = fn_name_input->text();
+      react_script->number_of_hist_messages = hist_amount_input->value();
+      react_script->needs_user_input = needs_ue_input->isChecked();
+      emit saved(ScriptsCast::to_string(react_script));
+      delete react_script;
+    });
   }
   stype_input->setEnabled(true);
 }
@@ -159,28 +207,28 @@ bool AddScriptDialog::load_from_text(QString json_text) {
 /*! @brief TBD */
 bool AddScriptDialog::load_from_script(ScriptMetadata *script) {
   if (script->stype == ScriptType::Startup) {
-    auto *s = dynamic_cast<StartupScript *>(script);
-    
+    change_stype(0);
+    emit load(script);
     return true;
   } else if (script->stype == ScriptType::Daemon) {
-    auto *s = dynamic_cast<DaemonScript *>(script);
-    
+    change_stype(1);
+    emit load(script);
     return true;
   } else if (script->stype == ScriptType::Server) {
-    auto *s = dynamic_cast<ServerScript *>(script);
-    
+    change_stype(2);
+    emit load(script);
     return true;
   } else if (script->stype == ScriptType::CustomScan) {
-    auto *s = dynamic_cast<CustomScanScript *>(script);
-    
+    change_stype(3);
+    emit load(script);
     return true;
   } else if (script->stype == ScriptType::CustomCompose) {
-    auto *s = dynamic_cast<CustomComposeScript *>(script);
-    
+    change_stype(4);
+    emit load(script);
     return true;
   } else if (script->stype == ScriptType::React) {
-    auto *s = dynamic_cast<ReactScript *>(script);
     set_stype(5);
+    emit load(script);
     return true;
   } else return false;
 }

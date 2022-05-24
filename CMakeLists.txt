@@ -90,8 +90,6 @@ set(SRCS_UI
   dialogues/sources.h
   dialogues/phrase-editor/brief.cpp
   dialogues/phrase-editor/brief.h
-  dialogues/phrase-editor/edit-phrase-as-reactscript.cpp
-  dialogues/phrase-editor/edit-phrase-as-reactscript.h
   dialogues/phrase-editor/overview.cpp
   dialogues/phrase-editor/overview.h
   dialogues/phrase-editor/selector.cpp

@@ -15,6 +15,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLayoutItem>
+#include <QSpinBox>
 
 /*! @class AddScriptDialog
  *  @brief Adds information about scripts to Jeff.  */
@@ -23,7 +24,8 @@ class AddScriptDialog : public ScrollFreezerWidget {
   Q_DISABLE_COPY(AddScriptDialog)
 public:  
   // Functions described in `add-script.cpp`:
-  AddScriptDialog(QWidget *parent, Basis *_basis, PythonModule *_pm, ModalHandler *m_handler);
+  AddScriptDialog(QWidget *parent = nullptr, Basis *_basis = nullptr, 
+                  PythonModule *_pm = nullptr, ModalHandler *m_handler = nullptr);
   ~AddScriptDialog();
   bool load_from_text(QString json_text);
   bool load_from_script(ScriptMetadata *script);
@@ -31,7 +33,9 @@ public:
 signals:
   /*! @brief Notifies the parent that editing is complete (you can close the widget) 
    *  and sends it information about the script.  */
-  QJsonObject saved(QJsonObject json_script);
+  QString saved(QString json_script);
+  void closed();
+  ScriptMetadata *load(ScriptMetadata *script);
   
 private:
   // Objects:

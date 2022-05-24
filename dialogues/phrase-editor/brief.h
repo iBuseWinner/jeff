@@ -2,7 +2,7 @@
 #define PHRASE_EDITOR_BRIEF_H
 
 #include "core/basis.h"
-#include "dialogues/phrase-editor/edit-phrase-as-reactscript.h"
+#include "dialogues/add-script.h"
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"
 #include "widgets/lineedit.h"
@@ -38,7 +38,6 @@ public:
   
   // Functions described in `brief.cpp`:
   PhraseEditorBrief(Basis *_basis, QWidget *parent = nullptr);
-  ~PhraseEditorBrief();
   bool setup(Source _source, Phrases _phrases, int address);
   void waits_for_choosed(int address);
   
@@ -69,7 +68,7 @@ private:
   QHBoxLayout phrase_expression_edit_layout;
   LineEdit phrase_expression_edit_line;
   Button phrase_expression_edit_save;
-  PhraseEditorEditAsReactScript *script_editor = nullptr;
+  AddScriptDialog *script_editor = nullptr;
   Menu phrases_context_menu; /*! Context menus. */
   QAction
     add_phrase_action, connect_phrase_action, edit_phrase_action, 

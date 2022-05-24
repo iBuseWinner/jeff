@@ -17,7 +17,7 @@ public:
   // Functions described in `editlist.cpp`:
   EditList(QWidget *parent = nullptr);
   QStringList get_list();
-  void set_list(QStringList list);
+  void append(QStringList list);
   void set_add_btn_text(QString text);
   void set_rem_btn_text(QString text);
   void set_lineedit_placeholder_text(QString placeholder_text);
