@@ -2,12 +2,12 @@
 #define PHRASE_EDITOR_BRIEF_H
 
 #include "core/basis.h"
-#include "dialogues/add-script.h"
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"
 #include "widgets/lineedit.h"
 #include "widgets/list.h"
 #include "widgets/menu.h"
+#include "widgets/scripteditor.h"
 #include "widgets/styling.h"
 #include <QApplication>
 #include <QCheckBox>
@@ -68,7 +68,7 @@ private:
   QHBoxLayout phrase_expression_edit_layout;
   LineEdit phrase_expression_edit_line;
   Button phrase_expression_edit_save;
-  AddScriptDialog *script_editor = nullptr;
+  ScriptEditor *script_editor = nullptr;
   Menu phrases_context_menu; /*! Context menus. */
   QAction
     add_phrase_action, connect_phrase_action, edit_phrase_action, 

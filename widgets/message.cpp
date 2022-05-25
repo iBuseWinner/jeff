@@ -138,7 +138,7 @@ void Message::prepare_to_widget() {
 
 /*! @brief Creates a spacer and an Board to adjust the layout. */
 QPair<QSpacerItem *, Board *> Message::make_layout() {
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
   auto *board = new Board(this);
   grid_layout = new QGridLayout();
   grid_layout->setSpacing(0);

@@ -1,7 +1,7 @@
 #include "brief.h"
 
 /*! @brief The constructor. */
-PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent) 
+PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   : QScrollArea(parent), basis(_basis) {
   // Top-level widgets.
   auto header_font = QApplication::font();
@@ -46,11 +46,6 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
     styling.css_scroll_bar.arg(styling.light_theme ? styling.css_light_sb : styling.css_dark_sb)
   );
   verticalScrollBar()->setFixedWidth(5);
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setFocusPolicy(Qt::NoFocus);
-  setFrameStyle(QFrame::NoFrame);
-  setFrameShadow(QFrame::Plain);
-  setWidgetResizable(true);
   // Expression edit widgets.
   phrase_expression_edit_save.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
@@ -136,20 +131,22 @@ void PhraseEditorBrief::edit_phrase_text() {
   edit_expression.setEnabled(false);
   back_to_overview.setEnabled(false);
   exec_checkbox.setEnabled(false);
+  activators_list.setEnabled(false);
+  reagents_list.setEnabled(false);
   edit_expression.hide();
   header.hide();
   if (exec_checkbox.isChecked()) {
     if (not script_editor) {
-      script_editor = new AddScriptDialog(nullptr, basis);
+      script_editor = new ScriptEditor(this, basis);
       script_editor->setMaximumWidth(maximumWidth() - 6);
     }
     auto json_script = header.text();
     script_editor->load_from_text(json_script);
     connect(
-      script_editor, &AddScriptDialog::saved, this, &PhraseEditorBrief::save_script
+      script_editor, &ScriptEditor::saved, this, &PhraseEditorBrief::save_script
     );
     connect(
-      script_editor, &AddScriptDialog::closed, this, [this, json_script] { save_script(json_script); }
+      script_editor, &ScriptEditor::closed, this, [this, json_script] { save_script(json_script); }
     );
     widget_layout.replaceWidget(&header, script_editor);
     script_editor->show();
@@ -171,6 +168,8 @@ void PhraseEditorBrief::save_phrase_text() {
   widget_layout.replaceWidget(&phrase_expression_edit_widget, &header);
   header.show();
   edit_expression.show();
+  activators_list.setEnabled(true);
+  reagents_list.setEnabled(true);
   exec_checkbox.setEnabled(true);
   edit_expression.setEnabled(true);
   back_to_overview.setEnabled(true);
@@ -183,10 +182,12 @@ void PhraseEditorBrief::save_script(QString script_json) {
   script_editor->hide();
   header.setText(script_json);
   widget_layout.replaceWidget(script_editor, &header);
-  disconnect(script_editor, &AddScriptDialog::saved, nullptr, nullptr);
-  script_editor->setParent(nullptr);
+  disconnect(script_editor, &ScriptEditor::saved, nullptr, nullptr);
+  disconnect(script_editor, &ScriptEditor::closed, nullptr, nullptr);
   header.show();
   edit_expression.show();
+  activators_list.setEnabled(true);
+  reagents_list.setEnabled(true);
   exec_checkbox.setEnabled(true);
   edit_expression.setEnabled(true);
   back_to_overview.setEnabled(true);

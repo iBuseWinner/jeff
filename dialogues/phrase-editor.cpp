@@ -66,10 +66,11 @@ PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handl
 void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
   Q_UNUSED(column)
   if (not mode_mutex.try_lock()) return;
-  brief->setFixedWidth(overview->width() - 6);
   overview->hide();
   editor_layout.replaceWidget(overview, brief);
   brief->setup(overview->selected_source(), overview->phrases, item->text(0).toInt());
+  brief->setFixedWidth(480);
+  dynamic_cast<QWidget *>(parent())->setFixedWidth(500);
   brief->show();
   mode = BriefMode;
   mode_mutex.unlock();
@@ -78,11 +79,12 @@ void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
 /*! @brief Opens the phrase editor at its address in the source. */
 void PhraseEditor::open_brief_by_address(int address) {
   if (not mode_mutex.try_lock()) return;
-  brief->setFixedWidth(overview->width());
   overview->hide();
   editor_layout.replaceWidget(overview, brief);
   overview->update_phrases();
   brief->setup(overview->selected_source(), overview->phrases, address);
+  brief->setFixedWidth(480);
+  dynamic_cast<QWidget *>(parent())->setFixedWidth(490);
   brief->show();
   mode = BriefMode;
   mode_mutex.unlock();
@@ -91,7 +93,7 @@ void PhraseEditor::open_brief_by_address(int address) {
 /*! @brief Opens a list of phrases to choose from. */
 void PhraseEditor::open_selector() {
   if (not mode_mutex.try_lock()) return;
-  selector->setFixedWidth(overview->width());
+  selector->setFixedWidth(480);
   selector->setFixedHeight(brief->height());
   brief->hide();
   editor_layout.replaceWidget(brief, selector);
