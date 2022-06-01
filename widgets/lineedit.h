@@ -19,7 +19,7 @@ public:
 
 private:
   // Constants:
-  inline static const QString style_sheet = "background-color: %1; color: %2; border-width: 1px; border-style: solid; border-color: %3; border-radius: 6px;";
+  inline static const QString style_sheet = "LineEdit { background-color: %1; color: %2; border-width: 1px; border-style: solid; border-color: %3; border-radius: 6px; } LineEdit:disabled { border-color: %1; }";
   inline static const QString wob_style_sheet = "background-color: %1; color: %2;";
 };
 

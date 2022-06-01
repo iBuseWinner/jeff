@@ -74,3 +74,16 @@ QString HProcessor::last_user_message(int i) {
   message_mutex.unlock();
   return msg;
 }
+
+/*! @brief Blocks the addition of new messages and passes the history to the calling method. */
+Messages *HProcessor::hold_messages() { message_mutex.lock(); return &message_history; }
+/*! @brief Unblocks messages. */
+void HProcessor::release_messages() { message_mutex.unlock(); }
+
+/*! @brief Returns the length of the history. */
+int HProcessor::length() {
+  message_mutex.lock();
+  auto len = message_history.length();
+  message_mutex.unlock();
+  return len;
+}

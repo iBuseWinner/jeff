@@ -5,7 +5,6 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   setObjectName(object_name);
-  mainLt.setSpacing(0);
   mainLt.setMargin(0);
   // Delay.
   delay.setText(tr("Enable delay"));

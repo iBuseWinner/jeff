@@ -1,6 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include "core/history-processor.h"
 #include "core/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/message.h"
@@ -24,7 +25,7 @@ public:
   void set_scroll_enabled(bool _scroll_enabled) { scroll_enabled = _scroll_enabled; }
 
   // Functions described in `display.cpp`:
-  Display(short _max_message_amount = 50, QWidget *parent = nullptr);
+  Display(HProcessor *_hp = nullptr, short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
   void start_by(Messages history);
   void add_message(Message *message);
@@ -34,7 +35,9 @@ public:
 
 private:
   // Objects:
+  HProcessor *hp = nullptr;
   QVBoxLayout *vertical_box_layout = nullptr;
+  QSpacerItem *spacer = nullptr;
   bool scroll_enabled = true;
   QMutex messages_mutex;
   QList<Message *> all_messages;
@@ -50,9 +53,8 @@ private:
 
   // Functions described in `display.cpp`:
   void scroll_down(int min, int max);
-  void scroll_tumbler(int value);
+  void scroller(int value);
   void prepare_message(Message *message);
-  void show_widgets(int value = 0);
   void remove_message(Message *message);
   void resizeEvent(QResizeEvent *event) override;
   void fit_messages();

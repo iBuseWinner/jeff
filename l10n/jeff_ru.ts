@@ -637,6 +637,34 @@
         <source>Check if script needs whole user input</source>
         <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
     </message>
+    <message>
+        <source>Please complete path field before saving.</source>
+        <translation>Пожалуйста, заполните путь скрипта перед сохранением.</translation>
+    </message>
+    <message>
+        <source>If the script is located remotely, enter the IP address:</source>
+        <translation>Если скрипт расположен удалённо, введите IP-адрес:</translation>
+    </message>
+    <message>
+        <source>IP address...</source>
+        <translation>IP-адрес...</translation>
+    </message>
+    <message>
+        <source>Enter server port:</source>
+        <translation>Введите порт сервера:</translation>
+    </message>
+    <message>
+        <source>Server port...</source>
+        <translation>Порт сервера...</translation>
+    </message>
+    <message>
+        <source>Please complete path or server IP and port fields before saving.</source>
+        <translation>Пожалуйста, введите путь или IP-адрес сервера и его порт перед сохранением.</translation>
+    </message>
+    <message>
+        <source>Check if you need to pass additional values to the script</source>
+        <translation>Отметьте, если вам нужно передавать дополнительные свойства в скрипт</translation>
+    </message>
 </context>
 <context>
     <name>Server</name>

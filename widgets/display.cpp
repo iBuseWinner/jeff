@@ -1,8 +1,8 @@
 #include "display.h"
 
 /*! @brief The constructor. */
-Display::Display(short _max_message_amount, QWidget *parent)
-    : QScrollArea(parent), max_message_amount(_max_message_amount) {
+Display::Display(HProcessor *_hp, short _max_message_amount, QWidget *parent)
+    : QScrollArea(parent), hp(_hp), max_message_amount(_max_message_amount) {
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   setFocusPolicy(Qt::NoFocus);
@@ -15,8 +15,9 @@ Display::Display(short _max_message_amount, QWidget *parent)
   );
   verticalScrollBar()->setFixedWidth(5);
   connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scroll_down);
-  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scroll_tumbler);
-  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::show_widgets);
+  connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scroller);
+  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+  setStyleSheet(box_style_sheet);
   start();
 }
 
@@ -30,21 +31,29 @@ void Display::prepare_message(Message *message) {
 
 /*! @brief Really adds a message to the display. @sa ..._by_md and ..._with_widget. */
 void Display::add_message(Message *message) {
+  std::cout << "got another" << std::endl;
   prepare_message(message);
   messages_mutex.lock();
+  std::cout << message_counter << std::endl;
   message_counter++;
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   /*! If the scroll is approximately below the middle, and the number of
    *  displayed messages is greater than the maximum...  */
+  std::cout << message_counter << " " << max_message_amount << std::endl;
   if ((verticalScrollBar()->value() >
        ((verticalScrollBar()->minimum() + verticalScrollBar()->maximum()) / 2)) and
       (message_counter > max_message_amount))
     /*! ...we delete all unnecessary messages */
     while (message_counter > max_message_amount) {
-      all_messages[all_messages.length() - message_counter]->hide();
-      vertical_box_layout->removeWidget(all_messages[all_messages.length() - message_counter--]);
+      std::cout << "took up one" << std::endl;
+      auto *message = all_messages.takeAt(0);
+      message->hide();
+      vertical_box_layout->removeWidget(message);
+      delete message;
+      message_counter--;
     }
+  std::cout << message_counter << std::endl;
   messages_mutex.unlock();
 }
 
@@ -83,16 +92,16 @@ void Display::start() {
   message_counter = 0;
   all_messages.clear();
   if (vertical_box_layout) delete vertical_box_layout;
-  QWidget *box = new QWidget(this);
-  box->setContentsMargins(0, 0, 5, 0);
-  box->setObjectName(box_object_name);
-  setStyleSheet(box_style_sheet);
+  auto *w = takeWidget();
+  if (w) delete w;
   vertical_box_layout = new QVBoxLayout(this);
   vertical_box_layout->setSpacing(0);
   vertical_box_layout->setMargin(0);
-  // WARNING If you enter more than the maximum messages, scroll up and start opening the settings,
-  // an empty space will appear at the top.
-  vertical_box_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
+  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+  vertical_box_layout->addItem(spacer);
+  QWidget *box = new QWidget(this);
+  box->setContentsMargins(0, 0, 5, 0);
+  box->setObjectName(box_object_name);
   box->setLayout(vertical_box_layout);
   setWidget(box);
   messages_mutex.unlock();
@@ -124,26 +133,39 @@ void Display::scroll_down(int min, int max) {
   if (scroll_enabled) verticalScrollBar()->setValue(max);
 }
 
-/*! @brief Enables or disables automatic scrolling. */
-void Display::scroll_tumbler(int value) {
-  if (not scroll_enabled and (value == verticalScrollBar()->maximum())) scroll_enabled = true;
-  else if (scroll_enabled and (value != verticalScrollBar()->maximum())) scroll_enabled = false;
-}
-
-/*! @brief Shows the message history when scrolling up. */
-void Display::show_widgets(int value) {
-  if ((value == verticalScrollBar()->minimum()) and (message_counter < all_messages.length())) {
+/*! @brief Enables or disables automatic scrolling and shows the message history when scrolling up. */
+void Display::scroller(int value) {
+  if (not scroll_enabled and (value == verticalScrollBar()->maximum())) {
+    scroll_enabled = true;
+    if (not spacer) {
+      spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+      vertical_box_layout->insertItem(0, spacer);
+    }
+  }
+  else if (scroll_enabled and (value != verticalScrollBar()->maximum())) {
+    scroll_enabled = false;
+    if (spacer) {
+      vertical_box_layout->removeItem(spacer);
+      delete spacer;
+      spacer = nullptr;
+    }
+  }
+  auto length = hp->length();
+  if ((value == verticalScrollBar()->minimum()) and (message_counter < length)) {
     /*! Add half of the maximum. */
     short portion = max_message_amount / 2;
-    if (message_counter + portion > all_messages.length())
-      portion = all_messages.length() - message_counter;
-    while (portion) {
-      vertical_box_layout->insertWidget(
-          1, all_messages.at(all_messages.length() - message_counter - 1));
-      all_messages.at(all_messages.length() - message_counter - 1)->show();
+    if (message_counter + portion > length) portion = length - message_counter;
+    auto *messages = hp->hold_messages();
+    while (portion--) {
+      auto *message = new Message(messages->at(messages->length() - message_counter - 1));
+      all_messages.insert(0, message);
+      int pos = 0;
+      if (spacer) pos = 1;
+      vertical_box_layout->insertWidget(pos, message);
+      message->show();
       message_counter++;
-      portion--;
     }
+    hp->release_messages();
     verticalScrollBar()->setValue(1);
   }
 }

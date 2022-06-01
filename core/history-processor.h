@@ -26,6 +26,9 @@ public:
   void save(const QString &filename = QString());
   Messages recent(int amount);
   QString last_user_message(int i = 0);
+  Messages *hold_messages();
+  void release_messages();
+  int length();
 
 signals:
   /*! @brief Sends message history to Display. */

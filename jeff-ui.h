@@ -47,7 +47,7 @@ private:
   Basis *basis = core->basis;
   HProcessor *history_processor = core->hp;
   Line *line = new Line(this);
-  Display *display = new Display(25, this);
+  Display *display = new Display(history_processor, 25, this);
   MenuBar *menubar = new MenuBar(basis, line, this);
 
   // Constants:
