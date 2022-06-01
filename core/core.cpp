@@ -135,7 +135,6 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
       this, [this, mdata, id_and_message] {
-        hp->append(mdata);
         notifier->notify(mdata);
         QPair<QString, MessageData> id_and_message_data(id_and_message.first, mdata);
         emit show_status(id_and_message_data);

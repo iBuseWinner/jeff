@@ -16,7 +16,7 @@ PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifi
 /*! @brief The destructor. */
 PythonModule::~PythonModule() {
   Py_Finalize();
-  for (auto *proc : _daemons) proc->terminate();
+  for (auto *proc : _daemons) proc->kill();
   basis->json->write_scripts(_scripts);
   for (auto *script : _scripts) delete script;
   _scripts.clear();

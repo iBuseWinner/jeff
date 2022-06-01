@@ -31,29 +31,26 @@ void Display::prepare_message(Message *message) {
 
 /*! @brief Really adds a message to the display. @sa ..._by_md and ..._with_widget. */
 void Display::add_message(Message *message) {
-  std::cout << "got another" << std::endl;
   prepare_message(message);
   messages_mutex.lock();
-  std::cout << message_counter << std::endl;
   message_counter++;
   all_messages.append(message);
   vertical_box_layout->addWidget(message);
   /*! If the scroll is approximately below the middle, and the number of
    *  displayed messages is greater than the maximum...  */
-  std::cout << message_counter << " " << max_message_amount << std::endl;
   if ((verticalScrollBar()->value() >
        ((verticalScrollBar()->minimum() + verticalScrollBar()->maximum()) / 2)) and
       (message_counter > max_message_amount))
     /*! ...we delete all unnecessary messages */
     while (message_counter > max_message_amount) {
-      std::cout << "took up one" << std::endl;
       auto *message = all_messages.takeAt(0);
+      for (auto key : status_messages.keys()) 
+        if (status_messages[key] == message) status_messages.remove(key);
       message->hide();
       vertical_box_layout->removeWidget(message);
       delete message;
       message_counter--;
     }
-  std::cout << message_counter << std::endl;
   messages_mutex.unlock();
 }
 
@@ -91,6 +88,7 @@ void Display::start() {
   messages_mutex.lock();
   message_counter = 0;
   all_messages.clear();
+  status_messages.clear();
   if (vertical_box_layout) delete vertical_box_layout;
   auto *w = takeWidget();
   if (w) delete w;
