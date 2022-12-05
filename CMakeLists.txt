@@ -30,14 +30,14 @@ set(SRCS
   core/core.h
   core/history-processor.cpp
   core/history-processor.h
+  core/jeff-core-kit.cpp
+  core/jeff-core-kit.h
   core/local-server.cpp
   core/local-server.h
-  core/nlp-module.cpp
-  core/nlp-module.h
   core/notify-client.cpp
   core/notify-client.h
-  core/python-module.cpp
-  core/python-module.h
+  core/script-engine-module.cpp
+  core/script-engine-module.h
   core/standard-templates.cpp
   core/standard-templates.h
   core/database/json.cpp
@@ -58,6 +58,8 @@ set(SRCS
   core/model/python/object.h
   core/model/python/script.cpp
   core/model/python/script.h
+  core/model/python/worker.cpp
+  core/model/python/worker.h
   main.cpp
 )
 

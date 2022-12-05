@@ -4,13 +4,11 @@
 bool SQLite::create_source(const Source &source, QString *uuid) {
   /*! The source is created even if the database itself does not exist. */
   bool correct;
-  sql_mutex.lock();
-  auto db = prepare(source.path, Openable, &correct, true);
+  auto db = prepare(source.path, "", Openable, &correct, true);
   QSqlQuery query(db);
   if (not create_base_structure(&query)) {
     emit sqlite_error("Could not create main table.");
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   /*! Generates a table name. User-entered name may be incorrect for SQLite database. */
@@ -31,7 +29,6 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
       QString::number(maximum_number_of_attempts) + "."
     );
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   *uuid = uuid_to_verify; /*!< The UUID is passed by pointer to the object that
@@ -54,11 +51,9 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
       ) {
     emit sqlite_error("Could not write options and create source table.");
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   db.close();
-  sql_mutex.unlock();
   return true;
 }
 
@@ -73,11 +68,9 @@ bool SQLite::create_base_structure(QSqlQuery *query) {
 
 /*! @brief Searches for database sources of activators and reagents. */
 Sources SQLite::sources(const QString &path) {
-  sql_mutex.lock();
-  auto db = prepare(path, Openable);
+  auto db = prepare(path, "", Openable);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return Sources();
   }
   QSqlQuery query(db);
@@ -97,38 +90,28 @@ Sources SQLite::sources(const QString &path) {
     query.next();
   }
   db.close();
-  sql_mutex.unlock();
   return sources;
 }
 
 /*! @brief Loads source properties from the database. */
 Source SQLite::load_source(Source source) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
-  if (db.databaseName().isEmpty()) {
-    sql_mutex.unlock();
-    return source;
-  }
+  if (db.databaseName().isEmpty()) return source;
   QSqlQuery query(db);
   exec(&query, LoadOptions, {source.table_name});
-  if (not query.first()) {
-    sql_mutex.unlock();
-    return source;
-  }
+  if (not query.first()) return source;
   source.table_title = query.value(0).toString();
   source.is_read_only = query.value(1).toBool();
   source.is_private = query.value(2).toBool();
   source.is_catching = query.value(3).toBool();
   source.is_prioritised = query.value(4).toBool();
   db.close();
-  sql_mutex.unlock();
   return source;
 }
 
 /*! @brief Writes source properties into the database. */
 bool SQLite::write_source(const Source &source) {
-  sql_mutex.lock();
-  auto db = prepare(source.path, Openable);
+  auto db = prepare(source.path, "", Openable);
   if (db.databaseName().isEmpty()) return false;
   QSqlQuery query(db);
   auto result = exec(&query, WriteOptions,
@@ -138,17 +121,14 @@ bool SQLite::write_source(const Source &source) {
                       QString::number(source.is_catching),
                       QString::number(source.is_prioritised)});
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Selects all expressions from @a source. */
 Phrases SQLite::select_all(const Source &source) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return Phrases();
   }
   QSqlQuery query(db);
@@ -166,18 +146,15 @@ Phrases SQLite::select_all(const Source &source) {
     query.next();
   }
   db.close();
-  sql_mutex.unlock();
   return phrases;
 }
 
 /*! @brief Inserts a new expression into the source.
  *  @details If phrases are already in the database, just adds a link from one phrase to another.  */
 bool SQLite::insert_expression(const Source &source, const Expression &expression) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   QSqlQuery query(db);
@@ -240,17 +217,14 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
     }
   }
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Inserts a new expression into the source. */
 bool SQLite::insert_phrase(const Source &source, const Phrase &phrase) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   QSqlQuery query(db);
@@ -263,17 +237,14 @@ bool SQLite::insert_phrase(const Source &source, const Phrase &phrase) {
     }
   );
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Finds a phrase by address. */
 Phrase SQLite::get_phrase_by_address(const Source &source, int address) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return Phrase();
   }
   QSqlQuery query(db);
@@ -288,18 +259,15 @@ Phrase SQLite::get_phrase_by_address(const Source &source, int address) {
     phrase.properties = Phrase::parse_props(query.value(4).toString());
   }
   db.close();
-  sql_mutex.unlock();
   return phrase;
 }
 
 /*! @brief Creates a stub for a new phrase and returns its address.
  *  @details In fact, it reserves an address for creating a new phrase in the GUI.  */
 int SQLite::create_new_phrase(const Source &source, const QString &text) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return -1;
   }
   QSqlQuery query(db);
@@ -313,17 +281,14 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
     }
   );
   db.close();
-  sql_mutex.unlock();
   return result ? new_id : -1;
 }
 
 /*! @brief Edits the content of a phrase. */
 bool SQLite::update_expression(const Source &source, const QString &expression, int address) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   QSqlQuery query(db);
@@ -331,17 +296,14 @@ bool SQLite::update_expression(const Source &source, const QString &expression, 
     &query, UpdateExpressionByAddress, {source.table_name, expression, QString::number(address)}
   );
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Edits whether an expression is executable in a script. */
 bool SQLite::update_exec(const Source &source, bool ex, int address) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   QSqlQuery query(db);
@@ -349,17 +311,14 @@ bool SQLite::update_exec(const Source &source, bool ex, int address) {
     &query, UpdateExecByAddress, {source.table_name, QString::number(ex), QString::number(address)}
   );
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Edits links to other phrases. */
 bool SQLite::update_links(const Source &source, QSet<int> links, int address) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   QSqlQuery query(db);
@@ -367,17 +326,14 @@ bool SQLite::update_links(const Source &source, QSet<int> links, int address) {
     &query, UpdateLinksByAddress, {source.table_name, Phrase::pack_links(links), QString::number(address)}
   );
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Removes a phrase from a table. */
 bool SQLite::remove_phrase(const Source &source, int address) {
-  sql_mutex.lock();
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return false;
   }
   QSqlQuery query(db);
@@ -385,17 +341,17 @@ bool SQLite::remove_phrase(const Source &source, int address) {
     &query, RemovePhraseByAddress, {source.table_name, QString::number(address)}
   );
   db.close();
-  sql_mutex.unlock();
   return result;
 }
 
 /*! @brief Finds all activators for the expression. */
-CacheWithIndices SQLite::scan_source(const Source &source, const QString &input) {
-  sql_mutex.lock();
-  auto db = prepare(source.path);
+CacheWithIndices SQLite::scan_source(const Source &source,
+                                     const QString &input,
+                                     QString conn_name)
+{
+  auto db = prepare(source.path, conn_name);
   if (db.databaseName().isEmpty()) {
     db.close();
-    sql_mutex.unlock();
     return CacheWithIndices();
   }
   CacheWithIndices selection;
@@ -430,13 +386,16 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input)
     query.next();
   }
   db.close();
-  sql_mutex.unlock();
   return selection;
 }
 
 /*! @brief Prepares a database for work. */
-QSqlDatabase SQLite::prepare(const QString &path, Check option, bool *result, bool quiet) {
-  auto db = QSqlDatabase::database();
+QSqlDatabase SQLite::prepare(const QString &path, QString conn_name,
+                             Check option, bool *result, bool quiet)
+{
+  QSqlDatabase db;
+  if (conn_name.isEmpty()) db = QSqlDatabase::database();
+  else db = QSqlDatabase::database(conn_name);
   switch (option) {
     case NoCheck: {
       db.setDatabaseName(path);

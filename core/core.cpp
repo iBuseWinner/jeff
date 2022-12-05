@@ -10,13 +10,12 @@ Core::Core(QObject *parent) : QObject(parent) {
   basis->check_settings_file();
   basis->check_default_source();
   connect(server, &Server::server_error, this, &Core::got_error);
-  connect(pm, &PythonModule::script_exception, this, &Core::got_warning);
-  connect(pm, &PythonModule::send, this, &Core::got_message_from_script);
+  connect(sem, &SEModule::script_exception, this, &Core::got_warning);
   connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);
 #ifdef JEFF_WITH_QT_WIDGETS
   connect(std_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
 #endif
-  connect(nlp, &NLPmodule::response, this, &Core::got_message_from_nlp);
+  connect(jck, &JCKController::response, this, &Core::got_message_from_jck);
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
@@ -25,8 +24,8 @@ Core::Core(QObject *parent) : QObject(parent) {
 
 /*! @brief The destructor. */
 Core::~Core() {
-  delete nlp;
-  delete pm;
+  delete jck;
+  delete sem;
   delete notifier;
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->save();
   delete hp;
@@ -53,12 +52,12 @@ void Core::got_message_from_user(const QString &user_expression) {
   if (std_templates->dialogues(user_expression)) return;
 #endif
   if (std_templates->fast_commands(user_expression)) return;
-  nlp->search_for_suggests(user_expression);
+  jck->search_for_suggests(user_expression);
 }
 
-/*! @brief Processes the output of the NLP module @a result_expression and
+/*! @brief Processes the output of the JCK module @a result_expression and
  *  displays a message on the screen.  */
-void Core::got_message_from_nlp(const QString &result_expression) {
+void Core::got_message_from_jck(const QString &result_expression) {
   if (result_expression.isEmpty()) return;
   MessageData mdata = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
@@ -72,7 +71,7 @@ void Core::got_message_from_nlp(const QString &result_expression) {
         notifier->notify(mdata);
         emit show(mdata);
         /*! Search again if monologue mode enabled. */
-        if (monologue_enabled) nlp->search_for_suggests(result_expression);
+        if (monologue_enabled) jck->search_for_suggests(result_expression);
       });
 }
 
@@ -91,7 +90,7 @@ void Core::got_message_from_script(const QString &message) {
         notifier->notify(mdata);
         emit show(mdata);
         /*! Search again if monologue mode enabled. */
-        if (monologue_enabled) nlp->search_for_suggests(message);
+        if (monologue_enabled) jck->search_for_suggests(message);
       });
 }
 
@@ -102,7 +101,7 @@ void Core::got_message_to_search_again(const QString &rephrased_message) {
   if (std_templates->dialogues(rephrased_message)) return;
 #endif
   if (std_templates->fast_commands(rephrased_message)) return;
-  nlp->search_for_suggests(rephrased_message);
+  jck->search_for_suggests(rephrased_message);
 }
 
 /*! @brief Shows the message and searches again. */
@@ -119,7 +118,7 @@ void Core::got_message_from_script_as_user(const QString &message) {
   if (std_templates->dialogues(message)) return;
 #endif
   if (std_templates->fast_commands(message)) return;
-  nlp->search_for_suggests(message);
+  jck->search_for_suggests(message);
 }
 
 /*! @brief Shows updateable message. @details Checks id's length. */
@@ -192,21 +191,21 @@ void Core::set_monologue_enabled(const bool enabled) {
 
 /*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */
 void Core::start() {
-  pm->startup();
+  sem->startup();
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool())
     hp->load();
   if (not (*basis)[basis->customScannerSt].toString().isEmpty()) {
     custom_scanner = new CustomScanScript();
     custom_scanner->path = (*basis)[basis->customScannerSt].toString();
     custom_scanner->fn_name = (*basis)[basis->customScannerFnSt].toString();
-    nlp->set_custom_scanner(custom_scanner);
+    jck->set_custom_scanner(custom_scanner);
   }
   if (not (*basis)[basis->customComposerSt].toString().isEmpty()) {
     custom_composer = new CustomComposeScript();
     custom_composer->path = (*basis)[basis->customComposerSt].toString();
     custom_composer->fn_name = (*basis)[basis->customComposerFnSt].toString();
     custom_composer->send_adprops = (*basis)[basis->customComposerSASt].toBool();
-    nlp->set_custom_composer(custom_composer);
+    jck->set_custom_composer(custom_composer);
   }
   if ((*basis)[basis->isGreetingsEnabledSt].toBool())
     got_message_from_user((*basis)[basis->greetingsMsg].toString());

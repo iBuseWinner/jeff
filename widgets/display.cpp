@@ -140,7 +140,7 @@ void Display::scroller(int value) {
       vertical_box_layout->insertItem(0, spacer);
     }
   }
-  else if (scroll_enabled and (value != verticalScrollBar()->maximum())) {
+  else if (scroll_enabled and (viewportSizeHint().height() > height()) and (value != verticalScrollBar()->maximum())) {
     scroll_enabled = false;
     if (spacer) {
       vertical_box_layout->removeItem(spacer);
@@ -153,7 +153,7 @@ void Display::scroller(int value) {
     /*! Add half of the maximum. */
     short portion = max_message_amount / 2;
     if (message_counter + portion > length) portion = length - message_counter;
-    auto *messages = hp->hold_messages();
+    auto *messages = hp->messages();
     while (portion--) {
       auto *message = new Message(messages->at(messages->length() - message_counter - 1));
       all_messages.insert(0, message);
@@ -163,7 +163,6 @@ void Display::scroller(int value) {
       message->show();
       message_counter++;
     }
-    hp->release_messages();
     verticalScrollBar()->setValue(1);
   }
 }

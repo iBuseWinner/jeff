@@ -2,7 +2,7 @@
 #define SCRIPT_EDITOR_H
 
 #include "core/basis.h"
-#include "core/python-module.h"
+#include "core/script-engine-module.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/combobox.h"
@@ -27,7 +27,7 @@ class ScriptEditor : public QWidget {
 public:  
   // Functions described in `scripteditor.cpp`:
   ScriptEditor(QWidget *parent = nullptr, Basis *_basis = nullptr, 
-               PythonModule *_pm = nullptr, ModalHandler *m_handler = nullptr);
+               SEModule *_sem = nullptr, ModalHandler *m_handler = nullptr);
   ~ScriptEditor();
   bool load_from_text(QString json_text);
   bool load_from_script(ScriptMetadata *script);
@@ -42,7 +42,7 @@ private:
   // Objects:
   int stype = 0;
   Basis *basis = nullptr;
-  PythonModule *pm = nullptr;
+  SEModule *sem = nullptr;
   ModalHandler *_m_handler = nullptr;
   Button *path_input = nullptr, *save_btn = nullptr;
   QLabel *stype_info = nullptr;

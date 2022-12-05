@@ -1,8 +1,9 @@
 #include "scripteditor.h"
 
 /*! @brief The constructor. */
-ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, PythonModule *_pm, ModalHandler *m_handler) 
-: QWidget(parent), basis(_basis), pm(_pm), _m_handler(m_handler) {
+ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, SEModule *_sem, ModalHandler *m_handler) 
+  : QWidget(parent), basis(_basis), sem(_sem), _m_handler(m_handler)
+{
   stype_info = new QLabel(tr("Specify script type:"), this);
   auto *path_info = new QLabel(tr("Specify script path:"), this);
   path_input = new Button(tr("Select a file..."), this);
@@ -14,7 +15,6 @@ ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, PythonModule *_pm, Mo
   });
   stype_input = new ComboBox(this);
   stype_input->addItems({
-    tr("Startup script (suitable for startup prompts)"),
     tr("Daemon (works in background with Jeff's server)"),
     tr("Server (works in background and receives all messages)"),
     tr("Custom scanner (another answering system)"),
@@ -77,38 +77,6 @@ void ScriptEditor::change_stype() {
       delete child;
     }
   if (stype == 0) {
-    // Startup script (suitable for startup prompts)
-    auto *fn_name_info = new QLabel(tr("Specify function name:"));
-    fn_name_input = new LineEdit();
-    fn_name_input->setPlaceholderText(tr("Function name..."));
-    auto *memory_cells_info = new QLabel(tr("Add the memory cells to be passed to the script:"));
-    memory_cells_list = new EditList();
-    memory_cells_list->set_add_btn_text(tr("Add memory cell"));
-    memory_cells_list->set_rem_btn_text(tr("Remove selected cell"));
-    memory_cells_list->set_lineedit_placeholder_text(tr("Memory cell name..."));
-    memory_cells_list->set_list_headers({tr("Cells list")});
-    dynamic_properties_layout->addWidget(fn_name_info, 0, 0);
-    dynamic_properties_layout->addWidget(fn_name_input, 0, 1);
-    dynamic_properties_layout->addWidget(memory_cells_info, 1, 0, 1, 2);
-    dynamic_properties_layout->addWidget(memory_cells_list, 2, 0, 1, 2);
-    connect(save_btn, &Button::clicked, this, [this] {
-      if (path_input->text() == tr("Select a file...") or fn_name_input->text().isEmpty()) {
-        basis->warn_about(tr("Please complete path and function name fields before saving."));
-        return;
-      }
-      auto *startup_script = new StartupScript();
-      startup_script->path = path_input->text();
-      startup_script->memory_cells = memory_cells_list->get_list();
-      startup_script->fn_name = fn_name_input->text();
-      if (_m_handler) {
-        pm->add_script(startup_script);
-        emit closed();
-      } else {
-        emit saved(ScriptsCast::to_string(startup_script));
-        delete startup_script;
-      }
-    });
-  } else if (stype == 1) {
     // Daemon (works in background with Jeff's server)
     dynamic_properties_layout->parentWidget()->hide();
     connect(save_btn, &Button::clicked, this, [this] {
@@ -119,14 +87,14 @@ void ScriptEditor::change_stype() {
       auto *daemon_script = new DaemonScript();
       daemon_script->path = path_input->text();
       if (_m_handler) {
-        pm->add_script(daemon_script);
+        sem->add_script(daemon_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(daemon_script));
         delete daemon_script;
       }
     });
-  } else if (stype == 2) {
+  } else if (stype == 1) {
     // Server (works in background and receives all messages)
     auto *server_addr_info = new QLabel(tr("If the script is located remotely, enter the IP address:"));
     server_addr_input = new LineEdit();
@@ -158,14 +126,14 @@ void ScriptEditor::change_stype() {
       if (server_port_input->validator()->validate(port, pos) == QValidator::Acceptable)
         server_script->server_port = port.toInt();
       if (_m_handler) {
-        pm->add_script(server_script);
+        sem->add_script(server_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(server_script));
         delete server_script;
       }
     });
-  } else if (stype == 3) {
+  } else if (stype == 2) {
     // Custom scanner (another answering system)
     auto *fn_name_info = new QLabel(tr("Specify function name:"));
     fn_name_input = new LineEdit();
@@ -181,14 +149,14 @@ void ScriptEditor::change_stype() {
       cs_script->path = path_input->text();
       cs_script->fn_name = fn_name_input->text();
       if (_m_handler) {
-        pm->add_script(cs_script);
+        sem->add_script(cs_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(cs_script));
         delete cs_script;
       }
     });
-  } else if (stype == 4) {
+  } else if (stype == 3) {
     // Custom composer (receives chosed variants and answers on them in another manner)
     auto *fn_name_info = new QLabel(tr("Specify function name:"));
     fn_name_input = new LineEdit();
@@ -207,14 +175,14 @@ void ScriptEditor::change_stype() {
       cc_script->fn_name = fn_name_input->text();
       cc_script->send_adprops = send_adprops->isChecked();
       if (_m_handler) {
-        pm->add_script(cc_script);
+        sem->add_script(cc_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(cc_script));
         delete cc_script;
       }
     });
-  } else if (stype == 5) {
+  } else if (stype == 4) {
     // React script (runs when a pattern is found in user input)
     /*! @details This option is not listed and is responsible for editing react scripts saved as 
      *  phrase text in the database. */
@@ -250,7 +218,7 @@ void ScriptEditor::change_stype() {
       react_script->path = path_input->text();
       react_script->memory_cells = memory_cells_list->get_list();
       react_script->fn_name = fn_name_input->text();
-      react_script->number_of_hist_messages = hist_amount_input->value();
+      react_script->hist_parts = hist_amount_input->value();
       react_script->needs_user_input = needs_ue_input->isChecked();
       emit saved(ScriptsCast::to_string(react_script));
       delete react_script;
@@ -282,42 +250,35 @@ bool ScriptEditor::load_from_text(QString json_text) {
 /*! @brief Loads data into a form from a saved state. */
 bool ScriptEditor::load_from_script(ScriptMetadata *script) {
   path_input->setText(script->path);
-  if (script->stype == ScriptType::Startup) {
+  if (script->stype == ScriptType::Daemon) {
     change_stype(0);
-    auto *s = dynamic_cast<StartupScript *>(script);
-    if (not s) return false;
-    fn_name_input->setText(s->fn_name);
-    memory_cells_list->append(s->memory_cells);
-    return true;
-  } else if (script->stype == ScriptType::Daemon) {
-    change_stype(1);
     return true;
   } else if (script->stype == ScriptType::Server) {
-    change_stype(2);
+    change_stype(1);
     auto *s = dynamic_cast<ServerScript *>(script);
     if (not s) return false;
     server_addr_input->setText(s->server_addr.toString());
     server_port_input->setText(QString::number(s->server_port));
     return true;
   } else if (script->stype == ScriptType::CustomScan) {
-    change_stype(3);
+    change_stype(2);
     auto *s = dynamic_cast<CustomScanScript *>(script);
     if (not s) return false;
     fn_name_input->setText(s->fn_name);
     return true;
   } else if (script->stype == ScriptType::CustomCompose) {
-    change_stype(4);
+    change_stype(3);
     auto *s = dynamic_cast<CustomComposeScript *>(script);
     if (not s) return false;
     fn_name_input->setText(s->fn_name);
     send_adprops->setChecked(s->send_adprops);
     return true;
   } else if (script->stype == ScriptType::React) {
-    set_stype(5);
+    set_stype(4);
     auto *s = dynamic_cast<ReactScript *>(script);
     if (not s) return false;
     fn_name_input->setText(s->fn_name);
-    hist_amount_input->setValue(s->number_of_hist_messages);
+    hist_amount_input->setValue(s->hist_parts);
     needs_ue_input->setChecked(s->needs_user_input);
     memory_cells_list->append(s->memory_cells);
     return true;

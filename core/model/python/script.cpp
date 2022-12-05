@@ -6,9 +6,6 @@ ScriptMetadata *ScriptsCast::to_script(const QJsonObject &json_object)  {
   if (stype == ScriptType::React) {
     auto *script = new ReactScript(json_object);
     return script;
-  } else if (stype == ScriptType::Startup) {
-    auto *script = new StartupScript(json_object);
-    return script;
   } else if (stype == ScriptType::Daemon) {
     auto *script = new DaemonScript(json_object);
     return script;
@@ -38,9 +35,6 @@ QJsonObject ScriptsCast::to_json(ScriptMetadata *script) {
   auto stype = script->stype;
   if (stype == ScriptType::React) {
     auto *s = dynamic_cast<ReactScript *>(script);
-    return s->to_json();
-  } else if (stype == ScriptType::Startup) {
-    auto *s = dynamic_cast<StartupScript *>(script);
     return s->to_json();
   } else if (stype == ScriptType::Daemon) {
     auto *s = dynamic_cast<DaemonScript *>(script);

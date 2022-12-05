@@ -40,7 +40,7 @@ bool StandardTemplates::dialogues(const QString &expression) {
   }
   if (expression == basis->add_script_cmd) {
     auto *modal_handler = new ModalHandler(this);
-    auto *add_script = new AddScriptDialog(nullptr, basis, pm, modal_handler);
+    auto *add_script = new AddScriptDialog(nullptr, basis, sem, modal_handler);
     Q_UNUSED(add_script)
     emit showModalWidget(modal_handler);
     return true;

@@ -2,7 +2,7 @@
 #define SCRIPT_DIALOG_H
 
 #include "core/basis.h"
-#include "core/python-module.h"
+#include "core/script-engine-module.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/combobox.h"
@@ -26,7 +26,7 @@ class AddScriptDialog : public ScrollFreezerWidget {
 public:  
   // Functions described in `add-script.cpp`:
   AddScriptDialog(QWidget *parent = nullptr, Basis *_basis = nullptr, 
-                  PythonModule *_pm = nullptr, ModalHandler *m_handler = nullptr);
+                  SEModule *_sem = nullptr, ModalHandler *m_handler = nullptr);
   
 private:
   // Objects:

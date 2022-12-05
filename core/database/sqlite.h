@@ -86,7 +86,7 @@ public:
   bool update_exec(const Source &source, bool ex, int address);
   bool update_links(const Source &source, QSet<int> links, int address);
   bool remove_phrase(const Source &source, int address);
-  CacheWithIndices scan_source(const Source &source, const QString &input);
+  CacheWithIndices scan_source(const Source &source, const QString &input, QString conn_name = "");
   QString generate_uuid();
 
 signals:
@@ -94,16 +94,13 @@ signals:
   QString sqlite_error(QString error_text);
 
 private:
-  // Objects:
-  QMutex sql_mutex;
-  
   // Constants:
   static const int maximum_number_of_attempts = 4; /*!< Number of attempts for table creation. */
   static const int init_additionals_rows = 4;      /*!< Column from which additional expression 
                                                    /*!< properties begin. */
 
   // Functions described in `sqlite.cpp`:
-  QSqlDatabase prepare(const QString &path, Check option = Openable,
+  QSqlDatabase prepare(const QString &path, QString conn_name = "", Check option = Openable,
                        bool *result = nullptr, bool quiet = false);
   bool check(QSqlDatabase *db, Check option = NoCheck);
   bool validate(QSqlDatabase *db, bool recursive = false, bool quiet = false);

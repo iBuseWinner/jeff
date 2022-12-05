@@ -27,7 +27,6 @@ void Basis::check_default_source() {
 
 /*! @brief @see Basis::check_default_source */
 void Basis::set_first_source_as_default() {
-  sources_mutex.lock();
   if (not _sources.isEmpty()) {
     write(defaultSourcePath, _sources[0].path);
     write(defaultSourceContainer, _sources[0].table_name);
@@ -35,7 +34,6 @@ void Basis::set_first_source_as_default() {
     write(defaultSourcePath, "");
     write(defaultSourceContainer, "");
   }
-  sources_mutex.unlock();
 }
 
 /*! @brief Sets the value of the parameter. */
@@ -51,7 +49,6 @@ void Basis::write(const QString &key, const QVariant &data) {
 
 /*! @brief Loads @a _sources from file. */
 void Basis::load_sources() {
-  sources_mutex.lock();
   if (not _sources.isEmpty()) _sources.clear();
   Sources tmp = json->read_source_list(sql);
   for (int i = 0; i < tmp.length(); i++) {
@@ -59,58 +56,27 @@ void Basis::load_sources() {
       if (not _sources.contains(tmp[i]))
         _sources.append(tmp[i]);
   }
-  sources_mutex.unlock();
   emit sources_changed();
 }
 
 /*! @brief @returns @a _sources. */
-Sources Basis::sources() {
-  sources_mutex.lock();
-  auto s = _sources;
-  sources_mutex.unlock();
-  return s;
-}
+Sources Basis::sources() { return _sources; }
 
 /*! @brief Saves and updates @a sources list. */
 void Basis::sources(Sources s) {
-  sources_mutex.lock();
-  _sources = s;
-  sources_mutex.unlock();
-  json->write_source_list(sql, s);
+  json->write_source_list(sql, _sources);
   check_default_source();
   emit sources_changed();
 }
 
 /*! @brief Loads @a _memory from file. */
-void Basis::load_memory() {
-  KeyStore m = json->read_memory();
-  memory_mutex.lock();
-  _memory = m;
-  memory_mutex.unlock();
-}
-
+void Basis::load_memory() { _memory = json->read_memory(); }
 /*! @brief Saves @a _memory to file. */
-void Basis::save_memory() {
-  memory_mutex.lock();
-  KeyStore m = _memory;
-  memory_mutex.unlock();
-  json->write_memory(m);
-}
-
+void Basis::save_memory() { json->write_memory(_memory); }
 /*! @brief Writes @a data to memory by @a key. */
-void Basis::memory(const QString &key, QJsonValue data) {
-  memory_mutex.lock();
-  _memory[key] = data;
-  memory_mutex.unlock();
-}
-
+void Basis::memory(const QString &key, QJsonValue data) { _memory[key] = data; }
 /*! @brief Reads @a data from memory by @a key. */
-QJsonValue Basis::memory(const QString &key) {
-  memory_mutex.lock();
-  auto data = _memory[key];
-  memory_mutex.unlock();
-  return data;
-}
+QJsonValue Basis::memory(const QString &key) { return _memory[key]; }
 
 /*! @brief Prepares @a transport to send into script. */
 QJsonObject Basis::handle_to_script(const QJsonObject &object) {

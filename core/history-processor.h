@@ -26,8 +26,7 @@ public:
   void save(const QString &filename = QString());
   Messages recent(int amount);
   QString last_user_message(int i = 0);
-  Messages *hold_messages();
-  void release_messages();
+  Messages *messages();
   int length();
 
 signals:
@@ -37,7 +36,6 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
-  QMutex message_mutex;
   Messages message_history;
   
   // Constants:

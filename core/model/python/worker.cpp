@@ -1,11 +1,8 @@
-#include "python-module.h"
+#include "worker.h"
 
-using namespace std::chrono_literals;
-
-/*! @brief The constructor. */
-PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent)
-    : QObject(parent), hp(_hp), basis(_basis), notifier(_notifier) {
-  _scripts = basis->json->read_scripts();
+PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent)
+  : QObject(parent), basis(_basis), hp(_hp)
+{
   Py_InitializeEx(1);
   // Adds current path to sys.path for importing scripts from this directory.
   _current_path = QDir::toNativeSeparators(QDir::currentPath());
@@ -13,58 +10,11 @@ PythonModule::PythonModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifi
   PyRun_SimpleString(command.toStdString().c_str());
 }
 
-/*! @brief The destructor. */
-PythonModule::~PythonModule() {
+PythonWorker::~PythonWorker() {
   Py_Finalize();
-  for (auto *proc : _daemons) proc->kill();
-  basis->json->write_scripts(_scripts);
-  for (auto *script : _scripts) delete script;
-  _scripts.clear();
-  notifier->unsubscribe_all();
 }
 
-/*! @brief Runs functions in scripts intended to start when Jeff starts. */
-void PythonModule::startup() {
-  for (auto *script : _scripts) {
-    if (script->stype == ScriptType::Startup) {
-      auto *startup_script = dynamic_cast<StartupScript *>(script);
-      if (not startup_script) continue;
-      QJsonObject transport;
-      if (not startup_script->memory_cells.isEmpty()) {
-        QJsonObject memory_cells;
-        for (auto key : startup_script->memory_cells) memory_cells[key] = basis->memory(key);
-        transport[basis->memoryValuesWk] = memory_cells;
-      }
-      run(startup_script->path, startup_script->fn_name, transport);
-    } else if (script->stype == ScriptType::Daemon) {
-      auto *daemon_script = dynamic_cast<DaemonScript *>(script);
-      if (not daemon_script) continue;
-      auto *proc = new QProcess(this);
-      connect(proc, &QProcess::errorOccurred, this, [this, daemon_script]() {
-        emit script_exception(
-          tr("An error occurred during script execution") + " (" + daemon_script->path + ")"
-        );
-      });
-      proc->start(QString("python"), QStringList(daemon_script->path));
-      _daemons.append(proc);
-    } else if (script->stype == ScriptType::Server) {
-      auto *server_script = dynamic_cast<ServerScript *>(script);
-      if (not server_script) continue;
-      auto *proc = new QProcess(this);
-      connect(proc, &QProcess::errorOccurred, this, [this, server_script]() {
-        emit script_exception(
-          tr("An error occurred during script execution") + " (" + server_script->path + ")"
-        );
-      });
-      proc->start(QString("python"), QStringList(server_script->path));
-      _daemons.append(proc);
-      notifier->subscribe(server_script);
-    }
-  }
-}
-
-/*! @brief Runs a function with parameters and returns the result. */
-QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transport) {
+QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transport) {
   QFileInfo module_info(path);
   QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());
   if (dir_path != _current_path) {
@@ -83,7 +33,7 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
     emit script_exception(tr("Could not find \"answer\" attribute in module."));
     return {{basis->errorTypeWk, 2}};
   }
-  if (not (answer_func && PyCallable_Check(answer_func))) {
+  if (not (answer_func and PyCallable_Check(answer_func))) {
     emit script_exception(tr("Cannot call \"answer\": this is not a function!"));
     return {{basis->errorTypeWk, 3}};
   }
@@ -93,17 +43,13 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
     emit script_exception(tr("Failed to construct argument from string."));
     return {{basis->errorTypeWk, 4}};
   }
-  /*! If we pack in tuple our beautiful Object instead of PyObject, a segmentation fault will */
-  Object args = PyTuple_Pack(1, *arg);          /*!< come out. Instead we send pure PyObject. */
+  /*! If we pack in tuple our beautiful Object instead of PyObject, a segmentation fault will  */
+  Object args = PyTuple_Pack(1, arg.get());      /*!< come out. Instead we send pure PyObject. */
   if (not args) {
     emit script_exception(tr("Failed to construct a tuple from a string."));
     return {{basis->errorTypeWk, 5}};
   }
-  auto f = std::async(&PythonModule::async_runner, this, answer_func, args);
-  PyThreadState *_state = PyEval_SaveThread();
-  if (f.wait_for(3s) != std::future_status::ready) return QJsonObject();
-  Object answer_result = f.get();
-  PyEval_RestoreThread(_state);
+  Object answer_result = PyObject_CallObject(answer_func, args);
   if (not answer_result) {
     emit script_exception(tr(
       "The function could not execute correctly because it did not return a result."
@@ -124,14 +70,6 @@ QJsonObject PythonModule::run(QString path, QString def_name, QJsonObject transp
   return recv_doc.object();
 }
 
-/*! @brief Executes a Python function asynchronously. */
-Object PythonModule::async_runner(Object func, Object args) {
-  PyGILState_STATE _state = PyGILState_Ensure();
-  Object answer_result = PyObject_CallObject(func, args);
-  PyGILState_Release(_state);
-  return answer_result;
-}
-
 /*!
  * @brief Processes the script configuration and gets the necessary information from it.
  * @details Handles next things:
@@ -143,7 +81,7 @@ Object PythonModule::async_runner(Object func, Object args) {
  *   6. <!-- script runs -->
  *   7. `store_in_memory` prop from script
  */
-QJsonObject PythonModule::request_answer(
+QJsonObject PythonWorker::request_answer(
   ReactScript *script, const Expression &expression, const QString &user_expression
 ) {
   QJsonObject transport;
@@ -152,9 +90,9 @@ QJsonObject PythonModule::request_answer(
     for (auto key : script->memory_cells) memory_cells[key] = basis->memory(key);
     transport[basis->memoryValuesWk] = memory_cells;
   }
-  if (script->number_of_hist_messages) {
+  if (script->hist_parts) {
     QJsonArray history_array;
-    auto history = hp->recent(script->number_of_hist_messages);
+    auto history = hp->recent(script->hist_parts);
     for (auto msg : history) 
       history_array.append(
         QString("%1: %2").arg(msg.author == Author::User ? "User" : "Jeff").arg(msg.content)
@@ -179,14 +117,14 @@ QJsonObject PythonModule::request_answer(
 }
 
 /*! @brief Prepares data for custom scanning. */
-QJsonObject PythonModule::request_scan(CustomScanScript *script, const QString &user_expression) {
+QJsonObject PythonWorker::request_scan(CustomScanScript *script, const QString &user_expression) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
   return run(script->path, script->fn_name, transport);
 }
 
 /*! @brief Prepares data for custom composing. */
-QJsonObject PythonModule::request_compose(
+QJsonObject PythonWorker::request_compose(
   CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
 ) {
   QJsonObject transport;
@@ -205,13 +143,3 @@ QJsonObject PythonModule::request_compose(
   transport["candidates"] = candidates;
   return run(script->path, script->fn_name, transport);
 }
-
-/*! @brief Adds a script to the general list.
- *  @warning When the program ends, this module will delete the scripts from memory itself.
- *  @sa ~PythonModule()  */
-void PythonModule::add_script(ScriptMetadata *script) { _scripts.append(script); }
-
-/*! @brief Removes a script from the general list. */
-bool PythonModule::remove_script(ScriptMetadata *script) { return _scripts.removeOne(script); }
-/*! @brief Returns the general list of scripts. */
-Scripts PythonModule::get_scripts() { return _scripts; }

@@ -1,19 +1,29 @@
-#include "nlp-module.h"
+#include "jeff-core-kit.h"
+#include <iostream>
 
 /*! @brief The constructor. */
-NLPmodule::NLPmodule(Basis *_basis, PythonModule *_pm, HProcessor *_hp, QObject *parent) 
-    : QObject(parent), basis(_basis), pm(_pm), hp(_hp) {
+JCK::JCK(Basis *_basis, HProcessor *_hp, QObject *parent) 
+    : QObject(parent), basis(_basis), hp(_hp) {
   gen = new QRandomGenerator(QTime::currentTime().msec());
   load_cache();
 }
 
 /*! @brief The destructor. */
-NLPmodule::~NLPmodule() { save_cache(); delete gen; }
+JCK::~JCK() { save_cache(); delete gen; }
+
+/*! @brief The thread setup. */
+void JCK::thread_setup() {
+  pw = new PythonWorker(basis, hp, this);
+  connect(pw, &PythonWorker::script_exception, this, [this](QString e) {
+    emit script_exception(e);
+  });
+  QSqlDatabase::addDatabase("QSQLITE", thread_conn_wk);
+}
 
 /*! @brief Matches the answer based on the input. */
-void NLPmodule::search_for_suggests(const QString &input) {
+void JCK::search_for_suggests(const QString &input) {
   if (scanner) {
-    auto json_object = pm->request_scan(scanner, input);
+    auto json_object = pw->request_scan(scanner, input);
     if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
     return;
   }
@@ -35,7 +45,7 @@ void NLPmodule::search_for_suggests(const QString &input) {
   if (selection.keys().isEmpty()) return;
   auto sorted = select_candidates(selection, input);
   if (composer) {
-    auto json_object = pm->request_compose(composer, input, sorted);
+    auto json_object = pw->request_compose(composer, input, sorted);
     if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
     return;
   }
@@ -51,7 +61,7 @@ void NLPmodule::search_for_suggests(const QString &input) {
 }
 
 /*! @brief Resets the expression usage counter. */
-void NLPmodule::reset_cache_use_cases(CacheWithIndices &selection) {
+void JCK::reset_cache_use_cases(CacheWithIndices &selection) {
   auto *cache = basis->cacher->get_ptr();
   for (auto expr : selection)
     for (int i = 0; i < cache->length(); i++)
@@ -59,7 +69,7 @@ void NLPmodule::reset_cache_use_cases(CacheWithIndices &selection) {
 }
 
 /*! @brief Matches candidates for each index of occurrence in the input expression. */
-CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QString input) {
+CacheWithIndices JCK::select_candidates(CacheWithIndices selection, QString input) {
   CacheWithIndices candidates;
   for (auto ewi : selection) {
     if (candidates.keys().isEmpty()) {
@@ -107,7 +117,7 @@ CacheWithIndices NLPmodule::select_candidates(CacheWithIndices selection, QStrin
 
 /*! @brief Builds an answer in the order of the indices of the occurrence and
  *  sets the uncovered part of the expression.  */
-QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndices candidates) {
+QPair<QString, QString> JCK::compose_answer(QString input, CacheWithIndices candidates) {
   QString output;
   input = StringSearch::lemmatize(input);
   for (auto ewi : candidates) {
@@ -119,7 +129,7 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
         delete script;
         continue;
       }
-      auto obj = pm->request_answer(react_script, ewi.second, input);
+      auto obj = pw->request_answer(react_script, ewi.second, input);
       delete react_script;
       if (obj.contains(basis->errorTypeWk)) continue;
       if (obj.contains(basis->sendWk)) {
@@ -138,7 +148,7 @@ QPair<QString, QString> NLPmodule::compose_answer(QString input, CacheWithIndice
 }
 
 /*! @brief Selects expressions to compose a response from the cache. */
-CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
+CacheWithIndices JCK::select_from_cache(const QString &input) {
   CacheWithIndices selection;
   Cache cache = basis->cacher->get();
   for (int i = 0; i < cache.length(); i++) {
@@ -153,11 +163,11 @@ CacheWithIndices NLPmodule::select_from_cache(const QString &input) {
 }
 
 /*! @brief Selects expressions to compose a response from the database. */
-CacheWithIndices NLPmodule::select_from_db(const QString &input) {
+CacheWithIndices JCK::select_from_db(const QString &input) {
   CacheWithIndices selection;
   Sources sources = basis->sources();
   for (int i = 0; i < sources.length(); i++) {
-    auto cwi = basis->sql->scan_source(sources[i], input);
+    auto cwi = basis->sql->scan_source(sources[i], input, thread_conn_wk);
     for (auto ewi : cwi) {
       for (auto _ewi : selection) if (_ewi.second == ewi.second) continue; 
       if (selection.keys().length() == 0) selection[0] = ewi;
@@ -168,16 +178,16 @@ CacheWithIndices NLPmodule::select_from_db(const QString &input) {
 }
 
 /*! @brief Loads the cache into memory. */
-void NLPmodule::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
+void JCK::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
 /*! @brief Saves the cache to disk. */
-void NLPmodule::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }
+void JCK::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }
 /*! @brief Sets up Jeff's default scanner. */
-void NLPmodule::set_default_scanner() { scanner = nullptr; }
+void JCK::set_default_scanner() { scanner = nullptr; }
 /*! @brief Sets up custom scanner. */
-void NLPmodule::set_custom_scanner(CustomScanScript *custom_scanner) { scanner = custom_scanner; }
+void JCK::set_custom_scanner(CustomScanScript *custom_scanner) { scanner = custom_scanner; }
 /*! @brief Sets up Jeff's default composer. */
-void NLPmodule::set_default_composer() { composer = nullptr; }
+void JCK::set_default_composer() { composer = nullptr; }
 /*! @brief Sets up custom composer. */
-void NLPmodule::set_custom_composer(CustomComposeScript *custom_composer) {
+void JCK::set_custom_composer(CustomComposeScript *custom_composer) {
   composer = custom_composer;
 }

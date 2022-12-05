@@ -75,7 +75,7 @@ public:
   
   const char *scriptPathWk     = "path";
   const char *funcNameWk       = "fn_name";
-  const char *getHistWk        = "number_of_hist_messages";
+  const char *getHistWk        = "hist_parts";
   const char *errorTypeWk      = "error_type";
   const char *recentMessagesWk = "recent_messages";
   const char *readMemoryWk     = "memory_cells";
@@ -165,9 +165,6 @@ signals:
 
 private:
   // Objects:
-  QMutex sources_mutex;
-  QMutex context_mutex;
-  QMutex memory_mutex;
   Sources _sources; /*!< List of sources for @a NLPmodule. */
   KeyStore _memory; /*!< Long-life memory. */
   

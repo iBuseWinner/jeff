@@ -12,12 +12,11 @@
  *  @brief Specifies the types of scripts that are used in Jeff.
  *  @details There are the following types of scripts:
  *  1. React - Reacts to user expressions, added directly to databases
- *  2. Startup - Run once when Jeff starts
- *  3. Daemon - Run as daemons and interact with Jeff's server as needed
- *  4. Server - Run as daemons, receive notifications of new messages and interact with the server
- *  5. CustomScan - Scans and responds to user input, replacing Jeff's NLPmodule
- *  6. CustomCompose - Receives response options for user input from Jeff and composes the response  */
-enum ScriptType { NoAction, React, Startup, Daemon, Server, CustomScan, CustomCompose };
+ *  2. Daemon - Run as daemons and interact with Jeff's server as needed
+ *  3. Server - Run as daemons, receive notifications of new messages and interact with the server
+ *  4. CustomScan - Scans and responds to user input, replacing Jeff's NLPmodule
+ *  5. CustomCompose - Receives response options for user input from Jeff and composes the response  */
+enum ScriptType { NoAction, React, Daemon, Server, CustomScan, CustomCompose };
 
 /*! @class ScriptMetadata
  *  @brief Contains metadata about a script.  */
@@ -59,7 +58,7 @@ public:
       QJsonArray array = json_object["memory_cells"].toArray();
       for (auto key : array) memory_cells.append(key.toString());
     }
-    number_of_hist_messages = json_object["number_of_hist_messages"].toInt();
+    hist_parts = json_object["hist_parts"].toInt();
     needs_user_input = json_object["needs_user_input"].toBool();
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::React;
@@ -67,7 +66,7 @@ public:
   /*! List of memory cells that will be passed to the script. */
   QStringList memory_cells;
   /*! The number of previous messages that will be passed to the script to understand the context. */
-  int number_of_hist_messages = 0;
+  int hist_parts = 0;
   /*! Name of function inside the script. */
   QString fn_name;
   /*! Indicates whether the script needs the entire text of the message entered by the user. */
@@ -82,42 +81,8 @@ public:
       {"stype", int(stype)},
       {"fn_name", fn_name},
       {"memory_cells", memory_cells_array},
-      {"number_of_hist_messages", number_of_hist_messages},
+      {"hist_parts", hist_parts},
       {"needs_user_input", needs_user_input}
-    };
-  }
-};
-
-/*! @class StartupScript
- *  @brief Contains metadata about startup script.  */
-class StartupScript : public ScriptMetadata {
-public:
-  /*! Constructors. */
-  StartupScript() : ScriptMetadata() {
-    stype = ScriptType::Startup;
-  }
-  StartupScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
-    if (json_object["memory_cells"].isArray()) {
-      auto array = json_object["memory_cells"].toArray();
-      for (auto key : array) memory_cells.append(key.toString());
-    }
-    fn_name = json_object["fn_name"].toString();
-    stype = ScriptType::Startup;
-  }
-  /*! List of memory locations that will be passed to the script when Jeff starts. */
-  QStringList memory_cells;
-  /*! Name of function inside the script. */
-  QString fn_name;
-  
-  /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
-    QJsonArray memory_cells_array;
-    for (auto str : memory_cells) memory_cells_array.append(str);
-    return {
-      {"path", path},
-      {"stype", int(stype)},
-      {"fn_name", fn_name},
-      {"memory_cells", memory_cells_array}
     };
   }
 };

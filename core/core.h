@@ -3,10 +3,10 @@
 
 #include "core/basis.h"
 #include "core/history-processor.h"
+#include "core/jeff-core-kit.h"
 #include "core/local-server.h"
-#include "core/nlp-module.h"
 #include "core/notify-client.h"
-#include "core/python-module.h"
+#include "core/script-engine-module.h"
 #include "core/standard-templates.h"
 #include "core/database/sqlite.h"
 #include "core/model/python/script.h"
@@ -30,13 +30,13 @@ public:
   HProcessor *hp = new HProcessor(basis);
   class Server *server = new class Server(basis);
   NotifyClient *notifier = new NotifyClient();
-  PythonModule *pm = new PythonModule(hp, basis, notifier);
+  SEModule *sem = new SEModule(hp, basis, notifier);
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
   ~Core();
   void got_message_from_user(const QString &user_expression);
-  void got_message_from_nlp(const QString &result_expression);
+  void got_message_from_jck(const QString &result_expression);
   void got_message_from_script(const QString &outter_message);
   void got_message_to_search_again(const QString &rephrased_message);
   void got_message_from_script_as_user(const QString &message);
@@ -66,8 +66,8 @@ signals:
 private:
   // Objects:
   bool monologue_enabled = false;
-  NLPmodule *nlp = new NLPmodule(basis, pm, hp);
-  StandardTemplates *std_templates = new StandardTemplates(basis, hp, pm);
+  JCKController *jck = new JCKController(basis, hp);
+  StandardTemplates *std_templates = new StandardTemplates(basis, hp, sem);
   CustomScanScript *custom_scanner = nullptr;
   CustomComposeScript *custom_composer = nullptr;
 };

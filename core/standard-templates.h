@@ -13,7 +13,7 @@
 #include "dialogues/sources.h"
 #endif
 #include "core/history-processor.h"
-#include "core/python-module.h"
+#include "core/script-engine-module.h"
 #include <QString>
 
 /*!
@@ -25,8 +25,8 @@ class StandardTemplates : public QObject {
 public:
   // Functions:
   /*! @brief The constructor. */
-  StandardTemplates(Basis *_basis, HProcessor *_hp, PythonModule *_pm, QObject *parent = nullptr)
-    : QObject(parent), basis(_basis), hp(_hp), pm(_pm) {}
+  StandardTemplates(Basis *_basis, HProcessor *_hp, SEModule *_sem, QObject *parent = nullptr)
+    : QObject(parent), basis(_basis), hp(_hp), sem(_sem) {}
 
   // Functions described in `standard-templates.cpp`:
 #ifdef JEFF_WITH_QT_WIDGETS
@@ -46,7 +46,7 @@ private:
   // Objects:
   Basis *basis = nullptr;
   HProcessor *hp = nullptr;
-  PythonModule *pm = nullptr;
+  SEModule *sem = nullptr;
 };
 
 #endif
