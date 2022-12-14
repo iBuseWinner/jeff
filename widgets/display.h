@@ -46,10 +46,9 @@ private:
   short max_message_amount = 0;
 
   // Constants:
-  inline static const QString object_name = "display";
-  inline static const QString box_object_name = "box";
-  inline static const QString box_style_sheet =
-    "#display, #box { background-color: rgba(255, 255, 255, 0); }";
+  const char *object_name = "display";
+  const char *box_object_name = "box";
+  const char *box_style_sheet = "#display, #box { background-color: rgba(255, 255, 255, 0); }";
 
   // Functions described in `display.cpp`:
   void scroll_down(int min, int max);

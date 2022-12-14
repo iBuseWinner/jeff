@@ -37,6 +37,7 @@ public:
   QJsonObject request_compose(
     CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
   );
+  QJsonObject request_next_step(SceneryScript *script, const QString &user_expression);
   
 signals:
   /*! @brief Notifies of a script error. */

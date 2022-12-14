@@ -5,7 +5,7 @@ AddScriptDialog::AddScriptDialog(QWidget *parent, Basis *_basis,
                                  SEModule *_sem, ModalHandler *m_handler) 
 : ScrollFreezerWidget(parent), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName("add_script_dialog");
+  setObjectName(object_name);
   auto *script_editor = new ScriptEditor(this, _basis, _sem, _m_handler);
   auto *lt = new QGridLayout();
   lt->setMargin(0);

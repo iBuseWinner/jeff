@@ -1,24 +1,26 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include "core/model/message.h"
-#include "dialogues/modal-handler.h"
-#include "widgets/board.h"
+#include <QAction>
+#include <QClipboard>
 #include <QFileInfo>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
+#include <QPoint>
 #include <QResizeEvent>
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextDocument>
+#include "core/model/message.h"
+#include "dialogues/modal-handler.h"
+#include "widgets/board.h"
+#include "widgets/menu.h"
 
-/*!
- * @class Message
- * @brief Widget that displays single piece of data.
- * @details Any text entered from the keyboard or NLPmodule/PythonHandler,
- * widget, picture, audio, file, etc. can be used as a message.
- */
+/*! @class Message
+ *  @brief Widget that displays single piece of data.
+ *  @details Any text entered from the keyboard or NLPmodule/PythonHandler,
+ *  widget, picture, audio, file, etc. can be used as a message.  */
 class Message : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(Message)
@@ -57,7 +59,7 @@ private:
   // Functions described in `message.cpp`:
   void author(Author _a);
   void content_type(ContentType _ct);
-  // void theme(Theme _t);
+  void theme(Theme _t);
   void setup_jeff();
   void setup_user();
   void setup_text(const QString &content);

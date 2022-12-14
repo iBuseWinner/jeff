@@ -26,6 +26,11 @@ void JCK::search_for_suggests(const QString &input) {
     auto json_object = pw->request_scan(scanner, input);
     if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
     return;
+  } else if (current_scenery) {
+    auto json_object = pw->request_next_step(current_scenery, input);
+    if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
+    else current_scenery = nullptr;
+    return;
   }
   CacheWithIndices selection;
   bool from_db = false;
@@ -122,22 +127,43 @@ QPair<QString, QString> JCK::compose_answer(QString input, CacheWithIndices cand
   input = StringSearch::lemmatize(input);
   for (auto ewi : candidates) {
     if (ewi.second.exec) {
+      /*! Executable <=> Script. @sa ScriptMetadata */
       ScriptMetadata *script = ScriptsCast::to_script(ewi.second.reagent_text);
       if (not script) continue;
-      ReactScript *react_script = dynamic_cast<ReactScript *>(script);
-      if (not react_script) {
-        delete script;
-        continue;
-      }
-      auto obj = pw->request_answer(react_script, ewi.second, input);
-      delete react_script;
-      if (obj.contains(basis->errorTypeWk)) continue;
-      if (obj.contains(basis->sendWk)) {
-        ewi.second.use_cases += 1;
-        basis->cacher->append(ewi.second);
-        output += obj[basis->sendWk].toString() + " ";
-      }
+      if (script->stype == ScriptType::React) {
+        /*! React scripts. @sa ReactScript */
+        ReactScript *react_script = dynamic_cast<ReactScript *>(script);
+        if (not react_script) {
+          delete script;
+          continue;
+        }
+        auto obj = pw->request_answer(react_script, ewi.second, input);
+        delete react_script;
+        if (obj.contains(basis->errorTypeWk)) continue;
+        if (obj.contains(basis->sendWk)) {
+          ewi.second.use_cases += 1;
+          basis->cacher->append(ewi.second);
+          output += obj[basis->sendWk].toString() + " ";
+        }
+      } else if (script->stype == ScriptType::Scenery) {
+        /*! Scenery scripts. @sa SceneryScript */
+        SceneryScript *scenery_script = dynamic_cast<SceneryScript *>(script);
+        if (not scenery_script) {
+          delete script;
+          continue;
+        }
+        auto obj = pw->request_next_step(scenery_script, input);
+        if (obj.contains(basis->sendWk)) {
+          emit response(obj[basis->sendWk].toString());
+          current_scenery = scenery_script;
+          return QPair<QString, QString>();
+        } else {
+          delete scenery_script;
+          continue;
+        }
+      } else { delete script; continue; }
     } else {
+      /*! Not `exec` */
       ewi.second.use_cases += 1;
       basis->cacher->append(ewi.second);
       output += ewi.second.reagent_text + " ";

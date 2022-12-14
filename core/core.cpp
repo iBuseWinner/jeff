@@ -109,7 +109,7 @@ void Core::got_message_from_script_as_user(const QString &message) {
   /*! Does not respond to blank input. */
   if (message.isEmpty()) return;
   /*! Displays the entered message on the screen. */
-  MessageData mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Blue);
+  MessageData mdata = get_message(message, Author::User, ContentType::Markdown, Theme::Blue);
   hp->append(mdata);
   notifier->notify(mdata);
   emit show(mdata);

@@ -5,7 +5,7 @@ import transport
 # Shutdown flag. Used in main() to stop script.
 SHUTDOWN = False
 # A list of words that indicate that a person is talking to the bot.
-ATTENTION_WORDS = ['эй', 'хэй', 'хай']
+ATTENTION_WORDS = [word for word in 'эй, хэй, хай, ваня'.split(', ')]
 
 
 def list_subdirs(path: str) -> list:
@@ -88,6 +88,7 @@ def main(t: transport.Transport) -> None:
     sample_rate = int(sounddevice.query_devices(sounddevice.default.device, "input")["default_samplerate"])
     vosk_recognizer = vosk.KaldiRecognizer(vosk_model, sample_rate)
     print('Let\'s start recognizing...')
+    t.send_msg('Voice input activated.')
     try:
       while True:
         if SHUTDOWN:
@@ -97,7 +98,8 @@ def main(t: transport.Transport) -> None:
           text = json.loads(vosk_recognizer.Result())["text"]
           for word in text.split():
             if word in ATTENTION_WORDS:
-              print('- ' + text)
+              print(' - ' + text)
+              t.send_as_user(text)
               break
     except KeyboardInterrupt:
       print('\nSpeech recognition is off.')

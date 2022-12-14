@@ -26,7 +26,7 @@ private:
   ModalHandler *_m_handler = nullptr;
 
   // Constants:
-  inline static const QString object_name = "firststart";
+  const char *object_name = "firststart";
   static const int fixed_width = 400;
 };
 

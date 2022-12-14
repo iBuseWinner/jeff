@@ -16,7 +16,7 @@
  *  3. Server - Run as daemons, receive notifications of new messages and interact with the server
  *  4. CustomScan - Scans and responds to user input, replacing Jeff's NLPmodule
  *  5. CustomCompose - Receives response options for user input from Jeff and composes the response  */
-enum ScriptType { NoAction, React, Daemon, Server, CustomScan, CustomCompose };
+enum ScriptType { NoAction, React, Daemon, Server, CustomScan, CustomCompose, Scenery };
 
 /*! @class ScriptMetadata
  *  @brief Contains metadata about a script.  */
@@ -179,6 +179,40 @@ public:
       {"stype", int(stype)},
       {"fn_name", fn_name},
       {"send_adprops", send_adprops}
+    };
+  }
+};
+
+/*! @class SceneryScript
+ *  @brief Contains metadata about scenery script.  */
+class SceneryScript : public ScriptMetadata {
+public:
+  /*! Constructors. */
+  SceneryScript() : ScriptMetadata() {
+    stype = ScriptType::Scenery;
+  }
+  SceneryScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    fn_name = json_object["fn_name"].toString();
+    if (json_object["memory_cells"].isArray()) {
+      QJsonArray array = json_object["memory_cells"].toArray();
+      for (auto key : array) memory_cells.append(key.toString());
+    }
+    stype = ScriptType::Scenery;
+  }
+  /*! Name of function inside the script. */
+  QString fn_name;
+  /*! List of memory cells that will be passed to the script. */
+  QStringList memory_cells;
+  
+  /*! @brief Turns @a script into a JSON object. */
+  QJsonObject to_json() {
+    QJsonArray memory_cells_array;
+    for (auto str : memory_cells) memory_cells_array.append(str);
+    return {
+      {"path", path},
+      {"stype", int(stype)},
+      {"fn_name", fn_name},
+      {"memory_cells", memory_cells_array}
     };
   }
 };

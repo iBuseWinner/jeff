@@ -111,6 +111,7 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
     }
   }
   if (not except_send) {
+    /*! This block have used to send messages by daemons and servers. */
     if (object.contains(sendWk)) {
       QString message = object[sendWk].toString();
       emit send(message);

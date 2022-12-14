@@ -37,7 +37,7 @@ private:
   Button save_and_close;
 
   // Constants:
-  inline static const QString object_name = "settings";
+  const char *object_name = "settings";
 
   // Functions described in `settings.cpp`:
   void loadStates();

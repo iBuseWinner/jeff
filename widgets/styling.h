@@ -27,16 +27,16 @@ public:
   // Constants:
   inline static const QString css_blank = "rgb(%1,%2,%3)";
 
-  inline static const QString css_light_sb = "#1b1b1b"; /*!< Light themed scroll bar color. */
-  inline static const QString css_dark_sb  = "#e4e4e4";
+  const char *css_light_sb = "#1b1b1b";  /*!< Light themed scroll bar color. */
+  const char *css_dark_sb  = "#e4e4e4";
 
-  inline static const QString css_light_wbg = "#e7e8eb"; /*!< Light themed window bg. */
-  inline static const QString css_dark_wbg  = "#282c34";
+  const char *css_light_wbg = "#e7e8eb"; /*!< Light themed window bg. */
+  const char *css_dark_wbg  = "#282c34";
 
-  inline static const QString css_light_sm = "#d1d2d4";   /*!< Light themed selected action. */
-  inline static const QString css_light_pm = "#aeafb1"; /*!< ...pressed action. */
-  inline static const QString css_dark_sm  = "#595c66";
-  inline static const QString css_dark_pm  = "#6e717e";
+  const char *css_light_sm = "#d1d2d4";  /*!< Light themed selected action. */
+  const char *css_light_pm = "#aeafb1";  /*!< ...pressed action. */
+  const char *css_dark_sm  = "#595c66";
+  const char *css_dark_pm  = "#6e717e";
 
   inline static const QString css_scroll_bar =
     "QScrollBar:vertical { background: transparent; border: none; width: 5px; margin: 0px 0px "

@@ -23,7 +23,7 @@ void Message::message_data(MessageData _md) {
   md = _md;
   author(md.author);
   content_type(md.content_type);
-  // theme(md.theme);
+  theme(md.theme);
 }
 
 /*! @brief Sets {modal_handler->getPrisoner()} into the Message. */
@@ -68,7 +68,19 @@ void Message::content_type(ContentType _ct) {
 }
 
 /*! @brief Sets the message colors. */
-// void Message::theme(Theme _t) {}
+void Message::theme(Theme _t) {
+  if (_t == Theme::Std) return; /*!< This theme is by default, and message theme 
+                                /*!  cannot be changed after sending. */
+  auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
+  if (board == nullptr) board = static_cast<Board *>(layout()->itemAt(1)->widget());
+  if (board == nullptr) return; /*!< C'est impossible... */
+  if (_t == Theme::White)       board->setStyleSheet(board->white_style);
+  else if (_t == Theme::Black)  board->setStyleSheet(board->black_style);
+  else if (_t == Theme::Red)    board->setStyleSheet(board->red_style);
+  else if (_t == Theme::Green)  board->setStyleSheet(board->green_style);
+  else if (_t == Theme::Blue)   board->setStyleSheet(board->blue_style);
+  else if (_t == Theme::Yellow) board->setStyleSheet(board->yellow_style);
+}
 
 /*! @brief Customizes layout of message from Jeff. */
 void Message::setup_jeff() {
@@ -111,6 +123,19 @@ void Message::setup_picture(const QString &content) {
   if (pix.isNull()) return;
   label->setScaledContents(true);
   label->setPixmap(pix.scaledToWidth(320, Qt::SmoothTransformation));
+  label->setContextMenuPolicy(Qt::CustomContextMenu);
+  auto *copy_path_action = new QAction(
+    QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy image path"), this
+  );
+  connect(copy_path_action, &QAction::triggered, this, [this, content] {
+    auto *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(content);
+  });
+  auto *context_menu = new Menu(this);
+  context_menu->addAction(copy_path_action);
+  connect(label, &QLabel::customContextMenuRequested, this, [this, context_menu] {
+    context_menu->exec(QCursor::pos());
+  });
   grid_layout->addWidget(w);
 }
 

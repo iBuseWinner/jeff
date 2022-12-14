@@ -30,10 +30,10 @@ enum ContentType {
 
 /*!
  * @enum Theme
- * @brief Enumeration of possible message themes for ADisplay.
+ * @brief Enumeration of possible message themes for Display.
  * @sa MessageData
  */
-enum Theme { undefT, Std, White, Dark, Red, Green, Blue, Yellow };
+enum Theme { undefT, Std, White, Black, Red, Green, Blue, Yellow };
 
 /*!
  * @class MessageData
@@ -77,10 +77,8 @@ public:
   }
 };
 
-/*!
- * @typedef Messages
- * @brief Contains a part of message history.
- */
+/*! @typedef Messages
+ *  @brief Contains a part of message history.  */
 typedef QList<MessageData> Messages;
 
 #endif

@@ -31,3 +31,7 @@ class Transport:
   def send_msg(self, msg):
     j = {"send": msg}
     self._send(Transport._encode_json(j))
+
+  def send_as_user(self, msg):
+    j = {"send_as_user": msg}
+    self._send(Transport._encode_json(j))

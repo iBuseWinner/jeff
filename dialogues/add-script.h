@@ -29,6 +29,9 @@ public:
                   SEModule *_sem = nullptr, ModalHandler *m_handler = nullptr);
   
 private:
+  // Constants:
+  const char *object_name = "add_script_dialog";
+  
   // Objects:
   ModalHandler *_m_handler = nullptr;
 };

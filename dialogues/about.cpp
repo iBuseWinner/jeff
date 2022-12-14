@@ -38,9 +38,7 @@ About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(par
   tab1->setText(
     tr("Jeff - chat bot and automatization tool") + "<br><br>© 2018-2022 " +
     tr("Jeff Authors") + "<br><br><a href=\"https://github.com/markcda/jeff\">"
-    "https://github.com/markcda/jeff</a><br><a href=\"https://raw.githubusercontent"
-    ".com/markcda/jeff/master/LICENSE\">" + tr("License") +
-    ": MIT License"
+    "https://github.com/markcda/jeff</a><br>" + tr("License") + ": <a href=\"https://raw.githubusercontent.com/markcda/jeff/master/LICENSE\">MIT License"
   );
   tab1->setOpenExternalLinks(true);
   tab1->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -49,7 +47,7 @@ About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(par
     "<b>" + tr("Shamshin Victor") + "</b><br>" + tr("Developer") +
     "<br><a href=\"mailto:androiddevelop@yandex.ru\">androiddevelop@yandex.ru</a><br><br><b>" +
     tr("Mark CDA") + "</b><br>" + tr("Developer") + "<br><a "
-    "href=\"mailto:markcda@protonmail.com\">markcda@protonmail.com</a>"
+    "href=\"mailto:creativecorp.markcda@proton.me\">creativecorp.markcda@proton.me</a>"
   );
   tab2->setOpenExternalLinks(true);
   tab2->setAlignment(Qt::AlignTop | Qt::AlignLeft);

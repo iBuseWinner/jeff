@@ -34,7 +34,7 @@ private:
   ModalHandler *_m_handler = nullptr;
 
   // Constants:
-  inline static const QString object_name = "about";
+  const char *object_name = "about";
   static const int fixed_width = 320;
 };
 

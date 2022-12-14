@@ -54,6 +54,7 @@ private:
   QRandomGenerator *gen = nullptr;
   CustomScanScript *scanner = nullptr;
   CustomComposeScript *composer = nullptr;
+  SceneryScript *current_scenery = nullptr;
 
   // Constants:
   const char *cache_path = "";

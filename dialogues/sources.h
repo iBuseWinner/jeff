@@ -46,7 +46,7 @@ private:
   bool edited = false;
 
   // Constants:
-  inline static const QString object_name = "sources";
+  const char *object_name = "sources";
 
   // Functions described in `sources.cpp`:
   void connector();

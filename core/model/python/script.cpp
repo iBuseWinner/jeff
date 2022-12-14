@@ -18,6 +18,9 @@ ScriptMetadata *ScriptsCast::to_script(const QJsonObject &json_object)  {
   } else if (stype == ScriptType::CustomCompose) {
     auto *script = new CustomComposeScript(json_object);
     return script;
+  } else if (stype == ScriptType::Scenery) {
+    auto *script = new SceneryScript(json_object);
+    return script;
   } else return nullptr;
 }
 
@@ -47,6 +50,9 @@ QJsonObject ScriptsCast::to_json(ScriptMetadata *script) {
     return s->to_json();
   } else if (stype == ScriptType::CustomCompose) {
     auto *s = dynamic_cast<CustomComposeScript *>(script);
+    return s->to_json();
+  } else if (stype == ScriptType::Scenery) {
+    auto *s = dynamic_cast<SceneryScript *>(script);
     return s->to_json();
   } else return QJsonObject();
 }

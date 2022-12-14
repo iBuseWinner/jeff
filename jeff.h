@@ -12,10 +12,8 @@
 #include <ncurses.h>
 #include <thread>
 
-/*!
- * @mainclass Jeff
- * @brief Application class.
- */
+/*! @mainclass Jeff
+ *  @brief Application class.  */
 class Jeff : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Jeff)
