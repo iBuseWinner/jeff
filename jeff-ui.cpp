@@ -56,6 +56,12 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
     clear();
 }
 
+/*! @brief Closes the app. */
+void Jeff::closeEvent(QCloseEvent *event) {
+  core->sem->shutdown_daemons();
+  event->accept();
+}
+
 /*! @brief Reads the settings from the file and applies them. */
 void Jeff::apply_settings() {
   /*! If settings file does not exist, sets default settings. */

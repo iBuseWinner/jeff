@@ -57,7 +57,7 @@ void Message::content_type(ContentType _ct) {
     if (info.exists() and info.isFile()) {
       md.content_type = ContentType::Picture;
       setup_picture(md.content);
-    }
+    } else setup_text(md.content);
   }
   else if (_ct == ContentType::Text) setup_text(md.content);
   else if (_ct == ContentType::Markdown) setup_markdown(md.content);

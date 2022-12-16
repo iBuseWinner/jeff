@@ -11,7 +11,7 @@ def try_locate():
   return "darknet"
 
 
-def recognize(incoming):
+def recognize(incoming, savepath):
   """"""
   r = incoming.recv(1024).strip()
   incoming.close()
@@ -34,7 +34,7 @@ def recognize(incoming):
                    "cfg/yolov4-tiny.cfg",
                    "yolov4-tiny.weights",
                    path.rstrip()])
-  filename = f'../{str(uuid.uuid4())}.jpg'
+  filename = f'{savepath}/{str(uuid.uuid4())}.jpg'
   os.rename('predictions.jpg', filename)
   response = {}
   response["send"] = os.path.abspath(filename)
@@ -49,6 +49,9 @@ def main():
   path = try_locate()
   if not path:
     return
+  if not os.path.isdir('recognized'):
+    os.mkdir('recognized')
+  savepath = os.path.abspath('recognized')
   port = 15203
   os.chdir(path)
   server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -57,7 +60,7 @@ def main():
   print(f'Darknet enabled on port {str(port)}.')
   while True:
     incoming, _ = server.accept()
-    recognize(incoming)
+    recognize(incoming, savepath)
 
 
 if __name__ == "__main__":

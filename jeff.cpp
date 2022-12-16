@@ -77,6 +77,7 @@ void Jeff::ncurses_draw() {
       QString user_message = QString::fromStdWString(buffer);
       buffer.clear();
       if (user_message == "/q") {
+        core->sem->shutdown_daemons();
         qt_shutdown();
         break;
       }

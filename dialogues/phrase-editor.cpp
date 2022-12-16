@@ -84,7 +84,7 @@ void PhraseEditor::open_brief_by_address(int address) {
   overview->update_phrases();
   brief->setup(overview->selected_source(), overview->phrases, address);
   brief->setFixedWidth(480);
-  dynamic_cast<QWidget *>(parent())->setFixedWidth(490);
+  dynamic_cast<QWidget *>(parent())->setFixedWidth(500);
   brief->show();
   mode = BriefMode;
   mode_mutex.unlock();

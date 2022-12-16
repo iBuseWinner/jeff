@@ -9,6 +9,7 @@
 #include "widgets/menubar.h"
 #include "widgets/styling.h"
 #include <QApplication>
+#include <QCloseEvent>
 #include <QLayout>
 #include <QLineEdit>
 #include <QList>
@@ -40,6 +41,7 @@ signals:
 protected:
   // Functions described in `jeff-ui.cpp`:
   void keyPressEvent(QKeyEvent *event) override;
+  void closeEvent(QCloseEvent *event) override;
 
 private:
   // Objects:

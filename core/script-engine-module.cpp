@@ -8,11 +8,19 @@ SEModule::SEModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObj
 
 /*! @brief The destructor. */
 SEModule::~SEModule() {
-  for (auto *daemon : _daemons) daemon->kill();
   basis->json->write_scripts(_scripts);
   for (auto *script : _scripts) delete script;
   _scripts.clear();
   notifier->unsubscribe_all();
+}
+
+/*! @brief Kills daemons' and servers' processes. */
+void SEModule::shutdown_daemons() {
+  for (auto *daemon : _daemons) {
+    disconnect(daemon, &QProcess::errorOccurred, nullptr, nullptr);
+    daemon->terminate();
+    daemon->waitForFinished(1500);
+  }
 }
 
 /*! @brief Runs functions in scripts intended to start when Jeff starts. */

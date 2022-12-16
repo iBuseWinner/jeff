@@ -42,6 +42,7 @@ public:
   bool remove_script(ScriptMetadata *script);
   Scripts get_scripts();
   void startup();
+  void shutdown_daemons();
 
 signals:
   /*! @brief Notifies of a script error. */
