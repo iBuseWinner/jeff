@@ -1,4 +1,5 @@
 #include "worker.h"
+#include <iostream>
 
 PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent)
   : QObject(parent), basis(_basis), hp(_hp)
@@ -57,7 +58,7 @@ QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transp
     return {{basis->errorTypeWk, 6}};
   }
   Object objects_representation = PyObject_Repr(answer_result);
-  auto result = QString::fromUtf8(PyUnicode_AsUTF8(objects_representation)).chopped(1).remove(0, 1);
+  auto result = QString::fromUtf8(PyUnicode_AsUTF8(objects_representation)).chopped(1).remove(0, 2);
   auto recv_doc = QJsonDocument::fromJson(result.toUtf8());
   if (recv_doc.isNull()) {
     emit script_exception(tr("No valid JSON received."));

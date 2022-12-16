@@ -3,10 +3,8 @@
 
 #include <QLabel>
 
-/*!
- * @class ExplanationLabel
- * @brief Label explaining settings.
- */
+/*! @class ExplanationLabel
+ *  @brief Label explaining settings.  */
 class ExplanationLabel : public QLabel {
   Q_OBJECT
   Q_DISABLE_COPY(ExplanationLabel)

@@ -4,11 +4,9 @@
 #include <QWheelEvent>
 #include <QWidget>
 
-/*!
- * @class ScrollFreezerWidget
- * @brief Some widget messages have scroll areas, and this widget allows you to prevent the Display 
- * from scrolling while the mouse cursor is over this widget.
- */
+/*! @class ScrollFreezerWidget
+ *  @brief Some widget messages have scroll areas, and this widget allows you to prevent the Display 
+ *  from scrolling while the mouse cursor is over this widget.  */
 class ScrollFreezerWidget : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(ScrollFreezerWidget)

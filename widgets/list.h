@@ -6,10 +6,8 @@
 #include <QScrollBar>
 #include <QTreeWidget>
 
-/*!
- * @class List
- * @brief List widget.
- */
+/*! @class List
+ *  @brief List widget.  */
 class List : public QTreeWidget {
   Q_OBJECT
   Q_DISABLE_COPY(List)

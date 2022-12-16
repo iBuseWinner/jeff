@@ -11,10 +11,8 @@
 #include <QMenuBar>
 #include <QWidget>
 
-/*!
- * @class MenuBar
- * @brief Provides the ability to interact with Jeff using the menubar.
- */
+/*! @class MenuBar
+ *  @brief Provides the ability to interact with Jeff using the menubar.  */
 class MenuBar : public QMenuBar {
   Q_OBJECT
   Q_DISABLE_COPY(MenuBar)

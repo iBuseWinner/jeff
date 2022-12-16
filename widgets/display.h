@@ -11,11 +11,9 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-/*!
- * @class Display
- * @brief Widget that displays messages.
- * @sa Message
- */
+/*! @class Display
+ *  @brief Widget that displays messages.
+ *  @sa Message  */
 class Display : public QScrollArea {
   Q_OBJECT
   Q_DISABLE_COPY(Display)

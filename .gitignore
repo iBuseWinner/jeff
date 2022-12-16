@@ -2,3 +2,4 @@ arts/.directory
 examples/vosk-voice-input/models
 *.pyc
 examples/darknet-image-recognition/darknet
+examples/darknet-image-recognition/recognized

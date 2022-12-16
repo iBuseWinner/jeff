@@ -16,7 +16,7 @@ About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(par
   setFixedWidth(fixed_width);
   auto *layout = new QGridLayout();
   layout->setMargin(0);
-  layout->setSpacing(0);
+  layout->setSpacing(3);
   auto *logo = new QLabel(this);
   logo->setScaledContents(true);
   logo->setFixedWidth(fixed_width / 2);

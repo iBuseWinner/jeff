@@ -162,6 +162,26 @@
         <source>Enter your message...</source>
         <translation>Введите сообщение...</translation>
     </message>
+    <message>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation>Вырезать</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation>Вставить</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Выбрать всё</translation>
+    </message>
 </context>
 <context>
     <name>MenuBar</name>
@@ -267,6 +287,10 @@
     <message>
         <source>Error: </source>
         <translation>Ошибка: </translation>
+    </message>
+    <message>
+        <source>Copy image path</source>
+        <translation>Копировать путь до изображения</translation>
     </message>
 </context>
 <context>
@@ -382,7 +406,7 @@
     </message>
 </context>
 <context>
-    <name>PythonModule</name>
+    <name>PythonWorker</name>
     <message>
         <source>Failed to connect the module.</source>
         <translation>Не удалось подключить модуль.</translation>
@@ -393,7 +417,7 @@
     </message>
     <message>
         <source>Cannot call &quot;answer&quot;: this is not a function!</source>
-        <translation>Невозможно вызвать answer: это не функция!</translation>
+        <translation>Невозможно вызвать &quot;answer&quot;: это не функция!</translation>
     </message>
     <message>
         <source>Failed to construct argument from string.</source>
@@ -423,6 +447,9 @@
         <source>The function name is empty.</source>
         <translation>Имя функции пустое.</translation>
     </message>
+</context>
+<context>
+    <name>SEModule</name>
     <message>
         <source>An error occurred during script execution</source>
         <translation>Произошла ошибка в процессе выполнения скрипта</translation>
@@ -567,7 +594,7 @@
     </message>
     <message>
         <source>Startup script (suitable for startup prompts)</source>
-        <translation>Сценарий запуска (подходит для приглашений при запуске)</translation>
+        <translation type="vanished">Сценарий запуска (подходит для приглашений при запуске)</translation>
     </message>
     <message>
         <source>Daemon (works in background with Jeff&apos;s server)</source>

@@ -7,11 +7,9 @@
 #include <QPalette>
 #include <QString>
 
-/*!
- * @class Styling
- * @brief Looks at what colors are set by the system theme, and allows widgets
- * to build their appearance on this basis.
- */
+/*! @class Styling
+ *  @brief Looks at what colors are set by the system theme, and allows widgets
+ *  to build their appearance on this basis.  */
 class Styling {
 public:
   // Objects:

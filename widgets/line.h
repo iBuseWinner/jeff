@@ -8,11 +8,9 @@
 #include <QLineEdit>
 #include <QWidget>
 
-/*!
- * @class Line
- * @brief Widget for sending user messages.
- * @sa Board, Button, LineEdit
- */
+/*! @class Line
+ *  @brief Widget for sending user messages.
+ *  @sa Board, Button, LineEdit  */
 class Line : public Board {
   Q_OBJECT
   Q_DISABLE_COPY(Line)

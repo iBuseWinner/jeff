@@ -9,12 +9,10 @@
 #include <QToolButton>
 #include <QWidget>
 
-/*!
- * @class Spoiler
- * @brief Collapses and expands a large amount of content.
- * @copyright https://stackoverflow.com/users/1174343/x-squared
- * @details @link https://stackoverflow.com/questions/32476006/how-to-make-an-expandable-collapsable-section-widget-in-qt
- */
+/*! @class Spoiler
+ *  @brief Collapses and expands a large amount of content.
+ *  @copyright https://stackoverflow.com/users/1174343/x-squared
+ *  @details @link https://stackoverflow.com/questions/32476006/how-to-make-an-expandable-collapsable-section-widget-in-qt  */
 class Spoiler : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(Spoiler)

@@ -8,10 +8,8 @@
 #include <QPainter>
 #include <QPixmap>
 
-/*!
- * @class Menu
- * @brief Menu with a special style of design.
- */
+/*! @class Menu
+ *  @brief Menu with a special style of design.  */
 class Menu : public QMenu {
   Q_OBJECT
   Q_DISABLE_COPY(Menu)

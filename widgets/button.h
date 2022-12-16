@@ -8,10 +8,8 @@
 #include <QPoint>
 #include <QPushButton>
 
-/*!
- * @class Button
- * @brief Button with click animation and options.
- */
+/*! @class Button
+ *  @brief Button with click animation and options.  */
 class Button : public QPushButton {
   Q_OBJECT
   Q_DISABLE_COPY(Button)
