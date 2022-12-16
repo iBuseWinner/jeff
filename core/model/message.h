@@ -68,7 +68,7 @@ public:
            m1.content == m2.content and m1.datetime == m2.datetime;
   }
   /*! @brief Turns @a message into a JSON object.  */
-  QJsonObject to_json() {
+  QJsonObject to_json() const {
     return {{"content", content},
             {"datetime", datetime.toString(Qt::ISODateWithMs)},
             {"author", int(author)},

@@ -110,6 +110,7 @@ public:
   }
   ServerScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
     server_addr = QHostAddress(json_object["server_addr"].toString());
+    if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
     server_port = quint16(json_object["server_port"].toInt());
     stype = ScriptType::Server;
   }

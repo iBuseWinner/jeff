@@ -42,6 +42,7 @@ void SEModule::startup() {
       proc->setWorkingDirectory(output.path());
       proc->start(QString("python"), QStringList(s->path));
       _daemons.append(proc);
+      notifier->subscribe(s);
     } else continue;
   }
 }
