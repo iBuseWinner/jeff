@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import asyncio, json, socket, time, uuid
+import json, socket, time, uuid
 
 
-async def send_time(msg_id) -> None:
-  data = json.dumps({"send_status": {"id": msg_id, "msg": time.strftime('%X')}}).encode()
+def send_time(msg_id) -> None:
+  data = json.dumps({"send_status": {"id": msg_id,
+                                     "msg": f'Текущее время: {time.strftime("%X")}.'}}).encode()
   try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
       sock.connect(('localhost', 8005))
@@ -13,15 +14,15 @@ async def send_time(msg_id) -> None:
     print('Сервер отключен.')
 
 
-async def main() -> None:
+def main() -> None:
   msg_id = str(uuid.uuid4())
   while True:
-    await send_time(msg_id)
-    await asyncio.sleep(5)
+    send_time(msg_id)
+    time.sleep(5)
 
 
 if __name__ == '__main__':
   try:
-    asyncio.run(main())
+    main()
   except KeyboardInterrupt:
     print('\nЧасы отключены.')
