@@ -9,11 +9,11 @@
 #include "core/model/keystore.h"
 #include "core/model/message.h"
 #include "core/model/nlp/cache.h"
+#include "core/model/python/daemon-process.h"
 #include "core/model/python/script.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -21,13 +21,12 @@
 #include <QList>
 #include <QObject>
 #include <QPair>
-#include <QProcess>
 #include <QString>
 #include <QVariantMap>
 
 /*! @typedef Daemons
  *  @brief List of working daemons.  */
-typedef QList<QProcess *> Daemons;
+typedef QList<DaemonProcess *> Daemons;
 
 /*! @class ScriptEngineModule @aka SEModule
  *  @brief Contains methods of working with scripts.  */
@@ -64,6 +63,9 @@ private:
   const char *custom_compose_name = "custom_compose";
   const char *action_provider_name = "action_provider";
   const char *go_action_name = "go_action";
+  
+  // Functions described in `script-engine-module.cpp`:
+  void start_daemon(ScriptMetadata *script);
 };
 
 #endif

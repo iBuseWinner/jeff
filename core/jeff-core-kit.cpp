@@ -26,11 +26,6 @@ void JCK::search_for_suggests(const QString &input) {
     auto json_object = pw->request_scan(scanner, input);
     if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
     return;
-  } else if (current_scenery) {
-    auto json_object = pw->request_next_step(current_scenery, input);
-    if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
-    else current_scenery = nullptr;
-    return;
   }
   CacheWithIndices selection;
   bool from_db = false;
@@ -145,22 +140,16 @@ QPair<QString, QString> JCK::compose_answer(QString input, CacheWithIndices cand
           basis->cacher->append(ewi.second);
           output += obj[basis->sendWk].toString() + " ";
         }
-      } else if (script->stype == ScriptType::Scenery) {
-        /*! Scenery scripts. @sa SceneryScript */
-        SceneryScript *scenery_script = dynamic_cast<SceneryScript *>(script);
-        if (not scenery_script) {
+      } else if (script->stype == ScriptType::Scenario) {
+        /*! Scenario scripts. @sa ScenarioScript */
+        ScenarioScript *scenario_script = dynamic_cast<ScenarioScript *>(script);
+        if (not scenario_script) {
           delete script;
           continue;
         }
-        auto obj = pw->request_next_step(scenery_script, input);
-        if (obj.contains(basis->sendWk)) {
-          emit response(obj[basis->sendWk].toString());
-          current_scenery = scenery_script;
-          return QPair<QString, QString>();
-        } else {
-          delete scenery_script;
-          continue;
-        }
+        /*! @note @a scenario_script will have been deleted in @a Core::got_scenario_shutting. */
+        emit setup_scenario(scenario_script); 
+        return QPair<QString, QString>();
       } else { delete script; continue; }
     } else {
       /*! Not `exec` */

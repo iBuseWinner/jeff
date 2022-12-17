@@ -70,6 +70,7 @@ void Jeff::apply_settings() {
     emit send(basis->first_start_cmd);
     basis->write(basis->isGreetingsEnabledSt, true);
     basis->write(basis->greetingsMsg, tr("Hello!"));
+    basis->write(basis->scenarioExitMsg, "//");
     save_window_settings();
     return;
   }
@@ -104,6 +105,7 @@ void Jeff::connect_all() {
   connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send(basis->settings_cmd); });
   connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
+  connect(menubar, &MenuBar::exit_triggered, this, [this] { close(); });
   // others
   connect(&(line->send_button), &Button::clicked, this, &Jeff::user_input_handler);
   connect(this, &Jeff::ready_state, core, &Core::start);

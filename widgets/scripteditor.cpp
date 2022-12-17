@@ -9,7 +9,7 @@ ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, SEModule *_sem, Modal
   path_input = new Button(tr("Select a file..."), this);
   connect(path_input, &Button::clicked, this, [this]() {
     auto _path = 
-      QFileDialog::getOpenFileName(nullptr, tr("Select file..."), "", tr("Python script") + "(*.py)");
+      QFileDialog::getOpenFileName(nullptr, tr("Select file..."), "", tr("Python script") + "(*.py);;" + tr("Any executable") + "(*.*)");
     if (not _path.isEmpty()) path_input->setText(_path);
     else path_input->setText(tr("Select a file..."));
   });

@@ -5,7 +5,6 @@
 #include "widgets/styling.h"
 #include <QAction>
 #include <QLineEdit>
-#include <QPoint>
 #include <QWidget>
 
 /*! @class LineEdit
@@ -33,7 +32,6 @@ private:
   
   // Functions described in `lineedit.cpp`:
   void setup_context_menu();
-  void show_context_menu(const QPoint &pos);
 };
 
 #endif

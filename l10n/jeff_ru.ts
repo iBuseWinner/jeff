@@ -87,6 +87,13 @@
     </message>
 </context>
 <context>
+    <name>DaemonProcess</name>
+    <message>
+        <source>An error occurred during script execution</source>
+        <translation>Произошла ошибка в процессе выполнения скрипта</translation>
+    </message>
+</context>
+<context>
     <name>FirstStart</name>
     <message>
         <source>Jeff</source>
@@ -292,6 +299,10 @@
         <source>Copy image path</source>
         <translation>Копировать путь до изображения</translation>
     </message>
+    <message>
+        <source>Copy message text</source>
+        <translation>Скопировать текст сообщения</translation>
+    </message>
 </context>
 <context>
     <name>PhraseEditor</name>
@@ -449,13 +460,6 @@
     </message>
 </context>
 <context>
-    <name>SEModule</name>
-    <message>
-        <source>An error occurred during script execution</source>
-        <translation>Произошла ошибка в процессе выполнения скрипта</translation>
-    </message>
-</context>
-<context>
     <name>SQLite</name>
     <message>
         <source>Database &quot;%1&quot; doesn&apos;t exist.</source>
@@ -593,10 +597,6 @@
         <translation>Скрипт Python</translation>
     </message>
     <message>
-        <source>Startup script (suitable for startup prompts)</source>
-        <translation type="vanished">Сценарий запуска (подходит для приглашений при запуске)</translation>
-    </message>
-    <message>
         <source>Daemon (works in background with Jeff&apos;s server)</source>
         <translation>Демон (работает в фоновом режиме с сервером Джеффа)</translation>
     </message>
@@ -691,6 +691,10 @@
     <message>
         <source>Check if you need to pass additional values to the script</source>
         <translation>Отметьте, если вам нужно передавать дополнительные свойства в скрипт</translation>
+    </message>
+    <message>
+        <source>Any executable</source>
+        <translation>Любая программа</translation>
     </message>
 </context>
 <context>

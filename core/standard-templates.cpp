@@ -92,5 +92,9 @@ bool StandardTemplates::fast_commands(const QString &expression) {
     }
     return true;
   }
+  if (expression == (*basis)[basis->scenarioExitMsg]) {
+    emit shutdown_scenario();
+    return true;
+  }
   return false;
 }

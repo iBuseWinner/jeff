@@ -19,10 +19,13 @@ public:
   void unsubscribe(ServerScript *script);
   void unsubscribe_all();
   void notify(MessageData mdata);
+  void set_scenario_listener(ScenarioScript *script);
+  void unset_scenario_listener();
   
 private:
   // Objects:
   QList<ServerScript *> scripts;
+  ScenarioScript *scenario = nullptr;
   
   // Functions described in `notify-client.cpp`:
   void send_event(MessageData mdata, QHostAddress addr, quint16 port);

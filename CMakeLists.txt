@@ -55,6 +55,8 @@ set(SRCS
   core/model/nlp/options.h
   core/model/nlp/stringssearch.cpp
   core/model/nlp/stringssearch.h
+  core/model/python/daemon-process.cpp
+  core/model/python/daemon-process.h
   core/model/python/object.h
   core/model/python/script.cpp
   core/model/python/script.h

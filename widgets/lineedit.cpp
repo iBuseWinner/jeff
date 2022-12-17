@@ -9,7 +9,9 @@ LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {
   setFrame(false);
   setup_context_menu();
   setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, &LineEdit::customContextMenuRequested, this, &LineEdit::show_context_menu);
+  connect(this, &LineEdit::customContextMenuRequested, this, [this]() {
+    context_menu->exec(QCursor::pos());
+  });
 }
 
 /*! @brief Sets up context menu for use. */
@@ -46,11 +48,6 @@ void LineEdit::setup_context_menu() {
   context_menu->addAction(paste_text_action);
   context_menu->addSeparator();
   context_menu->addAction(select_all_text_action);
-}
-
-/*! @brief Shows the context menu. */
-void LineEdit::show_context_menu(const QPoint &pos) {
-  context_menu->exec(QCursor::pos());
 }
 
 /*! @brief Sets a different widget style sheet so that its border is not displayed on the screen. */

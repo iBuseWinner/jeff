@@ -41,6 +41,8 @@ signals:
 #endif
   /*! @brief Sends a signal to turn on/off monologue mode. */
   void changeMonologueMode();
+  /*! @brief Notifies that the scenario has finished running. @sa ScenarioScript */
+  void shutdown_scenario();
 
 private:
   // Objects:

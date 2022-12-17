@@ -37,6 +37,9 @@ public:
   ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_jck(const QString &result_expression);
+  void got_scenario_start(ScenarioScript *scenario);
+  void got_scenario_shutting();
+  void notify_scenario_first_time();
   void got_message_from_script(const QString &outter_message);
   void got_message_to_search_again(const QString &rephrased_message);
   void got_message_from_script_as_user(const QString &message);
@@ -70,6 +73,7 @@ private:
   StandardTemplates *std_templates = new StandardTemplates(basis, hp, sem);
   CustomScanScript *custom_scanner = nullptr;
   CustomComposeScript *custom_composer = nullptr;
+  ScenarioScript *current_scenario = nullptr;
 };
 
 #endif

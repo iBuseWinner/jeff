@@ -16,7 +16,7 @@
  *  3. Server - Run as daemons, receive notifications of new messages and interact with the server
  *  4. CustomScan - Scans and responds to user input, replacing Jeff's NLPmodule
  *  5. CustomCompose - Receives response options for user input from Jeff and composes the response  */
-enum ScriptType { NoAction, React, Daemon, Server, CustomScan, CustomCompose, Scenery };
+enum ScriptType { NoAction, React, Daemon, Server, CustomScan, CustomCompose, Scenario };
 
 /*! @class ScriptMetadata
  *  @brief Contains metadata about a script.  */
@@ -73,7 +73,7 @@ public:
   bool needs_user_input;
   
   /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
+  QJsonObject to_json() const {
     QJsonArray memory_cells_array;
     for (auto str : memory_cells) memory_cells_array.append(str);
     return {
@@ -120,7 +120,7 @@ public:
   quint16 server_port;
   
   /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
+  QJsonObject to_json() const {
     return {
       {"path", path},
       {"stype", int(stype)},
@@ -146,7 +146,7 @@ public:
   QString fn_name;
   
   /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
+  QJsonObject to_json() const {
     return {
       {"path", path},
       {"stype", int(stype)},
@@ -174,7 +174,7 @@ public:
   QString fn_name;
   
   /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
+  QJsonObject to_json() const {
     return {
       {"path", path},
       {"stype", int(stype)},
@@ -184,36 +184,32 @@ public:
   }
 };
 
-/*! @class SceneryScript
- *  @brief Contains metadata about scenery script.  */
-class SceneryScript : public ScriptMetadata {
+/*! @class ScenarioScript
+ *  @brief Contains metadata about scenario script.  */
+class ScenarioScript : public ScriptMetadata {
 public:
   /*! Constructors. */
-  SceneryScript() : ScriptMetadata() {
-    stype = ScriptType::Scenery;
+  ScenarioScript() : ScriptMetadata() {
+    stype = ScriptType::Scenario;
   }
-  SceneryScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
-    fn_name = json_object["fn_name"].toString();
-    if (json_object["memory_cells"].isArray()) {
-      QJsonArray array = json_object["memory_cells"].toArray();
-      for (auto key : array) memory_cells.append(key.toString());
-    }
-    stype = ScriptType::Scenery;
+  ScenarioScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    server_addr = QHostAddress(json_object["server_addr"].toString());
+    if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
+    server_port = quint16(json_object["server_port"].toInt());
+    stype = ScriptType::Scenario;
   }
-  /*! Name of function inside the script. */
-  QString fn_name;
-  /*! List of memory cells that will be passed to the script. */
-  QStringList memory_cells;
+  /*! Server address. */
+  QHostAddress server_addr;
+  /*! Server port. */
+  quint16 server_port;
   
   /*! @brief Turns @a script into a JSON object. */
-  QJsonObject to_json() {
-    QJsonArray memory_cells_array;
-    for (auto str : memory_cells) memory_cells_array.append(str);
+  QJsonObject to_json() const {
     return {
       {"path", path},
       {"stype", int(stype)},
-      {"fn_name", fn_name},
-      {"memory_cells", memory_cells_array}
+      {"server_addr", server_addr.toString()},
+      {"server_port", int(server_port)}
     };
   }
 };

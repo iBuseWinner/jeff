@@ -12,11 +12,13 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
   import_history_action.setText(tr("Import message history"));
   enable_monologue_mode.setText(tr("Enable monologue mode") + space + basis->monologue_mode_cmd);
   enable_monologue_mode.setCheckable(true);
+  exit_action.setText(tr("&Exit"));
   source_manager_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_M));
   phrase_editor_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_P));
   export_history_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_E));
   import_history_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_I));
   enable_monologue_mode.setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_M);
+  exit_action.setShortcut(Qt::ALT | static_cast<int>(Qt::Key_F4));
   source_manager_action.setIcon(
     QIcon::fromTheme("network-server-database", QIcon(":/arts/icons/16/database-manager.svg")));
   phrase_editor_action.setIcon(
@@ -27,6 +29,8 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
     QIcon::fromTheme("document-import", QIcon(":/arts/icons/16/document-import.svg")));
   enable_monologue_mode.setIcon(
     QIcon::fromTheme("user-group-properties", QIcon(":/arts/icons/16/monologue.svg")));
+  exit_action.setIcon(
+    QIcon::fromTheme("application-exit", QIcon(":/arts/icons/16/application-exit.svg")));
   file_menu.addAction(&source_manager_action);
   file_menu.addAction(&phrase_editor_action);
   file_menu.addAction(&enable_monologue_mode);
@@ -34,9 +38,7 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
   file_menu.addAction(&export_history_action);
   file_menu.addAction(&import_history_action);
   file_menu.addSeparator();
-  file_menu.addAction(
-    QIcon::fromTheme("application-exit", QIcon(":/arts/icons/16/application-exit.svg")),
-    tr("&Exit"), &QApplication::quit, Qt::ALT | static_cast<int>(Qt::Key_F4));
+  file_menu.addAction(&exit_action);
   connect(&source_manager_action, &QAction::triggered, this, [this] { emit sources_triggered(); });
   connect(&phrase_editor_action, &QAction::triggered, this, [this] { emit phrase_editor_triggered(); });
   connect(&export_history_action, &QAction::triggered, this, [this] { emit export_triggered(); });
@@ -47,6 +49,7 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
     else
       enable_monologue_mode.setText(tr("Enable monologue mode") + space + basis->monologue_mode_cmd);
   });
+  connect(&exit_action, &QAction::triggered, this, [this] { emit exit_triggered(); });
   addMenu(&file_menu);
   // Edit
   edit_menu.setTitle(tr("Edit"));

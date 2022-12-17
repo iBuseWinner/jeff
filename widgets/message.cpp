@@ -102,8 +102,21 @@ void Message::setup_text(const QString &content) {
   w = label;
   label->setObjectName("text");
   label->setTextFormat(Qt::PlainText);
-  label->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
   label->setFocusPolicy(Qt::NoFocus);
+  label->setContextMenuPolicy(Qt::CustomContextMenu);
+  auto *copy_text_action = new QAction(
+    QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy message text"), this
+  );
+  connect(copy_text_action, &QAction::triggered, this, [this, content] {
+    auto *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(content);
+  });
+  auto *context_menu = new Menu(this);
+  context_menu->addAction(copy_text_action);
+  connect(label, &QLabel::customContextMenuRequested, this, [this, context_menu] {
+    context_menu->exec(QCursor::pos());
+  });
   grid_layout->addWidget(w);
 }
 

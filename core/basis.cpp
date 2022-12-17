@@ -130,4 +130,7 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
       }
     }
   }
+  if (object.contains(scenarioReadyWk))
+    if (object[scenarioReadyWk].toBool())
+      emit send_msg_to_scenario();
 }

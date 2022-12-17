@@ -60,6 +60,7 @@ public:
   const char *isHistoryKeepingEnabledSt = "core/ishistorykeepingenabled";
   const char *isGreetingsEnabledSt      = "core/isgreetingsenabled";
   const char *greetingsMsg              = "core/greetings";
+  const char *scenarioExitMsg           = "core/scenarioexitter";
   
   const char *defaultSourcePath      = "sources/defaultsourcepath";
   const char *defaultSourceContainer = "sources/defaultsourcecontainer";
@@ -83,6 +84,7 @@ public:
   const char *contextWk        = "context";
   const char *exprPropsWk      = "expression_properties";
   const char *writeMemoryWk    = "store_in_memory";
+  const char *scenarioReadyWk  = "sready";
   const char *sendWk           = "send";
   const char *searchAgainWk    = "search_again";
   const char *sendAsUserWk     = "send_as_user";
@@ -162,6 +164,8 @@ signals:
   QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
   /*! @brief Reports that sources has been changed. */
   void sources_changed();
+  /*! @brief Sends last message to scenario. @sa Core */
+  void send_msg_to_scenario();
 
 private:
   // Objects:

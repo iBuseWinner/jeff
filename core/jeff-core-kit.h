@@ -45,6 +45,8 @@ signals:
   QString response(QString response);
   /*! @brief Notifies of a script error. */
   QString script_exception(QString error);
+  /*! @brief Informs that JCK needs to wait for the scenario to run and sends it the last message. */
+  ScenarioScript *setup_scenario(ScenarioScript *script);
 
 private:
   // Objects:
@@ -54,7 +56,6 @@ private:
   QRandomGenerator *gen = nullptr;
   CustomScanScript *scanner = nullptr;
   CustomComposeScript *composer = nullptr;
-  SceneryScript *current_scenery = nullptr;
 
   // Constants:
   const char *cache_path = "";
@@ -88,6 +89,9 @@ public:
       emit script_exception(e);
     });
     connect(jck, &JCK::response, this, [this](QString r) { emit response(r); });
+    connect(jck, &JCK::setup_scenario, this, [this](ScenarioScript *s) {
+      emit setup_scenario(s);
+    });
     jck_thread.start();
   }
   /*! @brief The destructor. */
@@ -100,11 +104,14 @@ public:
   void set_custom_composer(CustomComposeScript *custom_composer) { emit scc(custom_composer); }
 
 signals:
+  /*! @brief Functions to thread. */
   QString sfs(QString input);
   CustomScanScript *scs(CustomScanScript *script);
   CustomComposeScript *scc(CustomComposeScript *script);
+  /*! @brief Real JCK signals. */
   QString response(QString response);
   QString script_exception(QString error);
+  ScenarioScript *setup_scenario(ScenarioScript *script);
 
 private:
   // Objects:

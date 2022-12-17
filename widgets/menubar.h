@@ -39,7 +39,8 @@ signals:
   void export_triggered();
   /*! @brief Informs about clicking on the "Import message history..." action. */
   void import_triggered();
-
+  /*! @brief Informs about clicking on the "&Exit" action. */
+  void exit_triggered();
   /*! @brief Informs about clicking on the "Help" action [constructing] */
   // void help_triggered();
 
@@ -50,7 +51,7 @@ private:
   QAction 
     /*! `File`  menu. */
     source_manager_action, script_manager_action, phrase_editor_action, export_history_action,
-    import_history_action,
+    import_history_action, exit_action,
     /*! `Edit`  menu. */
     clear_history_action, delete_text_action, cut_text_action, copy_text_action, paste_text_action,
     select_all_text_action,

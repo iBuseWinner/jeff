@@ -7,6 +7,7 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::search_again, this, &Core::got_message_to_search_again);
   connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);
   connect(basis, &Basis::send_status, this, &Core::got_status_from_script);
+  connect(basis, &Basis::send_msg_to_scenario, this, &Core::notify_scenario_first_time);
   basis->check_settings_file();
   basis->check_default_source();
   connect(server, &Server::server_error, this, &Core::got_error);
@@ -16,6 +17,8 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(std_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
 #endif
   connect(jck, &JCKController::response, this, &Core::got_message_from_jck);
+  connect(jck, &JCKController::setup_scenario, this, &Core::got_scenario_start);
+  connect(std_templates, &StandardTemplates::shutdown_scenario, this, &Core::got_scenario_shutting);
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
@@ -45,13 +48,14 @@ void Core::got_message_from_user(const QString &user_expression) {
   /*! Displays the entered message on the screen. */
   MessageData message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   hp->append(message);
-  notifier->notify(message);
   emit show(message);
-  /*! If a user has entered the command, there is no need to run other modules. */
+  /*! If user has entered any command, there is no need to run other modules. */
 #ifdef JEFF_WITH_QT_WIDGETS
   if (std_templates->dialogues(user_expression)) return;
 #endif
   if (std_templates->fast_commands(user_expression)) return;
+  notifier->notify(message); /*!< Notifies only when message isn't any dialog or command. */
+  if (current_scenario) return; /*!< @sa ScenarioScript */
   jck->search_for_suggests(user_expression);
 }
 
@@ -73,6 +77,29 @@ void Core::got_message_from_jck(const QString &result_expression) {
         /*! Search again if monologue mode enabled. */
         if (monologue_enabled) jck->search_for_suggests(result_expression);
       });
+}
+
+/*! @brief Runs a scenario process and sets notifications. */
+void Core::got_scenario_start(ScenarioScript *scenario) {
+  current_scenario = scenario;
+  notifier->set_scenario_listener(current_scenario);
+  sem->add_script(current_scenario);
+}
+
+/*! @brief Disables scenario. */
+void Core::got_scenario_shutting() {
+  notifier->unset_scenario_listener();
+  sem->remove_script(current_scenario);
+  delete current_scenario;
+  current_scenario = nullptr;
+}
+
+/*! @brief Responds to the scenario's ready message by sending it the last user message. */
+void Core::notify_scenario_first_time() {
+  if (not current_scenario) return;
+  auto recent = hp->recent(1);
+  if (recent.isEmpty()) return;
+  notifier->notify(recent[0]);
 }
 
 /*! @brief Shows output from script or outter app on the screen. */
@@ -163,8 +190,6 @@ void Core::got_error(const QString &error_text) {
 void Core::got_modal(ModalHandler *m_handler) {
   MessageData message = get_message(m_handler->getPrisoner()->objectName(),
                                     Author::Jeff, ContentType::Widget, Theme::Std);
-  hp->append(message);
-  notifier->notify(message);
   emit show_modal(message, m_handler);
 }
 #endif

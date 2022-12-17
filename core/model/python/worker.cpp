@@ -117,28 +117,6 @@ QJsonObject PythonWorker::request_answer(
   return result;
 }
 
-/*! @brief Prepares data for requesting next step in scenery execution. */
-QJsonObject PythonWorker::request_next_step(SceneryScript *script, const QString &user_expression) {
-  QJsonObject transport;
-  if (not script->memory_cells.isEmpty()) {
-    QJsonObject memory_cells;
-    for (auto key : script->memory_cells) memory_cells[key] = basis->memory(key);
-    transport[basis->memoryValuesWk] = memory_cells;
-  }
-  transport["user_expression"] = user_expression;
-  if (not script->path.length()) {
-    emit script_exception(tr("The path to the module is empty."));
-    return {{basis->errorTypeWk, 10}};
-  }
-  if (not script->fn_name.length()) {
-    emit script_exception(tr("The function name is empty."));
-    return {{basis->errorTypeWk, 12}};
-  }
-  QJsonObject result = run(script->path, script->fn_name, transport);
-  basis->handle_from_script(result, true);
-  return result;
-}
-
 /*! @brief Prepares data for custom scanning. */
 QJsonObject PythonWorker::request_scan(CustomScanScript *script, const QString &user_expression) {
   QJsonObject transport;
