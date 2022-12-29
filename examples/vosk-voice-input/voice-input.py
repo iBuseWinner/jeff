@@ -97,6 +97,8 @@ def main(t: transport.Transport) -> None:
           break
         data = audio_block_queue.get()
         if vosk_recognizer.AcceptWaveform(data):
+          #res = json.loads(vosk_recognizer.PartialResult())
+          #print(res)
           text = json.loads(vosk_recognizer.Result())["text"]
           for word in text.split():
             if word in ATTENTION_WORDS:

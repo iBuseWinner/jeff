@@ -1,8 +1,8 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "core/history-processor.h"
-#include "core/model/message.h"
+#include "core-kit/history-processor.h"
+#include "core-kit/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/message.h"
 #include <QMutex>

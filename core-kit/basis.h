@@ -1,13 +1,13 @@
 #ifndef BASIS_H
 #define BASIS_H
 
-#include "core/database/json.h"
-#include "core/database/sqlite.h"
-#include "core/model/keystore.h"
-#include "core/model/message.h"
-#include "core/model/nlp/cacher.h"
-#include "core/model/nlp/options.h"
-#include "core/model/source.h"
+#include "core-kit/database/json.h"
+#include "core-kit/database/sqlite.h"
+#include "core-kit/model/keystore.h"
+#include "core-kit/model/message.h"
+#include "core-kit/model/nlp/cacher.h"
+#include "core-kit/model/nlp/options.h"
+#include "core-kit/model/source.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -53,14 +53,14 @@ public:
   const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  const char *isMonologueEnabledSt      = "core/ismonologuemodeenabled";
-  const char *isDelayEnabledSt          = "core/isdelayenabled";
-  const char *minDelaySt                = "core/mindelay";
-  const char *maxDelaySt                = "core/maxdelay";
-  const char *isHistoryKeepingEnabledSt = "core/ishistorykeepingenabled";
-  const char *isGreetingsEnabledSt      = "core/isgreetingsenabled";
-  const char *greetingsMsg              = "core/greetings";
-  const char *scenarioExitMsg           = "core/scenarioexitter";
+  const char *isMonologueEnabledSt      = "core-kit/ismonologuemodeenabled";
+  const char *isDelayEnabledSt          = "core-kit/isdelayenabled";
+  const char *minDelaySt                = "core-kit/mindelay";
+  const char *maxDelaySt                = "core-kit/maxdelay";
+  const char *isHistoryKeepingEnabledSt = "core-kit/ishistorykeepingenabled";
+  const char *isGreetingsEnabledSt      = "core-kit/isgreetingsenabled";
+  const char *greetingsMsg              = "core-kit/greetings";
+  const char *scenarioExitMsg           = "core-kit/scenarioexitter";
   
   const char *defaultSourcePath      = "sources/defaultsourcepath";
   const char *defaultSourceContainer = "sources/defaultsourcecontainer";

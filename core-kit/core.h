@@ -1,15 +1,15 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "core/basis.h"
-#include "core/history-processor.h"
-#include "core/jeff-core-kit.h"
-#include "core/local-server.h"
-#include "core/notify-client.h"
-#include "core/script-engine-module.h"
-#include "core/standard-templates.h"
-#include "core/database/sqlite.h"
-#include "core/model/python/script.h"
+#include "core-kit/basis.h"
+#include "core-kit/history-processor.h"
+#include "core-kit/jeff-core-kit.h"
+#include "core-kit/local-server.h"
+#include "core-kit/notify-client.h"
+#include "core-kit/script-engine-module.h"
+#include "core-kit/standard-templates.h"
+#include "core-kit/database/sqlite.h"
+#include "core-kit/model/python/script.h"
 #include "dialogues/modal-handler.h"
 #include <QObject>
 #include <QPair>

@@ -1,11 +1,11 @@
 #ifndef SQLITE_H
 #define SQLITE_H
 
-#include "core/model/nlp/cache.h"
-#include "core/model/nlp/stringssearch.h"
-#include "core/model/expression.h"
-#include "core/model/phrase.h"
-#include "core/model/source.h"
+#include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/nlp/stringssearch.h"
+#include "core-kit/model/expression.h"
+#include "core-kit/model/phrase.h"
+#include "core-kit/model/source.h"
 #include <QFile>
 #include <QMap>
 #include <QMutex>

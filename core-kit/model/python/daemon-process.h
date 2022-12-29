@@ -1,7 +1,7 @@
 #ifndef DAEMONPROCESS_H
 #define DAEMONPROCESS_H
 
-#include "core/model/python/script.h"
+#include "core-kit/model/python/script.h"
 #include <QFileInfo>
 #include <QProcess>
 #include <QStringList>

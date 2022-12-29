@@ -1,7 +1,7 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
-#include "core/basis.h"
+#include "core-kit/basis.h"
 #include "widgets/line.h"
 #include "widgets/menu.h"
 #include <QAction>

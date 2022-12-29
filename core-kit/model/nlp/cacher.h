@@ -1,7 +1,7 @@
 #ifndef CACHER_H
 #define CACHER_H
 
-#include "core/model/nlp/cache.h"
+#include "core-kit/model/nlp/cache.h"
 #include <QMutex>
 #include <QObject>
 

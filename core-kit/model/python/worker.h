@@ -9,12 +9,12 @@
 #include <QJsonValue>
 #include <QList>
 #include <QObject>
-#include "core/basis.h"
-#include "core/history-processor.h"
-#include "core/model/expression.h"
-#include "core/model/nlp/cache.h"
-#include "core/model/python/object.h"
-#include "core/model/python/script.h"
+#include "core-kit/basis.h"
+#include "core-kit/history-processor.h"
+#include "core-kit/model/expression.h"
+#include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/python/object.h"
+#include "core-kit/model/python/script.h"
 
 #pragma push_macro("slots")
 #undef slots

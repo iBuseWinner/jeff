@@ -1,7 +1,7 @@
 #ifndef STANDARDTEMPLATES_H
 #define STANDARDTEMPLATES_H
 
-#include "core/basis.h"
+#include "core-kit/basis.h"
 #ifdef JEFF_WITH_QT_WIDGETS
 #include "dialogues/about.h"
 #include "dialogues/add-script.h"
@@ -12,8 +12,8 @@
 #include "dialogues/settings.h"
 #include "dialogues/sources.h"
 #endif
-#include "core/history-processor.h"
-#include "core/script-engine-module.h"
+#include "core-kit/history-processor.h"
+#include "core-kit/script-engine-module.h"
 #include <QString>
 
 /*!

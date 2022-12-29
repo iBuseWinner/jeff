@@ -1,4 +1,5 @@
 #include "display.h"
+#include <iostream>
 
 /*! @brief The constructor. */
 Display::Display(HProcessor *_hp, short _max_message_amount, QWidget *parent)
@@ -179,11 +180,14 @@ void Display::remove_message(Message *message) {
 }
 
 /*! @brief When resizing, calls the @a fit_messages function again. */
-void Display::resizeEvent(QResizeEvent *event) { fit_messages(); event->accept(); }
+void Display::resizeEvent(QResizeEvent *event) {
+  fit_messages();
+  QScrollArea::resizeEvent(event);
+}
 
 /*! @brief Controls the size of messages on the screen, limiting them to 80% of the display width. */
 void Display::fit_messages() {
-  if (not messages_mutex.try_lock()) { return; };
+  if (not messages_mutex.try_lock()) return;
   auto max_width = int(width() * 0.8);
   for (auto *message : all_messages) message->setWidth(max_width);
   messages_mutex.unlock();

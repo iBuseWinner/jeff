@@ -1,7 +1,7 @@
 #ifndef PHRASE_EDITOR_BRIEF_H
 #define PHRASE_EDITOR_BRIEF_H
 
-#include "core/basis.h"
+#include "core-kit/basis.h"
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"
 #include "widgets/lineedit.h"

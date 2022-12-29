@@ -1,9 +1,9 @@
 #ifndef PHRASE_EDITOR_SELECTOR_H
 #define PHRASE_EDITOR_SELECTOR_H
 
-#include "core/basis.h"
-#include "core/model/phrase.h"
-#include "core/model/source.h"
+#include "core-kit/basis.h"
+#include "core-kit/model/phrase.h"
+#include "core-kit/model/source.h"
 #include "widgets/button.h"
 #include "widgets/combobox.h"
 #include "widgets/explanationlabel.h"

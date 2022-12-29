@@ -1,9 +1,9 @@
 #ifndef EXPRESSION_H
 #define EXPRESSION_H
 
-#include "core/model/nlp/options.h"
-#include "core/model/phrase.h"
-#include "core/model/source.h"
+#include "core-kit/model/nlp/options.h"
+#include "core-kit/model/phrase.h"
+#include "core-kit/model/source.h"
 #include <QList>
 #include <QMap>
 #include <QString>

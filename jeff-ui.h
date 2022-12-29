@@ -1,7 +1,7 @@
 #ifndef JEFF_H
 #define JEFF_H
 
-#include "core/core.h"
+#include "core-kit/core.h"
 #include "widgets/board.h"
 #include "widgets/button.h"
 #include "widgets/display.h"

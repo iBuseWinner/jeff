@@ -1,4 +1,5 @@
 #include "message.h"
+#include <iostream>
 
 /*! @brief The constructor. */
 Message::Message() {
@@ -125,7 +126,8 @@ void Message::setup_markdown(const QString &content) {
   setup_text(content);
   auto *label = static_cast<QLabel *>(w);
   label->setTextFormat(Qt::RichText);
-  label->setText(label->text().replace("\n", "<br>"));
+  md.content = md.content.replace("\n", "<br>");
+  label->setText(md.content);
 }
 
 /*! @brief Displays a picture with the path @a content. */
@@ -135,7 +137,7 @@ void Message::setup_picture(const QString &content) {
   auto pix = QPixmap(content);
   if (pix.isNull()) return;
   label->setScaledContents(true);
-  label->setPixmap(pix.scaledToWidth(320, Qt::SmoothTransformation));
+  label->setPixmap(pix.scaledToWidth(640, Qt::SmoothTransformation));
   label->setContextMenuPolicy(Qt::CustomContextMenu);
   auto *copy_path_action = new QAction(
     QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy image path"), this
@@ -192,19 +194,93 @@ void Message::setWidth(int width) {
     if (w) w->setMaximumWidth(width);
     return;
   }
-  QTextDocument textDocument;
-  if (md.content_type == ContentType::Markdown) textDocument.setHtml(label->text());
-  else if (
-    md.content_type == ContentType::Widget or 
+  if (
+    md.content_type == ContentType::Widget or
     md.content_type == ContentType::File or
     md.content_type == ContentType::Picture
   ) return;
-  else textDocument.setPlainText(label->text());
-  if (textDocument.idealWidth() < width)
-    label->setWordWrap(false);
-  else {
-    label->setWordWrap(true);
-    label->setFixedWidth(width);
+  if (text_ideal_width) {
+    QTextDocument textDocument;
+    QString rtext, next_line;
+    QString content = md.content;
+    while (not (next_line = optimal_line(content, textDocument, width, md.content_type)).isEmpty()) {
+      if (not rtext.isEmpty()) {
+        if (md.content_type == ContentType::Markdown) rtext.append("<br>");
+        else if (md.content_type == ContentType::Text) rtext.append("\n");
+      }
+      rtext.append(next_line);
+      content.remove(0, next_line.length());
+    }
+    label->setText(rtext);
+  } else if (not non_ideal_width_completed) {
+    QString rtext, next_line;
+    QString content = md.content;
+    while (not (next_line = optimal_line(content, 64)).isEmpty()) {
+      if (not rtext.isEmpty()) {
+        if (md.content_type == ContentType::Markdown) rtext.append("<br>");
+        else if (md.content_type == ContentType::Text) rtext.append("\n");
+      }
+      rtext.append(next_line);
+      content.remove(0, next_line.length());
+    }
+    label->setText(rtext);
+    non_ideal_width_completed = true;
   }
   _width = width;
+}
+
+/*! @brief Returns @a line that fits @a max_width.
+ *  @details Measures text's width for @a Message widget.
+ *  @details How do we know that @a QTextDocument knows ideal width of @a text without any options?
+ *  That's all 'cause we use default @a QLabel settings, setting up only text's format.  */
+QString Message::optimal_line(
+  const QString &remaining, QTextDocument &document, int max_width, ContentType ct
+) {
+  document.setPlainText("");
+  auto words = remaining.split(QLatin1Char(' '));
+  /*! Splitting by @a words. */
+  QString line;
+  QString next_part;
+  while (document.idealWidth() < max_width) {
+    if (not line.isEmpty()) line.append(" ");
+    if (not next_part.isEmpty()) line.append(next_part);
+    if (words.isEmpty()) break;
+    next_part = words.takeFirst();
+    if       (ct == ContentType::Markdown)  document.setMarkdown(line + " " + next_part);
+    else if  (ct == ContentType::Text)      document.setPlainText(line + " " + next_part);
+  }
+  /*! Splitting by symbols of very long word. */
+  if (line.isEmpty() and not next_part.isEmpty()) {
+    document.setPlainText("");
+    QChar next_sym;
+    for (int i = 0; (i < next_part.length()) and (document.idealWidth() < max_width); i++) {
+      if (not next_sym.isNull()) line.append(next_sym);
+      next_sym = next_part.at(i);
+      if       (ct == ContentType::Markdown)  document.setMarkdown(line + next_sym);
+      else if  (ct == ContentType::Text)      document.setPlainText(line + next_sym);
+    }
+  }
+  return line;
+}
+
+/*! @brief Returns @a line that fits @a max_sym_width. */
+QString Message::optimal_line(const QString &remaining, int max_sym_width) {
+  auto words = remaining.split(QLatin1Char(' '));
+  /*! Splitting by @a words. */
+  QString line;
+  QString next_part;
+  while (line.length() + next_part.length() < max_sym_width) {
+    if (not next_part.isEmpty()) line.append(" " + next_part);
+    if (words.isEmpty()) break;
+    next_part = words.takeFirst();
+  }
+  /*! Splitting by symbols of very long word. */
+  if (line.isEmpty() and not next_part.isEmpty()) {
+    QChar next_sym;
+    for (int i = 0; (i < next_part.length()) and (line.length() + 1 < max_sym_width); i++) {
+      if (not next_sym.isNull()) line.append(next_sym);
+      next_sym = next_part.at(i);
+    }
+  }
+  return line;
 }

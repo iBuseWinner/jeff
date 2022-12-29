@@ -1,16 +1,16 @@
 #ifndef SE_MODULE_H
 #define SE_MODULE_H
 
-#include "core/basis.h"
-#include "core/history-processor.h"
-#include "core/notify-client.h"
-#include "core/database/json.h"
-#include "core/model/expression.h"
-#include "core/model/keystore.h"
-#include "core/model/message.h"
-#include "core/model/nlp/cache.h"
-#include "core/model/python/daemon-process.h"
-#include "core/model/python/script.h"
+#include "core-kit/basis.h"
+#include "core-kit/history-processor.h"
+#include "core-kit/notify-client.h"
+#include "core-kit/database/json.h"
+#include "core-kit/model/expression.h"
+#include "core-kit/model/keystore.h"
+#include "core-kit/model/message.h"
+#include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/python/daemon-process.h"
+#include "core-kit/model/python/script.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>

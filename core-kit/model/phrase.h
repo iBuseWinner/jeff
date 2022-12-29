@@ -1,7 +1,7 @@
 #ifndef PHRASE_H
 #define PHRASE_H
 
-#include "core/model/nlp/options.h"
+#include "core-kit/model/nlp/options.h"
 #include <QList>
 #include <QJsonDocument>
 #include <QJsonObject>

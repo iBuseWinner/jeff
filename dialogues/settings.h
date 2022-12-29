@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "core/basis.h"
+#include "core-kit/basis.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"

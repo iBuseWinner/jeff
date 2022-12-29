@@ -1,12 +1,12 @@
 #ifndef JSON_H
 #define JSON_H
 
-#include "core/database/sqlite.h"
-#include "core/model/keystore.h"
-#include "core/model/message.h"
-#include "core/model/nlp/cache.h"
-#include "core/model/python/script.h"
-#include "core/model/source.h"
+#include "core-kit/database/sqlite.h"
+#include "core-kit/model/keystore.h"
+#include "core-kit/model/message.h"
+#include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/python/script.h"
+#include "core-kit/model/source.h"
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>

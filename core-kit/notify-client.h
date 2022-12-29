@@ -1,8 +1,8 @@
 #ifndef NOTIFY_CLIENT
 #define NOTIFY_CLIENT
 
-#include "core/model/message.h"
-#include "core/model/python/script.h"
+#include "core-kit/model/message.h"
+#include "core-kit/model/python/script.h"
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QList>

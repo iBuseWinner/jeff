@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(jeff)
+project(jeff-cli)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
@@ -12,11 +12,11 @@ find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
 include_directories(
   .
-  core
-  core/database
-  core/model
-  core/model/nlp
-  core/model/python
+  core-kit
+  core-kit/database
+  core-kit/model
+  core-kit/model/nlp
+  core-kit/model/python
   dialogues
   dialogues/phrase-editor
   dialogues/sources
@@ -24,51 +24,51 @@ include_directories(
 )
 
 set(SRCS
-  core/basis.cpp
-  core/basis.h
-  core/core.cpp
-  core/core.h
-  core/history-processor.cpp
-  core/history-processor.h
-  core/jeff-core-kit.cpp
-  core/jeff-core-kit.h
-  core/local-server.cpp
-  core/local-server.h
-  core/notify-client.cpp
-  core/notify-client.h
-  core/script-engine-module.cpp
-  core/script-engine-module.h
-  core/standard-templates.cpp
-  core/standard-templates.h
-  core/database/json.cpp
-  core/database/json.h
-  core/database/sqlite.cpp
-  core/database/sqlite.h
-  core/model/expression.h
-  core/model/keystore.h
-  core/model/message.h
-  core/model/phrase.h
-  core/model/source.h
-  core/model/nlp/cache.h
-  core/model/nlp/cacher.cpp
-  core/model/nlp/cacher.h
-  core/model/nlp/options.h
-  core/model/nlp/stringssearch.cpp
-  core/model/nlp/stringssearch.h
-  core/model/python/daemon-process.cpp
-  core/model/python/daemon-process.h
-  core/model/python/object.h
-  core/model/python/script.cpp
-  core/model/python/script.h
-  core/model/python/worker.cpp
-  core/model/python/worker.h
+  core-kit/basis.cpp
+  core-kit/basis.h
+  core-kit/core.cpp
+  core-kit/core.h
+  core-kit/history-processor.cpp
+  core-kit/history-processor.h
+  core-kit/jeff-core-kit.cpp
+  core-kit/jeff-core-kit.h
+  core-kit/local-server.cpp
+  core-kit/local-server.h
+  core-kit/notify-client.cpp
+  core-kit/notify-client.h
+  core-kit/script-engine-module.cpp
+  core-kit/script-engine-module.h
+  core-kit/standard-templates.cpp
+  core-kit/standard-templates.h
+  core-kit/database/json.cpp
+  core-kit/database/json.h
+  core-kit/database/sqlite.cpp
+  core-kit/database/sqlite.h
+  core-kit/model/expression.h
+  core-kit/model/keystore.h
+  core-kit/model/message.h
+  core-kit/model/phrase.h
+  core-kit/model/source.h
+  core-kit/model/nlp/cache.h
+  core-kit/model/nlp/cacher.cpp
+  core-kit/model/nlp/cacher.h
+  core-kit/model/nlp/options.h
+  core-kit/model/nlp/stringssearch.cpp
+  core-kit/model/nlp/stringssearch.h
+  core-kit/model/python/daemon-process.cpp
+  core-kit/model/python/daemon-process.h
+  core-kit/model/python/object.h
+  core-kit/model/python/script.cpp
+  core-kit/model/python/script.h
+  core-kit/model/python/worker.cpp
+  core-kit/model/python/worker.h
   main.cpp
 )
 
-add_executable(jeff ${SRCS} jeff.cpp jeff.h resources.qrc)
+add_executable(jeff-cli ${SRCS} jeff.cpp jeff.h resources.qrc)
 
 target_link_libraries(
-  jeff PRIVATE
+  jeff-cli PRIVATE
     Python::Python
     Qt5::Core
     Qt5::Network
@@ -137,12 +137,12 @@ set(SRCS_UI
   jeff-ui.h
 )
 
-add_executable(jeff-ui ${SRCS} ${SRCS_UI} resources.qrc ui-resources.qrc)
+add_executable(jeff-qt ${SRCS} ${SRCS_UI} resources.qrc ui-resources.qrc)
 
-target_compile_definitions(jeff-ui PRIVATE JEFF_WITH_QT_WIDGETS)
+target_compile_definitions(jeff-qt PRIVATE JEFF_WITH_QT_WIDGETS)
 
 target_link_libraries(
-  jeff-ui PRIVATE
+  jeff-qt PRIVATE
     Python::Python
     Qt5::Core
     Qt5::Gui

@@ -12,7 +12,7 @@
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextDocument>
-#include "core/model/message.h"
+#include "core-kit/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/board.h"
 #include "widgets/menu.h"
@@ -52,9 +52,11 @@ private:
   QGridLayout *grid_layout = nullptr;
   QWidget *w = nullptr;
   int _width;
+  bool non_ideal_width_completed = false;
 
   // Constants:
   static const ushort standardMargin = 6;
+  static const bool text_ideal_width = false;
 
   // Functions described in `message.cpp`:
   void author(Author _a);
@@ -70,6 +72,10 @@ private:
   void setup_error(const QString &content);
   void prepare_to_widget();
   QPair<QSpacerItem *, Board *> make_layout();
+  QString optimal_line(
+    const QString &remaining, QTextDocument &document, int max_width, ContentType ct
+  );
+  QString optimal_line(const QString &remaining, int max_sym_width);
 };
 
 #endif

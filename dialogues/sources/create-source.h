@@ -1,8 +1,8 @@
 #ifndef CREATESOURCEDIALOG_H
 #define CREATESOURCEDIALOG_H
 
-#include "core/basis.h"
-#include "core/model/source.h"
+#include "core-kit/basis.h"
+#include "core-kit/model/source.h"
 #include "widgets/button.h"
 #include "widgets/lineedit.h"
 #include <QFileDialog>

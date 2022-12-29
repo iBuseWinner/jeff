@@ -1,14 +1,14 @@
 #ifndef JCK_H
 #define JCK_H
 
-#include "core/basis.h"
-#include "core/database/sqlite.h"
-#include "core/model/expression.h"
-#include "core/model/nlp/cache.h"
-#include "core/model/nlp/cacher.h"
-#include "core/model/nlp/stringssearch.h"
-#include "core/model/python/worker.h"
-#include "core/standard-templates.h"
+#include "core-kit/basis.h"
+#include "core-kit/database/sqlite.h"
+#include "core-kit/model/expression.h"
+#include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/nlp/cacher.h"
+#include "core-kit/model/nlp/stringssearch.h"
+#include "core-kit/model/python/worker.h"
+#include "core-kit/standard-templates.h"
 #include <QList>
 #include <QMap>
 #include <QObject>

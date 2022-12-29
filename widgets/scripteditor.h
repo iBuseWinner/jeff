@@ -1,8 +1,8 @@
 #ifndef SCRIPT_EDITOR_H
 #define SCRIPT_EDITOR_H
 
-#include "core/basis.h"
-#include "core/script-engine-module.h"
+#include "core-kit/basis.h"
+#include "core-kit/script-engine-module.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/combobox.h"

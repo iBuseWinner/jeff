@@ -1,7 +1,7 @@
 #ifndef HISTORY_PROCESSOR_H
 #define HISTORY_PROCESSOR_H
 
-#include "core/basis.h"
+#include "core-kit/basis.h"
 #include <QList>
 #include <QMutex>
 #include <QStringList>

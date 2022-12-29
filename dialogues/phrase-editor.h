@@ -1,9 +1,9 @@
 #ifndef PHRASE_EDITOR_H
 #define PHRASE_EDITOR_H
 
-#include "core/basis.h"
-#include "core/model/phrase.h"
-#include "core/model/source.h"
+#include "core-kit/basis.h"
+#include "core-kit/model/phrase.h"
+#include "core-kit/model/source.h"
 #include "dialogues/phrase-editor/brief.h"
 #include "dialogues/phrase-editor/overview.h"
 #include "dialogues/phrase-editor/selector.h"
