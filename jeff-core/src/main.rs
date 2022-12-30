@@ -1,5 +1,8 @@
 //! Jeff Core.
 
+mod hyper_router;
+mod logic;
+mod model;
 mod psql;
 mod setup;
 
