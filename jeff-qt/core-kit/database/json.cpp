@@ -1,7 +1,10 @@
 #include "json.h"
 
 /*! @brief The constructor. */
-Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {}
+Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {
+  check_or_create_subdir();
+  _settings_path = _settings_path + QDir::separator() + subdir_name;
+}
 
 /*! @brief Reads the store and loads a list of connected sources. */
 Sources Json::read_source_list(SQLite *sql) {
@@ -16,7 +19,7 @@ Sources Json::read_source_list(SQLite *sql) {
   return sources;
 }
 
-/*! @brief Recreates message history from file. */
+/*! @brief Recreates message history from @a file. */
 Messages Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
   Messages message_history;
@@ -24,13 +27,13 @@ Messages Json::read_message_history(QFile *file) {
   return message_history;
 }
 
-/*! @brief Restores message history from default storage. */
+/*! @brief Restores @a message_history from default storage. */
 Messages Json::read_message_history() {
   QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
   return read_message_history(&store);
 }
 
-/*! @brief Reads the expressions most commonly used in Jeff's answers. */
+/*! @brief Reads the expressions most commonly used in Jeff's answers - @a cache. */
 Cache Json::read_NLP_cache() {
   QFile store = QFile(_settings_path + QDir::separator() + cache_store_filename);
   if (not store.exists()) return Cache();
@@ -40,7 +43,7 @@ Cache Json::read_NLP_cache() {
   return cache;
 }
 
-/*! @brief Reads scripts' metadata. */
+/*! @brief Reads @a scripts. */
 Scripts Json::read_scripts() {
   QFile store = QFile(_settings_path + QDir::separator() + scripts_store_filename);
   if (not store.exists()) return Scripts();
@@ -54,7 +57,7 @@ Scripts Json::read_scripts() {
   return scripts;
 }
 
-/*! @brief Reads memory. */
+/*! @brief Reads memory - @a keystore. */
 KeyStore Json::read_memory() {
   QFile store = QFile(_settings_path + QDir::separator() + memory_store_filename);
   if (not store.exists()) return KeyStore();
@@ -67,7 +70,7 @@ KeyStore Json::read_memory() {
   return keystore;
 }
 
-/*! @brief Saves list of sources. */
+/*! @brief Saves @a sources. */
 void Json::write_source_list(SQLite *sql, Sources sources) {
   QJsonArray sources_json;
   for (int i = 0; i < sources.length(); i++) {
@@ -80,20 +83,20 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
   write_json(&file, sources_json);
 }
 
-/*! @brief Saves message history. */
+/*! @brief Saves @a message_history. */
 void Json::write_message_history(Messages message_history, QFile *file) {
   QJsonArray message_history_json;
   for (auto message : message_history) message_history_json.append(message.to_json());
   write_json(file, message_history_json);
 }
 
-/*! @brief Saves message history at the default storage. */
+/*! @brief Saves @a message_history at the default storage. */
 void Json::write_message_history(Messages message_history) {
   QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
   write_message_history(message_history, &store);
 }
 
-/*! @brief Saves NLPmodule's cache. */
+/*! @brief Saves NLPmodule's @a cache. */
 void Json::write_NLP_cache(Cache cache) {
   QJsonArray cache_json;
   for (auto expression : cache) cache_json.append(expression.to_json());
@@ -101,7 +104,7 @@ void Json::write_NLP_cache(Cache cache) {
   write_json(&file, cache_json);
 }
 
-/*! @brief Saves scripts' metadata. */
+/*! @brief Saves @a scripts metadata. */
 void Json::write_scripts(Scripts scripts) {
   QJsonArray scripts_json;
   for (auto *script : scripts) scripts_json.append(ScriptsCast::to_json(script));
@@ -109,7 +112,7 @@ void Json::write_scripts(Scripts scripts) {
   write_json(&file, scripts_json);
 }
 
-/*! @brief Saves memory. */
+/*! @brief Saves @a memory. */
 void Json::write_memory(KeyStore memory) {
   QJsonArray memory_json;
   for (auto cell_key : memory.keys()) {
@@ -121,7 +124,7 @@ void Json::write_memory(KeyStore memory) {
   write_json(&file, memory_json);
 }
 
-/*! @brief Universal JSON read function. */
+/*! @brief Universal JSON read from @a file function. */
 QJsonArray Json::read_json(QFile *file) {
   if (not file->exists()) return QJsonArray();
   if (not file->open(QIODevice::ReadOnly | QIODevice::Text)) return QJsonArray();
@@ -133,11 +136,18 @@ QJsonArray Json::read_json(QFile *file) {
   return document.array();
 }
 
-/*! @brief Checks the file for access and writes file. */
+/*! @brief Checks @a savefile for access and writes @a json_array. */
 void Json::write_json(QFile *savefile, const QJsonArray &json_array) {
   if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) return;
   QJsonDocument doc(json_array);
   QTextStream textStream(savefile);
   textStream << doc.toJson(QJsonDocument::Compact);
   savefile->close();
+}
+
+/*! @brief Checks */
+void Json::check_or_create_subdir() {
+  QDir dir;
+  auto subdir_path = _settings_path + QDir::separator() + subdir_name;
+  if (not dir.exists(subdir_path)) dir.mkdir(subdir_path);
 }

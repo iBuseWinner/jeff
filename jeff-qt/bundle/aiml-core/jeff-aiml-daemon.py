@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-import aiml, asyncio, json, os.path, server, transport
+import aiml, asyncio, json, os.path
+from jeff_api import client, server
 
 
 async def main() -> None:
-  t = transport.Transport(8005)
-  s = server.Server(8017)
+  srv = server.Server(None, 8017)
+  cli = client.Client('localhost', 8005)
   aiml_kernel = aiml.Kernel()
   aiml_kernel.setTextEncoding(None)
   current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
@@ -15,7 +16,7 @@ async def main() -> None:
   # kern.saveBrain(args.save)
   # kern.bootstrap(brainFile=args.brain)
   while True:
-    data = s.listen()
+    data = srv.listen()
     if len(data) == 0:
       continue
     if data['author'] == 1: # Jeff
@@ -25,7 +26,7 @@ async def main() -> None:
     msg = aiml_kernel.respond(data['content'])
     if not len(msg):
       continue
-    t.send_msg(msg)
+    cli.send_msg(msg)
 
 
 if __name__ == "__main__":

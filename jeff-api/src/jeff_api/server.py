@@ -1,9 +1,9 @@
 import json, socket
 
 class Server:
-  def __init__(self, port):
+  def __init__(self, host, port):
     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.server_socket.bind((socket.gethostname(), port))
+    self.server_socket.bind((host if host is not None else socket.gethostname(), port))
     self.server_socket.listen(5)
   
   def _waits_for(self):

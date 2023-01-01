@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import transport
+from jeff_api import client
 
 # Shutdown flag. Used in main() to stop script.
 SHUTDOWN = False
@@ -20,7 +20,7 @@ def shutdown() -> None:
   SHUTDOWN = True
 
 
-def try_import(t: transport.Transport) -> bool:
+def try_import(cli: client.Client) -> bool:
   """Checks if required modules are installed and installs otherwise."""
   import locale
   lang, _ = locale.getdefaultlocale()
@@ -36,7 +36,7 @@ def try_import(t: transport.Transport) -> bool:
     except subprocess.CalledProcessError:
       msg = 'Installation failed. Please install "sounddevice" and "vosk" Python modules manually before using vosk-voice-input so that Jeff can hear and listen to you.' if lang != 'ru_RU' else 'Установка не удалась. Пожалуйста, установите модули "sounddevice" и "vosk" самостоятельно перед тем, как использовать vosk-voice-input, чтобы Джефф мог вас слышать и слушать.'
       print(msg)
-      t.send_msg(msg)
+      cli.send_msg(msg)
       return False
   import platform, os.path, webbrowser
   # The binary library for connecting to a microphone for the sounddevice module is downloaded
@@ -45,19 +45,19 @@ def try_import(t: transport.Transport) -> bool:
     if not os.path.exists('/usr/lib/libportaudio.so'):
       msg = 'Your Linux distribution does not have the PortAudio library installed. Install it to use vosk-voice-input. Opening browser...' if lang != 'ru_RU' else 'На вашей системе Linux отсутствует библиотека PortAudio. Установите её для использования vosk-voice-input. Открывается браузер...'
       print(msg)
-      t.send_msg(msg)
+      cli.send_msg(msg)
       webbrowser.open('https://pkgs.org/search/?q=portaudio')
       return False
   if not os.path.exists('models') or len(list_subdirs('models')) == 0:
     msg = 'You don\'t have any Vosk models installed. Download the one suitable for you from the site, create a "models" folder and unzip the model into it. Opening browser...' if lang != 'ru_RU' else 'У вас нет ни одной установленной модели Vosk. Скачайте подходящую для вас модель с сайта, создайте папку "models" и распакуйте модель туда. Открывается браузер...'
     print(msg)
-    t.send_msg(msg)
+    cli.send_msg(msg)
     webbrowser.open('https://alphacephei.com/vosk/models')
     return False
   return True
 
 
-def main(t: transport.Transport) -> None:
+def main(cli: client.Client) -> None:
   """Starts speech recognition."""
   import sounddevice, vosk, locale, queue, os.path, json
   
@@ -90,7 +90,7 @@ def main(t: transport.Transport) -> None:
     sample_rate = int(sounddevice.query_devices(sounddevice.default.device, "input")["default_samplerate"])
     vosk_recognizer = vosk.KaldiRecognizer(vosk_model, sample_rate)
     print('Let\'s start recognizing...' if lang != 'ru_RU' else 'Начинаем распознавание...')
-    t.send_msg('Voice input activated.' if lang != 'ru_RU' else 'Активирован голосовой ввод.')
+    cli.send_msg('Voice input activated.' if lang != 'ru_RU' else 'Активирован голосовой ввод.')
     try:
       while True:
         if SHUTDOWN:
@@ -103,13 +103,13 @@ def main(t: transport.Transport) -> None:
           for word in text.split():
             if word in ATTENTION_WORDS:
               print(' - ' + text)
-              t.send_as_user(text)
+              cli.send_as_user(text)
               break
     except KeyboardInterrupt:
       print('\nSpeech recognition is off.' if lang != 'ru_RU' else '\nРаспознавание голоса отключено.')
 
 
 if __name__ == "__main__":
-  t = transport.Transport(8005)
-  if try_import(t):
-    main(t)
+  cli = client.Client('localhost', 8005)
+  if try_import(cli):
+    main(cli)
