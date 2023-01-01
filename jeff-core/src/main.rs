@@ -11,7 +11,7 @@ use psql::Db;
 pub async fn shutdown() {
   tokio::signal::ctrl_c()
     .await
-    .expect("Не удалось установить комбинацию Ctrl+C как завершающую работу.");
+    .expect("Failed to set Ctrl+C combination as shutdown.");
 }
 
 #[tokio::main]

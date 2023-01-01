@@ -1,7 +1,7 @@
 *.directory
 *.pyc
-examples/darknet-image-recognition/darknet
-examples/darknet-image-recognition/recognized
-examples/vosk-voice-input/models
+jeff-qt/examples/darknet-image-recognition/darknet
+jeff-qt/examples/darknet-image-recognition/recognized
+jeff-qt/examples/vosk-voice-input/models
 jeff-core/target
 jeff-core/Cargo.lock

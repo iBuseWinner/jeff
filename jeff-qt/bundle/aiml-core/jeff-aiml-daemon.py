@@ -10,7 +10,7 @@ async def main() -> None:
   aiml_kernel.setTextEncoding(None)
   current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
   aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
-  # chdir = os.path.join( aiml.__path__[0],'botdata','alice' )
+  # chdir = os.path.join(aiml.__path__[0], 'botdata', 'alice')
   # kern.bootstrap(learnFiles="startup.xml", commands="load alice", chdir=chdir)
   # kern.saveBrain(args.save)
   # kern.bootstrap(brainFile=args.brain)
