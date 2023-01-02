@@ -3,10 +3,9 @@
 mod hyper_router;
 mod logic;
 mod model;
-mod psql;
 mod setup;
 
-use psql::Db;
+use model::Db;
 
 pub async fn shutdown() {
   tokio::signal::ctrl_c()
