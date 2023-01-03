@@ -10,6 +10,7 @@ use hyper::{Body, body::to_bytes, http::Request};
 use passwords::{PasswordGenerator, hasher::{bcrypt, gen_salt}};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use sha3::{Digest, Sha3_256};
+use std::net::SocketAddr;
 use tokio_postgres::{ToStatement, types::ToSql, row::Row, NoTls};
 
 type MResult<T> = Result<T, Box<dyn std::error::Error>>;
@@ -78,6 +79,24 @@ pub struct User {
   pub id: i64,
   pub shared_boards: Vec<i64>,
   pub user_creds: UserCredentials,
+}
+
+#[derive(Deserialize, Serialize, Clone)]
+pub struct AppConfig {
+  pub pg: String,
+  pub admin_key: String,
+  pub hyper_addr: SocketAddr,
+  pub daemons: Vec<Daemon>,
+}
+
+#[derive(Deserialize, Serialize, Clone)]
+pub struct Daemon {
+  pub cmd: String,
+  pub server: Option<SocketAddr>,
+}
+
+pub struct DaemonsHolder {
+  pub spawned: Vec<(Daemon, std::io::Result<tokio::process::Child>)>,
 }
 
 // App security's structs.

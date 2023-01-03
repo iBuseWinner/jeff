@@ -1,10 +1,13 @@
 use hyper::{Body, Method, http::{Request, Response}};
-use std::{convert::Infallible, net::SocketAddr};
+use std::{convert::Infallible, net::SocketAddr, sync::Arc};
+use tokio::sync::Mutex;
 
-use crate::model::{Workspace, Db};
+use crate::model::{Workspace, Db, DaemonsHolder};
 use crate::logic;
 
-pub async fn router(req: Request<Body>, db: Db, admin_key: String, _addr: SocketAddr)
+pub async fn router(
+  req: Request<Body>, db: Db, admin_key: String, _addr: SocketAddr, _daemons: Arc<Mutex<DaemonsHolder>>
+)
   -> Result<Response<Body>, Infallible>
 {
   let ws = Workspace { req, db };

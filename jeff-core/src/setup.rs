@@ -1,17 +1,14 @@
 use std::{env, io, io::Read, process, fs, boxed::Box, net::SocketAddr};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Deserialize, Serialize)]
-pub struct AppConfig {
-  pub pg: String,
-  pub admin_key: String,
-  pub hyper_addr: SocketAddr,
-}
+use crate::model::{AppConfig, Daemon, DaemonsHolder};
+
+// Configuration loader.
 
 impl AppConfig {
   pub fn load() -> AppConfig {
     match match env::args().nth(1) {
-      None => AppConfig::stdin_setup(),
+      None => AppConfig::no_args(),
       Some(filepath) => AppConfig::parse_cfg_file(filepath),
     } {
       Ok(conf) => {
@@ -25,33 +22,8 @@ impl AppConfig {
     }
   }
   
-  fn stdin_setup() -> Result<AppConfig, Box<dyn std::error::Error>> {
-    let stdin = io::stdin();
-    println!("Hello! This is Jeff server. Enter several params:");
-    println!("PostgreSQL username:");
-    let mut buffer = String::new();
-    stdin.read_line(&mut buffer)?;
-    let buffer = buffer.trim();
-    let pg = String::from("host=localhost user='") + &buffer + &String::from("' password='");
-    println!("PostgreSQL password:");
-    let mut buffer = String::new();
-    stdin.read_line(&mut buffer)?;
-    let buffer = buffer.trim();
-    let pg = pg + &buffer + &String::from("' connect_timeout=10 keepalives=0");
-    println!("IP and port:");
-    let mut buffer = String::new();
-    stdin.read_line(&mut buffer)?;
-    let buffer = buffer.trim();
-    let hyper_addr: SocketAddr = buffer.parse()?;
-    println!("Auth key (more than 64 symbols):");
-    let mut buffer = String::new();
-    stdin.read_line(&mut buffer)?;
-    let admin_key = String::from(buffer.strip_suffix("\n").ok_or("")?);
-    match admin_key.len() < 64 {
-      true => Err(Box::new(io::Error::new(io::ErrorKind::Other, 
-                                          "Key length is less than 64 symbols."))),
-      false => Ok(AppConfig { pg, admin_key, hyper_addr }),
-    }
+  fn no_args() -> Result<AppConfig, Box<dyn std::error::Error>> {
+    Err(Box::new(io::Error::new(io::ErrorKind::Other, "No args received.")))
   }
   
   fn parse_cfg_file(filepath: String) -> Result<AppConfig, Box<dyn std::error::Error>> {
@@ -69,4 +41,27 @@ impl AppConfig {
 
 pub fn get_config() -> AppConfig {
   AppConfig::load()
+}
+
+// Daemons' starter.
+
+impl DaemonsHolder {
+  pub fn load(commands: &Vec<Daemon>) -> DaemonsHolder {
+    let mut daemons = vec![];
+    for daemon in commands {
+      if daemon.cmd.len() < 1 { continue; }
+      let cmd_args: Vec<&str> = daemon.cmd.split(' ').collect();
+      let proc = match cmd_args.len() > 1 {
+        true => tokio::process::Command::new(cmd_args[0])
+          .args(&cmd_args[1..])
+          .kill_on_drop(true)
+          .spawn(),
+        false => tokio::process::Command::new(cmd_args[0])
+          .kill_on_drop(true)
+          .spawn(),
+      };
+      daemons.push((daemon.to_owned(), proc));
+    }
+    DaemonsHolder { spawned: daemons }
+  }
 }

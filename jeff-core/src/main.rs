@@ -5,7 +5,10 @@ mod logic;
 mod model;
 mod setup;
 
-use model::Db;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
+use model::{Db, DaemonsHolder};
 
 pub async fn shutdown() {
   tokio::signal::ctrl_c()
@@ -26,8 +29,10 @@ pub async fn main() {
     let db = db.clone();
     let admin_key = cfg.admin_key.clone();
     let addr = conn.remote_addr();
+    let daemons = DaemonsHolder::load(&cfg.daemons);
+    let daemons_mutex = Arc::new(Mutex::new(daemons));
     let service = hyper::service::service_fn(move |req| {
-      hyper_router::router(req, db.clone(), admin_key.clone(), addr)
+      hyper_router::router(req, db.clone(), admin_key.clone(), addr, daemons_mutex.clone())
     });
     async move { Ok::<_, std::convert::Infallible>(service) }
   });
