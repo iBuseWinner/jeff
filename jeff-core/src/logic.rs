@@ -9,7 +9,10 @@ use sha3::{Digest, Sha3_256};
 use std::{boxed::Box, collections::HashSet};
 use tokio_postgres::types::ToSql;
 
-use crate::model::{extract, extract_creds, Workspace, Db, AdminCredentials, UserCredentials, Token, TokenAuth};
+use crate::model::{
+  extract, extract_creds, salt_pass, generate_strong, check_pass, Workspace, Db, AdminCredentials,
+  SignUpCredentials, SignInCredentials, UserCredentials, Token, TokenAuth
+};
 
 type MResult<T> = Result<T, Box<dyn std::error::Error>>;
 
@@ -102,7 +105,7 @@ pub async fn db_setup(ws: Workspace, admin_key: String) -> Response<Body> {
   let status_code = match key == admin_key {
     true => match ws.db.write_mul(vec![
       ("create table if not exists taskboard_keys (key varchar unique, value varchar);", vec![]),
-      ("create table if not exists users (id bigserial, login varchar unique, sources varchar, user_creds varchar, scripts varchar);", vec![]),
+      ("create table if not exists users (id bigserial, login varchar unique, user_creds varchar, sources varchar, scripts varchar);", vec![]),
       ("create table if not exists sources (id bigserial, shared_with varchar, header varchar);", vec![]),
       ("create table if not exists scripts (id bigserial, shared_with varchar, path varchar);", vec![]),
       ("create table if not exists hists (id bigserial, author bigint, header varchar);", vec![]),
@@ -116,24 +119,128 @@ pub async fn db_setup(ws: Workspace, admin_key: String) -> Response<Body> {
   from_code_and_msg(status_code, None)
 }
 
+pub async fn create_user(db: &Db, sign_up_credentials: &SignUpCredentials) -> MResult<i64> {
+  let (salt, salted_pass) = salt_pass(sign_up_credentials.pass.clone())?;
+  let id: i64 = db.read("select nextval(pg_get_serial_sequence('users', 'id'));", &[]).await?.get(0);
+  let user_credentials = UserCredentials { salt, salted_pass, tokens: vec![] };
+  let user_credentials = serde_json::to_string(&user_credentials)?;
+  db.write(
+    "insert into users values ($1, $2, $3, '[]', '[]');",
+    &[&id, &sign_up_credentials.login, &user_credentials]
+  ).await?;
+  Ok(id)
+}
+
+pub async fn get_new_token(db: &Db, id: &i64) -> MResult<TokenAuth> {
+  let user_credentials = db.read("select user_creds from users where id = $1;", &[id]).await?;
+  let mut user_credentials: UserCredentials = serde_json::from_str(user_credentials.get(0))?;
+  let token = generate_strong(64)?;
+  let mut hasher = Sha3_256::new();
+  hasher.update(&token);
+  let hashed = hasher.finalize();
+  let token_info = Token {
+    tk: hashed.to_vec(),
+    from_dt: Utc::now(),
+  };
+  user_credentials.tokens.push(token_info.clone());
+  let user_credentials = serde_json::to_string(&user_credentials)?;
+  db.write("update users set user_creds = $1 where id = $2;", &[&user_credentials, id]).await?;
+  let token_auth = TokenAuth { id: *id, token: token };
+  Ok(token_auth)
+}
+
 pub async fn sign_up(ws: Workspace) -> Response<Body> {
-  unimplemented!();
+  let su_creds = match extract_creds::<SignUpCredentials>(ws.req.headers().get("App-Token")) {
+    Ok(v) => v,
+    _ => return from_code_and_msg(401, Some("No valid token received.")),
+  };
+  if su_creds.pass.len() < 8 {
+    return from_code_and_msg(400, Some("Password is too short"));
+  };
+  let id = match create_user(&ws.db, &su_creds).await {
+    Ok(v) => v,
+    _ => return from_code_and_msg(500, Some("Unable to create user - internal error.")),
+  };
+  match get_new_token(&ws.db, &id).await {
+    Ok(token_auth) => from_code_and_msg(200, Some(&serde_json::to_string(&token_auth).unwrap())),
+    _ => from_code_and_msg(500, Some("Unable to create error - internal error.")),
+  }
+}
+
+pub async fn sign_in_creds_to_id(db: &Db, sign_in_credentials: &SignInCredentials) -> MResult<i64> {
+  custom_error!{IncorrectPassword{} = "Wrong password!"};
+  let id_and_credentials = db.read(
+    "select id, user_creds from users where login = $1;", &[&sign_in_credentials.login]
+  ).await?;
+  let user_credentials: UserCredentials = serde_json::from_str(id_and_credentials.get(1))?;
+  match check_pass(
+    user_credentials.salt,
+    user_credentials.salted_pass,
+    &sign_in_credentials.pass
+  ) {
+    true => Ok(id_and_credentials.get(0)),
+    _ => Err(Box::new(IncorrectPassword{})),
+  }
 }
 
 pub async fn sign_in(ws: Workspace) -> Response<Body> {
-  unimplemented!();
+  let si_creds = match extract_creds::<SignInCredentials>(ws.req.headers().get("App-Token")) {
+    Ok(v) => v,
+    _ => return from_code_and_msg(401, Some("No valid App-Token received.")),
+  };
+  let id = match sign_in_creds_to_id(&ws.db, &si_creds).await {
+    Ok(v) => v,
+    _ => return from_code_and_msg(401, None),
+  };
+  let token_auth = match get_new_token(&ws.db, &id).await {
+    Ok(v) => v,
+    _ => return from_code_and_msg(500, None),
+  };
+  match serde_json::to_string(&token_auth) {
+    Ok(body) => from_code_and_msg(200, Some(&body)),
+    _ => from_code_and_msg(500, None),
+  }
 }
 
 pub async fn auth_by_token(ws: &Workspace) -> Result<i64, (u16, String)> {
-  unimplemented!();
+  let token_auth = match extract_creds::<TokenAuth>(ws.req.headers().get("App-Token")) {
+    Ok(v) => v,
+    _ => return Err((401, "No valid App-Token received.".into())),
+  };
+  let valid = verify_user(&ws.db, &token_auth).await;
+  if !valid {
+    return Err((401, "Wrong token, please, sign in again.".into()));
+  };
+  Ok(token_auth.id)
 }
 
 pub async fn delete_account(ws: Workspace, user_id: i64) -> Response<Body> {
+  match ws.db.write("delete from users where id = $1;", &[&user_id]).await {
+    Ok(_) => from_code_and_msg(200, None),
+    Err(_) => from_code_and_msg(500, Some("Unable to delete user - internal error.")),
+  }
+}
+
+pub async fn change_password(db: &Db, user_id: &i64, password: &str) -> MResult<()> {
   unimplemented!();
 }
 
 pub async fn patch_user_creds(ws: Workspace, user_id: i64) -> Response<Body> {
-  unimplemented!();
+  let patch = match extract::<JsonValue>(ws.req).await {
+    Ok(v) => v,
+    _ => return from_code_and_msg(400, Some("Unable to deserialize data.")),
+  };
+  let password = match patch.get("password") {
+    Some(password) => match password.as_str() {
+      Some(password) => password,
+      _ => return from_code_and_msg(400, Some("Password field must be a string.")),
+    },
+    _ => return from_code_and_msg(400, Some("No new password received.")),
+  };
+  match change_password(&ws.db, &user_id, &password).await {
+    Ok(_) => from_code_and_msg(200, None),
+    _ => from_code_and_msg(500, Some("Не удалось применить патч к доске.")),
+  }
 }
 
 pub async fn new_source(ws: Workspace, user_id: i64) -> Response<Body> {

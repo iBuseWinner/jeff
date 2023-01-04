@@ -47,3 +47,9 @@ psql
 alter user username password password;
 create database db_name with owner username;
 ```
+
+### Отладка запросов
+
+```bash
+curl -X GET -H "App-Token: your-token" http://127.0.0.1:55219/db-setup
+```

@@ -21,6 +21,7 @@ pub async fn router(
       Ok(user_id) => match (method, path) {
         (&Method::DELETE, "/user")        => logic::delete_account    (ws, user_id)  .await,
         (&Method::PATCH,  "/user/creds")  => logic::patch_user_creds  (ws, user_id)  .await,
+        (&Method::GET,    "/sources")     => logic::list_sources      (ws, user_id)  .await,
         (&Method::PUT,    "/source")      => logic::new_source        (ws, user_id)  .await,
         (&Method::PUT,    "/import")      => logic::import_to_source  (ws, user_id)  .await,
         (&Method::GET,    "/export")      => logic::export_source     (ws, user_id)  .await,
