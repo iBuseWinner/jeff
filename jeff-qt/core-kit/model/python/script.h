@@ -25,25 +25,19 @@ public:
   /*! Constructors. */
   ScriptMetadata() {}
   ScriptMetadata(const QJsonObject &json_object) {
-    path = json_object["path"].toString();
     stype = ScriptType(json_object["stype"].toInt());
   }
-  /*! Script path. */
-  QString path;
   /*! Script type. */
   ScriptType stype = ScriptType::NoAction;
   
   /*! @brief Turns @a script into a JSON object. */
   virtual QJsonObject to_json() {
-    return {
-      {"path", path},
-      {"stype", int(stype)}
-    };
+    return {{"stype", int(stype)}};
   }
 };
 
 /*! @brief Container for scripts of different types. */
-typedef QList<ScriptMetadata *> Scripts;
+typedef QList<ScriptMetadata *> ScriptsMeta;
 
 /*! @class ReactScript
  *  @brief Contains metadata about reagent script.  */
@@ -54,6 +48,7 @@ public:
     stype = ScriptType::React;
   }
   ReactScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    path = json_object["path"].toString();
     if (json_object["memory_cells"].isArray()) {
       QJsonArray array = json_object["memory_cells"].toArray();
       for (auto key : array) memory_cells.append(key.toString());
@@ -63,6 +58,8 @@ public:
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::React;
   }
+  /*! Script path. */
+  QString path;
   /*! List of memory cells that will be passed to the script. */
   QStringList memory_cells;
   /*! The number of previous messages that will be passed to the script to understand the context. */
@@ -87,28 +84,63 @@ public:
   }
 };
 
-/*! @class DaemonScript
- *  @brief Contains metadata about daemon script.  */
-class DaemonScript : public ScriptMetadata {
+/*! @class DaemonizeableScriptMetadata
+ *  @brief Contains metadata about a script.  */
+class DaemonizeableScriptMetadata : public ScriptMetadata {
 public:
   /*! Constructors. */
-  DaemonScript() : ScriptMetadata() {
+  DaemonizeableScriptMetadata() {}
+  DaemonizeableScriptMetadata(const QJsonObject &json_object) {
+    stype = ScriptType(json_object["stype"].toInt());
+    cmd = json_object["cmd"].toString();
+  }
+  /*! Script's start command. */
+  QString cmd;
+  /*! Script type. */
+  ScriptType stype = ScriptType::NoAction;
+  
+  /*! @brief Turns @a script into a JSON object. */
+  virtual QJsonObject to_json() {
+    return {
+      {"cmd", cmd},
+      {"stype", int(stype)}
+    };
+  }
+};
+
+/*! @brief Container for daemons of different types. */
+typedef QList<DaemonizeableScriptMetadata *> DaemonsMeta;
+
+/*! @class DaemonScript
+ *  @brief Contains metadata about daemon script.  */
+class DaemonScript : public DaemonizeableScriptMetadata {
+public:
+  /*! Constructors. */
+  DaemonScript() : DaemonizeableScriptMetadata() {
     stype = ScriptType::Daemon;
   }
-  DaemonScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+  DaemonScript(const QJsonObject &json_object) : DaemonizeableScriptMetadata(json_object) {
     stype = ScriptType::Daemon;
+  }
+  
+  /*! @brief Turns @a script into a JSON object. */
+  virtual QJsonObject to_json() {
+    return {
+      {"cmd", cmd},
+      {"stype", int(stype)}
+    };
   }
 };
 
 /*! @class ServerScript
  *  @brief Contains metadata about server script.  */
-class ServerScript : public ScriptMetadata {
+class ServerScript : public DaemonizeableScriptMetadata {
 public:
   /*! Constructors. */
-  ServerScript() : ScriptMetadata() {
+  ServerScript() : DaemonizeableScriptMetadata() {
     stype = ScriptType::Server;
   }
-  ServerScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+  ServerScript(const QJsonObject &json_object) : DaemonizeableScriptMetadata(json_object) {
     server_addr = QHostAddress(json_object["server_addr"].toString());
     if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
     server_port = quint16(json_object["server_port"].toInt());
@@ -122,7 +154,7 @@ public:
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() const {
     return {
-      {"path", path},
+      {"cmd", cmd},
       {"stype", int(stype)},
       {"server_addr", server_addr.toString()},
       {"server_port", int(server_port)}
@@ -139,9 +171,12 @@ public:
     stype = ScriptType::CustomScan;
   }
   CustomScanScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+    path = json_object["path"].toString();
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::CustomScan;
   }
+  /*! Script path. */
+  QString path;
   /*! Name of function inside the script. */
   QString fn_name;
   
@@ -168,6 +203,8 @@ public:
     fn_name = json_object["fn_name"].toString();
     stype = ScriptType::CustomCompose;
   }
+  /*! Script path. */
+  QString path;
   /*! Whether to send additional properties of selected phrases to the script. */
   bool send_adprops = false;
   /*! Name of function inside the script. */
@@ -186,13 +223,13 @@ public:
 
 /*! @class ScenarioScript
  *  @brief Contains metadata about scenario script.  */
-class ScenarioScript : public ScriptMetadata {
+class ScenarioScript : public DaemonizeableScriptMetadata {
 public:
   /*! Constructors. */
-  ScenarioScript() : ScriptMetadata() {
+  ScenarioScript() : DaemonizeableScriptMetadata() {
     stype = ScriptType::Scenario;
   }
-  ScenarioScript(const QJsonObject &json_object) : ScriptMetadata(json_object) {
+  ScenarioScript(const QJsonObject &json_object) : DaemonizeableScriptMetadata(json_object) {
     server_addr = QHostAddress(json_object["server_addr"].toString());
     if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
     server_port = quint16(json_object["server_port"].toInt());
@@ -206,7 +243,7 @@ public:
   /*! @brief Turns @a script into a JSON object. */
   QJsonObject to_json() const {
     return {
-      {"path", path},
+      {"cmd", cmd},
       {"stype", int(stype)},
       {"server_addr", server_addr.toString()},
       {"server_port", int(server_port)}
@@ -220,8 +257,12 @@ namespace ScriptsCast {
   // Functions described in `script.cpp`:
   ScriptMetadata *to_script(const QJsonObject &json_object);
   ScriptMetadata *to_script(QString expression);
+  DaemonizeableScriptMetadata *to_daemon(const QJsonObject &json_object);
+  DaemonizeableScriptMetadata *to_daemon(QString expression);
   QJsonObject to_json(ScriptMetadata *script);
   QString to_string(ScriptMetadata *script);
+  QJsonObject to_json(DaemonizeableScriptMetadata *script);
+  QString to_string(DaemonizeableScriptMetadata *script);
 }
 
 #endif

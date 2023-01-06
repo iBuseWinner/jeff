@@ -2,6 +2,8 @@
 *.pyc
 jeff-api/dist
 jeff-api/src/*.egg-info
+jeff-qt/examples/chatgpt-listener/credentials.py
+jeff-qt/examples/chatgpt-listener/proxy-scraper
 jeff-qt/examples/darknet-image-recognition/darknet
 jeff-qt/examples/darknet-image-recognition/recognized
 jeff-qt/examples/vosk-voice-input/models

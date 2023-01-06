@@ -28,13 +28,13 @@ public:
   Messages read_message_history (QFile *file) ;
   Messages read_message_history ()            ;
   Cache    read_NLP_cache       ()            ;
-  Scripts  read_scripts         ()            ;
+  DaemonsMeta  read_daemons     ()            ;
   KeyStore read_memory          ()            ;
   void write_source_list     (SQLite *sql, Sources sources)          ;
   void write_message_history (Messages message_history, QFile *file) ;
   void write_message_history (Messages message_history)              ;
   void write_NLP_cache       (Cache cache)                           ;
-  void write_scripts         (Scripts scripts)                       ;
+  void write_daemons         (DaemonsMeta scripts)                   ;
   void write_memory          (KeyStore memory)                       ;
 
 private:
@@ -42,7 +42,7 @@ private:
   const char *sources_store_filename = "jeff_sources.json"   ;
   const char *cache_store_filename   = "jeff_nlp_cache.json" ;
   const char *history_store_filename = "jeff_history.json"   ;
-  const char *scripts_store_filename = "jeff_scripts.json"   ;
+  const char *daemons_store_filename = "jeff_daemons.json"   ;
   const char *memory_store_filename  = "jeff_memory.json"    ;
   const char *subdir_name            = "jeff-qt"             ;
 

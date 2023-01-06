@@ -1,22 +1,26 @@
 #include "daemon-process.h"
 
 /*! @brief The constructor. */
-DaemonProcess::DaemonProcess(ScriptMetadata *_script, QObject *parent)
+DaemonProcess::DaemonProcess(DaemonizeableScriptMetadata *_script, QObject *parent)
   : QProcess(parent), script(_script)
 {
+  /*! Regular expression by @author DaVinci v.3 (OpenAI's ChatGPT). */
+  // QRegExp divider("\"([^\"\\\\]*(\\\\.[^\"\\\\]*)*)\"|'([^'\\\\]*(\\\\.[^'\\\\]*)*)'|([^\\s]+)");
+  parsed_args = QStringList(script->cmd); //.split(divider);
+  main_cmd = parsed_args.first();
+  parsed_args.pop_front();
   connect(this, &QProcess::errorOccurred, this, [this]() {
     emit script_exception(
-      tr("An error occurred during script execution") + " (" + script->path + ")"
+      tr("An error occurred during script execution") + " (\"" + script->cmd + "\")"
     );
   });
-  QFileInfo output(script->path);
+  QFileInfo output(main_cmd);
   setWorkingDirectory(output.path());
 }
 
 /*! @brief Starts the daemon. */
 void DaemonProcess::start() {
-  if (script->path.endsWith(".py")) QProcess::start(QString("python"), QStringList(script->path));
-  else QProcess::start(QString(script->path), QStringList());
+  QProcess::start(main_cmd, parsed_args);
 }
 
 /*! @brief Stops the daemon */

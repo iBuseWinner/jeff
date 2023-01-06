@@ -83,13 +83,13 @@ void Core::got_message_from_jck(const QString &result_expression) {
 void Core::got_scenario_start(ScenarioScript *scenario) {
   current_scenario = scenario;
   notifier->set_scenario_listener(current_scenario);
-  sem->add_script(current_scenario);
+  sem->add_daemon(current_scenario);
 }
 
 /*! @brief Disables scenario. */
 void Core::got_scenario_shutting() {
   notifier->unset_scenario_listener();
-  sem->remove_script(current_scenario);
+  sem->remove_daemon(current_scenario);
   delete current_scenario;
   current_scenario = nullptr;
 }

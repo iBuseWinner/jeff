@@ -4,6 +4,7 @@
 #include "core-kit/model/python/script.h"
 #include <QFileInfo>
 #include <QProcess>
+#include <QRegExp>
 #include <QStringList>
 
 class DaemonProcess : public QProcess {
@@ -11,11 +12,11 @@ class DaemonProcess : public QProcess {
   Q_DISABLE_COPY(DaemonProcess)
 public:
   // Functions described in `daemon-process.cpp`:
-  DaemonProcess(ScriptMetadata *_script, QObject *parent = nullptr);
+  DaemonProcess(DaemonizeableScriptMetadata *_script, QObject *parent = nullptr);
   void start();
   void stop(int msecs = 1500);
   /*! @brief Tells if this process is spawned by given script. */
-  bool is_spawner(ScriptMetadata *s) { return script == s; }
+  bool is_spawner(DaemonizeableScriptMetadata *s) { return script == s; }
 
 signals:
   /*! @brief Notifies about execution error. */
@@ -23,7 +24,9 @@ signals:
 
 private:
   // Objects:
-  ScriptMetadata *script = nullptr;
+  DaemonizeableScriptMetadata *script = nullptr;
+  QStringList parsed_args;
+  QString main_cmd;
 };
 
 #endif

@@ -43,18 +43,18 @@ Cache Json::read_NLP_cache() {
   return cache;
 }
 
-/*! @brief Reads @a scripts. */
-Scripts Json::read_scripts() {
-  QFile store = QFile(_settings_path + QDir::separator() + scripts_store_filename);
-  if (not store.exists()) return Scripts();
+/*! @brief Reads @a daemons. */
+DaemonsMeta Json::read_daemons() {
+  QFile store = QFile(_settings_path + QDir::separator() + daemons_store_filename);
+  if (not store.exists()) return DaemonsMeta();
   QJsonArray scripts_json = read_json(&store);
-  Scripts scripts;
+  DaemonsMeta daemons;
   for (auto obj : scripts_json) {
-    auto *script = ScriptsCast::to_script(obj.toObject());
+    auto *script = ScriptsCast::to_daemon(obj.toObject());
     if (not script) continue;
-    scripts.append(script);
+    daemons.append(script);
   }
-  return scripts;
+  return daemons;
 }
 
 /*! @brief Reads memory - @a keystore. */
@@ -104,11 +104,11 @@ void Json::write_NLP_cache(Cache cache) {
   write_json(&file, cache_json);
 }
 
-/*! @brief Saves @a scripts metadata. */
-void Json::write_scripts(Scripts scripts) {
+/*! @brief Saves @a daemons metadata. */
+void Json::write_daemons(DaemonsMeta daemons) {
   QJsonArray scripts_json;
-  for (auto *script : scripts) scripts_json.append(ScriptsCast::to_json(script));
-  QFile file = QFile(_settings_path + QDir::separator() + scripts_store_filename);
+  for (auto *daemon : daemons) scripts_json.append(ScriptsCast::to_json(daemon));
+  QFile file = QFile(_settings_path + QDir::separator() + daemons_store_filename);
   write_json(&file, scripts_json);
 }
 

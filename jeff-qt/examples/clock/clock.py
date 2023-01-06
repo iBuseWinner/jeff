@@ -1,20 +1,15 @@
 #!/usr/bin/env python
 
 import json, socket, time, uuid
+from jeff_api import client
+
+cli = client.Client('localhost', 8005)
+
+def send_time(msg_id):
+  cli.send_status(msg_id, f'Текущее время: {time.strftime("%X")}.')
 
 
-def send_time(msg_id) -> None:
-  data = json.dumps({"send_status": {"id": msg_id,
-                                     "msg": f'Текущее время: {time.strftime("%X")}.'}}).encode()
-  try:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-      sock.connect(('localhost', 8005))
-      sock.sendall(data)
-  except ConnectionRefusedError:
-    print('Сервер отключен.')
-
-
-def main() -> None:
+def main():
   msg_id = str(uuid.uuid4())
   while True:
     send_time(msg_id)

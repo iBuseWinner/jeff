@@ -4,7 +4,7 @@ class Server:
   def __init__(self, host, port):
     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.server_socket.bind((host if host is not None else socket.gethostname(), port))
-    self.server_socket.listen(5)
+    self.server_socket.listen()
   
   def _waits_for(self):
     (socket, address) = self.server_socket.accept()
@@ -22,4 +22,4 @@ class Server:
     return json.loads(b.decode())
   
   def listen(self):
-    return self._decode_json(self._waits_for())
+    return Server._decode_json(self._waits_for())

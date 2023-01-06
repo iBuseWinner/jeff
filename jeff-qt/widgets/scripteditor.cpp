@@ -1,5 +1,8 @@
 #include "scripteditor.h"
 
+/*! TODO исправить все поля, что изменились
+ *  TODO исправить сохранение CustomScan/CustomCompose  */
+
 /*! @brief The constructor. */
 ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, SEModule *_sem, ModalHandler *m_handler) 
   : QWidget(parent), basis(_basis), sem(_sem), _m_handler(m_handler)
@@ -85,9 +88,9 @@ void ScriptEditor::change_stype() {
         return;
       }
       auto *daemon_script = new DaemonScript();
-      daemon_script->path = path_input->text();
+      daemon_script->cmd = path_input->text();
       if (_m_handler) {
-        sem->add_script(daemon_script);
+        sem->add_daemon(daemon_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(daemon_script));
@@ -112,12 +115,12 @@ void ScriptEditor::change_stype() {
     dynamic_properties_layout->addWidget(server_port_info, 1, 0);
     dynamic_properties_layout->addWidget(server_port_input, 1, 1);
     connect(save_btn, &Button::clicked, this, [this] {
-      if ((path_input->text() == tr("Select a file...") and server_addr_input->text().isEmpty()) or server_port_input->text().isEmpty()) {
+      if ((path_input->text() == tr("Select a file...") or server_addr_input->text().isEmpty()) and server_port_input->text().isEmpty()) {
         basis->warn_about(tr("Please complete path or server IP and port fields before saving."));
         return;
       }
       auto *server_script = new ServerScript();
-      if (path_input->text() != tr("Select a file...")) server_script->path = path_input->text();
+      if (path_input->text() != tr("Select a file...")) server_script->cmd = path_input->text();
       auto addr = server_addr_input->text();
       int pos = 0;
       if (server_addr_input->validator()->validate(addr, pos) == QValidator::Acceptable)
@@ -126,7 +129,7 @@ void ScriptEditor::change_stype() {
       if (server_port_input->validator()->validate(port, pos) == QValidator::Acceptable)
         server_script->server_port = port.toInt();
       if (_m_handler) {
-        sem->add_script(server_script);
+        sem->add_daemon(server_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(server_script));
@@ -149,7 +152,7 @@ void ScriptEditor::change_stype() {
       cs_script->path = path_input->text();
       cs_script->fn_name = fn_name_input->text();
       if (_m_handler) {
-        sem->add_script(cs_script);
+        // sem->add_script(cs_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(cs_script));
@@ -175,7 +178,7 @@ void ScriptEditor::change_stype() {
       cc_script->fn_name = fn_name_input->text();
       cc_script->send_adprops = send_adprops->isChecked();
       if (_m_handler) {
-        sem->add_script(cc_script);
+        // sem->add_script(cc_script);
         emit closed();
       } else {
         emit saved(ScriptsCast::to_string(cc_script));
@@ -249,14 +252,17 @@ bool ScriptEditor::load_from_text(QString json_text) {
 
 /*! @brief Loads data into a form from a saved state. */
 bool ScriptEditor::load_from_script(ScriptMetadata *script) {
-  path_input->setText(script->path);
   if (script->stype == ScriptType::Daemon) {
     change_stype(0);
+    auto *s = dynamic_cast<DaemonScript *>(script);
+    if (not s) return false;
+    path_input->setText(s->cmd);
     return true;
   } else if (script->stype == ScriptType::Server) {
     change_stype(1);
     auto *s = dynamic_cast<ServerScript *>(script);
     if (not s) return false;
+    path_input->setText(s->cmd);
     server_addr_input->setText(s->server_addr.toString());
     server_port_input->setText(QString::number(s->server_port));
     return true;
@@ -264,12 +270,14 @@ bool ScriptEditor::load_from_script(ScriptMetadata *script) {
     change_stype(2);
     auto *s = dynamic_cast<CustomScanScript *>(script);
     if (not s) return false;
+    path_input->setText(s->path);
     fn_name_input->setText(s->fn_name);
     return true;
   } else if (script->stype == ScriptType::CustomCompose) {
     change_stype(3);
     auto *s = dynamic_cast<CustomComposeScript *>(script);
     if (not s) return false;
+    path_input->setText(s->path);
     fn_name_input->setText(s->fn_name);
     send_adprops->setChecked(s->send_adprops);
     return true;
@@ -277,6 +285,7 @@ bool ScriptEditor::load_from_script(ScriptMetadata *script) {
     set_stype(4);
     auto *s = dynamic_cast<ReactScript *>(script);
     if (not s) return false;
+    path_input->setText(s->path);
     fn_name_input->setText(s->fn_name);
     hist_amount_input->setValue(s->hist_parts);
     needs_ue_input->setChecked(s->needs_user_input);

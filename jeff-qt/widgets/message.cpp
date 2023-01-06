@@ -46,7 +46,7 @@ void Message::update_text(const QString &text) {
   auto *label = qobject_cast<QLabel *>(w);
   if (not label) return;
   label->setText(text);
-  setMaximumWidth(_width);
+  setWidth(_width);
 }
 
 /*! @brief Adjusts the message to the content type. */
@@ -109,9 +109,9 @@ void Message::setup_text(const QString &content) {
   auto *copy_text_action = new QAction(
     QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy message text"), this
   );
-  connect(copy_text_action, &QAction::triggered, this, [this, content] {
+  connect(copy_text_action, &QAction::triggered, this, [this] {
     auto *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(content);
+    clipboard->setText(this->content());
   });
   auto *context_menu = new Menu(this);
   context_menu->addAction(copy_text_action);

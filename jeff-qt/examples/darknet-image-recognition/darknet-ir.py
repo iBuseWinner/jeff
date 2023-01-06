@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from jeff_api import client, server
 import json, subprocess, socket, os, uuid, locale
 
 lang, _ = locale.getdefaultlocale()
@@ -14,23 +15,14 @@ def try_locate():
   return "darknet"
 
 
-def recognize(incoming, savepath):
+def recognize(cli, request, savepath):
   """"""
-  r = incoming.recv(1024).strip()
-  incoming.close()
-  if not r:
-    return
-  request = json.loads(r.decode('utf-8'))
   if request["author"] == 1:
     return
   if not request["content"].endswith('.jpg'):
     return
   path = request["content"]
-  response = {"send": f'Got a file {path}.' if lang != 'ru_RU' else f'Получен файл {path}.'}
-  outgoing = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  outgoing.connect(('localhost', 8005))
-  outgoing.send(json.dumps(response).encode())
-  outgoing.close()
+  cli.send_msg(f'Got a file {path}.' if lang != 'ru_RU' else f'Получен файл {path}.')
   subprocess.call(["./darknet",
                    "detect",
                    "cfg/yolov4-tiny.cfg",
@@ -38,11 +30,7 @@ def recognize(incoming, savepath):
                    path.rstrip()])
   filename = f'{savepath}/{str(uuid.uuid4())}.jpg'
   os.rename('predictions.jpg', filename)
-  response = {"send": os.path.abspath(filename)}
-  outgoing = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  outgoing.connect(('localhost', 8005))
-  outgoing.send(json.dumps(response).encode())
-  outgoing.close()
+  cli.send_msg(os.path.abspath(filename))
 
 
 def main():
@@ -55,14 +43,13 @@ def main():
   savepath = os.path.abspath('recognized')
   port = 15203
   os.chdir(path)
-  server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-  server.bind(('localhost', port))
-  server.listen()
+  srv = server.Server(None, port)
+  cli = client.Client('localhost', 8005)
   print(f'Darknet enabled on port {str(port)}.' if lang != 'ru_RU' \
         else f'Darknet слушает на порту {str(port)}.')
   while True:
-    incoming, _ = server.accept()
-    recognize(incoming, savepath)
+    j = srv.listen()
+    recognize(cli, j, savepath)
 
 
 if __name__ == "__main__":

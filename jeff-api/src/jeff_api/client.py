@@ -39,3 +39,7 @@ class Client:
   def send_as_user(self, msg):
     j = {"send_as_user": msg}
     self._send(Client._encode_json(j))
+
+  def send_status(self, msg_id, msg):
+    j = {"send_status": {"id": msg_id, "msg": msg}}
+    self._send(Client._encode_json(j))

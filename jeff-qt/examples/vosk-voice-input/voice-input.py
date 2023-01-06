@@ -8,56 +8,56 @@ SHUTDOWN = False
 ATTENTION_WORDS = [word for word in 'эй, хэй, хай, ваня'.split(', ')]
 
 
-def list_subdirs(path: str) -> list:
+def list_subdirs(path):
   """Lists the subfolders of the 'path' folder."""
   from os import listdir
   from os.path import isdir, join
   return [f for f in listdir(path) if isdir(join(path, f))]
 
 
-def shutdown() -> None:
+def shutdown():
   """Turns off speech recognition."""
   SHUTDOWN = True
 
 
-def try_import(cli: client.Client) -> bool:
-  """Checks if required modules are installed and installs otherwise."""
-  import locale
-  lang, _ = locale.getdefaultlocale()
-  try:
-    import sounddevice, vosk
-  except ImportError:
-    import subprocess
-    try:
-      print('Installing modules via "pip"...' if lang != 'ru_RU' else 'Установка модулей через "pip"...')
-      print(subprocess.run(
-        ["pip", "install", "sounddevice", "vosk", "--user"], capture_output=True).stdout.decode()
-      )
-    except subprocess.CalledProcessError:
-      msg = 'Installation failed. Please install "sounddevice" and "vosk" Python modules manually before using vosk-voice-input so that Jeff can hear and listen to you.' if lang != 'ru_RU' else 'Установка не удалась. Пожалуйста, установите модули "sounddevice" и "vosk" самостоятельно перед тем, как использовать vosk-voice-input, чтобы Джефф мог вас слышать и слушать.'
-      print(msg)
-      cli.send_msg(msg)
-      return False
-  import platform, os.path, webbrowser
-  # The binary library for connecting to a microphone for the sounddevice module is downloaded
-  # automatically for Windows and Mac OS X. Therefore, we check if you are using Linux.
-  if platform.system() == 'Linux':
-    if not os.path.exists('/usr/lib/libportaudio.so'):
-      msg = 'Your Linux distribution does not have the PortAudio library installed. Install it to use vosk-voice-input. Opening browser...' if lang != 'ru_RU' else 'На вашей системе Linux отсутствует библиотека PortAudio. Установите её для использования vosk-voice-input. Открывается браузер...'
-      print(msg)
-      cli.send_msg(msg)
-      webbrowser.open('https://pkgs.org/search/?q=portaudio')
-      return False
-  if not os.path.exists('models') or len(list_subdirs('models')) == 0:
-    msg = 'You don\'t have any Vosk models installed. Download the one suitable for you from the site, create a "models" folder and unzip the model into it. Opening browser...' if lang != 'ru_RU' else 'У вас нет ни одной установленной модели Vosk. Скачайте подходящую для вас модель с сайта, создайте папку "models" и распакуйте модель туда. Открывается браузер...'
-    print(msg)
-    cli.send_msg(msg)
-    webbrowser.open('https://alphacephei.com/vosk/models')
-    return False
-  return True
+# def try_import():
+#   """Checks if required modules are installed and installs otherwise."""
+#   import locale
+#   lang, _ = locale.getdefaultlocale()
+#   try:
+#     import sounddevice, vosk
+#   except ImportError:
+#     import subprocess
+#     try:
+#       print('Installing modules via "pip"...' if lang != 'ru_RU' else 'Установка модулей через "pip"...')
+#       print(subprocess.run(
+#         ["pip", "install", "sounddevice", "vosk", "--user"], capture_output=True).stdout.decode()
+#       )
+#     except subprocess.CalledProcessError:
+#       msg = 'Installation failed. Please install "sounddevice" and "vosk" Python modules manually before using vosk-voice-input so that Jeff can hear and listen to you.' if lang != 'ru_RU' else 'Установка не удалась. Пожалуйста, установите модули "sounddevice" и "vosk" самостоятельно перед тем, как использовать vosk-voice-input, чтобы Джефф мог вас слышать и слушать.'
+#       print(msg)
+#       cli.send_msg(msg)
+#       return False
+#   import platform, os.path, webbrowser
+#   # The binary library for connecting to a microphone for the sounddevice module is downloaded
+#   # automatically for Windows and Mac OS X. Therefore, we check if you are using Linux.
+#   if platform.system() == 'Linux':
+#     if not os.path.exists('/usr/lib/libportaudio.so'):
+#       msg = 'Your Linux distribution does not have the PortAudio library installed. Install it to use vosk-voice-input. Opening browser...' if lang != 'ru_RU' else 'На вашей системе Linux отсутствует библиотека PortAudio. Установите её для использования vosk-voice-input. Открывается браузер...'
+#       print(msg)
+#       cli.send_msg(msg)
+#       webbrowser.open('https://pkgs.org/search/?q=portaudio')
+#       return False
+#   if not os.path.exists('models') or len(list_subdirs('models')) == 0:
+#     msg = 'You don\'t have any Vosk models installed. Download the one suitable for you from the site, create a "models" folder and unzip the model into it. Opening browser...' if lang != 'ru_RU' else 'У вас нет ни одной установленной модели Vosk. Скачайте подходящую для вас модель с сайта, создайте папку "models" и распакуйте модель туда. Открывается браузер...'
+#     print(msg)
+#     cli.send_msg(msg)
+#     webbrowser.open('https://alphacephei.com/vosk/models')
+#     return False
+#   return True
 
 
-def main(cli: client.Client) -> None:
+def main(cli):
   """Starts speech recognition."""
   import sounddevice, vosk, locale, queue, os.path, json
   
@@ -111,5 +111,5 @@ def main(cli: client.Client) -> None:
 
 if __name__ == "__main__":
   cli = client.Client('localhost', 8005)
-  if try_import(cli):
-    main(cli)
+  #if try_import(cli):
+  main(cli)

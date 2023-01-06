@@ -37,9 +37,9 @@ public:
   // Functions described in `python-module.cpp`:
   SEModule(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent = nullptr);
   ~SEModule();
-  void add_script(ScriptMetadata *script);
-  bool remove_script(ScriptMetadata *script);
-  Scripts get_scripts();
+  void add_daemon(DaemonizeableScriptMetadata *daemon_meta);
+  bool remove_daemon(DaemonizeableScriptMetadata *daemon_meta);
+  DaemonsMeta get_daemons();
   void startup();
   void shutdown_daemons();
 
@@ -52,7 +52,7 @@ private:
   HProcessor *hp = nullptr;
   Basis *basis = nullptr;
   NotifyClient *notifier = nullptr;
-  Scripts _scripts;
+  DaemonsMeta _daemons_meta;
   Daemons _daemons;
   QString _current_path;
 
@@ -65,7 +65,7 @@ private:
   const char *go_action_name = "go_action";
   
   // Functions described in `script-engine-module.cpp`:
-  void start_daemon(ScriptMetadata *script);
+  void start_daemon(DaemonizeableScriptMetadata *daemon_meta);
 };
 
 #endif
