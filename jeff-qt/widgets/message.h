@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef MESSAGE_W_H
+#define MESSAGE_W_H
 
 #include <QAction>
 #include <QClipboard>
@@ -31,12 +31,12 @@ public:
   Theme theme() { return md.theme; }
   QString content() { return md.content; }
   QDateTime date_time() { return md.datetime; }
-  MessageData message_data() { return md; }
+  MessageMeta message_data() { return md; }
 
   // Functions described in `message.cpp`:
   Message();
-  Message(MessageData _md);
-  void message_data(MessageData _md);
+  Message(MessageMeta _md);
+  void message_data(MessageMeta _md);
   void widget(ModalHandler *modal_handler);
   void update_text(const QString &text);
   void setWidth(int width);
@@ -48,7 +48,7 @@ signals:
 
 private:
   // Objects:
-  MessageData md;
+  MessageMeta md;
   QGridLayout *grid_layout = nullptr;
   QWidget *w = nullptr;
   int _width;

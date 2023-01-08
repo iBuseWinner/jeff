@@ -47,7 +47,7 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
-  Menu file_menu, edit_menu, tools_menu, help_menu;
+  Menu file_menu, edit_menu, extensions_menu, tools_menu, help_menu;
   QAction 
     /*! `File`  menu. */
     source_manager_action, script_manager_action, phrase_editor_action, export_history_action,
@@ -55,10 +55,13 @@ private:
     /*! `Edit`  menu. */
     clear_history_action, delete_text_action, cut_text_action, copy_text_action, paste_text_action,
     select_all_text_action,
+    /*! `Extensions` menu. */
+    extensions_viewer_action, scenario_running_info, stop_scenario_action, current_scanner_info,
+    select_scanner_action, current_composer_info, select_composer_action,
     /*! `Tools` menu. */
     hide_menubar_action, settings_action,
     /*! `Help`  menu. */
-    novice_guide, database_guide, aiml_guide, scripts_guide, server_script_guide, about_action;
+    novice_guide, database_guide, scripts_guide, extensions_guide, about_jeff_action;
 };
 
 #endif

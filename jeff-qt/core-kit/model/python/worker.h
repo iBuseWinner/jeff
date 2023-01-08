@@ -11,10 +11,10 @@
 #include <QObject>
 #include "core-kit/basis.h"
 #include "core-kit/history-processor.h"
-#include "core-kit/model/expression.h"
+#include "core-kit/extensions/script.h"
 #include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/nlp/expression.h"
 #include "core-kit/model/python/object.h"
-#include "core-kit/model/python/script.h"
 
 #pragma push_macro("slots")
 #undef slots
@@ -31,11 +31,11 @@ public:
   PythonWorker(Basis *_basis = nullptr, HProcessor *_hp = nullptr, QObject *parent = nullptr);
   ~PythonWorker();
   QJsonObject request_answer(
-    ReactScript *script, const Expression &expression, const QString &user_expression
+    ScriptMeta *script, const Expression &expression, const QString &input
   );
-  QJsonObject request_scan(CustomScanScript *script, const QString &user_expression);
+  QJsonObject request_scan(ScriptMeta *script, const QString &user_expression);
   QJsonObject request_compose(
-    CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
+    ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted
   );
   
 signals:

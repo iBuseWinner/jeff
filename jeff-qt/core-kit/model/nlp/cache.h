@@ -1,7 +1,7 @@
 #ifndef CACHE_H
 #define CACHE_H
 
-#include "core-kit/model/expression.h"
+#include "core-kit/model/nlp/expression.h"
 
 /*!
  * @typedef Cache

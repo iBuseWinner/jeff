@@ -24,6 +24,13 @@
 #include <QTextStream>
 #include <QVariant>
 
+/*! @brief The address and port of the server responsible for the specific scenario. */
+struct ScenarioServerMeta {
+  QHostAddress server_addr;
+  quint16 server_port;
+  QString auth_key;
+};
+
 /*!
  * @class Basis
  * @brief Provides methods for intra-component work.
@@ -45,64 +52,70 @@ public:
   Json *json = nullptr;              /*!< Json handler.   */
 
   // Constants:
-  const char *companyName     = "cclc";
-  const char *applicationName = "jeff";
+  static constexpr const char *companyName     = "cclc";
+  static constexpr const char *applicationName = "jeff";
 
-  const char *isMenuBarHiddenSt = "jeff-qt/menubarishidden";
-  const char *sizeSt            = "jeff-qt/size";
-  const char *isFullScreenSt    = "jeff-qt/isfullscreen";
-  const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
+  static constexpr const char *isMenuBarHiddenSt = "jeff-qt/menubarishidden";
+  static constexpr const char *sizeSt            = "jeff-qt/size";
+  static constexpr const char *isFullScreenSt    = "jeff-qt/isfullscreen";
+  static constexpr const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  const char *isMonologueEnabledSt      = "core-kit/ismonologuemodeenabled";
-  const char *isDelayEnabledSt          = "core-kit/isdelayenabled";
-  const char *minDelaySt                = "core-kit/mindelay";
-  const char *maxDelaySt                = "core-kit/maxdelay";
-  const char *isHistoryKeepingEnabledSt = "core-kit/ishistorykeepingenabled";
-  const char *isGreetingsEnabledSt      = "core-kit/isgreetingsenabled";
-  const char *greetingsMsg              = "core-kit/greetings";
-  const char *scenarioExitMsg           = "core-kit/scenarioexitter";
+  static constexpr const char *isMonologueEnabledSt      = "core-kit/ismonologuemodeenabled";
+  static constexpr const char *isDelayEnabledSt          = "core-kit/isdelayenabled";
+  static constexpr const char *minDelaySt                = "core-kit/mindelay";
+  static constexpr const char *maxDelaySt                = "core-kit/maxdelay";
+  static constexpr const char *isHistoryKeepingEnabledSt = "core-kit/ishistorykeepingenabled";
+  static constexpr const char *isGreetingsEnabledSt      = "core-kit/isgreetingsenabled";
+  static constexpr const char *greetingsMsg              = "core-kit/greetings";
+  static constexpr const char *scenarioExitMsg           = "core-kit/scenarioexitter";
+  static constexpr const char *serverPortSt              = "core-kit/serverport";
   
-  const char *defaultSourcePath      = "sources/defaultsourcepath";
-  const char *defaultSourceContainer = "sources/defaultsourcecontainer";
+  static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
+  static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";
   
-  const char *serverAuthorizationOnSt = "server/authorize";
-  const char *serverAuthKeySt         = "server/auth_key";
+  static constexpr const char *serverAuthorizationOnSt = "server/authorize";
+  static constexpr const char *serverAuthKeySt         = "server/auth_key";
   
-  const char *customScannerSt    = "scripts/custom_scanner";
-  const char *customScannerFnSt  = "scripts/custom_scanner_fn_name";
-  const char *customComposerSt   = "scripts/custom_composer";
-  const char *customComposerFnSt = "scripts/custom_composer_fn_name";
-  const char *customComposerSASt = "scripts/custom_composer_send_adprops";
+  static constexpr const char *customScannerSt    = "scripts/custom_scanner";
+  static constexpr const char *customScannerFnSt  = "scripts/custom_scanner_fn_name";
+  static constexpr const char *customComposerSt   = "scripts/custom_composer";
+  static constexpr const char *customComposerFnSt = "scripts/custom_composer_fn_name";
+  static constexpr const char *customComposerSASt = "scripts/custom_composer_send_adprops";
   
-  const char *scriptPathWk     = "path";
-  const char *funcNameWk       = "fn_name";
-  const char *getHistWk        = "hist_parts";
-  const char *errorTypeWk      = "error_type";
-  const char *recentMessagesWk = "recent_messages";
-  const char *readMemoryWk     = "memory_cells";
-  const char *memoryValuesWk   = "memory_values";
-  const char *contextWk        = "context";
-  const char *exprPropsWk      = "expression_properties";
-  const char *writeMemoryWk    = "store_in_memory";
-  const char *scenarioReadyWk  = "sready";
-  const char *sendWk           = "send";
-  const char *searchAgainWk    = "search_again";
-  const char *sendAsUserWk     = "send_as_user";
-  const char *sendStatusWk     = "send_status";
-  const char *authKeyWk        = "auth_key";
+  static constexpr const char *scriptPathWk       = "path";
+  static constexpr const char *funcNameWk         = "fn_name";
+  static constexpr const char *getHistWk          = "hist_parts";
+  static constexpr const char *errorTypeWk        = "error_type";
+  static constexpr const char *recentMessagesWk   = "recent_messages";
+  static constexpr const char *readMemoryWk       = "memory_cells";
+  static constexpr const char *memoryValuesWk     = "memory_values";
+  static constexpr const char *contextWk          = "context";
+  static constexpr const char *exprPropsWk        = "expression_properties";
+  static constexpr const char *writeMemoryWk      = "store_in_memory";
+  static constexpr const char *scenarioReadyWk    = "sready";
+  static constexpr const char *scenarioAddrWk     = "saddr";
+  static constexpr const char *scenarioPortWk     = "sport";
+  static constexpr const char *scenarioTokenWk    = "stoken";
+  static constexpr const char *scenarioContinueWk = "scontinue";
+  static constexpr const char *scenarioFinishWk   = "sfinish";
+  static constexpr const char *sendWk             = "send";
+  static constexpr const char *searchAgainWk      = "search_again";
+  static constexpr const char *sendAsUserWk       = "send_as_user";
+  static constexpr const char *sendStatusWk       = "send_status";
+  static constexpr const char *sendWarningWk      = "send_warning";
+  static constexpr const char *authKeyWk          = "auth_key";
   
 #ifdef JEFF_WITH_QT_WIDGETS
-  const char *source_manager_cmd = "/sources";
-  const char *script_manager_cmd = "/scripts";
-  const char *first_start_cmd    = "/first";
-  const char *about_cmd          = "/about";
-  const char *settings_cmd       = "/settings";
-  const char *phrase_editor_cmd  = "/phrases";
-  const char *add_script_cmd     = "/#";
+  static constexpr const char *source_manager_cmd = "/sources";
+  static constexpr const char *script_manager_cmd = "/scripts";
+  static constexpr const char *first_start_cmd    = "/first";
+  static constexpr const char *about_cmd          = "/about";
+  static constexpr const char *settings_cmd       = "/settings";
+  static constexpr const char *phrase_editor_cmd  = "/phrases";
 #endif
-  const char *fast_append_cmd        = "/+ ";
-  const char *fast_append_script_cmd = "/++ ";
-  const char *monologue_mode_cmd     = "/mm";
+  static constexpr const char *fast_append_cmd        = "/+ ";
+  static constexpr const char *fast_append_script_cmd = "/++ ";
+  static constexpr const char *monologue_mode_cmd     = "/mm";
 
   // Functions:
   /*! @brief The constructor. */
@@ -123,6 +136,8 @@ public:
   inline bool accessible() { return _settings.status() != QSettings::AccessError; }
   /*! @brief Determines the correctness of the settings file format. */
   inline bool correct() { return _settings.status() != QSettings::FormatError; }
+  /*! @brief Clears scenario's token. */
+  inline void clear_stoken() { _scenario_token = QString(); }
   
   /*! @brief Reads the setting. */
   inline QVariant read(const QString &key)       { return _settings.value(key); }
@@ -165,12 +180,15 @@ signals:
   /*! @brief Reports that sources has been changed. */
   void sources_changed();
   /*! @brief Sends last message to scenario. @sa Core */
-  void send_msg_to_scenario();
+  ScenarioServerMeta start_scenario(ScenarioServerMeta scenario_meta);
+  /*! @brief Stops current scenario. */
+  void shutdown_scenario();
 
 private:
   // Objects:
-  Sources _sources; /*!< List of sources for @a NLPmodule. */
-  KeyStore _memory; /*!< Long-life memory. */
+  Sources _sources;      /*!< List of sources for @a JCK. */
+  KeyStore _memory;      /*!< Long-life memory. */
+  QString _scenario_token; /*!< Token for scenarios. */
   
   /*! Qt settings object. */
   QSettings _settings = QSettings(

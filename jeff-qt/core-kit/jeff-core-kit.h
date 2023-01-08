@@ -3,9 +3,11 @@
 
 #include "core-kit/basis.h"
 #include "core-kit/database/sqlite.h"
-#include "core-kit/model/expression.h"
+#include "core-kit/extensions/extension.h"
+#include "core-kit/extensions/script.h"
 #include "core-kit/model/nlp/cache.h"
 #include "core-kit/model/nlp/cacher.h"
+#include "core-kit/model/nlp/expression.h"
 #include "core-kit/model/nlp/stringssearch.h"
 #include "core-kit/model/python/worker.h"
 #include "core-kit/standard-templates.h"
@@ -35,18 +37,18 @@ public:
   void load_cache();
   void save_cache();
   void search_for_suggests(const QString &input);
-  void set_default_scanner();
-  void set_custom_scanner(CustomScanScript *custom_scanner);
-  void set_default_composer();
-  void set_custom_composer(CustomComposeScript *custom_composer);
+  void set_custom_scanner(ScriptMeta *custom_scanner);
+  void set_custom_composer(ScriptMeta *custom_composer);
 
 signals:
+  /*! @brief Informs that JCK gets no output on this input. */
+  QString empty(QString input);
   /*! @brief Sends a response expression to @a Core. */
   QString response(QString response);
   /*! @brief Notifies of a script error. */
   QString script_exception(QString error);
-  /*! @brief Informs that JCK needs to wait for the scenario to run and sends it the last message. */
-  ScenarioScript *setup_scenario(ScenarioScript *script);
+  /*! @brief Informs that JCK needs to start an extension. */
+  ExtensionMeta *start_extension(ExtensionMeta *extension_meta);
 
 private:
   // Objects:
@@ -54,8 +56,8 @@ private:
   PythonWorker *pw = nullptr;
   HProcessor *hp = nullptr;
   QRandomGenerator *gen = nullptr;
-  CustomScanScript *scanner = nullptr;
-  CustomComposeScript *composer = nullptr;
+  ScriptMeta *scanner = nullptr;
+  ScriptMeta *composer = nullptr;
 
   // Constants:
   const char *cache_path = "";
@@ -70,7 +72,9 @@ private:
 };
 
 /*! @class JCKController
- *  @brief TBD  */
+ *  @brief Runs JCK entity in another thread.
+ *  @details Jeff runs JCK in another thread to avoid UI freezing when executing too huge 
+ *  scripts or processes.  */
 class JCKController : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(JCKController)
@@ -88,9 +92,10 @@ public:
     connect(jck, &JCK::script_exception, this, [this](QString e) {
       emit script_exception(e);
     });
+    connect(jck, &JCK::empty, this, [this](QString e) { emit empty(e); });
     connect(jck, &JCK::response, this, [this](QString r) { emit response(r); });
-    connect(jck, &JCK::setup_scenario, this, [this](ScenarioScript *s) {
-      emit setup_scenario(s);
+    connect(jck, &JCK::start_extension, this, [this](ExtensionMeta *e) {
+      emit start_extension(e);
     });
     jck_thread.start();
   }
@@ -100,18 +105,19 @@ public:
     jck_thread.wait();
   }
   void search_for_suggests(const QString &input) { emit sfs(input); }
-  void set_custom_scanner(CustomScanScript *custom_scanner) { emit scs(custom_scanner); }
-  void set_custom_composer(CustomComposeScript *custom_composer) { emit scc(custom_composer); }
+  void set_custom_scanner(ScriptMeta *custom_scanner) { emit scs(custom_scanner); }
+  void set_custom_composer(ScriptMeta *custom_composer) { emit scc(custom_composer); }
 
 signals:
   /*! @brief Functions to thread. */
   QString sfs(QString input);
-  CustomScanScript *scs(CustomScanScript *script);
-  CustomComposeScript *scc(CustomComposeScript *script);
+  ScriptMeta *scs(ScriptMeta *script);
+  ScriptMeta *scc(ScriptMeta *script);
   /*! @brief Real JCK signals. */
+  QString empty(QString input);
   QString response(QString response);
   QString script_exception(QString error);
-  ScenarioScript *setup_scenario(ScenarioScript *script);
+  ExtensionMeta *start_extension(ExtensionMeta *extension_meta);
 
 private:
   // Objects:

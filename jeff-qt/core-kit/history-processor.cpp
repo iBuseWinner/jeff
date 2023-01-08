@@ -11,15 +11,15 @@ void HProcessor::load(const QString &filename) {
 }
 
 /*! @brief Adds @a message to the story. */
-void HProcessor::append(const MessageData &message) { message_history.append(message); }
+void HProcessor::append(const MessageMeta &message) { message_history.append(message); }
 /*! @brief Clears the history. */
 void HProcessor::clear() { message_history.clear(); }
 /*! @brief Removes message from history. */
-void HProcessor::remove_one(MessageData message) { message_history.removeOne(message); }
+void HProcessor::remove_one(MessageMeta message) { message_history.removeOne(message); }
 
 /*! @brief Saves @a _message_history to file. */
 void HProcessor::save(const QString &filename) {
-  Messages _message_history;
+  MessagesMeta _message_history;
   for (auto msg : message_history)
     if (msg.content_type != ContentType::Widget) _message_history.append(msg);
   if (filename.isEmpty())
@@ -29,8 +29,8 @@ void HProcessor::save(const QString &filename) {
 }
 
 /*! @brief Returns the latest messages. */
-Messages HProcessor::recent(int amount) {
-  Messages messages;
+MessagesMeta HProcessor::recent(int amount) {
+  MessagesMeta messages;
   if (amount > message_history.length())
     amount = message_history.length();
   if (amount > maximum_number_of_recent_messages_to_be_sent)
@@ -56,6 +56,6 @@ QString HProcessor::last_user_message(int i) {
 }
 
 /*! @brief Blocks the addition of new messages and passes the history to the calling method. */
-Messages *HProcessor::messages() { return &message_history; }
+MessagesMeta *HProcessor::messages() { return &message_history; }
 /*! @brief Returns the length of the history. */
 int HProcessor::length() { return message_history.length(); }

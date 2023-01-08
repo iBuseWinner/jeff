@@ -7,6 +7,8 @@ Jeff::Jeff(int argc, char *argv[]) : QObject() {
   if (not basis->exists() or not basis->correct()) {
     basis->write(basis->isGreetingsEnabledSt, true);
     basis->write(basis->greetingsMsg, tr("Hello!"));
+    basis->write(basis->scenarioExitMsg, "//");
+    basis->write(basis->serverPortSt, 8005);
   }
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
   if (argc > 1) {
@@ -77,7 +79,7 @@ void Jeff::ncurses_draw() {
       QString user_message = QString::fromStdWString(buffer);
       buffer.clear();
       if (user_message == "/q") {
-        core->sem->shutdown_daemons();
+        core->em->shutdown_extensions();
         qt_shutdown();
         break;
       }
@@ -116,12 +118,12 @@ bool Jeff::ncurses_getstr(int y, int x, int available_space) {
 }
 
 /*! @brief Adds several messages to the screen. */
-void Jeff::start_by(Messages _messages) {
+void Jeff::start_by(MessagesMeta _messages) {
   for (auto message : _messages) add_message_by_md(message);
 }
 
 /*! @brief Adds a message to the screen (interactive mode). */
-void Jeff::add_message_by_md(MessageData message) {
+void Jeff::add_message_by_md(MessageMeta message) {
   if (message.author == Author::Jeff) messages.push_back(tr("Jeff") + ": " + message.content);
   else messages.push_back(tr("You") + ": " + message.content);
   int h, w;
@@ -137,7 +139,7 @@ void Jeff::qt_shutdown() {
 }
 
 /*! @brief Processes a single message, returns a response, and terminates the application. */
-void Jeff::handle_once(MessageData message) {
+void Jeff::handle_once(MessageMeta message) {
   once_mutex.lock();
   if (not once) {
     once = true;

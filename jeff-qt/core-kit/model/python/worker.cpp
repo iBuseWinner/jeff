@@ -1,5 +1,4 @@
 #include "worker.h"
-#include <iostream>
 
 PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent)
   : QObject(parent), basis(_basis), hp(_hp)
@@ -83,50 +82,50 @@ QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transp
  *   7. `store_in_memory` prop from script
  */
 QJsonObject PythonWorker::request_answer(
-  ReactScript *script, const Expression &expression, const QString &user_expression
+  ScriptMeta *script, const Expression &expression, const QString &user_expression
 ) {
   QJsonObject transport;
-  if (not script->memory_cells.isEmpty()) {
+  if (not script->required_memory_cells.isEmpty()) {
     QJsonObject memory_cells;
-    for (auto key : script->memory_cells) memory_cells[key] = basis->memory(key);
+    for (auto key : script->required_memory_cells) memory_cells[key] = basis->memory(key);
     transport[basis->memoryValuesWk] = memory_cells;
   }
-  if (script->hist_parts) {
+  if (script->required_history_parts) {
     QJsonArray history_array;
-    auto history = hp->recent(script->hist_parts);
+    auto history = hp->recent(script->required_history_parts);
     for (auto msg : history) 
       history_array.append(
         QString("%1: %2").arg(msg.author == Author::User ? "User" : "Jeff").arg(msg.content)
       );
     transport[basis->recentMessagesWk] = history_array;
   }
-  if (script->needs_user_input) transport["user_expression"] = user_expression;
+  if (script->required_user_input) transport["user_expression"] = user_expression;
   if (not expression.properties.isEmpty()) {
     transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }
-  if (not script->path.length()) {
-    emit script_exception(tr("The path to the module is empty."));
+  if (not script->filepath.length()) {
+    emit script_exception(tr("The filepath to the module is empty."));
     return {{basis->errorTypeWk, 10}};
   }
   if (not script->fn_name.length()) {
     emit script_exception(tr("The function name is empty."));
     return {{basis->errorTypeWk, 12}};
   }
-  QJsonObject result = run(script->path, script->fn_name, transport);
+  QJsonObject result = run(script->filepath, script->fn_name, transport);
   basis->handle_from_script(result, true);
   return result;
 }
 
 /*! @brief Prepares data for custom scanning. */
-QJsonObject PythonWorker::request_scan(CustomScanScript *script, const QString &user_expression) {
+QJsonObject PythonWorker::request_scan(ScriptMeta *script, const QString &user_expression) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
-  return run(script->path, script->fn_name, transport);
+  return run(script->filepath, script->fn_name, transport);
 }
 
 /*! @brief Prepares data for custom composing. */
 QJsonObject PythonWorker::request_compose(
-  CustomComposeScript *script, const QString &user_expression, CacheWithIndices sorted
+  ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted
 ) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
@@ -142,5 +141,5 @@ QJsonObject PythonWorker::request_compose(
     candidates.append(candidate);
   }
   transport["candidates"] = candidates;
-  return run(script->path, script->fn_name, transport);
+  return run(script->filepath, script->fn_name, transport);
 }

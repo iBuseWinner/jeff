@@ -2,8 +2,8 @@
 #define SQLITE_H
 
 #include "core-kit/model/nlp/cache.h"
+#include "core-kit/model/nlp/expression.h"
 #include "core-kit/model/nlp/stringssearch.h"
-#include "core-kit/model/expression.h"
 #include "core-kit/model/phrase.h"
 #include "core-kit/model/source.h"
 #include <QFile>

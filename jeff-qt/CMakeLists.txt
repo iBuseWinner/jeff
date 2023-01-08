@@ -36,15 +36,18 @@ set(SRCS
   core-kit/local-server.h
   core-kit/notify-client.cpp
   core-kit/notify-client.h
-  core-kit/script-engine-module.cpp
-  core-kit/script-engine-module.h
+  core-kit/extensions-manager.cpp
+  core-kit/extensions-manager.h
   core-kit/standard-templates.cpp
   core-kit/standard-templates.h
   core-kit/database/json.cpp
   core-kit/database/json.h
   core-kit/database/sqlite.cpp
   core-kit/database/sqlite.h
-  core-kit/model/expression.h
+  core-kit/extensions/daemon-process.cpp
+  core-kit/extensions/daemon-process.h
+  core-kit/extensions/extension.h
+  core-kit/extensions/script.h
   core-kit/model/keystore.h
   core-kit/model/message.h
   core-kit/model/phrase.h
@@ -52,14 +55,11 @@ set(SRCS
   core-kit/model/nlp/cache.h
   core-kit/model/nlp/cacher.cpp
   core-kit/model/nlp/cacher.h
+  core-kit/model/nlp/expression.h
   core-kit/model/nlp/options.h
   core-kit/model/nlp/stringssearch.cpp
   core-kit/model/nlp/stringssearch.h
-  core-kit/model/python/daemon-process.cpp
-  core-kit/model/python/daemon-process.h
   core-kit/model/python/object.h
-  core-kit/model/python/script.cpp
-  core-kit/model/python/script.h
   core-kit/model/python/worker.cpp
   core-kit/model/python/worker.h
   main.cpp
@@ -81,6 +81,8 @@ set(SRCS_UI
   dialogues/about.h
   dialogues/add-script.cpp
   dialogues/add-script.h
+  dialogues/extensions-viewer.cpp
+  dialogues/extensions-viewer.h
   dialogues/firststart.cpp
   dialogues/firststart.h
   dialogues/help.cpp
@@ -90,16 +92,18 @@ set(SRCS_UI
   dialogues/phrase-editor.h
   dialogues/settings.cpp
   dialogues/settings.h
-  dialogues/sources.cpp
-  dialogues/sources.h
+  dialogues/sources-editor.cpp
+  dialogues/sources-editor.h
+  dialogues/extensions-viewer/extension-overview.cpp
+  dialogues/extensions-viewer/extension-overview.h
   dialogues/phrase-editor/brief.cpp
   dialogues/phrase-editor/brief.h
   dialogues/phrase-editor/overview.cpp
   dialogues/phrase-editor/overview.h
   dialogues/phrase-editor/selector.cpp
   dialogues/phrase-editor/selector.h
-  dialogues/sources/create-source.cpp
-  dialogues/sources/create-source.h
+  dialogues/sources-editor/create-source.cpp
+  dialogues/sources-editor/create-source.h
   widgets/board.cpp
   widgets/board.h
   widgets/button.cpp

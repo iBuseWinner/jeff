@@ -1,5 +1,5 @@
-#ifndef MESSAGEDATA_H
-#define MESSAGEDATA_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
 #include <QDateTime>
 #include <QJsonObject>
@@ -8,14 +8,14 @@
 /*!
  * @enum Author
  * @brief Enumeration of possible authors of messages.
- * @sa MessageData
+ * @sa MessageMeta
  */
 enum Author { undefA, Jeff, User };
 
 /*!
  * @enum ContentType
  * @brief Enumeration of possible content types.
- * @sa MessageData
+ * @sa MessageMeta
  */
 enum ContentType {
   undefC,
@@ -31,20 +31,20 @@ enum ContentType {
 /*!
  * @enum Theme
  * @brief Enumeration of possible message themes for Display.
- * @sa MessageData
+ * @sa MessageMeta
  */
 enum Theme { undefT, Std, White, Black, Red, Green, Blue, Yellow };
 
 /*!
- * @class MessageData
+ * @class MessageMeta
  * @brief Contains the message and its properties.
  * @sa Author, ContentType, Theme
  */
-class MessageData {
+class MessageMeta {
 public:
   /*! Constructors. */
-  MessageData() {}
-  MessageData(const QJsonObject &json_object) {
+  MessageMeta() {}
+  MessageMeta(const QJsonObject &json_object) {
     content = json_object["content"].toString();
     datetime = QDateTime::fromString(json_object["datetime"].toString(), Qt::ISODateWithMs);
     author = Author(json_object["author"].toInt());
@@ -63,7 +63,7 @@ public:
   Theme theme = Theme::Std;
   /*! Compares two messages. They are identical if the authors, content types,
    * content and posting times are the same. */
-  friend bool operator==(MessageData m1, MessageData m2) {
+  friend bool operator==(MessageMeta m1, MessageMeta m2) {
     return m1.author == m2.author and m1.content_type == m2.content_type and
            m1.content == m2.content and m1.datetime == m2.datetime;
   }
@@ -77,8 +77,8 @@ public:
   }
 };
 
-/*! @typedef Messages
+/*! @typedef MessagesMeta
  *  @brief Contains a part of message history.  */
-typedef QList<MessageData> Messages;
+typedef QList<MessageMeta> MessagesMeta;
 
 #endif

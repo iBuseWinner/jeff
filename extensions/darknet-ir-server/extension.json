@@ -1,0 +1,34 @@
+{
+  "name": "Darknet",
+  "desc": "Darknet & YOLOv7 Objects-on-Image Recognition, NN that recognizes some object cathegories on pictures and sends back new picture with recognized objects' labels.",
+  "authors": [
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "Email": "aclo.create@gmail.com"
+      }
+    },
+    {
+      "author": "Joseph Redmon",
+      "contacts": {}
+    }
+  ],
+  "license": "MIT",
+  "links": [
+    "https://arxiv.org/abs/2207.02696",
+    "https://github.com/pjreddie/darknet",
+    "https://pjreddie.com/darknet/yolo/",
+    "https://pjreddie.com/darknet/",
+    "https://github.com/WongKinYiu/yolov7",
+    "https://github.com/AlexeyAB/darknet"
+  ],
+  "envs": {},
+  "command": "python",
+  "args": [
+    "darknet-ir.py",
+    "15203",
+    "<JEFF_PORT>"
+  ],
+  "server_addr": "",
+  "server_port": 15203
+}

@@ -25,11 +25,11 @@ public:
   // Functions described in `display.cpp`:
   Display(HProcessor *_hp = nullptr, short _max_message_amount = 50, QWidget *parent = nullptr);
   void start();
-  void start_by(Messages history);
+  void start_by(MessagesMeta history);
   void add_message(Message *message);
-  void add_message_by_md(MessageData message_data);
-  void update_status(QPair<QString, MessageData> id_and_message_data);
-  void add_message_with_widget(MessageData message_data, ModalHandler *handler);
+  void add_message_by_md(MessageMeta message_data);
+  void update_status(QPair<QString, MessageMeta> id_and_message_data);
+  void add_message_with_widget(MessageMeta message_data, ModalHandler *handler);
 
 private:
   // Objects:

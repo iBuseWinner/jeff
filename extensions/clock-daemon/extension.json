@@ -1,0 +1,21 @@
+{
+  "name": "5-Sec Precision Clock",
+  "desc": "Clock that sends status message to Jeff every 5 seconds.",
+  "authors": [
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "Email": "aclo.create@gmail.com"
+      }
+    }
+  ],
+  "license": "MIT",
+  "links": [],
+  "envs": {},
+  "command": "python",
+  "args": [
+    "clock.py",
+    "-p",
+    "<JEFF_PORT>"
+  ]
+}

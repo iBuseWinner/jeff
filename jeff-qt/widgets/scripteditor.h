@@ -2,7 +2,7 @@
 #define SCRIPT_EDITOR_H
 
 #include "core-kit/basis.h"
-#include "core-kit/script-engine-module.h"
+#include "core-kit/extensions-manager.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/combobox.h"
@@ -27,10 +27,10 @@ class ScriptEditor : public QWidget {
 public:  
   // Functions described in `scripteditor.cpp`:
   ScriptEditor(QWidget *parent = nullptr, Basis *_basis = nullptr, 
-               SEModule *_sem = nullptr, ModalHandler *m_handler = nullptr);
+               ExtensionsManager *_em = nullptr, ModalHandler *m_handler = nullptr);
   ~ScriptEditor();
   bool load_from_text(QString json_text);
-  bool load_from_script(ScriptMetadata *script);
+  bool load_from_script(ScriptMeta *script_meta);
   
 signals:
   /*! @brief Notifies the parent that editing is complete (you can close the widget) 
@@ -42,7 +42,7 @@ private:
   // Objects:
   int stype = 0;
   Basis *basis = nullptr;
-  SEModule *sem = nullptr;
+  ExtensionsManager *em = nullptr;
   ModalHandler *_m_handler = nullptr;
   Button *path_input = nullptr, *save_btn = nullptr;
   QLabel *stype_info = nullptr;

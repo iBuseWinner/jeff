@@ -58,7 +58,7 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
 
 /*! @brief Closes the app. */
 void Jeff::closeEvent(QCloseEvent *event) {
-  core->sem->shutdown_daemons();
+  core->em->shutdown_extensions();
   event->accept();
 }
 
@@ -71,6 +71,7 @@ void Jeff::apply_settings() {
     basis->write(basis->isGreetingsEnabledSt, true);
     basis->write(basis->greetingsMsg, tr("Hello!"));
     basis->write(basis->scenarioExitMsg, "//");
+    basis->write(basis->serverPortSt, 8005);
     save_window_settings();
     return;
   }

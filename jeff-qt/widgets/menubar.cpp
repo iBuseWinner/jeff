@@ -116,11 +116,11 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
   addMenu(&tools_menu);
   // Help
   help_menu.setTitle(tr("Help"));
-  about_action.setText(tr("About") + space + basis->about_cmd);
-  about_action.setIcon(
+  about_jeff_action.setText(tr("About") + space + basis->about_cmd);
+  about_jeff_action.setIcon(
     QIcon::fromTheme("help-about", QIcon(":/arts/icons/16/help-about.svg")));
-  help_menu.addAction(&about_action);
+  help_menu.addAction(&about_jeff_action);
   help_menu.addAction(QIcon(":/arts/icons/16/qt.svg"), tr("About Qt"), &QApplication::aboutQt);
-  connect(&about_action, &QAction::triggered, this, [this] { emit about_triggered(); });
+  connect(&about_jeff_action, &QAction::triggered, this, [this] { emit about_triggered(); });
   addMenu(&help_menu);
 }

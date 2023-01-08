@@ -20,15 +20,15 @@ Sources Json::read_source_list(SQLite *sql) {
 }
 
 /*! @brief Recreates message history from @a file. */
-Messages Json::read_message_history(QFile *file) {
+MessagesMeta Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
-  Messages message_history;
-  for (auto obj : messages_json) message_history.append(MessageData(obj.toObject()));
+  MessagesMeta message_history;
+  for (auto obj : messages_json) message_history.append(MessageMeta(obj.toObject()));
   return message_history;
 }
 
 /*! @brief Restores @a message_history from default storage. */
-Messages Json::read_message_history() {
+MessagesMeta Json::read_message_history() {
   QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
   return read_message_history(&store);
 }
@@ -43,18 +43,18 @@ Cache Json::read_NLP_cache() {
   return cache;
 }
 
-/*! @brief Reads @a daemons. */
-DaemonsMeta Json::read_daemons() {
-  QFile store = QFile(_settings_path + QDir::separator() + daemons_store_filename);
-  if (not store.exists()) return DaemonsMeta();
+/*! @brief Reads an extensions' metadata. */
+ExtensionsMeta Json::read_extensions() {
+  QFile store = QFile(_settings_path + QDir::separator() + extensions_store_filename);
+  if (not store.exists()) return ExtensionsMeta();
   QJsonArray scripts_json = read_json(&store);
-  DaemonsMeta daemons;
+  ExtensionsMeta extensions_meta;
   for (auto obj : scripts_json) {
-    auto *script = ScriptsCast::to_daemon(obj.toObject());
-    if (not script) continue;
-    daemons.append(script);
+    auto *extension_meta = new ExtensionMeta(obj.toObject());
+    if (not extension_meta) continue;
+    extensions_meta.append(extension_meta);
   }
-  return daemons;
+  return extensions_meta;
 }
 
 /*! @brief Reads memory - @a keystore. */
@@ -84,14 +84,14 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
 }
 
 /*! @brief Saves @a message_history. */
-void Json::write_message_history(Messages message_history, QFile *file) {
+void Json::write_message_history(MessagesMeta message_history, QFile *file) {
   QJsonArray message_history_json;
   for (auto message : message_history) message_history_json.append(message.to_json());
   write_json(file, message_history_json);
 }
 
 /*! @brief Saves @a message_history at the default storage. */
-void Json::write_message_history(Messages message_history) {
+void Json::write_message_history(MessagesMeta message_history) {
   QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
   write_message_history(message_history, &store);
 }
@@ -104,12 +104,12 @@ void Json::write_NLP_cache(Cache cache) {
   write_json(&file, cache_json);
 }
 
-/*! @brief Saves @a daemons metadata. */
-void Json::write_daemons(DaemonsMeta daemons) {
-  QJsonArray scripts_json;
-  for (auto *daemon : daemons) scripts_json.append(ScriptsCast::to_json(daemon));
-  QFile file = QFile(_settings_path + QDir::separator() + daemons_store_filename);
-  write_json(&file, scripts_json);
+/*! @brief Saves extensions' metadata. */
+void Json::write_extensions(ExtensionsMeta extensions_meta) {
+  QJsonArray json_arr;
+  for (auto *extension_meta : extensions_meta) json_arr.append(extension_meta->to_json());
+  QFile file = QFile(_settings_path + QDir::separator() + extensions_store_filename);
+  write_json(&file, json_arr);
 }
 
 /*! @brief Saves @a memory. */

@@ -1,8 +1,9 @@
 #ifndef NOTIFY_CLIENT
 #define NOTIFY_CLIENT
 
+#include "core-kit/basis.h"
+#include "core-kit/extensions/extension.h"
 #include "core-kit/model/message.h"
-#include "core-kit/model/python/script.h"
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QList>
@@ -15,20 +16,22 @@ class NotifyClient : public QObject {
 public:
   // Functions described in `notify-client.cpp`:
   NotifyClient(QObject *parent = nullptr);
-  void subscribe(ServerScript *script);
-  void unsubscribe(ServerScript *script);
+  void subscribe(ExtensionMeta *extension_meta);
+  void unsubscribe(ExtensionMeta *extension_meta);
   void unsubscribe_all();
-  void notify(MessageData mdata);
-  void set_scenario_listener(ScenarioScript *script);
-  void unset_scenario_listener();
+  void notify(MessageMeta msg_meta, bool no_jck_output = false);
+  void notify_scenario_first_time(MessageMeta msg_meta, QString auth_key);
+  void set_scenario(ScenarioServerMeta _scenario_server_meta);
+  void unset_scenario();
   
 private:
   // Objects:
-  QList<ServerScript *> scripts;
-  ScenarioScript *scenario = nullptr;
+  ExtensionsMeta extensions_meta;
+  bool is_scenario_running = false;
+  ScenarioServerMeta scenario_server_meta;
   
   // Functions described in `notify-client.cpp`:
-  void send_event(MessageData mdata, QHostAddress addr, quint16 port);
+  void send_event(MessageMeta msg_meta, QHostAddress addr, quint16 port);
 };
 
 #endif

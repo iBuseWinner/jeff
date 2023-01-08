@@ -56,12 +56,12 @@ void Display::add_message(Message *message) {
 }
 
 /*! @brief Constructs @a Message and adds it to the display. */
-void Display::add_message_by_md(MessageData message_data) {
+void Display::add_message_by_md(MessageMeta message_data) {
   add_message(new Message(message_data));
 }
 
 /*! @brief Updates the text of a message by its ID, or adds a new message with that ID. */
-void Display::update_status(QPair<QString, MessageData> id_and_message_data) {
+void Display::update_status(QPair<QString, MessageMeta> id_and_message_data) {
   if (not status_messages.contains(id_and_message_data.first)) {
     auto *message = new Message(id_and_message_data.second);
     add_message(message);
@@ -76,7 +76,7 @@ void Display::update_status(QPair<QString, MessageData> id_and_message_data) {
 }
 
 /*! @brief Constructs @a Message and adds it to the display. */
-void Display::add_message_with_widget(MessageData message_data, ModalHandler *handler) {
+void Display::add_message_with_widget(MessageMeta message_data, ModalHandler *handler) {
   auto *message = new Message(message_data);
   handler->getPrisoner()->setParent(message);
   message->widget(handler);
@@ -108,7 +108,7 @@ void Display::start() {
 
 /*! @details Of the given message history, it only shows the last 50. This is because the widget
  *  is designed to only show 50 (or whatever) messages when autoscroll is enabled.  */
-void Display::start_by(Messages history) {
+void Display::start_by(MessagesMeta history) {
   start();
   scroll_enabled = true;
   int m /*!< @brief Max messages to be shown now. */ = history.length() > max_message_amount ?

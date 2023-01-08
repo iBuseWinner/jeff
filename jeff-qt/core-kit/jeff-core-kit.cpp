@@ -1,5 +1,4 @@
 #include "jeff-core-kit.h"
-#include <iostream>
 
 /*! @brief The constructor. */
 JCK::JCK(Basis *_basis, HProcessor *_hp, QObject *parent) 
@@ -42,18 +41,25 @@ void JCK::search_for_suggests(const QString &input) {
       from_db = true;
     }
   }
-  if (selection.keys().isEmpty()) return;
+  if (selection.keys().isEmpty()) {
+    emit empty(input);
+    return;
+  }
   auto sorted = select_candidates(selection, input);
   if (composer) {
     auto json_object = pw->request_compose(composer, input, sorted);
-    if (json_object.contains(basis->sendWk)) emit response(json_object[basis->sendWk].toString());
-    return;
+    if (json_object.contains(basis->sendWk)) {
+      emit response(json_object[basis->sendWk].toString());
+      return;
+    }
   }
   auto composition = compose_answer(input, sorted);
   if (composition.first.length() / input.length() > 0.33 and not from_db) {
     selection = select_from_db(input);
-    if (selection.keys().isEmpty())
+    if (selection.keys().isEmpty()) {
+      emit empty(input);
       return;
+    }
     sorted = select_candidates(selection, input);
     composition = compose_answer(input, sorted);
   }
@@ -116,41 +122,40 @@ CacheWithIndices JCK::select_candidates(CacheWithIndices selection, QString inpu
 }
 
 /*! @brief Builds an answer in the order of the indices of the occurrence and
- *  sets the uncovered part of the expression.  */
+ *  fills the uncovered part of the expression.  */
 QPair<QString, QString> JCK::compose_answer(QString input, CacheWithIndices candidates) {
   QString output;
   input = StringSearch::lemmatize(input);
   for (auto ewi : candidates) {
     if (ewi.second.exec) {
-      /*! Executable <=> Script. @sa ScriptMetadata */
-      ScriptMetadata *script = ScriptsCast::to_script(ewi.second.reagent_text);
-      if (not script) continue;
-      if (script->stype == ScriptType::React) {
-        /*! React scripts. @sa ReactScript */
-        ReactScript *react_script = dynamic_cast<ReactScript *>(script);
-        if (not react_script) {
-          delete script;
+      /*! Executable <=> React Script. @sa ScriptMeta or ExtensionMeta */
+      auto *script_meta = ScriptMeta::from_string(ewi.second.reagent_text);
+      if (script_meta) {
+        if (script_meta->stype != ScriptType::React) {
+          delete script_meta;
           continue;
         }
-        auto obj = pw->request_answer(react_script, ewi.second, input);
-        delete react_script;
+        /*! React scripts. @sa ScriptType::React */
+        QJsonObject obj;
+        if (script_meta->is_for_embedded_python) {
+          obj = pw->request_answer(script_meta, ewi.second, input);
+        } else {
+          obj = DaemonProcess::request_output(script_meta, ewi.second, input);
+        }
+        delete script_meta;
         if (obj.contains(basis->errorTypeWk)) continue;
         if (obj.contains(basis->sendWk)) {
           ewi.second.use_cases += 1;
           basis->cacher->append(ewi.second);
           output += obj[basis->sendWk].toString() + " ";
         }
-      } else if (script->stype == ScriptType::Scenario) {
-        /*! Scenario scripts. @sa ScenarioScript */
-        ScenarioScript *scenario_script = dynamic_cast<ScenarioScript *>(script);
-        if (not scenario_script) {
-          delete script;
-          continue;
+      } else {
+        auto *extension_meta = ExtensionMeta::from_string(ewi.second.reagent_text);
+        if (extension_meta) {
+          /*! Some extension. @sa ExtensionMeta */
+          emit start_extension(extension_meta);
         }
-        /*! @note @a scenario_script will have been deleted in @a Core::got_scenario_shutting. */
-        emit setup_scenario(scenario_script); 
-        return QPair<QString, QString>();
-      } else { delete script; continue; }
+      }
     } else {
       /*! Not `exec` */
       ewi.second.use_cases += 1;
@@ -196,13 +201,9 @@ CacheWithIndices JCK::select_from_db(const QString &input) {
 void JCK::load_cache() { basis->cacher->append(basis->json->read_NLP_cache()); }
 /*! @brief Saves the cache to disk. */
 void JCK::save_cache() { basis->json->write_NLP_cache(basis->cacher->get()); }
-/*! @brief Sets up Jeff's default scanner. */
-void JCK::set_default_scanner() { scanner = nullptr; }
 /*! @brief Sets up custom scanner. */
-void JCK::set_custom_scanner(CustomScanScript *custom_scanner) { scanner = custom_scanner; }
-/*! @brief Sets up Jeff's default composer. */
-void JCK::set_default_composer() { composer = nullptr; }
+void JCK::set_custom_scanner(ScriptMeta *custom_scanner) { scanner = custom_scanner; }
 /*! @brief Sets up custom composer. */
-void JCK::set_custom_composer(CustomComposeScript *custom_composer) {
+void JCK::set_custom_composer(ScriptMeta *custom_composer) {
   composer = custom_composer;
 }

@@ -7,28 +7,31 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::search_again, this, &Core::got_message_to_search_again);
   connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);
   connect(basis, &Basis::send_status, this, &Core::got_status_from_script);
-  connect(basis, &Basis::send_msg_to_scenario, this, &Core::notify_scenario_first_time);
+  connect(basis, &Basis::start_scenario, this, &Core::got_scenario_start);
   basis->check_settings_file();
   basis->check_default_source();
   connect(server, &Server::server_error, this, &Core::got_error);
-  connect(sem, &SEModule::script_exception, this, &Core::got_warning);
+  connect(em, &ExtensionsManager::extension_exception, this, &Core::got_warning);
   connect(basis->sql, &SQLite::sqlite_error, this, &Core::got_error);
 #ifdef JEFF_WITH_QT_WIDGETS
   connect(std_templates, &StandardTemplates::showModalWidget, this, &Core::got_modal);
 #endif
+  connect(jck, &JCKController::empty, this, &Core::got_no_jck_output);
   connect(jck, &JCKController::response, this, &Core::got_message_from_jck);
-  connect(jck, &JCKController::setup_scenario, this, &Core::got_scenario_start);
+  connect(jck, &JCKController::start_extension, this, &Core::got_extension_start);
   connect(std_templates, &StandardTemplates::shutdown_scenario, this, &Core::got_scenario_shutting);
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
   set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
-  server->start();
+  quint16 port = quint16((*basis)[basis->serverPortSt].toInt());
+  if (port == 0) port = 8005;
+  server->start(QHostAddress::LocalHost, port);
 }
 
 /*! @brief The destructor. */
 Core::~Core() {
   delete jck;
-  delete sem;
+  delete em;
   delete notifier;
   if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->save();
   delete hp;
@@ -46,7 +49,7 @@ void Core::got_message_from_user(const QString &user_expression) {
   /*! Does not respond to blank input. */
   if (user_expression.isEmpty()) return;
   /*! Displays the entered message on the screen. */
-  MessageData message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
+  MessageMeta message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   hp->append(message);
   emit show(message);
   /*! If user has entered any command, there is no need to run other modules. */
@@ -55,7 +58,7 @@ void Core::got_message_from_user(const QString &user_expression) {
 #endif
   if (std_templates->fast_commands(user_expression)) return;
   notifier->notify(message); /*!< Notifies only when message isn't any dialog or command. */
-  if (current_scenario) return; /*!< @sa ScenarioScript */
+  if (is_scenario_running) return; /*!< @sa ScenarioScript */
   jck->search_for_suggests(user_expression);
 }
 
@@ -63,7 +66,7 @@ void Core::got_message_from_user(const QString &user_expression) {
  *  displays a message on the screen.  */
 void Core::got_message_from_jck(const QString &result_expression) {
   if (result_expression.isEmpty()) return;
-  MessageData mdata = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
+  MessageMeta mdata = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
@@ -79,33 +82,39 @@ void Core::got_message_from_jck(const QString &result_expression) {
       });
 }
 
-/*! @brief Runs a scenario process and sets notifications. */
-void Core::got_scenario_start(ScenarioScript *scenario) {
-  current_scenario = scenario;
-  notifier->set_scenario_listener(current_scenario);
-  sem->add_daemon(current_scenario);
+/*! @brief TBD */
+void Core::got_no_jck_output(const QString &user_expression) {
+  
+}
+
+/*! @brief Runs an extension process and sets notifications if necessary. */
+void Core::got_extension_start(ExtensionMeta *extension_meta) {
+  em->add_extension(extension_meta);
+}
+
+/*! @brief TBD */
+void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
+  current_scenario = scenario_meta;
+  notifier->set_scenario(current_scenario);
+  MessageMeta last;
+  {
+    auto recent = hp->recent(1);
+    if (not recent.isEmpty()) last = recent[0];
+  }
+  notifier->notify_scenario_first_time(last, current_scenario.auth_key);
 }
 
 /*! @brief Disables scenario. */
 void Core::got_scenario_shutting() {
-  notifier->unset_scenario_listener();
-  sem->remove_daemon(current_scenario);
-  delete current_scenario;
-  current_scenario = nullptr;
-}
-
-/*! @brief Responds to the scenario's ready message by sending it the last user message. */
-void Core::notify_scenario_first_time() {
-  if (not current_scenario) return;
-  auto recent = hp->recent(1);
-  if (recent.isEmpty()) return;
-  notifier->notify(recent[0]);
+  notifier->unset_scenario();
+  basis->clear_stoken();
+  is_scenario_running = false;
 }
 
 /*! @brief Shows output from script or outter app on the screen. */
 void Core::got_message_from_script(const QString &message) {
   if (message.isEmpty()) return;
-  MessageData mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Std);
+  MessageMeta mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
@@ -136,7 +145,7 @@ void Core::got_message_from_script_as_user(const QString &message) {
   /*! Does not respond to blank input. */
   if (message.isEmpty()) return;
   /*! Displays the entered message on the screen. */
-  MessageData mdata = get_message(message, Author::User, ContentType::Markdown, Theme::Blue);
+  MessageMeta mdata = get_message(message, Author::User, ContentType::Markdown, Theme::Blue);
   hp->append(mdata);
   notifier->notify(mdata);
   emit show(mdata);
@@ -152,7 +161,7 @@ void Core::got_message_from_script_as_user(const QString &message) {
 void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
   if (id_and_message.first.isEmpty() or id_and_message.second.isEmpty()) return;
   if (id_and_message.first.length() < 24) return;
-  MessageData mdata = get_message(id_and_message.second, Author::Jeff,
+  MessageMeta mdata = get_message(id_and_message.second, Author::Jeff,
                                   ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
@@ -162,7 +171,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
           : 0,
       this, [this, mdata, id_and_message] {
         notifier->notify(mdata);
-        QPair<QString, MessageData> id_and_message_data(id_and_message.first, mdata);
+        QPair<QString, MessageMeta> id_and_message_data(id_and_message.first, mdata);
         emit show_status(id_and_message_data);
       });
 }
@@ -170,7 +179,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
 /*! @brief Displays @a warning_text. */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
-  MessageData message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
+  MessageMeta message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
   hp->append(message);
   notifier->notify(message);
   emit show(message);
@@ -179,7 +188,7 @@ void Core::got_warning(const QString &warning_text) {
 /*! @brief Displays @a errorText. */
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
-  MessageData message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
+  MessageMeta message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   hp->append(message);
   notifier->notify(message);
   emit show(message);
@@ -188,16 +197,16 @@ void Core::got_error(const QString &error_text) {
 #ifdef JEFF_WITH_QT_WIDGETS
 /*! @brief Creates Message @a message_widget, inserts a widget into it and displays a message. */
 void Core::got_modal(ModalHandler *m_handler) {
-  MessageData message = get_message(m_handler->getPrisoner()->objectName(),
+  MessageMeta message = get_message(m_handler->getPrisoner()->objectName(),
                                     Author::Jeff, ContentType::Widget, Theme::Std);
   emit show_modal(message, m_handler);
 }
 #endif
 
 /*! @brief Creates @a message. */
-MessageData Core::get_message(const QString &content, Author author,
+MessageMeta Core::get_message(const QString &content, Author author,
                               ContentType content_type, Theme theme) {
-  MessageData message;
+  MessageMeta message;
   message.content = content;
   message.datetime = QDateTime::currentDateTime();
   message.author = author;
@@ -216,20 +225,14 @@ void Core::set_monologue_enabled(const bool enabled) {
 
 /*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */
 void Core::start() {
-  sem->startup();
-  if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool())
-    hp->load();
+  em->startup();
+  if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->load();
   if (not (*basis)[basis->customScannerSt].toString().isEmpty()) {
-    custom_scanner = new CustomScanScript();
-    custom_scanner->path = (*basis)[basis->customScannerSt].toString();
-    custom_scanner->fn_name = (*basis)[basis->customScannerFnSt].toString();
+    custom_scanner = ScriptMeta::from_string((*basis)[basis->customScannerSt].toString());
     jck->set_custom_scanner(custom_scanner);
   }
   if (not (*basis)[basis->customComposerSt].toString().isEmpty()) {
-    custom_composer = new CustomComposeScript();
-    custom_composer->path = (*basis)[basis->customComposerSt].toString();
-    custom_composer->fn_name = (*basis)[basis->customComposerFnSt].toString();
-    custom_composer->send_adprops = (*basis)[basis->customComposerSASt].toBool();
+    custom_composer = ScriptMeta::from_string((*basis)[basis->customComposerSt].toString());
     jck->set_custom_composer(custom_composer);
   }
   if ((*basis)[basis->isGreetingsEnabledSt].toBool())

@@ -42,9 +42,9 @@ private:
   void ncurses_draw();
   bool ncurses_getstr(int y, int x, int available_space);
   void qt_shutdown();
-  void start_by(Messages _messages);
-  void add_message_by_md(MessageData message);
-  void handle_once(MessageData message);
+  void start_by(MessagesMeta _messages);
+  void add_message_by_md(MessageMeta message);
+  void handle_once(MessageMeta message);
 };
 
 #endif

@@ -96,8 +96,40 @@ QJsonObject Basis::handle_to_script(const QJsonObject &object) {
   return transport;
 }
 
-/*! @brief Handles @a object that came from script. */
+/*! @brief Handles @an object that came from script. */
 void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
+  bool send_auth = false;
+  if (
+    object.contains(scenarioReadyWk) and
+    object.contains(scenarioAddrWk) and
+    object.contains(scenarioPortWk)
+  ) {
+    if (object[scenarioReadyWk].toBool()) {
+      auto server_addr = QHostAddress(object[scenarioAddrWk].toString());
+      if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
+      auto server_port = quint16(object[scenarioPortWk].toInt());
+      ScenarioServerMeta scenario_meta;
+      scenario_meta.server_addr = server_addr;
+      scenario_meta.server_port = server_port;
+      _scenario_token = sql->generate_uuid();
+      scenario_meta.auth_key = _scenario_token;
+      emit start_scenario(scenario_meta);
+      send_auth = true;
+    }
+  } else if (object.contains(scenarioContinueWk) and object.contains(scenarioTokenWk)) {
+    if (
+      object[scenarioContinueWk].toBool() and
+      object[scenarioTokenWk].toString() == _scenario_token
+    ) {
+      send_auth = true;
+    }
+  } else if (object.contains(scenarioFinishWk) and object.contains(scenarioTokenWk)) {
+    if (object[scenarioFinishWk].toBool() and object[scenarioTokenWk].toString() == _scenario_token) {
+      clear_stoken();
+      emit shutdown_scenario();
+      send_auth = true;
+    }
+  } else { send_auth = _scenario_token.isEmpty(); }
   if (object.contains(writeMemoryWk)) {
     QJsonArray to_store = object[writeMemoryWk].toArray();
     if (not to_store.isEmpty()) {
@@ -110,7 +142,7 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
       }
     }
   }
-  if (not except_send) {
+  if (not except_send and send_auth) {
     /*! This block have used to send messages by daemons and servers. */
     if (object.contains(sendWk)) {
       QString message = object[sendWk].toString();
@@ -128,9 +160,9 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
                                                status_obj["msg"].toString());
         emit send_status(id_and_message);
       }
+    } else if (object.contains(sendWarningWk)) {
+      QString warn_message = object[sendWarningWk].toString();
+      emit warn(warn_message);
     }
   }
-  if (object.contains(scenarioReadyWk))
-    if (object[scenarioReadyWk].toBool())
-      emit send_msg_to_scenario();
 }

@@ -6,10 +6,11 @@
 #include "core-kit/jeff-core-kit.h"
 #include "core-kit/local-server.h"
 #include "core-kit/notify-client.h"
-#include "core-kit/script-engine-module.h"
+#include "core-kit/extensions-manager.h"
 #include "core-kit/standard-templates.h"
 #include "core-kit/database/sqlite.h"
-#include "core-kit/model/python/script.h"
+#include "core-kit/extensions/extension.h"
+#include "core-kit/extensions/script.h"
 #include "dialogues/modal-handler.h"
 #include <QObject>
 #include <QPair>
@@ -19,7 +20,7 @@
  * @class Core
  * @brief Controls I/O.
  * @details Manages objects associated with receiving messages from different sources.
- * @sa Basis, HProcessor, NLPmodule, StdTemplates, MessageData
+ * @sa Basis, HProcessor, NLPmodule, StdTemplates, MessageMeta
  */
 class Core : public QObject {
   Q_OBJECT
@@ -30,14 +31,16 @@ public:
   HProcessor *hp = new HProcessor(basis);
   class Server *server = new class Server(basis);
   NotifyClient *notifier = new NotifyClient();
-  SEModule *sem = new SEModule(hp, basis, notifier);
+  ExtensionsManager *em = new ExtensionsManager(hp, basis, notifier);
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
   ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_jck(const QString &result_expression);
-  void got_scenario_start(ScenarioScript *scenario);
+  void got_no_jck_output(const QString &user_expression);
+  void got_extension_start(ExtensionMeta *extension_meta);
+  void got_scenario_start(ScenarioServerMeta scenario_meta);
   void got_scenario_shutting();
   void notify_scenario_first_time();
   void got_message_from_script(const QString &outter_message);
@@ -50,30 +53,32 @@ public:
   void got_modal(ModalHandler *m_handler);
 #endif
   void set_monologue_enabled(const bool enabled);
-  MessageData get_message(const QString &content, Author author, 
+  MessageMeta get_message(const QString &content, Author author, 
                           ContentType content_type, Theme theme);
   void start();
 
 signals:
 #ifdef JEFF_WITH_QT_WIDGETS
   /*! @brief Sends a message to Display. */
-  ModalHandler *show_modal(MessageData message_data, ModalHandler *handler);
+  ModalHandler *show_modal(MessageMeta message_data, ModalHandler *handler);
   /*! @brief Sets the monologue mode in MenuBar. */
   bool changeMenuBarMonologueCheckbox(bool enabled);
 #endif
   /*! @brief Sends a message. */
-  MessageData show(MessageData message_data);
+  MessageMeta show(MessageMeta message_data);
   /*! @brief Sends an updateable message. */
-  QPair<QString, MessageData> show_status(QPair<QString, MessageData> id_and_message_data);
+  QPair<QString, MessageMeta> show_status(QPair<QString, MessageMeta> id_and_message_data);
 
 private:
   // Objects:
   bool monologue_enabled = false;
   JCKController *jck = new JCKController(basis, hp);
-  StandardTemplates *std_templates = new StandardTemplates(basis, hp, sem);
-  CustomScanScript *custom_scanner = nullptr;
-  CustomComposeScript *custom_composer = nullptr;
-  ScenarioScript *current_scenario = nullptr;
+  StandardTemplates *std_templates = new StandardTemplates(basis, hp, em);
+  ScriptMeta *custom_scanner = nullptr;
+  ScriptMeta *custom_composer = nullptr;
+  bool is_scenario_running = false;
+  bool is_user_input_already_sent = false;
+  ScenarioServerMeta current_scenario;
 };
 
 #endif

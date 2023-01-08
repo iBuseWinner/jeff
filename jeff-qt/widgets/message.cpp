@@ -1,5 +1,4 @@
 #include "message.h"
-#include <iostream>
 
 /*! @brief The constructor. */
 Message::Message() {
@@ -10,7 +9,7 @@ Message::Message() {
 }
 
 /*! @brief Creates a Message based on @a message. */
-Message::Message(MessageData _md) {
+Message::Message(MessageMeta _md) {
   QHBoxLayout *hbox_layout = new QHBoxLayout();
   hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
   hbox_layout->setSpacing(0);
@@ -19,7 +18,7 @@ Message::Message(MessageData _md) {
 }
 
 /*! @brief Sets @a _message_data into the Message. */
-void Message::message_data(MessageData _md) {
+void Message::message_data(MessageMeta _md) {
   if (_md.datetime.isNull()) return;
   md = _md;
   author(md.author);
@@ -161,14 +160,14 @@ void Message::setup_picture(const QString &content) {
 void Message::setup_warning(const QString &content) {
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
   board->setStyleSheet(board->warning_style);
-  setup_text(QString(tr("Warning: ") + content));
+  setup_markdown(QString(tr("Warning: ") + content));
 }
 
 /*! @brief Displays an error @a content. */
 void Message::setup_error(const QString &content) {
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
   board->setStyleSheet(board->error_style);
-  setup_text(QString(tr("Error: ") + content));
+  setup_markdown(QString(tr("Error: ") + content));
 }
 
 /*! @brief Prepares Message for widget installation. */
@@ -206,7 +205,11 @@ void Message::setWidth(int width) {
     while (not (next_line = optimal_line(content, textDocument, width, md.content_type)).isEmpty()) {
       if (not rtext.isEmpty()) {
         if (md.content_type == ContentType::Markdown) rtext.append("<br>");
-        else if (md.content_type == ContentType::Text) rtext.append("\n");
+        else if (
+          md.content_type == ContentType::Text or
+          md.content_type == ContentType::Warning or
+          md.content_type == ContentType::Error
+        ) rtext.append("\n");
       }
       rtext.append(next_line);
       content.remove(0, next_line.length());
@@ -215,10 +218,14 @@ void Message::setWidth(int width) {
   } else if (not non_ideal_width_completed) {
     QString rtext, next_line;
     QString content = md.content;
-    while (not (next_line = optimal_line(content, 64)).isEmpty()) {
+    while (not (next_line = optimal_line(content, 80)).isEmpty()) {
       if (not rtext.isEmpty()) {
         if (md.content_type == ContentType::Markdown) rtext.append("<br>");
-        else if (md.content_type == ContentType::Text) rtext.append("\n");
+        else if (
+          md.content_type == ContentType::Text or
+          md.content_type == ContentType::Warning or
+          md.content_type == ContentType::Error
+        ) rtext.append("\n");
       }
       rtext.append(next_line);
       content.remove(0, next_line.length());
@@ -241,7 +248,7 @@ QString Message::optimal_line(
   /*! Splitting by @a words. */
   QString line;
   QString next_part;
-  while (document.idealWidth() < max_width) {
+  while (document.idealWidth() <= max_width) {
     if (not line.isEmpty()) line.append(" ");
     if (not next_part.isEmpty()) line.append(next_part);
     if (words.isEmpty()) break;
@@ -253,7 +260,7 @@ QString Message::optimal_line(
   if (line.isEmpty() and not next_part.isEmpty()) {
     document.setPlainText("");
     QChar next_sym;
-    for (int i = 0; (i < next_part.length()) and (document.idealWidth() < max_width); i++) {
+    for (int i = 0; (i < next_part.length()) and (document.idealWidth() <= max_width); i++) {
       if (not next_sym.isNull()) line.append(next_sym);
       next_sym = next_part.at(i);
       if       (ct == ContentType::Markdown)  document.setMarkdown(line + next_sym);
@@ -269,7 +276,7 @@ QString Message::optimal_line(const QString &remaining, int max_sym_width) {
   /*! Splitting by @a words. */
   QString line;
   QString next_part;
-  while (line.length() + next_part.length() < max_sym_width) {
+  while (line.length() + next_part.length() <= max_sym_width) {
     if (not next_part.isEmpty()) line.append(" " + next_part);
     if (words.isEmpty()) break;
     next_part = words.takeFirst();
@@ -277,7 +284,7 @@ QString Message::optimal_line(const QString &remaining, int max_sym_width) {
   /*! Splitting by symbols of very long word. */
   if (line.isEmpty() and not next_part.isEmpty()) {
     QChar next_sym;
-    for (int i = 0; (i < next_part.length()) and (line.length() + 1 < max_sym_width); i++) {
+    for (int i = 0; (i < next_part.length()) and (line.length() + 1 <= max_sym_width); i++) {
       if (not next_sym.isNull()) line.append(next_sym);
       next_sym = next_part.at(i);
     }
