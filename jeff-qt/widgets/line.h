@@ -4,6 +4,7 @@
 #include "widgets/board.h"
 #include "widgets/button.h"
 #include "widgets/lineedit.h"
+#include "widgets/layouts/linears.h"
 #include <QLayout>
 #include <QLineEdit>
 #include <QWidget>
@@ -21,10 +22,6 @@ public:
 
   // Functions described in `line.cpp`:
   Line(QWidget *parent = nullptr);
-
-private:
-  //Objects:
-  QHBoxLayout layout;
 };
 
 #endif

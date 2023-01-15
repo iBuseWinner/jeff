@@ -3,13 +3,11 @@
 
 #include <QObject>
 
-/*!
- * @class ModalHandler
- * @brief The class that is responsible for the state of the prisoner.
- * @details Allows a prisoner, regardless of class, to tell Message that he is closed.
- * In this case, Message will be expected to be hidden from Display.
- * @sa Message, Display
- */
+/*! @class ModalHandler
+ *  @brief The class that is responsible for the state of the prisoner.
+ *  @details Allows a prisoner, regardless of class, to tell Message that he is closed.
+ *  In this case, Message will be expected to be hidden from Display.
+ *  @sa Message, Display  */
 class ModalHandler : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(ModalHandler)
@@ -25,11 +23,9 @@ public:
   QWidget *getPrisoner() { return _prisoner; }
 
 signals:
-  /*!
-   * @brief Says the @a _prisoner is closed.
-   * @attention At this point, the custom widget on Display becomes zero size
-   * and displays as an empty message. It must be removed with Display.
-   */
+  /*! @brief Says the @a _prisoner is closed.
+   *  @attention At this point, the custom widget on Display becomes zero size
+   *  and displays as an empty message. It must be removed with Display.  */
   void prisonerClosed();
 
 private:

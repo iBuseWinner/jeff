@@ -1,10 +1,15 @@
 #ifndef MESSAGE_W_H
 #define MESSAGE_W_H
 
+#include "core-kit/model/message.h"
+#include "dialogues/modal-handler.h"
+#include "widgets/board.h"
+#include "widgets/menu.h"
+#include "widgets/layouts/grid.h"
+#include "widgets/layouts/linears.h"
 #include <QAction>
 #include <QClipboard>
 #include <QFileInfo>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QPair>
 #include <QPoint>
@@ -12,10 +17,6 @@
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextDocument>
-#include "core-kit/model/message.h"
-#include "dialogues/modal-handler.h"
-#include "widgets/board.h"
-#include "widgets/menu.h"
 
 /*! @class Message
  *  @brief Widget that displays single piece of data.
@@ -49,7 +50,7 @@ signals:
 private:
   // Objects:
   MessageMeta md;
-  QGridLayout *grid_layout = nullptr;
+  GridLt *grid_layout = nullptr;
   QWidget *w = nullptr;
   int _width;
   bool non_ideal_width_completed = false;

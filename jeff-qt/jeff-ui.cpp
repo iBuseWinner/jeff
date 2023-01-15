@@ -14,18 +14,13 @@ Jeff::Jeff() : QMainWindow() {
   setWindowIcon(QIcon(":/arts/icons/2000/icon.png"));
   setWindowTitle(tr("Jeff"));
   setMinimumSize(minimalWidth, minimalHeight);
-  layout()->setMargin(0);
   auto *centralWidget = new QWidget(this);
   centralWidget->setObjectName("cw");
   centralWidget->setStyleSheet(
     QString("#cw { background-color: %1; }")
     .arg(styling.light_theme ? styling.css_light_wbg : styling.css_dark_wbg)
   );
-  auto *layout = new QVBoxLayout();
-  layout->setSpacing(0);
-  layout->addWidget(display);
-  layout->addWidget(line);
-  centralWidget->setLayout(layout);
+  centralWidget->setLayout(VLineLt::another()->margin(6)->spacing()->addw(display)->addw(line));
   setCentralWidget(centralWidget);
   setMenuBar(menubar);
   connect_all();

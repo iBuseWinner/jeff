@@ -4,8 +4,6 @@
 Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName(object_name);
-  mainLt.setMargin(0);
   // Delay.
   delay.setText(tr("Enable delay"));
   connect(&delay, &QCheckBox::toggled, this, &Settings::delayChecked);
@@ -24,13 +22,9 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
           &Settings::maxDelayValueChanged);
   auto *msText = new QLabel(tr("ms"), this);
   msText->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-  auto *delayBoxLayout = new QHBoxLayout();
-  delayBoxLayout->addWidget(minDelayText);
-  delayBoxLayout->addWidget(&minDelay);
-  delayBoxLayout->addWidget(maxDelayText);
-  delayBoxLayout->addWidget(&maxDelay);
-  delayBoxLayout->addWidget(msText);
-  delayBox.setLayout(delayBoxLayout);
+  delayBox.setLayout(HLineLt::another()
+    ->addw(minDelayText)->addw(&minDelay)->addw(maxDelayText)->addw(&maxDelay)->addw(msText)
+  );
   // History keeping.
   keepHistory.setText(tr("Keep history"));
   auto *keepHistoryExplanation = new ExplanationLabel(tr(
@@ -48,16 +42,11 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
   save_and_close.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
   connect(&save_and_close, &Button::clicked, this, &Settings::saveAndClose);
-  mainLt.addWidget(&delay);
-  mainLt.addWidget(delayExplanation);
-  mainLt.addWidget(&delayBox);
-  mainLt.addWidget(&keepHistory);
-  mainLt.addWidget(keepHistoryExplanation);
-  mainLt.addWidget(&greetings);
-  mainLt.addWidget(greetingsExplanation);
-  mainLt.addWidget(&greetingsMsg);
-  mainLt.addWidget(&save_and_close);
-  setLayout(&mainLt);
+  setLayout(VLineLt::another()
+    ->addw(&delay)->addw(delayExplanation)->addw(&delayBox)->addw(&keepHistory)
+    ->addw(keepHistoryExplanation)->addw(&greetings)->addw(greetingsExplanation)
+    ->addw(&greetingsMsg)->addw(&save_and_close)
+  );
   loadStates();
 }
 

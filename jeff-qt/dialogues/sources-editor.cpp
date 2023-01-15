@@ -1,9 +1,10 @@
 #include "sources-editor.h"
+#include <iostream>
 
 /*!
  * @details All short named objects and their explanations:
- * @a tli2 < top-level item index < @a SourcesDialog::append,
- *                                  @a SourcesDialog::sncl
+ * @a tli2 < top-level item index < @a SourcesEditor::append,
+ *                                  @a SourcesEditor::sncl
  */
 
 /*!
@@ -16,13 +17,10 @@
  * {|> Remove }
  * <----------------------->
  */
-SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
+SourcesEditor::SourcesEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
     : ScrollFreezerWidget(parent), basis(_basis), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
   setObjectName(object_name);
-  grid_layout = new QGridLayout();
-  grid_layout->setSpacing(0);
-  grid_layout->setMargin(0);
   source_actions = new Button(tr("Source actions..."), this);
   add_source = new QAction(tr("Add sources"), this);
   create_source = new QAction(tr("Create source"), this);
@@ -46,17 +44,16 @@ SourcesDialog::SourcesDialog(Basis *_basis, QWidget *parent, ModalHandler *m_han
   source_list = new List(this);
   source_list->setRootIsDecorated(true);
   source_list->setHeaderLabel(tr("Sources"));
-  grid_layout->addWidget(source_list, 0, 0, 1, 0);
-  grid_layout->addWidget(source_actions, 1, 0);
-  grid_layout->addWidget(save_and_close, 1, 1);
-  setLayout(grid_layout);
+  layout = GridLt::another()
+    ->spacing()->addw(source_list, 0, 0, 1, 0)->addw(source_actions, 1, 0)->addw(save_and_close, 1, 1);
+  setLayout(layout);
   setFixedWidth(480);
   connector();
   load();
 }
 
 /*! @brief Loads saved sources. */
-void SourcesDialog::load() {
+void SourcesEditor::load() {
   source_widgets.clear();
   source_list->clear();
   basis->load_sources();
@@ -64,7 +61,7 @@ void SourcesDialog::load() {
 }
 
 /*! @brief Adds a source to the widget, loads its data. */
-void SourcesDialog::add() {
+void SourcesEditor::add() {
   QString filename = QFileDialog::getOpenFileName(
     nullptr, tr("Select database"), nullptr, tr("Jeff's database") + "(*.j.db)"
   );
@@ -74,7 +71,7 @@ void SourcesDialog::add() {
 }
 
 /*! @brief Removes selected sources. */
-void SourcesDialog::remove() {
+void SourcesEditor::remove() {
   if (not source_list->selectedItems().length()) return;
   edited = true;
   for (auto *item : source_list->selectedItems()) {
@@ -88,15 +85,15 @@ void SourcesDialog::remove() {
 }
 
 /*! @brief Establishes communications for user interaction through the dialog box. */
-void SourcesDialog::connector() {
-  connect(add_source, &QAction::triggered, this, &SourcesDialog::add);
-  connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
-  connect(remove_source, &QAction::triggered, this, &SourcesDialog::remove);
-  connect(save_and_close, &Button::clicked, this, &SourcesDialog::sncl);
+void SourcesEditor::connector() {
+  connect(add_source, &QAction::triggered, this, &SourcesEditor::add);
+  connect(create_source, &QAction::triggered, this, &SourcesEditor::openCS);
+  connect(remove_source, &QAction::triggered, this, &SourcesEditor::remove);
+  connect(save_and_close, &Button::clicked, this, &SourcesEditor::sncl);
 }
 
 /*! @brief Adds sources to the selection. */
-void SourcesDialog::append(Sources sources) {
+void SourcesEditor::append(Sources sources) {
   for (const auto &source : sources) {
     QTreeWidgetItem *parent = nullptr;
     bool isInside = false;
@@ -122,7 +119,7 @@ void SourcesDialog::append(Sources sources) {
 }
 
 /*!@brief Adds source to the selection. */
-void SourcesDialog::appendSingle(Source source) {
+void SourcesEditor::appendSingle(Source source) {
   QList<Source> sources;
   sources.append(source);
   append(sources);
@@ -130,7 +127,7 @@ void SourcesDialog::appendSingle(Source source) {
 }
 
 /*! @brief Saves the selection and closes the dialog. */
-void SourcesDialog::sncl() {
+void SourcesEditor::sncl() {
   if (edited) {
     Sources sources;
     for (int i = 0; i < source_list->topLevelItemCount(); i++)
@@ -142,18 +139,18 @@ void SourcesDialog::sncl() {
 }
 
 /*! @brief Opens the source creation dialog. */
-void SourcesDialog::openCS() {
-  disconnect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
+void SourcesEditor::openCS() {
+  disconnect(create_source, &QAction::triggered, this, &SourcesEditor::openCS);
   create_source_dialog = new CreateSourceDialog(basis, this);
-  grid_layout->addWidget(create_source_dialog, 2, 0, 1, 0);
-  connect(create_source_dialog, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
-  connect(create_source_dialog, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCS);
+  layout->addw(create_source_dialog, 2, 0, 1, 0);
+  connect(create_source_dialog, &CreateSourceDialog::add, this, &SourcesEditor::appendSingle);
+  connect(create_source_dialog, &CreateSourceDialog::cancelled, this, &SourcesEditor::closeCS);
 }
 
 /*! @brief Closes the source creation dialog. */
-void SourcesDialog::closeCS() {
-  disconnect(create_source_dialog, &CreateSourceDialog::add, this, &SourcesDialog::appendSingle);
-  disconnect(create_source_dialog, &CreateSourceDialog::cancelled, this, &SourcesDialog::closeCS);
-  grid_layout->removeWidget(create_source_dialog);
-  connect(create_source, &QAction::triggered, this, &SourcesDialog::openCS);
+void SourcesEditor::closeCS() {
+  disconnect(create_source_dialog, &CreateSourceDialog::add, this, &SourcesEditor::appendSingle);
+  disconnect(create_source_dialog, &CreateSourceDialog::cancelled, this, &SourcesEditor::closeCS);
+  layout->rem(create_source_dialog);
+  connect(create_source, &QAction::triggered, this, &SourcesEditor::openCS);
 }

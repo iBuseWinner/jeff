@@ -7,15 +7,15 @@ NotifyClient::NotifyClient(QObject *parent) : QObject(parent) {}
 void NotifyClient::notify(MessageMeta msg_meta, bool no_jck_output) {
   if (not is_scenario_running)
     for (auto *ext_m : extensions_meta) {
-      if (not ext_m->notify_when_no_suggestions)
+      if (not ext_m->notify_when_no_suggestions and not no_jck_output)
         send_event(msg_meta, ext_m->server_addr, ext_m->server_port);
-      else if (no_jck_output)
+      else if (ext_m->notify_when_no_suggestions and no_jck_output)
         send_event(msg_meta, ext_m->server_addr, ext_m->server_port);
     }
   else send_event(msg_meta, scenario_server_meta.server_addr, scenario_server_meta.server_port);
 }
 
-/*! @brief TBD */
+/*! @brief Passes authentication data to the extension. */
 void NotifyClient::notify_scenario_first_time(MessageMeta msg_meta, QString auth_key) {
   if (not is_scenario_running) return;
   auto *socket = new QTcpSocket(this);
@@ -29,6 +29,23 @@ void NotifyClient::notify_scenario_first_time(MessageMeta msg_meta, QString auth
     socket->disconnectFromHost();
   });
   socket->connectToHost(scenario_server_meta.server_addr, scenario_server_meta.server_port);
+}
+
+/*! @brief Notifies the extension that the script has finished. */
+void NotifyClient::finish_scenario() {
+  if (not is_scenario_running) return;
+  auto *socket = new QTcpSocket(this);
+  connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
+  connect(socket, &QTcpSocket::connected, this, [this, socket] {
+    QJsonObject transport;
+    transport[Basis::scenarioFinishWk] = true;
+    QJsonDocument doc_to_script(transport);
+    auto bytes_to_send = doc_to_script.toJson();
+    socket->write(bytes_to_send);
+    socket->disconnectFromHost();
+  });
+  socket->connectToHost(scenario_server_meta.server_addr, scenario_server_meta.server_port);
+  unset_scenario();
 }
 
 /*! @brief Sends a message to the server over TCP. */

@@ -9,20 +9,15 @@ EditList::EditList(QWidget *parent) : QWidget(parent) {
   add_btn->setIcon(QIcon::fromTheme("list-add", QIcon(":/arts/icons/16/list-add.svg")));
   remove_selected_btn->setIcon(
     QIcon::fromTheme("list-remove", QIcon(":/arts/icons/16/list-remove.svg")));
-  auto *buttons_widget_layout = new QVBoxLayout();
-  buttons_widget_layout->setMargin(0);
-  buttons_widget_layout->addWidget(add_btn);
-  buttons_widget_layout->addWidget(remove_selected_btn);
-  buttons_widget_layout->addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
   auto *buttons_widget = new QWidget(this);
   buttons_widget->setContentsMargins(0, 0, 0, 0);
-  buttons_widget->setLayout(buttons_widget_layout);
-  auto *main_layout = new QGridLayout();
-  main_layout->setMargin(0);
-  main_layout->addWidget(line_edit, 0, 0, 1, 2);
-  main_layout->addWidget(list_widget, 1, 0);
-  main_layout->addWidget(buttons_widget, 1, 1);
-  setLayout(main_layout);
+  buttons_widget->setLayout(VLineLt::another()
+    ->addw(add_btn)->addw(remove_selected_btn)
+    ->addi(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding))
+  );
+  setLayout(GridLt::another()
+    ->addw(line_edit, 0, 0, 1, 2)->addw(list_widget, 1, 0)->addw(buttons_widget, 1, 1)
+  );
   connect(add_btn, &Button::clicked, this, &EditList::add_element);
   connect(remove_selected_btn, &Button::clicked, this, &EditList::remove_element);
 }

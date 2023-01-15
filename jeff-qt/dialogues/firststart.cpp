@@ -1,21 +1,17 @@
 #include "firststart.h"
 
-/*!
- * @brief The constructor.
- * @details Layout scheme:
- * <-------------->
- * [    Title     ]
- * [  Start text  ]
- * [ Bottom  line ]
- * {<->}{Close btn}
- * <-------------->
- */
+/*! @brief The constructor.
+ *  @details Layout scheme:
+ *  <-------------->
+ *  [    Title     ]
+ *  [  Start text  ]
+ *  [ Bottom  line ]
+ *  {<->}{Close btn}
+ *  <-------------->  */
 FirstStart::FirstStart(QWidget *parent, ModalHandler *m_handler)
     : QWidget(parent), _m_handler(m_handler) {
   _m_handler->setPrisoner(this);
-  setObjectName(object_name);
   setFixedWidth(fixed_width);
-  auto *layout = new QVBoxLayout();
   auto *title = new QLabel("<font size=\"6\">" + tr("Jeff") + "</font>", this);
   auto *startText = new QLabel(
     "<font size=\"3\">" + tr("This is the first start of Jeff. Before you start working:") +
@@ -26,16 +22,11 @@ FirstStart::FirstStart(QWidget *parent, ModalHandler *m_handler)
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse);
   auto *bottomLine = new QWidget(this);
   auto *closeBtn = new Button(tr("Close"), bottomLine);
-  auto *bottomLayout = new QHBoxLayout();
-  bottomLayout->setMargin(0);
-  bottomLayout->setSpacing(0);
-  auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
-  bottomLayout->addItem(spacer);
-  bottomLayout->addWidget(closeBtn);
-  bottomLine->setLayout(bottomLayout);
+  bottomLine->setLayout(HLineLt::another()
+    ->spacing()
+    ->addi(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed))
+    ->addw(closeBtn)
+  );
   connect(closeBtn, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
-  layout->addWidget(title);
-  layout->addWidget(startText);
-  layout->addWidget(bottomLine);
-  setLayout(layout);
+  setLayout(VLineLt::another()->addw(title)->addw(startText)->addw(bottomLine));
 }

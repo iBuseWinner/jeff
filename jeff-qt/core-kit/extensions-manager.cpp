@@ -56,5 +56,14 @@ void ExtensionsManager::remove_extension(ExtensionMeta *extension_meta) {
   _extensions_meta.removeOne(extension_meta);
   delete extension_meta;
 }
+
+/*! @brief Returns the state of the extension. */
+bool ExtensionsManager::is_running(ExtensionMeta *extension_meta) {
+  for (auto *extension : _running)
+    if (extension->is_spawner(extension_meta) and extension->state() == QProcess::Running)
+      return true;
+  return false;
+}
+
 /*! @brief Returns the general list of daemons' metadata. */
 ExtensionsMeta ExtensionsManager::get_extensions_meta() { return _extensions_meta; }

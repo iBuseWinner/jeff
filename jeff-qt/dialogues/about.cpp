@@ -1,22 +1,16 @@
 #include "about.h"
 
-/*!
- * @brief The constructor.
- * @details Layout scheme:
- * <-------------->
- * [Logo][App name]
- * [  Tab widget  ]
- * {About}{Authors}
- * {<->}[Close btn]
- * <-------------->
- */
-About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(parent), _m_handler(m_handler) {
-  _m_handler->setPrisoner(this);
-  setObjectName(object_name);
+/*! @brief The constructor.
+ *  @details Layout scheme:
+ *  <-------------->
+ *  [Logo][App name]
+ *  [  Tab widget  ]
+ *  {About}{Authors}
+ *  {<->}[Close btn]
+ *  <-------------->  */
+About::About(QWidget *parent, ModalHandler *mhandler) : ScrollFreezerWidget(parent) {
+  mhandler->setPrisoner(this);
   setFixedWidth(fixed_width);
-  auto *layout = new QGridLayout();
-  layout->setMargin(0);
-  layout->setSpacing(3);
   auto *logo = new QLabel(this);
   logo->setScaledContents(true);
   logo->setFixedWidth(fixed_width / 2);
@@ -59,25 +53,20 @@ About::About(QWidget *parent, ModalHandler *m_handler) : ScrollFreezerWidget(par
   scroll_area_2->setFocusPolicy(Qt::NoFocus);
   scroll_area_2->setFrameStyle(QFrame::NoFrame);
   scroll_area_2->setFrameShadow(QFrame::Plain);
-  auto *bottomLine = new QWidget(this);
-  auto *closeBtn = new Button(tr("Close"), bottomLine);
-  auto *bottomLayout = new QHBoxLayout();
-  bottomLayout->setMargin(0);
-  bottomLayout->setSpacing(0);
-  auto *bottomSpacer = new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed);
-  bottomLayout->addItem(bottomSpacer);
-  bottomLayout->addWidget(closeBtn);
-  bottomLine->setLayout(bottomLayout);
-  connect(closeBtn, &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
+  auto *footer_w = new QWidget(this);
+  auto *close_btn = new Button(tr("Close"), footer_w);
+  close_btn->setIcon(
+    QIcon::fromTheme("collapse-all", QIcon(":/arts/icons/16/collapse-all.svg")));
+  footer_w->setLayout(HLineLt::another()
+    ->spacing()->addi(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Fixed))->addw(close_btn)
+  );
+  connect(close_btn, &Button::clicked, this, [this, mhandler] { mhandler->closePrisoner(); });
   scroll_area_1->setWidget(tab1);
   scroll_area_2->setWidget(tab2);
   tabs->addTab(scroll_area_1, tr("About"));
   tabs->addTab(scroll_area_2, tr("Authors"));
-  layout->addWidget(logo, 0, 0, 2, 1);
-  layout->addWidget(title, 0, 1);
-  layout->addWidget(version, 1, 1);
-  layout->addItem(spacer, 0, 2, 2, 1);
-  layout->addWidget(tabs, 2, 0, 1, 3);
-  layout->addWidget(bottomLine, 3, 0, 1, 3);
-  setLayout(layout);
+  setLayout(GridLt::another()
+    ->spacing(3)->addw(logo, 0, 0, 2, 1)->addw(title, 0, 1)->addw(version, 1, 1)
+    ->addi(spacer, 0, 2, 2, 1)->addw(tabs, 2, 0, 1, 3)->addw(footer_w, 3, 0, 1, 3)
+  );
 }

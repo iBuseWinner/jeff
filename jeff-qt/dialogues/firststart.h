@@ -8,12 +8,11 @@
 #include <QSpacerItem>
 #include <QTranslator>
 #include <QWidget>
+#include "widgets/layouts/linears.h"
 
-/*!
- * @class FirstStart
- * @brief Shows a quick start guide.
- * @sa ModalHandler
- */
+/*! @class FirstStart
+ *  @brief Shows a quick start guide.
+ *  @sa ModalHandler  */
 class FirstStart : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(FirstStart)
@@ -26,7 +25,6 @@ private:
   ModalHandler *_m_handler = nullptr;
 
   // Constants:
-  const char *object_name = "firststart";
   static const int fixed_width = 400;
 };
 

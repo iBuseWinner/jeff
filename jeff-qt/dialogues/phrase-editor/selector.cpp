@@ -18,12 +18,7 @@ PhraseEditorSelector::PhraseEditorSelector(Basis *_basis, QWidget *parent)
   back_to_brief.setText(tr("Back"));
   back_to_brief.setIcon(QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
   connect(&back_to_brief, &Button::clicked, this, [this] { emit back(); });
-  selector_layout.setSpacing(0);
-  selector_layout.setMargin(0);
-  selector_layout.addWidget(&header);
-  selector_layout.addWidget(&phrases_list);
-  selector_layout.addWidget(&back_to_brief);
-  setLayout(&selector_layout);
+  setLayout(VLineLt::another()->spacing()->addw(&header)->addw(&phrases_list)->addw(&back_to_brief));
 }
 
 /*! @brief Puts phrases from the source into the phrase list. */

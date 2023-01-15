@@ -1,21 +1,10 @@
 #include "message.h"
 
 /*! @brief The constructor. */
-Message::Message() {
-  QHBoxLayout *hbox_layout = new QHBoxLayout();
-  hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
-  hbox_layout->setSpacing(0);
-  setLayout(hbox_layout);
-}
+Message::Message() { setLayout(HLineLt::another()->cmargins(0, 0, 0, standardMargin)->spacing(0)); }
 
 /*! @brief Creates a Message based on @a message. */
-Message::Message(MessageMeta _md) {
-  QHBoxLayout *hbox_layout = new QHBoxLayout();
-  hbox_layout->setContentsMargins(0, 0, 0, standardMargin);
-  hbox_layout->setSpacing(0);
-  setLayout(hbox_layout);
-  message_data(_md);
-}
+Message::Message(MessageMeta _md) : Message() { message_data(_md); }
 
 /*! @brief Sets @a _message_data into the Message. */
 void Message::message_data(MessageMeta _md) {
@@ -31,7 +20,7 @@ void Message::widget(ModalHandler *modal_handler) {
   if (w) return;
   w = modal_handler->getPrisoner();
   connect(modal_handler, &ModalHandler::prisonerClosed, this, [this] { emit closed(); });
-  grid_layout->addWidget(w);
+  grid_layout->addw(w);
 }
 
 /*! @brief Makes a message either left or right. */
@@ -117,7 +106,7 @@ void Message::setup_text(const QString &content) {
   connect(label, &QLabel::customContextMenuRequested, this, [this, context_menu] {
     context_menu->exec(QCursor::pos());
   });
-  grid_layout->addWidget(w);
+  grid_layout->addw(w);
 }
 
 /*! @brief Displays markdown text. */
@@ -150,7 +139,7 @@ void Message::setup_picture(const QString &content) {
   connect(label, &QLabel::customContextMenuRequested, this, [this, context_menu] {
     context_menu->exec(QCursor::pos());
   });
-  grid_layout->addWidget(w);
+  grid_layout->addw(w);
 }
 
 /*! @brief Displays a file with the path @a content. */
@@ -179,9 +168,7 @@ void Message::prepare_to_widget() {
 QPair<QSpacerItem *, Board *> Message::make_layout() {
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum);
   auto *board = new Board(this);
-  grid_layout = new QGridLayout();
-  grid_layout->setSpacing(0);
-  grid_layout->setMargin(standardMargin);
+  grid_layout = GridLt::another()->spacing(0)->margin(standardMargin);
   board->setLayout(grid_layout);
   return QPair<QSpacerItem *, Board *>(spacer, board);
 }

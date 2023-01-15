@@ -7,6 +7,7 @@
 #include "widgets/menu.h"
 #include "widgets/list.h"
 #include "widgets/scrollfreezerwidget.h"
+#include "widgets/layouts/grid.h"
 #include <QApplication>
 #include <QDialog>
 #include <QFileDialog>
@@ -16,16 +17,14 @@
 #include <QTranslator>
 #include <QTreeWidgetItem>
 
-/*!
- * @class SourcesDialog
- * @brief Manages NLP module's sources.
- */
-class SourcesDialog : public ScrollFreezerWidget {
+/*! @class SourcesEditor
+ *  @brief Manages NLP module's sources.  */
+class SourcesEditor : public ScrollFreezerWidget {
   Q_OBJECT
-  Q_DISABLE_COPY(SourcesDialog)
+  Q_DISABLE_COPY(SourcesEditor)
 public:
-  // Functions described in `sources.cpp`:
-  SourcesDialog(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  // Functions described in `sources-editor.cpp`:
+  SourcesEditor(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
   void add();
   void remove();
 
@@ -36,7 +35,7 @@ private:
   QMap<QTreeWidgetItem *, Source> source_widgets;
   CreateSourceDialog *create_source_dialog = nullptr;
   List *source_list = nullptr;
-  QGridLayout *grid_layout = nullptr;
+  GridLt *layout = nullptr;
   Button *source_actions = nullptr;
   QAction *add_source = nullptr;
   QAction *create_source = nullptr;
@@ -46,9 +45,9 @@ private:
   bool edited = false;
 
   // Constants:
-  const char *object_name = "sources";
+  const char *object_name = "sources_editor";
 
-  // Functions described in `sources.cpp`:
+  // Functions described in `sources-editor.cpp`:
   void connector();
   void append(Sources sources);
   void appendSingle(Source source);

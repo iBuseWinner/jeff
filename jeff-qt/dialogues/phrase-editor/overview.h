@@ -16,6 +16,8 @@
 #include <QTreeWidgetItem>
 #include <QWidget>
 
+/*! @class PhraseEditorOverview
+ *  @brief List of phrases in Jeff's database with the ability to edit.  */
 class PhraseEditorOverview : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(PhraseEditorOverview)
@@ -32,6 +34,7 @@ public:
   void update_phrases();
 
 signals:
+  /*! @brief Asks to open detailed information about the phrase. */
   QTreeWidgetItem *open_brief(QTreeWidgetItem *item);
   
 private:

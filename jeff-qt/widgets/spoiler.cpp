@@ -19,13 +19,10 @@ Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *p
   toggle_animation.addAnimation(new QPropertyAnimation(this, "minimumHeight"));
   toggle_animation.addAnimation(new QPropertyAnimation(this, "maximumHeight"));
   toggle_animation.addAnimation(new QPropertyAnimation(&content_area, "maximumHeight"));
-  main_layout.setVerticalSpacing(0);
-  main_layout.setContentsMargins(0, 0, 0, 0);
-  int row = 0;
-  main_layout.addWidget(&toggle_button, row, 0, 1, 1, Qt::AlignLeft);
-  main_layout.addWidget(&header_line, row++, 2, 1, 1);
-  main_layout.addWidget(&content_area, row, 0, 1, 3);
-  setLayout(&main_layout);
+  layout = GridLt::another()
+    ->spacing()->cmargins()->addw(&toggle_button, 0, 0, 1, 1, Qt::AlignLeft)
+    ->addw(&header_line, 0, 2, 1, 1)->addw(&content_area, 1, 0, 1, 3);
+  setLayout(layout);
   connect(&toggle_button, &QToolButton::clicked, [this](const bool checked) {
     toggle_button.setArrowType(checked ? Qt::ArrowType::DownArrow : Qt::ArrowType::RightArrow);
     toggle_animation.setDirection(

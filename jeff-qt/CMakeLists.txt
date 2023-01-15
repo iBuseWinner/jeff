@@ -81,6 +81,7 @@ set(SRCS_UI
   dialogues/about.h
   dialogues/add-script.cpp
   dialogues/add-script.h
+  dialogues/dialog.h
   dialogues/extensions-viewer.cpp
   dialogues/extensions-viewer.h
   dialogues/firststart.cpp
@@ -94,8 +95,12 @@ set(SRCS_UI
   dialogues/settings.h
   dialogues/sources-editor.cpp
   dialogues/sources-editor.h
-  dialogues/extensions-viewer/extension-overview.cpp
-  dialogues/extensions-viewer/extension-overview.h
+  dialogues/extensions-viewer/brief.cpp
+  dialogues/extensions-viewer/brief.h
+  dialogues/extensions-viewer/card.cpp
+  dialogues/extensions-viewer/card.h
+  dialogues/extensions-viewer/overview.cpp
+  dialogues/extensions-viewer/overview.h
   dialogues/phrase-editor/brief.cpp
   dialogues/phrase-editor/brief.h
   dialogues/phrase-editor/overview.cpp
@@ -137,6 +142,8 @@ set(SRCS_UI
   widgets/spoiler.h
   widgets/styling.cpp
   widgets/styling.h
+  widgets/layouts/grid.h
+  widgets/layouts/linears.h
   jeff-ui.cpp
   jeff-ui.h
 )

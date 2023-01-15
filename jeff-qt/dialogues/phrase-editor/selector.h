@@ -9,15 +9,17 @@
 #include "widgets/explanationlabel.h"
 #include "widgets/list.h"
 #include "widgets/menu.h"
+#include "widgets/layouts/linears.h"
 #include <QAction>
 #include <QApplication>
 #include <QCursor>
 #include <QLabel>
 #include <QPoint>
 #include <QTreeWidgetItem>
-#include <QVBoxLayout>
 #include <QWidget>
 
+/*! @class PhraseEditorSelector
+ *  @brief Allows you to attach other phrases to one phrase.  */
 class PhraseEditorSelector : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(PhraseEditorSelector)
@@ -38,7 +40,7 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
-  QVBoxLayout selector_layout;
+  VLineLt *selector_layout = nullptr;
   QLabel header;
 };
 

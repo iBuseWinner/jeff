@@ -5,11 +5,10 @@
 #include <QLabel>
 #include <QWidget>
 
-/*!
- * @class Help
- * @brief Tells users how to use this program.
- */
+/*! @class Help
+ *  @brief Tells users how to use this program.  */
 class Help : public QWidget {
+  Q_OBJECT
   Q_DISABLE_COPY(Help)
 public:
   // Functions described in `help.cpp`:

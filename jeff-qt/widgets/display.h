@@ -5,10 +5,10 @@
 #include "core-kit/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/message.h"
+#include "widgets/layouts/linears.h"
 #include <QMutex>
 #include <QScrollArea>
 #include <QScrollBar>
-#include <QVBoxLayout>
 #include <QWidget>
 
 /*! @class Display
@@ -34,7 +34,7 @@ public:
 private:
   // Objects:
   HProcessor *hp = nullptr;
-  QVBoxLayout *vertical_box_layout = nullptr;
+  VLineLt *vt_layout = nullptr;
   QSpacerItem *spacer = nullptr;
   bool scroll_enabled = true;
   QMutex messages_mutex;

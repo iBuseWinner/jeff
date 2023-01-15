@@ -12,7 +12,7 @@ PhraseEditorOverview::PhraseEditorOverview(Basis *_basis, QWidget *parent)
   new_phrase.setText(tr("New phrase"));
   new_phrase.setIcon(QIcon::fromTheme("list-add", QIcon(":/arts/icons/16/list-add.svg")));
   close_editor.setText(tr("Close"));
-  close_editor.setIcon(QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
+  close_editor.setIcon(QIcon::fromTheme("collapse-all", QIcon(":/arts/icons/16/collapse-all.svg")));
   overview_layout.setSpacing(0);
   overview_layout.setMargin(0);
   overview_layout.addWidget(&databases, 0, 0, 1, 0);

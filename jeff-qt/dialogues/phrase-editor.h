@@ -10,20 +10,18 @@
 #include "dialogues/modal-handler.h"
 #include "widgets/scrollfreezerwidget.h"
 #include "widgets/styling.h"
+#include "widgets/layouts/grid.h"
 #include <QGridLayout>
 #include <QMutex>
 #include <QWidget>
 
-/*!
- * @enum PhraseEditorCurrentMode
- * @brief Tells whether the widget is currently showing either a list of expressions, or an expression editor.
- */
+/*! @enum PhraseEditorCurrentMode
+ *  @brief Tells whether the widget is currently showing either a list of expressions,
+ *  or an expression editor.  */
 enum PhraseEditorCurrentMode { OverviewMode, BriefMode, SelectorMode };
 
-/*!
- * @class PhraseEditor
- * @brief Allows you to view, add, delete and edit the expressions that Jeff operates on.
- */
+/*! @class PhraseEditor
+ *  @brief Allows you to view, add, delete and edit the expressions that Jeff operates on.  */
 class PhraseEditor : public ScrollFreezerWidget {
   Q_OBJECT
   Q_DISABLE_COPY(PhraseEditor)
@@ -37,7 +35,7 @@ private:
   Basis *basis = nullptr;
   QMutex mode_mutex;
   PhraseEditorCurrentMode mode = OverviewMode;
-  QGridLayout editor_layout;
+  GridLt *editor_layout = nullptr;
   PhraseEditorOverview *overview = nullptr;
   PhraseEditorBrief *brief = nullptr;
   PhraseEditorSelector *selector = nullptr;

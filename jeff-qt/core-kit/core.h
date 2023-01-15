@@ -45,7 +45,7 @@ public:
   void notify_scenario_first_time();
   void got_message_from_script(const QString &outter_message);
   void got_message_to_search_again(const QString &rephrased_message);
-  void got_message_from_script_as_user(const QString &message);
+  void got_message_from_script_as_user(const QString &outter_message);
   void got_status_from_script(QPair<QString, QString> id_and_message);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);

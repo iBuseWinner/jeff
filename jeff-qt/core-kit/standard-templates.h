@@ -4,6 +4,7 @@
 #include "core-kit/basis.h"
 #ifdef JEFF_WITH_QT_WIDGETS
 #include "dialogues/about.h"
+#include "dialogues/extensions-viewer.h"
 #include "dialogues/phrase-editor.h"
 #include "dialogues/firststart.h"
 #include "dialogues/help.h"

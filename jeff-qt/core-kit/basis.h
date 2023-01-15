@@ -106,12 +106,13 @@ public:
   static constexpr const char *authKeyWk          = "auth_key";
   
 #ifdef JEFF_WITH_QT_WIDGETS
-  static constexpr const char *source_manager_cmd = "/sources";
-  static constexpr const char *script_manager_cmd = "/scripts";
-  static constexpr const char *first_start_cmd    = "/first";
-  static constexpr const char *about_cmd          = "/about";
-  static constexpr const char *settings_cmd       = "/settings";
-  static constexpr const char *phrase_editor_cmd  = "/phrases";
+  static constexpr const char *source_manager_cmd    = "/sources";
+  static constexpr const char *script_manager_cmd    = "/scripts";
+  static constexpr const char *first_start_cmd       = "/first";
+  static constexpr const char *about_cmd             = "/about";
+  static constexpr const char *settings_cmd          = "/settings";
+  static constexpr const char *phrase_editor_cmd     = "/phrases";
+  static constexpr const char *extensions_viewer_cmd = "/extensions";
 #endif
   static constexpr const char *fast_append_cmd        = "/+ ";
   static constexpr const char *fast_append_script_cmd = "/++ ";

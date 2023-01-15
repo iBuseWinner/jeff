@@ -11,9 +11,9 @@
 #include "widgets/list.h"
 #include "widgets/scripteditor.h"
 #include "widgets/scrollfreezerwidget.h"
+#include "widgets/layouts/grid.h"
 #include <QCheckBox>
 #include <QFileDialog>
-#include <QGridLayout>
 #include <QLabel>
 #include <QLayoutItem>
 #include <QSpinBox>
@@ -29,9 +29,6 @@ public:
                   ExtensionsManager *_em = nullptr, ModalHandler *m_handler = nullptr);
   
 private:
-  // Constants:
-  const char *object_name = "add_script_dialog";
-  
   // Objects:
   ModalHandler *_m_handler = nullptr;
 };

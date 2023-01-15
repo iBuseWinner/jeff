@@ -6,18 +6,16 @@
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"
 #include "widgets/lineedit.h"
+#include "widgets/layouts/linears.h"
 #include <QCheckBox>
-#include <QGridLayout>
 #include <QSizePolicy>
 #include <QSpinBox>
 #include <QTranslator>
 #include <QWidget>
 
-/*!
- * @class Settings
- * @brief Manages the program settings.
- * @sa Basis, ModalHandler
- */
+/*! @class Settings
+ *  @brief Manages the program settings.
+ *  @sa Basis, ModalHandler  */
 class Settings : public QWidget {
   Q_OBJECT
   Q_DISABLE_COPY(Settings)
@@ -29,15 +27,12 @@ private:
   // Objects:
   Basis *basis = nullptr;
   ModalHandler *_m_handler = nullptr;
-  QVBoxLayout mainLt;
+  VLineLt *layout = nullptr;
   QCheckBox delay, keepHistory, greetings;
   QWidget delayBox;
   QSpinBox minDelay, maxDelay;
   LineEdit greetingsMsg;
   Button save_and_close;
-
-  // Constants:
-  const char *object_name = "settings";
 
   // Functions described in `settings.cpp`:
   void loadStates();

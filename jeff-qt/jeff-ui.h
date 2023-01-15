@@ -8,6 +8,7 @@
 #include "widgets/line.h"
 #include "widgets/menubar.h"
 #include "widgets/styling.h"
+#include "widgets/layouts/linears.h"
 #include <QApplication>
 #include <QCloseEvent>
 #include <QLayout>

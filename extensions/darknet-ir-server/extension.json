@@ -1,6 +1,6 @@
 {
   "name": "Darknet",
-  "desc": "Darknet & YOLOv7 Objects-on-Image Recognition, NN that recognizes some object cathegories on pictures and sends back new picture with recognized objects' labels.",
+  "desc": "Darknet & YOLOv7 Objects-on-Image Recognition, NN that recognizes some object cathegories on pictures and sends back new picture with recognized objects' labels. Pretrained with MS COCO dataset.",
   "authors": [
     {
       "author": "Mark CDA",

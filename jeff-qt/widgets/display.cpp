@@ -36,7 +36,7 @@ void Display::add_message(Message *message) {
   messages_mutex.lock();
   message_counter++;
   all_messages.append(message);
-  vertical_box_layout->addWidget(message);
+  vt_layout->addw(message);
   /*! If the scroll is approximately below the middle, and the number of
    *  displayed messages is greater than the maximum...  */
   if ((verticalScrollBar()->value() >
@@ -48,7 +48,7 @@ void Display::add_message(Message *message) {
       for (auto key : status_messages.keys()) 
         if (status_messages[key] == message) status_messages.remove(key);
       message->hide();
-      vertical_box_layout->removeWidget(message);
+      vt_layout->rem(message);
       delete message;
       message_counter--;
     }
@@ -90,18 +90,15 @@ void Display::start() {
   message_counter = 0;
   all_messages.clear();
   status_messages.clear();
-  if (vertical_box_layout) delete vertical_box_layout;
+  if (vt_layout) delete vt_layout;
   auto *w = takeWidget();
   if (w) delete w;
-  vertical_box_layout = new QVBoxLayout(this);
-  vertical_box_layout->setSpacing(0);
-  vertical_box_layout->setMargin(0);
-  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
-  vertical_box_layout->addItem(spacer);
+  vt_layout = VLineLt::another()
+    ->spacing()->addi(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
   QWidget *box = new QWidget(this);
-  box->setContentsMargins(0, 0, 5, 0);
+  box->setContentsMargins(5, 0, 5, 0);
   box->setObjectName(box_object_name);
-  box->setLayout(vertical_box_layout);
+  box->setLayout(vt_layout);
   setWidget(box);
   messages_mutex.unlock();
 }
@@ -138,13 +135,13 @@ void Display::scroller(int value) {
     scroll_enabled = true;
     if (not spacer) {
       spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
-      vertical_box_layout->insertItem(0, spacer);
+      vt_layout->insertItem(0, spacer);
     }
   }
   else if (scroll_enabled and (viewportSizeHint().height() > height()) and (value != verticalScrollBar()->maximum())) {
     scroll_enabled = false;
     if (spacer) {
-      vertical_box_layout->removeItem(spacer);
+      vt_layout->removeItem(spacer);
       delete spacer;
       spacer = nullptr;
     }
@@ -160,7 +157,7 @@ void Display::scroller(int value) {
       all_messages.insert(0, message);
       int pos = 0;
       if (spacer) pos = 1;
-      vertical_box_layout->insertWidget(pos, message);
+      vt_layout->insertWidget(pos, message);
       message->show();
       message_counter++;
     }
@@ -172,7 +169,7 @@ void Display::scroller(int value) {
 void Display::remove_message(Message *message) {
   messages_mutex.lock();
   message->close();
-  vertical_box_layout->removeWidget(message);
+  vt_layout->rem(message);
   all_messages.removeOne(message);
   disconnect(message);
   message_counter--;

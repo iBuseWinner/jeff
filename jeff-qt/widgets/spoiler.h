@@ -1,6 +1,7 @@
 #ifndef SPOILER_H
 #define SPOILER_H
 
+#include "widgets/layouts/grid.h"
 #include <QFrame>
 #include <QGridLayout>
 #include <QParallelAnimationGroup>
@@ -24,7 +25,7 @@ public:
   
 private:
   // Objects:
-  QGridLayout main_layout;
+  GridLt *layout = nullptr;
   QToolButton toggle_button;
   QFrame header_line;
   QParallelAnimationGroup toggle_animation;

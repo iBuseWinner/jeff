@@ -12,8 +12,8 @@ bool StandardTemplates::dialogues(const QString &expression) {
   }
   if (expression == basis->source_manager_cmd) {
     auto *modal_handler = new ModalHandler(this);
-    auto *sources = new SourcesDialog(basis, nullptr, modal_handler);
-    Q_UNUSED(sources)
+    auto *sources_editor = new SourcesEditor(basis, nullptr, modal_handler);
+    Q_UNUSED(sources_editor)
     emit showModalWidget(modal_handler);
     return true;
   }
@@ -35,6 +35,13 @@ bool StandardTemplates::dialogues(const QString &expression) {
     auto *modal_handler = new ModalHandler(this);
     auto *phrase_editor = new PhraseEditor(basis, nullptr, modal_handler);
     Q_UNUSED(phrase_editor)
+    emit showModalWidget(modal_handler);
+    return true;
+  }
+  if (expression == basis->extensions_viewer_cmd) {
+    auto *modal_handler = new ModalHandler(this);
+    auto *extensions_viewer = new ExtensionsViewer(em, basis, nullptr, modal_handler);
+    Q_UNUSED(extensions_viewer)
     emit showModalWidget(modal_handler);
     return true;
   }

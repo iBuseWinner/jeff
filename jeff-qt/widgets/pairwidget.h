@@ -1,7 +1,7 @@
 #ifndef PAIR_WIDGET_H
 #define PAIR_WIDGET_H
 
-#include <QHBoxLayout>
+#include "widgets/layouts/linears.h"
 #include <QWidget>
 
 /*! @class PairWidget

@@ -1,12 +1,13 @@
 #ifndef EDIT_LIST_H
 #define EDIT_LIST_H
 
-#include <QGridLayout>
-#include <QStringList>
-#include <QVBoxLayout>
 #include "widgets/button.h"
 #include "widgets/lineedit.h"
 #include "widgets/list.h"
+#include "widgets/layouts/grid.h"
+#include "widgets/layouts/linears.h"
+#include <QGridLayout>
+#include <QStringList>
 
 /*! @class EditList
  *  @brief Editable list of elements.  */

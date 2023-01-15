@@ -66,25 +66,27 @@ void Core::got_message_from_user(const QString &user_expression) {
  *  displays a message on the screen.  */
 void Core::got_message_from_jck(const QString &result_expression) {
   if (result_expression.isEmpty()) return;
-  MessageMeta mdata = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
+  MessageMeta message = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
           ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
-      this, [this, mdata, result_expression] {
-        hp->append(mdata);
-        notifier->notify(mdata);
-        emit show(mdata);
+      this, [this, message, result_expression] {
+        hp->append(message);
+        notifier->notify(message);
+        emit show(message);
         /*! Search again if monologue mode enabled. */
         if (monologue_enabled) jck->search_for_suggests(result_expression);
       });
 }
 
-/*! @brief TBD */
+/*! @brief Notifies those extensions that are designed to handle cases where JCK cannot
+ *  answer a question.  */
 void Core::got_no_jck_output(const QString &user_expression) {
-  
+  MessageMeta message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
+  notifier->notify(message, true);
 }
 
 /*! @brief Runs an extension process and sets notifications if necessary. */
@@ -92,7 +94,8 @@ void Core::got_extension_start(ExtensionMeta *extension_meta) {
   em->add_extension(extension_meta);
 }
 
-/*! @brief TBD */
+/*! @brief Notifies the extension that the scenario has started and passes the last message
+ *  and authentication data.  */
 void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
   current_scenario = scenario_meta;
   notifier->set_scenario(current_scenario);
@@ -106,27 +109,27 @@ void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
 
 /*! @brief Disables scenario. */
 void Core::got_scenario_shutting() {
-  notifier->unset_scenario();
+  notifier->finish_scenario();
   basis->clear_stoken();
   is_scenario_running = false;
 }
 
 /*! @brief Shows output from script or outter app on the screen. */
-void Core::got_message_from_script(const QString &message) {
-  if (message.isEmpty()) return;
-  MessageMeta mdata = get_message(message, Author::Jeff, ContentType::Markdown, Theme::Std);
+void Core::got_message_from_script(const QString &outter_message) {
+  if (outter_message.isEmpty()) return;
+  MessageMeta message = get_message(outter_message, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
           ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
-      this, [this, mdata, message] {
-        hp->append(mdata);
-        notifier->notify(mdata);
-        emit show(mdata);
+      this, [this, message, outter_message] {
+        hp->append(message);
+        notifier->notify(message);
+        emit show(message);
         /*! Search again if monologue mode enabled. */
-        if (monologue_enabled) jck->search_for_suggests(message);
+        if (monologue_enabled) jck->search_for_suggests(outter_message);
       });
 }
 
@@ -141,37 +144,37 @@ void Core::got_message_to_search_again(const QString &rephrased_message) {
 }
 
 /*! @brief Shows the message and searches again. */
-void Core::got_message_from_script_as_user(const QString &message) {
+void Core::got_message_from_script_as_user(const QString &outter_message) {
   /*! Does not respond to blank input. */
-  if (message.isEmpty()) return;
+  if (outter_message.isEmpty()) return;
   /*! Displays the entered message on the screen. */
-  MessageMeta mdata = get_message(message, Author::User, ContentType::Markdown, Theme::Blue);
-  hp->append(mdata);
-  notifier->notify(mdata);
-  emit show(mdata);
+  MessageMeta message = get_message(outter_message, Author::User, ContentType::Markdown, Theme::Blue);
+  hp->append(message);
+  notifier->notify(message);
+  emit show(message);
   /*! If a user has entered the command, there is no need to run other modules. */
 #ifdef JEFF_WITH_QT_WIDGETS
-  if (std_templates->dialogues(message)) return;
+  if (std_templates->dialogues(outter_message)) return;
 #endif
-  if (std_templates->fast_commands(message)) return;
-  jck->search_for_suggests(message);
+  if (std_templates->fast_commands(outter_message)) return;
+  jck->search_for_suggests(outter_message);
 }
 
 /*! @brief Shows updateable message. @details Checks id's length. */
 void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
   if (id_and_message.first.isEmpty() or id_and_message.second.isEmpty()) return;
   if (id_and_message.first.length() < 24) return;
-  MessageMeta mdata = get_message(id_and_message.second, Author::Jeff,
-                                  ContentType::Markdown, Theme::Std);
+  MessageMeta message = get_message(id_and_message.second, Author::Jeff,
+                                    ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
           ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
                                        (*basis)[basis->maxDelaySt].toInt())
           : 0,
-      this, [this, mdata, id_and_message] {
-        notifier->notify(mdata);
-        QPair<QString, MessageMeta> id_and_message_data(id_and_message.first, mdata);
+      this, [this, message, id_and_message] {
+        notifier->notify(message);
+        QPair<QString, MessageMeta> id_and_message_data(id_and_message.first, message);
         emit show_status(id_and_message_data);
       });
 }

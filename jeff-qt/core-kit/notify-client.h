@@ -22,6 +22,7 @@ public:
   void notify(MessageMeta msg_meta, bool no_jck_output = false);
   void notify_scenario_first_time(MessageMeta msg_meta, QString auth_key);
   void set_scenario(ScenarioServerMeta _scenario_server_meta);
+  void finish_scenario();
   void unset_scenario();
   
 private:

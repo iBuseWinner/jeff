@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import asyncio, json, socket
+import json, socket
 
 
-async def send_value(k, v) -> None:
+def send_value(k, v):
   data = json.dumps({"store_values": [{"key": k, "value": v}]}).encode()
   try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -13,7 +13,7 @@ async def send_value(k, v) -> None:
     print('\tСервер отключен.')
 
 
-async def read_value(k) -> str:
+def read_value(k):
   data = json.dumps({"need_values": [k]}).encode()
   try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -25,27 +25,23 @@ async def read_value(k) -> str:
   return json.loads(data.decode())['values'][k]
 
 
-async def main() -> None:
-  #msg_id = str(uuid.uuid4())
+def main():
   while True:
     option = input('Выберите вариант:\n1. Отправить значение\n2. Принять значение\n')
-    #await send_time(msg_id)
-    #await asyncio.sleep(5)
     if option != '1' and option != '2':
       return
     elif option == '1':
       k = input('\tВведите ключ: ')
       v = input('\tВведите значение: ')
-      await send_value(k, v)
+      send_value(k, v)
       print('\tОтправлено.')
     else:
       k = input('\tВведите ключ: ')
-      v = await read_value(k)
+      v = read_value(k)
       print(f'\tПолучено: {v}')
 
 
-if __name__ == '__main__':
-  try:
-    asyncio.run(main())
-  except KeyboardInterrupt:
-    print('\nЧасы отключены.')
+try:
+  main()
+except KeyboardInterrupt:
+  print('\nЧасы отключены.')

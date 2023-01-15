@@ -9,26 +9,21 @@
 #include "widgets/menu.h"
 #include "widgets/scripteditor.h"
 #include "widgets/styling.h"
+#include "widgets/layouts/linears.h"
 #include <QApplication>
 #include <QCheckBox>
 #include <QCursor>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QPoint>
 #include <QScrollArea>
-#include <QVBoxLayout>
 #include <QWidget>
 
-/*!
- * @enum PhraseEditorBriefWaitsFor
- * @brief Indicates what the phrase editor expects from the selector widget.
- */
+/*! @enum PhraseEditorBriefWaitsFor
+ *  @brief Indicates what the phrase editor expects from the selector widget.  */
 enum PhraseEditorBriefWaitsFor { Nothing, Activator, Reagent };
 
-/*!
- * @class PhraseEditorBrief
- * @brief Displays all phrase properties.
- */
+/*! @class PhraseEditorBrief
+ *  @brief Displays all phrase properties.  */
 class PhraseEditorBrief : public QScrollArea {
   Q_OBJECT
   Q_DISABLE_COPY(PhraseEditorBrief)
@@ -58,14 +53,13 @@ private:
   Source source;
   Phrases phrases;
   QWidget *area_widget = nullptr; /*!< Top-level widgets. */
-  QVBoxLayout widget_layout;
+  VLineLt *widget_layout = nullptr;
   QLabel header;
   Button edit_expression;
   ExplanationLabel address_label;
   QCheckBox exec_checkbox;
   List activators_list, reagents_list;
   QWidget phrase_expression_edit_widget; /*! Expression editor widgets. */
-  QHBoxLayout phrase_expression_edit_layout;
   LineEdit phrase_expression_edit_line;
   Button phrase_expression_edit_save;
   ScriptEditor *script_editor = nullptr;

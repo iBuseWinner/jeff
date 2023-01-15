@@ -37,8 +37,9 @@ public:
   // Functions described in `extensions-manager.cpp`:
   ExtensionsManager(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent = nullptr);
   ~ExtensionsManager();
-  void add_extension(ExtensionMeta *extension);
-  void remove_extension(ExtensionMeta *extension);
+  void add_extension(ExtensionMeta *extension_meta);
+  void remove_extension(ExtensionMeta *extension_meta);
+  bool is_running(ExtensionMeta *extension_meta);
   ExtensionsMeta get_extensions_meta();
   void startup();
   void shutdown_extensions();

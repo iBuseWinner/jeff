@@ -35,13 +35,8 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   connect(&reagents_list, &List::itemDoubleClicked, this, [this](QTreeWidgetItem *item) {
     emit open_brief(item);
   });
-  auto *EAR_layout = new QHBoxLayout();
-  EAR_layout->setSpacing(0);
-  EAR_layout->setMargin(0);
-  EAR_layout->addWidget(&activators_list);
-  EAR_layout->addWidget(&reagents_list);
   auto *EAR_widget = new QWidget(this);
-  EAR_widget->setLayout(EAR_layout);
+  EAR_widget->setLayout(HLineLt::another()->spacing()->addw(&activators_list)->addw(&reagents_list));
   verticalScrollBar()->setStyleSheet(
     styling.css_scroll_bar.arg(styling.light_theme ? styling.css_light_sb : styling.css_dark_sb)
   );
@@ -50,9 +45,9 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   phrase_expression_edit_save.setIcon(
     QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
   connect(&phrase_expression_edit_save, &Button::clicked, this, &PhraseEditorBrief::save_phrase_text);
-  phrase_expression_edit_layout.addWidget(&phrase_expression_edit_line);
-  phrase_expression_edit_layout.addWidget(&phrase_expression_edit_save);
-  phrase_expression_edit_widget.setLayout(&phrase_expression_edit_layout);
+  phrase_expression_edit_widget.setLayout(HLineLt::another()
+    ->addw(&phrase_expression_edit_line)
+    ->addw(&phrase_expression_edit_save));
   phrase_expression_edit_widget.hide();
   // Context menus setup.
   add_phrase_action.setText(tr("New phrase"));
@@ -69,17 +64,12 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   remove_phrase_action.setText(tr("Delete this phrase"));
   remove_phrase_action.setIcon(QIcon::fromTheme("list-remove", QIcon(":/arts/icons/16/list-remove.svg")));
   // Layout setup.
-  widget_layout.setSpacing(0);
-  widget_layout.setMargin(0);
-  widget_layout.addWidget(&header);
-  widget_layout.addWidget(&edit_expression);
-  widget_layout.addWidget(&address_label);
-  widget_layout.addWidget(&exec_checkbox);
-  widget_layout.addWidget(EAR_widget);
-  widget_layout.addItem(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
-  widget_layout.addWidget(&back_to_overview);
+  widget_layout = VLineLt::another()->spacing(0)->addw(&header)->addw(&edit_expression)
+    ->addw(&address_label)->addw(&exec_checkbox)->addw(EAR_widget)
+    ->addi(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding))
+    ->addw(&back_to_overview);
   area_widget = new QWidget();
-  area_widget->setLayout(&widget_layout);
+  area_widget->setLayout(widget_layout);
   // Brief setup.
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setFocusPolicy(Qt::NoFocus);
@@ -148,11 +138,11 @@ void PhraseEditorBrief::edit_phrase_text() {
     connect(
       script_editor, &ScriptEditor::closed, this, [this, json_script] { save_script(json_script); }
     );
-    widget_layout.replaceWidget(&header, script_editor);
+    widget_layout->replaceWidget(&header, script_editor);
     script_editor->show();
   } else {
     phrase_expression_edit_line.setText(header.text());
-    widget_layout.replaceWidget(&header, &phrase_expression_edit_widget);
+    widget_layout->replaceWidget(&header, &phrase_expression_edit_widget);
     phrase_expression_edit_widget.show();
   }
 }
@@ -165,7 +155,7 @@ void PhraseEditorBrief::save_phrase_text() {
   if (not basis->sql->update_expression(source, phrase.expression, phrase.address)) return;
   phrase_expression_edit_widget.hide();
   header.setText(phrase.expression);
-  widget_layout.replaceWidget(&phrase_expression_edit_widget, &header);
+  widget_layout->replaceWidget(&phrase_expression_edit_widget, &header);
   header.show();
   edit_expression.show();
   activators_list.setEnabled(true);
@@ -181,7 +171,7 @@ void PhraseEditorBrief::save_script(QString script_json) {
   if (not basis->sql->update_expression(source, phrase.expression, phrase.address)) return;
   script_editor->hide();
   header.setText(script_json);
-  widget_layout.replaceWidget(script_editor, &header);
+  widget_layout->replaceWidget(script_editor, &header);
   disconnect(script_editor, &ScriptEditor::saved, nullptr, nullptr);
   disconnect(script_editor, &ScriptEditor::closed, nullptr, nullptr);
   header.show();
