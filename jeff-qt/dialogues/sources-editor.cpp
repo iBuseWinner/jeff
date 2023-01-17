@@ -1,11 +1,4 @@
 #include "sources-editor.h"
-#include <iostream>
-
-/*!
- * @details All short named objects and their explanations:
- * @a tli2 < top-level item index < @a SourcesEditor::append,
- *                                  @a SourcesEditor::sncl
- */
 
 /*!
  * @brief The constructor.
@@ -17,9 +10,8 @@
  * {|> Remove }
  * <----------------------->
  */
-SourcesEditor::SourcesEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
-    : ScrollFreezerWidget(parent), basis(_basis), _m_handler(m_handler) {
-  _m_handler->setPrisoner(this);
+SourcesEditor::SourcesEditor(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
+    : Dialog(mhandler, parent), basis(_basis) {
   setObjectName(object_name);
   source_actions = new Button(tr("Source actions..."), this);
   add_source = new QAction(tr("Add sources"), this);
@@ -56,7 +48,6 @@ SourcesEditor::SourcesEditor(Basis *_basis, QWidget *parent, ModalHandler *m_han
 void SourcesEditor::load() {
   source_widgets.clear();
   source_list->clear();
-  basis->load_sources();
   append(basis->sources());
 }
 
@@ -135,7 +126,7 @@ void SourcesEditor::sncl() {
         sources.append(source_widgets.value(source_list->invisibleRootItem()->child(i)->child(j)));
     basis->sources(sources);
   }
-  _m_handler->closePrisoner();
+  Dialog::close();
 }
 
 /*! @brief Opens the source creation dialog. */

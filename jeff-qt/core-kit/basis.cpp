@@ -64,6 +64,7 @@ Sources Basis::sources() { return _sources; }
 
 /*! @brief Saves and updates @a sources list. */
 void Basis::sources(Sources s) {
+  _sources = s;
   json->write_source_list(sql, _sources);
   check_default_source();
   emit sources_changed();

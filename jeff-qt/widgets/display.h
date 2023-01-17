@@ -5,16 +5,15 @@
 #include "core-kit/model/message.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/message.h"
+#include "widgets/scrollarea.h"
 #include "widgets/layouts/linears.h"
 #include <QMutex>
-#include <QScrollArea>
-#include <QScrollBar>
 #include <QWidget>
 
 /*! @class Display
  *  @brief Widget that displays messages.
  *  @sa Message  */
-class Display : public QScrollArea {
+class Display : public ScrollArea {
   Q_OBJECT
   Q_DISABLE_COPY(Display)
 public:

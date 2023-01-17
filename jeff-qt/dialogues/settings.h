@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 #include "core-kit/basis.h"
+#include "dialogues/dialog.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/explanationlabel.h"
@@ -16,17 +17,16 @@
 /*! @class Settings
  *  @brief Manages the program settings.
  *  @sa Basis, ModalHandler  */
-class Settings : public QWidget {
+class Settings : public Dialog {
   Q_OBJECT
   Q_DISABLE_COPY(Settings)
 public:
   // Functions described in `settings.cpp`:
-  Settings(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  Settings(Basis *_basis, QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
 
 private:
   // Objects:
   Basis *basis = nullptr;
-  ModalHandler *_m_handler = nullptr;
   VLineLt *layout = nullptr;
   QCheckBox delay, keepHistory, greetings;
   QWidget delayBox;

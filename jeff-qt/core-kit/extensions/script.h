@@ -14,7 +14,7 @@
  *  0. React - Reacts to user expressions, added directly to databases
  *  1. CustomScan - Scans and responds to user input, replacing Jeff's NLPmodule
  *  2. CustomCompose - Receives response options for user input from Jeff and composes the response  */
-enum ScriptType { React, CustomScan, CustomCompose };
+enum ScriptType { NoneScript, React, CustomScan, CustomCompose };
 
 /*! @class ScriptMeta
  *  @brief Contains metadata about a script.  */
@@ -26,12 +26,12 @@ public:
     if (not (json_object.contains("type") and json_object.contains("stype"))) return;
     if (json_object["type"].toString() != "script") return;
     int _stype = json_object["stype"].toInt();
-    if ((_stype > 2) or (_stype < 0)) return;
+    if ((_stype > 3) or (_stype < 0)) return;
     stype = ScriptType(_stype);
     if (not (
       json_object.contains("filepath") and
       json_object.contains("fn_name")
-    ) or not (
+    ) and not (
       json_object.contains("program")
     )) return;
     if (json_object.contains("filepath") and json_object.contains("fn_name")) {
@@ -126,7 +126,7 @@ public:
   
   // Objects:
   bool valid = false;
-  ScriptType stype;
+  ScriptType stype = NoneScript;
   bool is_for_embedded_python = true;
   QString filepath;
   QString fn_name;

@@ -1,23 +1,12 @@
 #include "display.h"
-#include <iostream>
 
 /*! @brief The constructor. */
 Display::Display(HProcessor *_hp, short _max_message_amount, QWidget *parent)
-    : QScrollArea(parent), hp(_hp), max_message_amount(_max_message_amount) {
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-  setFocusPolicy(Qt::NoFocus);
-  setFrameStyle(QFrame::NoFrame);
-  setFrameShadow(QFrame::Plain);
-  setWidgetResizable(true);
-  setObjectName(object_name);
-  verticalScrollBar()->setStyleSheet(
-    styling.css_scroll_bar.arg(styling.light_theme ? styling.css_light_sb : styling.css_dark_sb)
-  );
-  verticalScrollBar()->setFixedWidth(5);
+    : ScrollArea(parent), hp(_hp), max_message_amount(_max_message_amount) {
   connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scroll_down);
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scroller);
   spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+  setObjectName(object_name);
   setStyleSheet(box_style_sheet);
   start();
 }

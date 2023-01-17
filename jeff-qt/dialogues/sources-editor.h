@@ -1,6 +1,7 @@
 #ifndef SOURCESDIALOG_H
 #define SOURCESDIALOG_H
 
+#include "dialogues/dialog.h"
 #include "dialogues/modal-handler.h"
 #include "dialogues/sources-editor/create-source.h"
 #include "widgets/button.h"
@@ -19,19 +20,18 @@
 
 /*! @class SourcesEditor
  *  @brief Manages NLP module's sources.  */
-class SourcesEditor : public ScrollFreezerWidget {
+class SourcesEditor : public Dialog {
   Q_OBJECT
   Q_DISABLE_COPY(SourcesEditor)
 public:
   // Functions described in `sources-editor.cpp`:
-  SourcesEditor(Basis *_basis, QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
+  SourcesEditor(Basis *_basis, QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
   void add();
   void remove();
 
 private:
   // Objects:
   Basis *basis = nullptr;
-  ModalHandler *_m_handler = nullptr;
   QMap<QTreeWidgetItem *, Source> source_widgets;
   CreateSourceDialog *create_source_dialog = nullptr;
   List *source_list = nullptr;

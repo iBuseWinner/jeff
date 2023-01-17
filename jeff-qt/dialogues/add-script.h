@@ -3,6 +3,7 @@
 
 #include "core-kit/basis.h"
 #include "core-kit/extensions-manager.h"
+#include "dialogues/dialog.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
 #include "widgets/combobox.h"
@@ -20,17 +21,13 @@
 
 /*! @class AddScriptDialog
  *  @brief Adds information about scripts to Jeff.  */
-class AddScriptDialog : public ScrollFreezerWidget {
+class AddScriptDialog : public Dialog {
   Q_OBJECT
   Q_DISABLE_COPY(AddScriptDialog)
 public:  
   // Functions described in `add-script.cpp`:
-  AddScriptDialog(QWidget *parent = nullptr, Basis *_basis = nullptr, 
-                  ExtensionsManager *_em = nullptr, ModalHandler *m_handler = nullptr);
-  
-private:
-  // Objects:
-  ModalHandler *_m_handler = nullptr;
+  AddScriptDialog(QWidget *parent = nullptr, ModalHandler *mhandler = nullptr,
+                  Basis *_basis = nullptr, ExtensionsManager *_em = nullptr);
 };
 
 #endif

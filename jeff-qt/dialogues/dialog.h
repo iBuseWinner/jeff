@@ -10,7 +10,9 @@
 class Dialog : public ScrollFreezerWidget {
 public:
   /*! @brief The constructor. */
-  Dialog(ModalHandler *mhandler) : _mhandler(mhandler) {
+  Dialog(ModalHandler *mhandler, QWidget *parent = nullptr)
+    : ScrollFreezerWidget(parent), _mhandler(mhandler)
+  {
     _mhandler->setPrisoner(this);
   }
   /*! @brief Closes this dialog. */

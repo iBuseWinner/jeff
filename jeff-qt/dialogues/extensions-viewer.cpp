@@ -2,13 +2,37 @@
 
 /*! @brief The constructor. */
 ExtensionsViewer::ExtensionsViewer(
-  ExtensionsManager *_em, Basis *_basis, QWidget *parent, ModalHandler *m_handler
-) : ScrollFreezerWidget(parent) {
-  m_handler->setPrisoner(this);
+  ExtensionsManager *_em, Basis *_basis, QWidget *parent, ModalHandler *mhandler
+) : Dialog(mhandler, parent) {
   // Sets up overview widget.
   overview = new ExtensionsViewerOverview(_em, _basis, this);
+  overview->setFixedWidth(480);
+  connect(overview, &ExtensionsViewerOverview::open_brief_by_extension_meta,
+          this, &ExtensionsViewer::open_brief_by_extension_meta);
+  connect(overview, &ExtensionsViewerOverview::close_viewer, this, &Dialog::close);
+  // Sets up brief widget.
+  brief = new ExtensionsViewerBrief();
+  brief->setFixedWidth(480);
+  connect(brief, &ExtensionsViewerBrief::close_brief, this, &ExtensionsViewer::open_overview);
+  brief->hide();
   // Shows overview.
   viewer_layout = GridLt::another()->spacing()->addw(overview);
   setLayout(viewer_layout);
-  setFixedWidth(480);
+}
+
+/*! @brief Shows the extension's details. */
+void ExtensionsViewer::open_brief_by_extension_meta(ExtensionMeta *extension_meta) {
+  overview->hide();
+  viewer_layout->replaceWidget(overview, brief);
+  brief->setup(extension_meta);
+  dynamic_cast<QWidget *>(parent())->setFixedWidth(500);
+  brief->show();
+}
+
+/*! @brief Shows the overview. */
+void ExtensionsViewer::open_overview() {
+  brief->hide();
+  viewer_layout->replaceWidget(brief, overview);
+  overview->fill_extensions_cards();
+  overview->show();
 }

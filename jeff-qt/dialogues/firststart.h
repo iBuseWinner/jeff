@@ -1,31 +1,25 @@
 #ifndef FIRSTSTART_H
 #define FIRSTSTART_H
 
+#include "dialogues/dialog.h"
 #include "dialogues/modal-handler.h"
 #include "widgets/button.h"
-#include <QGridLayout>
+#include "widgets/scrollarea.h"
+#include "widgets/layouts/grid.h"
+#include "widgets/layouts/linears.h"
 #include <QLabel>
 #include <QSpacerItem>
 #include <QTranslator>
 #include <QWidget>
-#include "widgets/layouts/linears.h"
 
 /*! @class FirstStart
- *  @brief Shows a quick start guide.
- *  @sa ModalHandler  */
-class FirstStart : public QWidget {
+ *  @brief Shows a quick start guide.  */
+class FirstStart : public Dialog {
   Q_OBJECT
   Q_DISABLE_COPY(FirstStart)
 public:
   // Functions described in `firststart.cpp`:
-  FirstStart(QWidget *parent = nullptr, ModalHandler *m_handler = nullptr);
-
-private:
-  // Objects:
-  ModalHandler *_m_handler = nullptr;
-
-  // Constants:
-  static const int fixed_width = 400;
+  FirstStart(QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
 };
 
 #endif

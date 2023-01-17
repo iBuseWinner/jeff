@@ -3,6 +3,7 @@
 /*! @brief The constructor. */
 PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
   : QScrollArea(parent), basis(_basis) {
+  setFixedHeight(360);
   // Top-level widgets.
   auto header_font = QApplication::font();
   header_font.setPointSize(14);
@@ -128,6 +129,8 @@ void PhraseEditorBrief::edit_phrase_text() {
   if (exec_checkbox.isChecked()) {
     if (not script_editor) {
       script_editor = new ScriptEditor(this, basis);
+      script_editor->set_stype(1); /*!< @details This is hidden function in @a ScriptEditor 
+                                    *   for @a ScriptType::React scripts. */
       script_editor->setMaximumWidth(maximumWidth() - 6);
     }
     auto json_script = header.text();

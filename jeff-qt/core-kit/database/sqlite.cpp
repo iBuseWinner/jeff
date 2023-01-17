@@ -277,7 +277,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   auto result = exec(
     &query, InsertPhrase,
     {
-      source.table_name, QString::number(new_id), text, "", QString::number(0), "{}"
+      source.table_name, QString::number(new_id), text, "", QString::number(0), ""
     }
   );
   db.close();

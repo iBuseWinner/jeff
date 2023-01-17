@@ -11,6 +11,7 @@
 #include "widgets/list.h"
 #include <QCheckBox>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QGridLayout>
 #include <QIntValidator>
 #include <QLabel>
@@ -27,10 +28,11 @@ class ScriptEditor : public QWidget {
 public:  
   // Functions described in `scripteditor.cpp`:
   ScriptEditor(QWidget *parent = nullptr, Basis *_basis = nullptr, 
-               ExtensionsManager *_em = nullptr, ModalHandler *m_handler = nullptr);
+               ExtensionsManager *_em = nullptr, ModalHandler *mhandler = nullptr);
   ~ScriptEditor();
   bool load_from_text(QString json_text);
   bool load_from_script(ScriptMeta *script_meta);
+  void set_stype(int _stype);
   
 signals:
   /*! @brief Notifies the parent that editing is complete (you can close the widget) 
@@ -43,8 +45,9 @@ private:
   int stype = 0;
   Basis *basis = nullptr;
   ExtensionsManager *em = nullptr;
-  ModalHandler *_m_handler = nullptr;
+  ModalHandler *_mhandler = nullptr;
   Button *path_input = nullptr, *save_btn = nullptr;
+  QString filepath;
   QLabel *stype_info = nullptr;
   ComboBox *stype_input = nullptr;
   QGridLayout *dynamic_properties_layout = nullptr;
@@ -60,7 +63,7 @@ private:
   // Functions described in `scripteditor.cpp`:
   void change_stype();
   void change_stype(int _stype);
-  void set_stype(int _stype);
+  void set_path(QString path);
 };
 
 #endif

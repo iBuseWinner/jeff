@@ -24,19 +24,20 @@
  * [    <  Back    ]
  * <--------------->
  */
-PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
-    : ScrollFreezerWidget(parent), basis(_basis), _m_handler(m_handler) {
-  _m_handler->setPrisoner(this);
+PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
+    : Dialog(mhandler, parent), basis(_basis) {
   // Sets up overview widget.
   overview = new PhraseEditorOverview(basis);
+  overview->setFixedWidth(480);
   connect(overview, &PhraseEditorOverview::open_brief, this, [this](QTreeWidgetItem *item) {
     open_brief(item);
   });
   connect(&(overview->new_phrase), &Button::clicked, this, &PhraseEditor::add_new_phrase);
   connect(&(overview->phrases_list), &List::itemDoubleClicked, this, &PhraseEditor::open_brief);
-  connect(&(overview->close_editor), &Button::clicked, this, [this] { _m_handler->closePrisoner(); });
+  connect(&(overview->close_editor), &Button::clicked, this, &Dialog::close);
   // Sets up brief widget.
   brief = new PhraseEditorBrief(basis);
+  brief->setFixedWidth(480);
   connect(&(brief->back_to_overview), &Button::clicked, this, &PhraseEditor::close_brief);
   connect(brief, &PhraseEditorBrief::open_brief, this, [this](QTreeWidgetItem *item) {
     open_brief(item);
@@ -47,6 +48,7 @@ PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handl
   brief->hide();
   // Sets up selector widget.
   selector = new PhraseEditorSelector(basis);
+  selector->setFixedWidth(480);
   connect(&(selector->back_to_brief), &Button::clicked, this, &PhraseEditor::close_selector);
   connect(selector, &PhraseEditorSelector::selected, this, [this](int address) {
     brief->waits_for_choosed(address);
@@ -56,70 +58,55 @@ PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *m_handl
   // Shows overview.
   editor_layout = GridLt::another()->spacing()->addw(overview);
   setLayout(editor_layout);
-  overview->setFixedWidth(480);
   overview->fill_databases();
 }
 
 /*! @brief Opens information about the phrase. */
 void PhraseEditor::open_brief(QTreeWidgetItem *item, int column) {
   Q_UNUSED(column)
-  if (not mode_mutex.try_lock()) return;
   overview->hide();
   editor_layout->replaceWidget(overview, brief);
   brief->setup(overview->selected_source(), overview->phrases, item->text(0).toInt());
-  brief->setFixedWidth(480);
-  dynamic_cast<QWidget *>(parent())->setFixedWidth(500);
   brief->show();
-  mode = BriefMode;
-  mode_mutex.unlock();
+  mode = PEBriefMode;
 }
 
 /*! @brief Opens the phrase editor at its address in the source. */
 void PhraseEditor::open_brief_by_address(int address) {
-  if (not mode_mutex.try_lock()) return;
   overview->hide();
   editor_layout->replaceWidget(overview, brief);
   overview->update_phrases();
   brief->setup(overview->selected_source(), overview->phrases, address);
-  brief->setFixedWidth(480);
   dynamic_cast<QWidget *>(parent())->setFixedWidth(500);
   brief->show();
-  mode = BriefMode;
-  mode_mutex.unlock();
+  mode = PEBriefMode;
 }
 
 /*! @brief Opens a list of phrases to choose from. */
 void PhraseEditor::open_selector() {
-  if (not mode_mutex.try_lock()) return;
-  selector->setFixedWidth(480);
   selector->setFixedHeight(brief->height());
   brief->hide();
   editor_layout->replaceWidget(brief, selector);
   selector->set_phrases(overview->phrases);
   selector->show();
-  mode = SelectorMode;
-  mode_mutex.unlock();
+  mode = PESelectorMode;
 }
 
 /*! @brief Closes the phrase list and returns to the phrase editor. */
 void PhraseEditor::close_selector() {
-  if (not mode_mutex.try_lock()) return;
   selector->hide();
   editor_layout->replaceWidget(selector, brief);
   brief->show();
-  mode = BriefMode;
-  mode_mutex.unlock();
+  mode = PEBriefMode;
 }
 
 /*! @brief Returns to the list of expressions. */
 void PhraseEditor::close_brief() {
-  if (not mode_mutex.try_lock()) return;
   brief->hide();
   editor_layout->replaceWidget(brief, overview);
   overview->update_phrases();
   overview->show();
-  mode = OverviewMode;
-  mode_mutex.unlock();
+  mode = PEOverviewMode;
 }
 
 /*! @brief Adds a new phrase and opens the editor. */

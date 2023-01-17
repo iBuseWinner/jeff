@@ -125,7 +125,7 @@ CacheWithIndices JCK::select_candidates(CacheWithIndices selection, QString inpu
  *  fills the uncovered part of the expression.  */
 QPair<QString, QString> JCK::compose_answer(QString input, CacheWithIndices candidates) {
   QString output;
-  input = StringSearch::lemmatize(input);
+  auto lemmatized = StringSearch::lemmatize(input);
   for (auto ewi : candidates) {
     if (ewi.second.exec) {
       /*! Executable <=> React Script. @sa ScriptMeta or ExtensionMeta */
@@ -162,9 +162,9 @@ QPair<QString, QString> JCK::compose_answer(QString input, CacheWithIndices cand
       basis->cacher->append(ewi.second);
       output += ewi.second.reagent_text + " ";
     }
-    if (not ewi.second.consonant()) input = StringSearch::replace(input, ewi.first);
+    if (not ewi.second.consonant()) lemmatized = StringSearch::replace(lemmatized, ewi.first);
   }
-  return QPair<QString, QString>(input, output);
+  return QPair<QString, QString>(lemmatized, output);
 }
 
 /*! @brief Selects expressions to compose a response from the cache. */

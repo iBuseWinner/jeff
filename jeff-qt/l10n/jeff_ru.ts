@@ -122,6 +122,18 @@
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
+    <message>
+        <source>Jeff doesn&apos;t have extensions yet. You can add them yourself by downloading from the Internet and clicking on the &quot;Add from file&quot; button.</source>
+        <translation>У Джеффа ещё нет расширений. Вы можете добавить их самостоятельно, скачивая их из Интернета и нажимая на кнопку &quot;Добавить из файла&quot;.</translation>
+    </message>
+    <message>
+        <source>Select extension&apos;s configuration</source>
+        <translation>Выберите конфигурацию расширения</translation>
+    </message>
+    <message>
+        <source>Jeff&apos;s extension</source>
+        <translation>Расширение Джеффа</translation>
+    </message>
 </context>
 <context>
     <name>FirstStart</name>
@@ -608,123 +620,91 @@
     <name>ScriptEditor</name>
     <message>
         <source>Specify script path:</source>
-        <translation type="vanished">Укажите путь к скрипту:</translation>
+        <translation>Укажите путь к скрипту:</translation>
     </message>
     <message>
         <source>Specify script type:</source>
-        <translation type="vanished">Укажите тип скрипта:</translation>
+        <translation>Укажите тип скрипта:</translation>
     </message>
     <message>
         <source>Select a file...</source>
-        <translation type="vanished">Выберите файл...</translation>
+        <translation>Выберите файл...</translation>
     </message>
     <message>
         <source>Select file...</source>
-        <translation type="vanished">Выбрать файл...</translation>
+        <translation>Выбрать файл...</translation>
     </message>
     <message>
         <source>Python script</source>
-        <translation type="vanished">Скрипт Python</translation>
-    </message>
-    <message>
-        <source>Daemon (works in background with Jeff&apos;s server)</source>
-        <translation type="vanished">Демон (работает в фоновом режиме с сервером Джеффа)</translation>
-    </message>
-    <message>
-        <source>Server (works in background and receives all messages)</source>
-        <translation type="vanished">Сервер (работает в фоновом режиме и получает все сообщения)</translation>
+        <translation>Скрипт Python</translation>
     </message>
     <message>
         <source>Custom scanner (another answering system)</source>
-        <translation type="vanished">Пользовательский сканер (другой автоответчик)</translation>
+        <translation>Пользовательский сканер (другой автоответчик)</translation>
     </message>
     <message>
         <source>Custom composer (receives chosed variants and answers on them in another manner)</source>
-        <translation type="vanished">Пользовательский композитор (получает выбранные варианты и отвечает на них другим способом)</translation>
+        <translation>Пользовательский композитор (получает выбранные варианты и отвечает на них другим способом)</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Отменить</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <source>Add script</source>
-        <translation type="vanished">Добавить скрипт</translation>
+        <translation>Добавить скрипт</translation>
     </message>
     <message>
         <source>Save script</source>
-        <translation type="vanished">Сохранить скрипт</translation>
+        <translation>Сохранить скрипт</translation>
     </message>
     <message>
         <source>Specify function name:</source>
-        <translation type="vanished">Укажите название функции:</translation>
+        <translation>Укажите название функции:</translation>
     </message>
     <message>
         <source>Function name...</source>
-        <translation type="vanished">Название функции...</translation>
+        <translation>Название функции...</translation>
     </message>
     <message>
         <source>Add the memory cells to be passed to the script:</source>
-        <translation type="vanished">Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
+        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
     </message>
     <message>
         <source>Add memory cell</source>
-        <translation type="vanished">Добавить ячейку памяти</translation>
+        <translation>Добавить ячейку памяти</translation>
     </message>
     <message>
         <source>Remove selected cell</source>
-        <translation type="vanished">Удалить выбранную ячейку</translation>
+        <translation>Удалить выбранную ячейку</translation>
     </message>
     <message>
         <source>Memory cell name...</source>
-        <translation type="vanished">Название ячейки памяти...</translation>
+        <translation>Название ячейки памяти...</translation>
     </message>
     <message>
         <source>Cells list</source>
-        <translation type="vanished">Список ячеек</translation>
+        <translation>Список ячеек</translation>
     </message>
     <message>
         <source>Please complete path and function name fields before saving.</source>
-        <translation type="vanished">Пожалуйста, укажите путь и название функции перед сохранением.</translation>
+        <translation>Пожалуйста, укажите путь и название функции перед сохранением.</translation>
     </message>
     <message>
         <source>Specify amount of message history to be sent:</source>
-        <translation type="vanished">Укажите количество последних сообщений, которые нужно отправить:</translation>
+        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
     </message>
     <message>
         <source>Check if script needs whole user input</source>
-        <translation type="vanished">Отметьте, если скрипту нужен весь ввод пользователя</translation>
-    </message>
-    <message>
-        <source>Please complete path field before saving.</source>
-        <translation type="vanished">Пожалуйста, заполните путь скрипта перед сохранением.</translation>
-    </message>
-    <message>
-        <source>If the script is located remotely, enter the IP address:</source>
-        <translation type="vanished">Если скрипт расположен удалённо, введите IP-адрес:</translation>
-    </message>
-    <message>
-        <source>IP address...</source>
-        <translation type="vanished">IP-адрес...</translation>
-    </message>
-    <message>
-        <source>Enter server port:</source>
-        <translation type="vanished">Введите порт сервера:</translation>
-    </message>
-    <message>
-        <source>Server port...</source>
-        <translation type="vanished">Порт сервера...</translation>
-    </message>
-    <message>
-        <source>Please complete path or server IP and port fields before saving.</source>
-        <translation type="vanished">Пожалуйста, введите путь или IP-адрес сервера и его порт перед сохранением.</translation>
+        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
     </message>
     <message>
         <source>Check if you need to pass additional values to the script</source>
-        <translation type="vanished">Отметьте, если вам нужно передавать дополнительные свойства в скрипт</translation>
+        <translation>Отметьте, если вам нужно передавать дополнительные свойства в скрипт</translation>
     </message>
     <message>
         <source>Any executable</source>
-        <translation type="vanished">Любая программа</translation>
+        <translation>Любая программа</translation>
     </message>
 </context>
 <context>

@@ -5,7 +5,10 @@
 #include "core-kit/extensions-manager.h"
 #include "core-kit/extensions/extension.h"
 #include "dialogues/extensions-viewer/card.h"
+#include "widgets/button.h"
+#include "widgets/scrollarea.h"
 #include "widgets/layouts/linears.h"
+#include <QFileDialog>
 #include <QList>
 #include <QWidget>
 
@@ -22,6 +25,8 @@ public:
 signals:
   /*! @brief Asks to open extension details. */
   ExtensionMeta *open_brief_by_extension_meta(ExtensionMeta *extension_meta);
+  /*! @brief Asks to close viewer dialog. */
+  void close_viewer();
   
 private:
   // Objects:
@@ -29,6 +34,10 @@ private:
   Basis *basis = nullptr;
   VLineLt *viewer_list_lt = nullptr;
   QList<ExtensionsViewerCard *> cards;
+  QLabel *no_extensions_yet = nullptr;
+  
+  // Functions described in `overview.cpp`:
+  void read_from_file();
 };
 
 #endif

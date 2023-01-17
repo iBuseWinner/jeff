@@ -137,6 +137,7 @@ set(SRCS_UI
   widgets/pairwidget.h
   widgets/scripteditor.cpp
   widgets/scripteditor.h
+  widgets/scrollarea.h
   widgets/scrollfreezerwidget.h
   widgets/spoiler.cpp
   widgets/spoiler.h

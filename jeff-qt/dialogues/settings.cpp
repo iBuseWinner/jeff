@@ -1,9 +1,9 @@
 #include "settings.h"
 
 /*! @brief The constructor. */
-Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *m_handler)
-    : QWidget(parent), basis(_basis), _m_handler(m_handler) {
-  _m_handler->setPrisoner(this);
+Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
+  : Dialog(mhandler, parent), basis(_basis)
+{
   // Delay.
   delay.setText(tr("Enable delay"));
   connect(&delay, &QCheckBox::toggled, this, &Settings::delayChecked);
@@ -72,7 +72,7 @@ void Settings::saveAndClose() {
   basis->write(basis->maxDelaySt, maxDelay.value());
   basis->write(basis->isGreetingsEnabledSt, greetings.isChecked());
   basis->write(basis->greetingsMsg, greetingsMsg.text());
-  _m_handler->closePrisoner();
+  Dialog::close();
 }
 
 /*! @brief Depending on whether the delay is enabled, turns on/off the widget
