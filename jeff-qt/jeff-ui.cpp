@@ -91,14 +91,7 @@ void Jeff::save_window_settings() {
 void Jeff::connect_all() {
   // menubar
   connect(&(menubar->full_screen_action), &QAction::triggered, this, &Jeff::full_screen_handler);
-  connect(&(menubar->enable_monologue_mode), &QAction::triggered, this, [this] {
-    emit send(basis->monologue_mode_cmd);
-  });
   connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
-  connect(menubar, &MenuBar::about_triggered, this, [this] { emit send(basis->about_cmd); });
-  connect(menubar, &MenuBar::sources_triggered, this, [this] { emit send(basis->source_manager_cmd); });
-  connect(menubar, &MenuBar::phrase_editor_triggered, this, [this] { emit send(basis->phrase_editor_cmd); });
-  connect(menubar, &MenuBar::settings_triggered, this, [this] { emit send(basis->settings_cmd); });
   connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
   connect(menubar, &MenuBar::exit_triggered, this, [this] { close(); });
@@ -109,8 +102,6 @@ void Jeff::connect_all() {
   connect(core, &Core::show, display, &Display::add_message_by_md);
   connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
   connect(core, &Core::show_status, display, &Display::update_status);
-  connect(core, &Core::changeMenuBarMonologueCheckbox,
-          &(menubar->enable_monologue_mode), &QAction::setChecked);
   connect(history_processor, &HProcessor::history_loaded, display, &Display::start_by);
 }
 
@@ -131,7 +122,7 @@ void Jeff::user_input_handler() {
 /*! @brief Calls the dialog, asks for @a filename and saves the message history to it. */
 void Jeff::export_message_history() {
   QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save history"), nullptr,
-                                                  tr("JSON file") + "(*.json)");
+                                                  tr("Jeff's history file") + "(*.history.json)");
   if (filename.isEmpty()) return;
   history_processor->save(filename);
 }
@@ -145,7 +136,7 @@ void Jeff::import_message_history() {
     QMessageBox::Ok) == QMessageBox::Ok
   ) {
     QString filename = QFileDialog::getOpenFileName(
-      nullptr, tr("Load history"), nullptr, tr("JSON file") + "(*.json)");
+      nullptr, tr("Load history"), nullptr, tr("Jeff's history file") + "(*.history.json)");
     if (filename.isEmpty()) return;
     history_processor->load(filename);
   }

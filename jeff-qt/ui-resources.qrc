@@ -33,6 +33,10 @@
     <file>../arts/icons/16/list-remove.svg</file>
     <file>../arts/icons/16/collapse-all.svg</file>
     <file>../arts/shots/addsource.png</file>
+    <file>../arts/icons/16/edit-copy-path.svg</file>
+    <file>../arts/icons/16/snap-extension.svg</file>
+    <file>../arts/icons/16/edit-find.svg</file>
+    <file>../arts/icons/16/curve-connector.svg</file>
     <file>../arts/icons/2000/icon.png</file>
     <file>../arts/jeff.png</file>
   </qresource>

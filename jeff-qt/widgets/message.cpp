@@ -128,7 +128,8 @@ void Message::setup_picture(const QString &content) {
   label->setPixmap(pix.scaledToWidth(640, Qt::SmoothTransformation));
   label->setContextMenuPolicy(Qt::CustomContextMenu);
   auto *copy_path_action = new QAction(
-    QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy image path"), this
+    QIcon::fromTheme("edit-copy-path", QIcon(":/arts/icons/16/edit-copy-path.svg")),
+    tr("Copy image path"), this
   );
   connect(copy_path_action, &QAction::triggered, this, [this, content] {
     auto *clipboard = QGuiApplication::clipboard();
@@ -161,7 +162,7 @@ void Message::setup_error(const QString &content) {
 
 /*! @brief Prepares Message for widget installation. */
 void Message::prepare_to_widget() {
-  grid_layout->parentWidget()->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+  grid_layout->parentWidget()->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
 /*! @brief Creates a spacer and an Board to adjust the layout. */

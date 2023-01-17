@@ -1,16 +1,16 @@
 #include "menubar.h"
 
 /*! @brief The constructor. */
-MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent), basis(_basis) {
+MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), core(_core) {
   QString space = " ";
   // File
   file_menu.setTitle(tr("File"));
-  source_manager_action.setText(tr("Source manager") + space + basis->source_manager_cmd);
-  phrase_editor_action.setText(tr("Phrase editor") + space + basis->phrase_editor_cmd);
-  script_manager_action.setText(tr("Scripts' manager") + space + basis->source_manager_cmd);
+  source_manager_action.setText(tr("Source manager") + space + Basis::source_manager_cmd);
+  phrase_editor_action.setText(tr("Phrase editor") + space + Basis::phrase_editor_cmd);
+  script_manager_action.setText(tr("Scripts' manager") + space + Basis::source_manager_cmd);
   export_history_action.setText(tr("Export message history"));
   import_history_action.setText(tr("Import message history"));
-  enable_monologue_mode.setText(tr("Enable monologue mode") + space + basis->monologue_mode_cmd);
+  enable_monologue_mode.setText(tr("Enable monologue mode") + space + Basis::monologue_mode_cmd);
   enable_monologue_mode.setCheckable(true);
   exit_action.setText(tr("&Exit"));
   source_manager_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_M));
@@ -39,16 +39,24 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
   file_menu.addAction(&import_history_action);
   file_menu.addSeparator();
   file_menu.addAction(&exit_action);
-  connect(&source_manager_action, &QAction::triggered, this, [this] { emit sources_triggered(); });
-  connect(&phrase_editor_action, &QAction::triggered, this, [this] { emit phrase_editor_triggered(); });
+  connect(&source_manager_action, &QAction::triggered, this, [this] {
+    core->got_message_from_user(Basis::source_manager_cmd);
+  });
+  connect(&phrase_editor_action, &QAction::triggered, this, [this] {
+    core->got_message_from_user(Basis::phrase_editor_cmd);
+  });
   connect(&export_history_action, &QAction::triggered, this, [this] { emit export_triggered(); });
   connect(&import_history_action, &QAction::triggered, this, [this] { emit import_triggered(); });
+  connect(&enable_monologue_mode, &QAction::triggered, this, [this] {
+    core->got_message_from_user(Basis::monologue_mode_cmd);
+  });
   connect(&enable_monologue_mode, &QAction::toggled, this, [this, space] {
     if (enable_monologue_mode.isChecked())
-      enable_monologue_mode.setText(tr("Disable monologue mode") + space + basis->monologue_mode_cmd);
+      enable_monologue_mode.setText(tr("Disable monologue mode") + space + Basis::monologue_mode_cmd);
     else
-      enable_monologue_mode.setText(tr("Enable monologue mode") + space + basis->monologue_mode_cmd);
+      enable_monologue_mode.setText(tr("Enable monologue mode") + space + Basis::monologue_mode_cmd);
   });
+  connect(core, &Core::change_menubar_mmode, &enable_monologue_mode, &QAction::setChecked);
   connect(&exit_action, &QAction::triggered, this, [this] { emit exit_triggered(); });
   addMenu(&file_menu);
   // Edit
@@ -92,12 +100,58 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
   connect(&paste_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::paste);
   connect(&select_all_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::selectAll);
   addMenu(&edit_menu);
+  // Extensions
+  extensions_menu.setTitle(tr("Extensions"));
+  extensions_viewer_action.setText(tr("Extensions viewer") + space + Basis::extensions_viewer_cmd);
+  scenario_running_info.setText(tr("No scenario running"));
+  scenario_running_info.setEnabled(false);
+  current_scanner_info.setText(tr("No custom scanner enabled"));
+  current_scanner_info.setEnabled(false);
+  select_scanner_action.setText(tr("Select custom scanner..."));
+  current_composer_info.setText(tr("No custom composer enabled"));
+  current_composer_info.setEnabled(false);
+  select_composer_action.setText(tr("Select custom composer..."));
+  extensions_viewer_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_Slash));
+  extensions_viewer_action.setIcon(
+    QIcon::fromTheme("snap-extension", QIcon(":/arts/icons/16/snap-extension.svg")));
+  current_scanner_info.setIcon(
+    QIcon::fromTheme("edit-find", QIcon(":/arts/icons/16/edit-find.svg")));
+  current_composer_info.setIcon(
+    QIcon::fromTheme("curve-connector", QIcon(":/arts/icons/16/curve-connector.svg")));
+  extensions_menu.addAction(&extensions_viewer_action);
+  extensions_menu.addSeparator();
+  extensions_menu.addAction(&scenario_running_info);
+  extensions_menu.addSeparator();
+  extensions_menu.addAction(&current_scanner_info);
+  extensions_menu.addAction(&select_scanner_action);
+  extensions_menu.addSeparator();
+  extensions_menu.addAction(&current_composer_info);
+  extensions_menu.addAction(&select_composer_action);
+  connect(&extensions_viewer_action, &QAction::triggered, this, [this] {
+    core->got_message_from_user(Basis::extensions_viewer_cmd);
+  });
+  connect(&scenario_running_info, &QAction::triggered, this, [this] {
+    emit stop_scenario_triggered();
+  });
+  connect(&current_scanner_info, &QAction::triggered, this, [this] {
+    emit stop_scanner_triggered();
+  });
+  connect(&select_scanner_action, &QAction::triggered, this, [this] {
+    emit select_scanner_triggered();
+  });
+  connect(&current_composer_info, &QAction::triggered, this, [this] {
+    emit stop_composer_triggered();
+  });
+  connect(&select_composer_action, &QAction::triggered, this, [this] {
+    emit select_composer_triggered();
+  });
+  addMenu(&extensions_menu);
   // Tools
   tools_menu.setTitle(tr("Tools"));
   hide_menubar_action.setText(tr("Hide menubar"));
   full_screen_action.setText(tr("Full screen"));
   full_screen_action.setCheckable(true);
-  settings_action.setText(tr("Settings...") + space + basis->settings_cmd);
+  settings_action.setText(tr("Settings...") + space + Basis::settings_cmd);
   hide_menubar_action.setShortcut(Qt::CTRL | static_cast<int>(Qt::Key_H));
   full_screen_action.setShortcut(Qt::Key_F11);
   settings_action.setShortcut(Qt::CTRL | Qt::SHIFT | Qt::Key_Comma);
@@ -112,15 +166,19 @@ MenuBar::MenuBar(Basis *_basis, Line *line, QWidget *parent) : QMenuBar(parent),
   tools_menu.addSeparator();
   tools_menu.addAction(&settings_action);
   connect(&hide_menubar_action, &QAction::triggered, this, [this] { setVisible(!isVisible()); });
-  connect(&settings_action, &QAction::triggered, this, [this] { emit settings_triggered(); });
+  connect(&settings_action, &QAction::triggered, this, [this] {
+    core->got_message_from_user(Basis::settings_cmd);
+  });
   addMenu(&tools_menu);
   // Help
   help_menu.setTitle(tr("Help"));
-  about_jeff_action.setText(tr("About") + space + basis->about_cmd);
+  about_jeff_action.setText(tr("About") + space + Basis::about_cmd);
   about_jeff_action.setIcon(
     QIcon::fromTheme("help-about", QIcon(":/arts/icons/16/help-about.svg")));
   help_menu.addAction(&about_jeff_action);
   help_menu.addAction(QIcon(":/arts/icons/16/qt.svg"), tr("About Qt"), &QApplication::aboutQt);
-  connect(&about_jeff_action, &QAction::triggered, this, [this] { emit about_triggered(); });
+  connect(&about_jeff_action, &QAction::triggered, this, [this] {
+    core->got_message_from_user(Basis::about_cmd);
+  });
   addMenu(&help_menu);
 }

@@ -42,10 +42,7 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
     (exec(
       &query, WriteOptions, {
         *uuid, source.table_title, 
-        QString::number(source.is_read_only),
-        QString::number(source.is_private),
-        QString::number(source.is_catching),
-        QString::number(source.is_prioritised)
+        QString::number(source.weight)
       }) and 
      exec(&query, CreateSourceTable, QStringList(*uuid)))
       ) {
@@ -82,10 +79,7 @@ Sources SQLite::sources(const QString &path) {
     source.path = path;
     source.table_name = query.value(0).toString();
     source.table_title = query.value(1).toString();
-    source.is_read_only = query.value(2).toInt();
-    source.is_private = query.value(3).toInt();
-    source.is_catching = query.value(4).toInt();
-    source.is_prioritised = query.value(5).toInt();
+    source.weight = query.value(2).toInt();
     sources.append(source);
     query.next();
   }
@@ -101,10 +95,7 @@ Source SQLite::load_source(Source source) {
   exec(&query, LoadOptions, {source.table_name});
   if (not query.first()) return source;
   source.table_title = query.value(0).toString();
-  source.is_read_only = query.value(1).toBool();
-  source.is_private = query.value(2).toBool();
-  source.is_catching = query.value(3).toBool();
-  source.is_prioritised = query.value(4).toBool();
+  source.weight = query.value(1).toInt();
   db.close();
   return source;
 }
@@ -116,10 +107,7 @@ bool SQLite::write_source(const Source &source) {
   QSqlQuery query(db);
   auto result = exec(&query, WriteOptions,
                      {source.table_name, source.table_title,
-                      QString::number(source.is_read_only),
-                      QString::number(source.is_private),
-                      QString::number(source.is_catching),
-                      QString::number(source.is_prioritised)});
+                      QString::number(source.weight)});
   db.close();
   return result;
 }
@@ -508,61 +496,12 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
     );
     return false;
   }
-  auto isReadOnlyColumnValid = true;
-  isReadOnlyColumnValid &= query.value(1).toString() == "isReadOnly";
-  isReadOnlyColumnValid &= query.value(2).toString() == "INTEGER";
-  isReadOnlyColumnValid &= query.value(3).toInt() == 1;
-  if (not isReadOnlyColumnValid and not quiet) {
+  auto weightColumnValid = true;
+  weightColumnValid &= query.value(1).toString() == "weight";
+  weightColumnValid &= query.value(2).toString() == "INTEGER";
+  if (not weightColumnValid and not quiet) {
     emit sqlite_error(
-      tr("Validation error: the third column of the table with sources does not fit the description of \"isReadOnly\" INTEGER NOT NULL.") + " " + db_suffix
-    );
-    return false;
-  }
-  if (not query.next() and not quiet) {
-    emit sqlite_error(
-      tr("Validation error: the table with sources contains only three columns.") + " " + db_suffix
-    );
-    return false;
-  }
-  auto isPrivateColumnValid = true;
-  isPrivateColumnValid &= query.value(1).toString() == "isPrivate";
-  isPrivateColumnValid &= query.value(2).toString() == "INTEGER";
-  isPrivateColumnValid &= query.value(3).toInt() == 1;
-  if (not isPrivateColumnValid and not quiet) {
-    emit sqlite_error(
-      tr("Validation error: the fourth column of the table with sources does not fit the description of \"isPrivate\" INTEGER NOT NULL.") + " " + db_suffix
-    );
-    return false;
-  }
-  if (not query.next() and not quiet) {
-    emit sqlite_error(
-      tr("Validation error: the table with sources contains only four columns.") + " " + db_suffix
-    );
-    return false;
-  }
-  auto isCatchingColumnValid = true;
-  isCatchingColumnValid &= query.value(1).toString() == "isCatching";
-  isCatchingColumnValid &= query.value(2).toString() == "INTEGER";
-  isCatchingColumnValid &= query.value(3).toInt() == 1;
-  if (not isCatchingColumnValid and not quiet) {
-    emit sqlite_error(
-      tr("Validation error: the fifth column of the table with sources does not fit the description of \"isCatching\" INTEGER NOT NULL.") + " " + db_suffix
-    );
-    return false;
-  }
-  if (not query.next() and not quiet) {
-    emit sqlite_error(
-      tr("Validation error: the table with sources contains only five columns.") + " " + db_suffix
-    );
-    return false;
-  }
-  auto isPrioritisedColumnValid = true;
-  isPrioritisedColumnValid &= query.value(1).toString() == "isPrioritised";
-  isPrioritisedColumnValid &= query.value(2).toString() == "INTEGER";
-  isPrioritisedColumnValid &= query.value(3).toInt() == 1;
-  if (not isPrioritisedColumnValid and not quiet) {
-    emit sqlite_error(
-      tr("Validation error: the sixth column of the table with sources does not fit the description of \"isPrioritised\" INTEGER NOT NULL.") + " " + db_suffix
+      tr("Validation error: the third column of the table with sources does not fit the description of \"weight\" INTEGER.") + " " + db_suffix
     );
     return false;
   }
@@ -677,7 +616,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
   switch (option) {
     case CreateMainTableIfNotExists:
       query->prepare(
-        "create table if not exists sources (source text not null unique, title text, isReadOnly integer, isPrivate integer, isCatching integer, isPrioritised integer);"
+        "create table if not exists sources (source text not null unique, title text, weight integer);"
       );
       break;
     case CreateSourceTable:
@@ -687,17 +626,14 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       break;
     case LoadOptions:
       query->prepare(
-        QString("select title, isReadOnly, isPrivate, isCatching, isPrioritised from sources where source = '%1'").arg(values[0])
+        QString("select title, weight from sources where source = '%1'").arg(values[0])
       );
       break;
     case WriteOptions:
-      query->prepare("insert or replace into sources values (:s, :t, :ro, :pv, :ch, :zr)");
+      query->prepare("insert or replace into sources values (:s, :t, :w)");
       query->bindValue(":s", values[0]);
       query->bindValue(":t", values[1]);
-      query->bindValue(":ro", values[2].toInt());
-      query->bindValue(":pv", values[3].toInt());
-      query->bindValue(":ch", values[4].toInt());
-      query->bindValue(":zr", values[5].toInt());
+      query->bindValue(":w", values[2].toInt());
       break;
     case SelectSources:
       query->prepare("select * from sources");

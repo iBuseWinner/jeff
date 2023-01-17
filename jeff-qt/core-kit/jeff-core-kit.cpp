@@ -189,7 +189,11 @@ CacheWithIndices JCK::select_from_db(const QString &input) {
   for (int i = 0; i < sources.length(); i++) {
     auto cwi = basis->sql->scan_source(sources[i], input, thread_conn_wk);
     for (auto ewi : cwi) {
-      for (auto _ewi : selection) if (_ewi.second == ewi.second) continue; 
+      // Appending source weight:
+      ewi.second.properties["weight"] = ewi.second.weight() + sources[i].weight;
+      // Removing duplicates:
+      for (auto _ewi : selection) if (_ewi.second == ewi.second) continue;
+      // Inserting in cache:
       if (selection.keys().length() == 0) selection[0] = ewi;
       else selection[selection.lastKey() + 1] = ewi;
     }

@@ -26,6 +26,7 @@
  */
 PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
     : Dialog(mhandler, parent), basis(_basis) {
+  setFixedWidth(490);
   // Sets up overview widget.
   overview = new PhraseEditorOverview(basis);
   overview->setFixedWidth(480);

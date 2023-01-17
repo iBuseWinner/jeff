@@ -2,6 +2,7 @@
 #define MENUBAR_H
 
 #include "core-kit/basis.h"
+#include "core-kit/core.h"
 #include "widgets/line.h"
 #include "widgets/menu.h"
 #include <QAction>
@@ -18,35 +19,28 @@ class MenuBar : public QMenuBar {
   Q_DISABLE_COPY(MenuBar)
 public:
   // Objects:
-  QAction full_screen_action;
-  QAction enable_monologue_mode;
+  QAction
+    full_screen_action, enable_monologue_mode, scenario_running_info,
+    current_scanner_info, current_composer_info;
 
   // Functions described in `menubar.cpp`:
-  MenuBar(Basis *_basis, Line *line, QWidget *parent = nullptr);
+  MenuBar(Core *_core, Line *line, QWidget *parent = nullptr);
 
 signals:
-  /*! @brief Informs about clicking on the "Clear history" action. */
   void clear_history_triggered();
-  /*! @brief Informs about clicking on the "About" action. */
-  void about_triggered();
-  /*! @brief Informs about clicking on the "Settings" action. */
-  void settings_triggered();
-  /*! @brief Informs about clicking on the "Source manager" action. */
-  void sources_triggered();
-  /*! @brief Informs about clicking on the "Expression editor" action. */
-  void phrase_editor_triggered();
-  /*! @brief Informs about clicking on the "Export message history..." action. */
   void export_triggered();
-  /*! @brief Informs about clicking on the "Import message history..." action. */
   void import_triggered();
-  /*! @brief Informs about clicking on the "&Exit" action. */
+  void stop_scenario_triggered();
+  void stop_scanner_triggered();
+  void select_scanner_triggered();
+  void stop_composer_triggered();
+  void select_composer_triggered();
   void exit_triggered();
-  /*! @brief Informs about clicking on the "Help" action [constructing] */
   // void help_triggered();
 
 private:
   // Objects:
-  Basis *basis = nullptr;
+  Core *core = nullptr;
   Menu file_menu, edit_menu, extensions_menu, tools_menu, help_menu;
   QAction 
     /*! `File`  menu. */
@@ -56,8 +50,7 @@ private:
     clear_history_action, delete_text_action, cut_text_action, copy_text_action, paste_text_action,
     select_all_text_action,
     /*! `Extensions` menu. */
-    extensions_viewer_action, scenario_running_info, stop_scenario_action, current_scanner_info,
-    select_scanner_action, current_composer_info, select_composer_action,
+    extensions_viewer_action, select_scanner_action, select_composer_action,
     /*! `Tools` menu. */
     hide_menubar_action, settings_action,
     /*! `Help`  menu. */

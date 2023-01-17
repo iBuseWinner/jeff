@@ -51,7 +51,7 @@ private:
   HProcessor *history_processor = core->hp;
   Line *line = new Line(this);
   Display *display = new Display(history_processor, 25, this);
-  MenuBar *menubar = new MenuBar(basis, line, this);
+  MenuBar *menubar = new MenuBar(core, line, this);
 
   // Constants:
   static const int minimalWidth = 800;

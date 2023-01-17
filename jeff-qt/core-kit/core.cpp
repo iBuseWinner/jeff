@@ -222,7 +222,7 @@ MessageMeta Core::get_message(const QString &content, Author author,
 void Core::set_monologue_enabled(const bool enabled) {
   monologue_enabled = enabled;
 #ifdef JEFF_WITH_QT_WIDGETS
-  emit changeMenuBarMonologueCheckbox(enabled);
+  emit change_menubar_mmode(enabled);
 #endif
 }
 

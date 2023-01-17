@@ -17,16 +17,10 @@ public:
   QString table_name = "";
   /*! Table title [username]. */
   QString table_title = "";
-  /*! Means that does not participate in the selection of reagents. */
+  /*! Means that it doesn't participate in choosing of reagents. */
   bool is_disabled = false;
-  /*! Means that not available for adding expressions from Jeff. */
-  bool is_read_only = false;
-  /*! Means that unavailable until purposeful entry. */
-  bool is_private = false;
-  /*! Means that the search for reagents occurs exclusively in it. */
-  bool is_catching = false;
-  /*! Means that the input is first validated using this source. */
-  bool is_prioritised = false;
+  /*! If a given source has a higher weight than others, then if a reagent is found in it, it will be used with much higher priority. */
+  int weight = 0;
   
   // Constructors:
   Source() {}
@@ -35,6 +29,7 @@ public:
     table_name = json_object["container"].toString();
     table_title = json_object["title"].toString();
     is_disabled = json_object["disabled"].toBool();
+    weight = json_object["weight"].toInt();
   }
   
   // Functions:
@@ -49,7 +44,8 @@ public:
     return {{"container", table_name},
             {"disabled", is_disabled},
             {"path", path},
-            {"title", table_title}};
+            {"title", table_title},
+            {"weight", weight}};
   }
 };
 

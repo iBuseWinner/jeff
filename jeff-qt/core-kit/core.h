@@ -62,12 +62,14 @@ signals:
   /*! @brief Sends a message to Display. */
   ModalHandler *show_modal(MessageMeta message_data, ModalHandler *handler);
   /*! @brief Sets the monologue mode in MenuBar. */
-  bool changeMenuBarMonologueCheckbox(bool enabled);
+  bool change_menubar_mmode(bool enabled);
 #endif
   /*! @brief Sends a message. */
   MessageMeta show(MessageMeta message_data);
   /*! @brief Sends an updateable message. */
   QPair<QString, MessageMeta> show_status(QPair<QString, MessageMeta> id_and_message_data);
+  /*! @brief TBD */
+  QString change_menubar_scenario_name(QString scenario_name);
 
 private:
   // Objects:
