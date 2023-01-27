@@ -41,9 +41,9 @@ bool SQLite::create_source(const Source &source, QString *uuid) {
   if (not
     (exec(
       &query, WriteOptions, {
-        *uuid, source.table_title, 
+        *uuid, source.table_title,
         QString::number(source.weight)
-      }) and 
+      }) and
      exec(&query, CreateSourceTable, QStringList(*uuid)))
       ) {
     emit sqlite_error("Could not write options and create source table.");
@@ -120,7 +120,7 @@ Phrases SQLite::select_all(const Source &source) {
     return Phrases();
   }
   QSqlQuery query(db);
-  auto result = exec(&query, SelectPhrases, {source.table_name});
+  exec(&query, SelectPhrases, {source.table_name});
   query.first();
   Phrases phrases;
   while (query.isValid()) {
@@ -157,7 +157,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
   if (query.isValid()) {
     activator_expr_addr = query.value(0).toInt();
   }
-  exec(&query, SelectAddressesByExpressionAndExec, 
+  exec(&query, SelectAddressesByExpressionAndExec,
        {source.table_name, expression.reagent_text, QString::number(expression.exec)});
   query.first();
   int reagent_expr_address = -1;
@@ -171,7 +171,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
       query.first();
       auto links = Phrase::unpack_links(query.value(0).toString());
       links.insert(reagent_expr_address);
-      result = exec(&query, UpdateLinksByAddress, {source.table_name, 
+      result = exec(&query, UpdateLinksByAddress, {source.table_name,
                                                   QString::number(activator_expr_addr),
                                                   Phrase::pack_links(links)});
     } else {
@@ -179,7 +179,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
       query.first();
       auto links = Phrase::unpack_links(query.value(0).toString());
       links.insert(new_address);
-      result = exec(&query, UpdateLinksByAddress, {source.table_name, 
+      result = exec(&query, UpdateLinksByAddress, {source.table_name,
                                                   QString::number(activator_expr_addr),
                                                   Phrase::pack_links(links)});
       result &= exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
@@ -351,7 +351,6 @@ CacheWithIndices SQLite::scan_source(const Source &source,
     auto x = StringSearch::contains(input, query.value(1).toString());
     if (x[0] != 0) {
       /*! ...then this value is an activator. */
-      auto address = query.value(0).toInt();
       auto links = Phrase::unpack_links(query.value(2).toString());
       auto activator_text = query.value(1).toString();
       QSqlQuery subquery(db);

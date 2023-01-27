@@ -66,14 +66,14 @@ private:
   // Functions described in `jeff-core-kit.cpp`:
   CacheWithIndices select_from_cache(const QString &input);
   CacheWithIndices select_from_db(const QString &input);
-  CacheWithIndices select_candidates(CacheWithIndices selection, QString input);
+  CacheWithIndices select_candidates(CacheWithIndices selection);
   QPair<QString, QString> compose_answer(QString input, CacheWithIndices candidates);
   void reset_cache_use_cases(CacheWithIndices &selection);
 };
 
 /*! @class JCKController
  *  @brief Runs JCK entity in another thread.
- *  @details Jeff runs JCK in another thread to avoid UI freezing when executing too huge 
+ *  @details Jeff runs JCK in another thread to avoid UI freezing when executing too huge
  *  scripts or processes.  */
 class JCKController : public QObject {
   Q_OBJECT

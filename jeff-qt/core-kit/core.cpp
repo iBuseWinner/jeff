@@ -211,7 +211,6 @@ MessageMeta Core::get_message(const QString &content, Author author,
                               ContentType content_type, Theme theme) {
   MessageMeta message;
   message.content = content;
-  message.datetime = QDateTime::currentDateTime();
   message.author = author;
   message.content_type = content_type;
   message.theme = theme;

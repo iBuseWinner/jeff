@@ -119,7 +119,7 @@ QString StringSearch::replace(QString that, QMap<int, int> indices, QString to) 
   for (auto i1 : indices.keys()) {
     if (i1 == 0 and indices[i1] == -2) continue;
     if (i1 > len or indices[i1] > len) continue;
-    QString n = "";
+    QString n = to;
     for (int i = i1; i < indices[i1]; i++) n += " ";
     auto left = that.left(i1);
     auto right = that.right(len - indices[i1]);

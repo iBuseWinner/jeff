@@ -1,0 +1,16 @@
+{
+  "name": "GPT-3 Chat",
+  "desc": "Chat resolver written on top of OpenAI's GPT-3 model, also used in a similar way in ChatGPT.",
+  "authors": [],
+  "license": "MIT",
+  "links": [],
+  "envs": {},
+  "program": "python",
+  "args": [
+    "gpt3-chat.py",
+    "23174",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 23174
+}

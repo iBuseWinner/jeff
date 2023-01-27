@@ -6,27 +6,21 @@
 #include <QPair>
 #include <QString>
 
-/*!
- * @namespace StringSearch
- * @brief Contains methods for working with user input.
- */
+/*! @namespace StringSearch
+ *  @brief Contains methods for working with user input.  */
 namespace StringSearch {
-  /*!
-   * @struct WordMetadata
-   * @brief Stores a word and indexes positioning it in a string.
-   * @sa StringSearch::contains
-   */
+  /*! @struct WordMetadata
+   *  @brief Stores a word and indexes positioning it in a string.
+   *  @sa StringSearch::contains  */
   struct WordMetadata {
     int i1 = 0;
     int i2 = 0;
     QString word;
   };
 
-  /*!
-   * @enum Intersects
-   * @brief Enumerating options for @a intersects.
-   * @sa StringSearch::intersects
-   */
+  /*! @enum Intersects
+   *  @brief Enumerating options for @a intersects.
+   *  @sa StringSearch::intersects  */
   enum Intersects { No, FirstBetter, SecondBetter, Equal };
 
   // Functions described in `stringssearch.cpp`:

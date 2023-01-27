@@ -2,16 +2,16 @@
 
 /*! @brief The constructor. */
 ExtensionsViewer::ExtensionsViewer(
-  ExtensionsManager *_em, Basis *_basis, QWidget *parent, ModalHandler *mhandler
+  ExtensionsManager *_em, QWidget *parent, ModalHandler *mhandler
 ) : Dialog(mhandler, parent) {
   // Sets up overview widget.
-  overview = new ExtensionsViewerOverview(_em, _basis, this);
+  overview = new ExtensionsViewerOverview(_em, this);
   overview->setFixedWidth(480);
   connect(overview, &ExtensionsViewerOverview::open_brief_by_extension_meta,
           this, &ExtensionsViewer::open_brief_by_extension_meta);
   connect(overview, &ExtensionsViewerOverview::close_viewer, this, &Dialog::close);
   // Sets up brief widget.
-  brief = new ExtensionsViewerBrief();
+  brief = new ExtensionsViewerBrief(_em, this);
   brief->setFixedWidth(480);
   connect(brief, &ExtensionsViewerBrief::close_brief, this, &ExtensionsViewer::open_overview);
   brief->hide();

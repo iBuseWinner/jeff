@@ -1,7 +1,6 @@
 #ifndef EXTENSIONS_OVERVIEW_H
 #define EXTENSIONS_OVERVIEW_H
 
-#include "core-kit/basis.h"
 #include "core-kit/extensions-manager.h"
 #include "core-kit/extensions/extension.h"
 #include "dialogues/extensions-viewer/card.h"
@@ -10,6 +9,8 @@
 #include "widgets/layouts/linears.h"
 #include <QFileDialog>
 #include <QList>
+#include <QMutableListIterator>
+#include <QSpacerItem>
 #include <QWidget>
 
 /*! @class ExtensionsViewerOverview
@@ -19,7 +20,7 @@ class ExtensionsViewerOverview : public QWidget {
   Q_DISABLE_COPY(ExtensionsViewerOverview)
 public:
   // Functions described in `overview.cpp`:
-  ExtensionsViewerOverview(ExtensionsManager *_em, Basis *_basis, QWidget *parent = nullptr);
+  ExtensionsViewerOverview(ExtensionsManager *_em, QWidget *parent = nullptr);
   void fill_extensions_cards();
 
 signals:
@@ -27,15 +28,15 @@ signals:
   ExtensionMeta *open_brief_by_extension_meta(ExtensionMeta *extension_meta);
   /*! @brief Asks to close viewer dialog. */
   void close_viewer();
-  
+
 private:
   // Objects:
   ExtensionsManager *em = nullptr;
-  Basis *basis = nullptr;
   VLineLt *viewer_list_lt = nullptr;
   QList<ExtensionsViewerCard *> cards;
   QLabel *no_extensions_yet = nullptr;
-  
+  QSpacerItem *spacer = nullptr;
+
   // Functions described in `overview.cpp`:
   void read_from_file();
 };

@@ -14,16 +14,16 @@ class Expression {
 public:
   // Objects:
   /*! What we looking for. */
-  QString activator_text;
+  QString activator_text = "";
   /*! Answer expression. */
-  QString reagent_text;
+  QString reagent_text = "";
   /*! Reagents properties (name, value). */
-  Options properties;
+  Options properties = Options();
   /*! How much times this expression used. */
   ushort use_cases = 0;
   /*! Is the reagent a script to be executed? */
   bool exec = false;
-  
+
   // Constructors:
   Expression() {}
   Expression(const QJsonObject &json_object) {
@@ -33,7 +33,7 @@ public:
     use_cases = json_object["use_cases"].toInt();
     exec = json_object["exec"].toBool();
   }
-  
+
   // Functions:
   /*! @brief Compares two expressions. */
   friend bool operator==(Expression e1, Expression e2) {
@@ -42,7 +42,7 @@ public:
            e1.exec == e2.exec and
            e1.properties == e2.properties;
   }
-  
+
   /*! @brief Turns @an expresson into a JSON object. */
   QJsonObject to_json() const {
     return {{"activator_text", activator_text},

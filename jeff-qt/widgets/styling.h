@@ -19,8 +19,8 @@ public:
   QString css_bg_color;
   QString css_fg_color;
   QString css_hl_color;
-  bool light_theme;
-  QFontMetrics *metrics = nullptr;
+  bool light_theme = true;
+  QFontMetrics *metrics = nullptr; /*!< For some elided text in app. @sa PhraseEditorOverview.cpp:65,84 */
 
   // Constants:
   inline static const QString css_blank = "rgb(%1,%2,%3)";

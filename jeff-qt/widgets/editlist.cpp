@@ -33,7 +33,7 @@ QStringList EditList::get_list() {
 /*! @brief Adds the given elements to the list. */
 void EditList::append(QStringList list) {
   auto *root = list_widget->invisibleRootItem();
-  for (auto element : list) auto *list_widget_element = new QTreeWidgetItem(root, {element});
+  for (auto element : list) new QTreeWidgetItem(root, {element});
 }
 
 /*! @brief Set the text on the buttons. */
@@ -69,7 +69,7 @@ void EditList::add_element() {
   if (element_text.trimmed().isEmpty()) return;
   line_edit->setText(QString());
   auto *root = list_widget->invisibleRootItem();
-  auto *list_widget_element = new QTreeWidgetItem(root, {element_text});
+  new QTreeWidgetItem(root, {element_text});
 }
 
 /*! @brief Removes selected element. */

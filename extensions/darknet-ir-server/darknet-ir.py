@@ -60,7 +60,7 @@ def recognize(cli, request, savepath):
   if verbose:
     print(gotcha_msg)
   cli.send_msg(gotcha_msg)
-  subprocess.call(["darknet" if os.path.exists("darknet") else "darknet.exe",
+  subprocess.call(['./darknet' if os.path.exists("darknet") else 'darknet.exe',
                    "detect",
                    os.path.join("cfg", "yolov7-tiny.cfg"),
                    "yolov7-tiny.weights",

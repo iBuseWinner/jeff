@@ -33,9 +33,9 @@ void ExtensionsManager::add_extension(ExtensionMeta *extension_meta) {
   _extensions_meta.append(extension_meta);
 }
 
-/*! @brief Starts a daemon. */
+/*! @brief Starts the daemon. */
 void ExtensionsManager::start_extension(ExtensionMeta *extension_meta) {
-  auto *proc = new DaemonProcess(extension_meta, basis, this);
+  auto *proc = new DaemonProcess(basis, extension_meta, this);
   connect(proc, &DaemonProcess::daemon_exception, this, [this](QString error_text) {
     emit extension_exception(error_text);
   });
@@ -44,15 +44,20 @@ void ExtensionsManager::start_extension(ExtensionMeta *extension_meta) {
   if (extension_meta->is_server) notifier->subscribe(extension_meta);
 }
 
+/*! @brief Stops the daemon. */
+void ExtensionsManager::stop_extension(ExtensionMeta *extension_meta) {
+  if (extension_meta->is_server) notifier->unsubscribe(extension_meta);
+  for (auto *proc : _running) if (proc->is_spawner(extension_meta)) {
+    proc->stop();
+    disconnect(proc, &DaemonProcess::daemon_exception, nullptr, nullptr);
+    _running.removeOne(proc);
+    break;
+  }
+}
+
 /*! @brief Removes an extension metadata and stops its daemon from the general list. */
 void ExtensionsManager::remove_extension(ExtensionMeta *extension_meta) {
-  for (auto *extension : _running)
-    if (extension->is_spawner(extension_meta)) {
-      extension->stop();
-      _running.removeOne(extension);
-      break;
-    }
-  if (extension_meta->is_server) notifier->unsubscribe(extension_meta);
+  stop_extension(extension_meta);
   _extensions_meta.removeOne(extension_meta);
   delete extension_meta;
 }
@@ -60,8 +65,10 @@ void ExtensionsManager::remove_extension(ExtensionMeta *extension_meta) {
 /*! @brief Returns the state of the extension. */
 bool ExtensionsManager::is_running(ExtensionMeta *extension_meta) {
   for (auto *extension : _running)
-    if (extension->is_spawner(extension_meta) and extension->state() == QProcess::Running)
-      return true;
+    if (extension->is_spawner(extension_meta)) {
+      if (extension->state() == QProcess::Running) return true;
+      else break;
+    }
   return false;
 }
 

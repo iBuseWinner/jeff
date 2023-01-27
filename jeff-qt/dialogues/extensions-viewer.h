@@ -18,8 +18,7 @@ class ExtensionsViewer : public Dialog {
   Q_DISABLE_COPY(ExtensionsViewer)
 public:
   // Functions described in `extensions-viewer.cpp`:
-  ExtensionsViewer(ExtensionsManager *_em, Basis *_basis,
-                   QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
+  ExtensionsViewer(ExtensionsManager *_em, QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
   
 private:
   // Objects:

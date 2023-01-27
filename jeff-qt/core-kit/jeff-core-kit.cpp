@@ -1,7 +1,7 @@
 #include "jeff-core-kit.h"
 
 /*! @brief The constructor. */
-JCK::JCK(Basis *_basis, HProcessor *_hp, QObject *parent) 
+JCK::JCK(Basis *_basis, HProcessor *_hp, QObject *parent)
     : QObject(parent), basis(_basis), hp(_hp) {
   gen = new QRandomGenerator(QTime::currentTime().msec());
   load_cache();
@@ -45,7 +45,7 @@ void JCK::search_for_suggests(const QString &input) {
     emit empty(input);
     return;
   }
-  auto sorted = select_candidates(selection, input);
+  auto sorted = select_candidates(selection);
   if (composer) {
     auto json_object = pw->request_compose(composer, input, sorted);
     if (json_object.contains(basis->sendWk)) {
@@ -60,7 +60,7 @@ void JCK::search_for_suggests(const QString &input) {
       emit empty(input);
       return;
     }
-    sorted = select_candidates(selection, input);
+    sorted = select_candidates(selection);
     composition = compose_answer(input, sorted);
   }
   emit response(composition.second.trimmed());
@@ -75,7 +75,7 @@ void JCK::reset_cache_use_cases(CacheWithIndices &selection) {
 }
 
 /*! @brief Matches candidates for each index of occurrence in the input expression. */
-CacheWithIndices JCK::select_candidates(CacheWithIndices selection, QString input) {
+CacheWithIndices JCK::select_candidates(CacheWithIndices selection) {
   CacheWithIndices candidates;
   for (auto ewi : selection) {
     if (candidates.keys().isEmpty()) {

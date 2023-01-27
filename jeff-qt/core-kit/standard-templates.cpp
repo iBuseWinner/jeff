@@ -40,7 +40,7 @@ bool StandardTemplates::dialogues(const QString &expression) {
   }
   if (expression == basis->extensions_viewer_cmd) {
     auto *modal_handler = new ModalHandler(this);
-    auto *extensions_viewer = new ExtensionsViewer(em, basis, nullptr, modal_handler);
+    auto *extensions_viewer = new ExtensionsViewer(em, nullptr, modal_handler);
     Q_UNUSED(extensions_viewer)
     emit showModalWidget(modal_handler);
     return true;

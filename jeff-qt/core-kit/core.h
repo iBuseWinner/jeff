@@ -68,7 +68,7 @@ signals:
   MessageMeta show(MessageMeta message_data);
   /*! @brief Sends an updateable message. */
   QPair<QString, MessageMeta> show_status(QPair<QString, MessageMeta> id_and_message_data);
-  /*! @brief TBD */
+  /*! @brief Asks the Menubar to set a new script name (it is displayed in the main window). */
   QString change_menubar_scenario_name(QString scenario_name);
 
 private:

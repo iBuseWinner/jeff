@@ -96,8 +96,8 @@ signals:
 private:
   // Constants:
   static const int maximum_number_of_attempts = 4; /*!< Number of attempts for table creation. */
-  static const int init_additionals_rows = 4;      /*!< Column from which additional expression 
-                                                   /*!< properties begin. */
+  static const int init_additionals_rows = 4;      /*!< Column from which additional expression
+                                                        properties begin. */
 
   // Functions described in `sqlite.cpp`:
   QSqlDatabase prepare(const QString &path, QString conn_name = "", Check option = Openable,

@@ -13,11 +13,8 @@
 #include <QJsonDocument>
 #include <QList>
 
-/*!
- * @class Json
- * @brief Provides methods for reading and writing data in/from json files.
- * @sa SQLite
- */
+/*! @class Json
+ *  @brief Provides methods for reading and writing data in/from json files.  */
 class Json : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Json)

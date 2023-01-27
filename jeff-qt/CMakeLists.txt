@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
+add_compile_options(-g -Wall -Wextra -pedantic -Wstrict-aliasing)
+
 include_directories(
   .
   core-kit
@@ -46,7 +48,9 @@ set(SRCS
   core-kit/database/sqlite.h
   core-kit/extensions/daemon-process.cpp
   core-kit/extensions/daemon-process.h
+  core-kit/extensions/extension.cpp
   core-kit/extensions/extension.h
+  core-kit/extensions/script.cpp
   core-kit/extensions/script.h
   core-kit/model/keystore.h
   core-kit/model/message.h

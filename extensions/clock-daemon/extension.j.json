@@ -5,14 +5,14 @@
     {
       "author": "Mark CDA",
       "contacts": {
-        "Email": "aclo.create@gmail.com"
+        "email": "aclo.create@gmail.com"
       }
     }
   ],
   "license": "MIT",
   "links": [],
   "envs": {},
-  "command": "python",
+  "program": "python",
   "args": [
     "clock.py",
     "-p",

@@ -94,6 +94,45 @@
     </message>
 </context>
 <context>
+    <name>ExtensionsViewerBrief</name>
+    <message>
+        <source>Remove this extension from Jeff</source>
+        <translation>Удалить это расширение из Джеффа</translation>
+    </message>
+    <message>
+        <source>Description:</source>
+        <translation>Описание:</translation>
+    </message>
+    <message>
+        <source>Authors:</source>
+        <translation>Авторы:</translation>
+    </message>
+    <message>
+        <source>License:</source>
+        <translation>Лицензия:</translation>
+    </message>
+    <message>
+        <source>Links:</source>
+        <translation>Ссылки:</translation>
+    </message>
+    <message>
+        <source>Turn the extension off</source>
+        <translation>Выключить расширение</translation>
+    </message>
+    <message>
+        <source>Running</source>
+        <translation>Запущено</translation>
+    </message>
+    <message>
+        <source>Turn the extension on</source>
+        <translation>Включить расширение</translation>
+    </message>
+    <message>
+        <source>Stopped</source>
+        <translation>Остановлено</translation>
+    </message>
+</context>
+<context>
     <name>ExtensionsViewerCard</name>
     <message>
         <source>See details</source>
@@ -177,10 +216,6 @@
         <translation>Сохранить историю сообщений</translation>
     </message>
     <message>
-        <source>JSON file</source>
-        <translation>Файл JSON</translation>
-    </message>
-    <message>
         <source>Import message history?</source>
         <translation>Импортировать историю сообщений?</translation>
     </message>
@@ -203,6 +238,10 @@
     <message>
         <source>Enter /q to quit</source>
         <translation>Введите /q для выхода</translation>
+    </message>
+    <message>
+        <source>Jeff&apos;s history file</source>
+        <translation>Файл истории Джеффа</translation>
     </message>
 </context>
 <context>
@@ -325,6 +364,34 @@
     <message>
         <source>Scripts&apos; manager</source>
         <translation>Менеджер скриптов</translation>
+    </message>
+    <message>
+        <source>Extensions</source>
+        <translation>Расширения</translation>
+    </message>
+    <message>
+        <source>Extensions viewer</source>
+        <translation>Просмотр расширений</translation>
+    </message>
+    <message>
+        <source>No scenario running</source>
+        <translation>Нет запущенных сценариев</translation>
+    </message>
+    <message>
+        <source>No custom scanner enabled</source>
+        <translation>Нет пользовательского сканера</translation>
+    </message>
+    <message>
+        <source>Select custom scanner...</source>
+        <translation>Выбрать сканер...</translation>
+    </message>
+    <message>
+        <source>No custom composer enabled</source>
+        <translation>Нет пользовательского композитора</translation>
+    </message>
+    <message>
+        <source>Select custom composer...</source>
+        <translation>Выбрать композитор...</translation>
     </message>
 </context>
 <context>
@@ -540,34 +607,6 @@
         <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь два столбца.</translation>
     </message>
     <message>
-        <source>Validation error: the third column of the table with sources does not fit the description of &quot;isReadOnly&quot; INTEGER NOT NULL.</source>
-        <translation>Ошибка в ходе проверки: третий столбец таблицы с источниками не соответствует описанию &quot;isReadOnly&quot; INTEGER NOT NULL.</translation>
-    </message>
-    <message>
-        <source>Validation error: the table with sources contains only three columns.</source>
-        <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь три столбца.</translation>
-    </message>
-    <message>
-        <source>Validation error: the fourth column of the table with sources does not fit the description of &quot;isPrivate&quot; INTEGER NOT NULL.</source>
-        <translation>Ошибка в ходе проверки: четвёртый столбец таблицы с источниками не соответствует описанию &quot;isPrivate&quot; INTEGER NOT NULL.</translation>
-    </message>
-    <message>
-        <source>Validation error: the table with sources contains only four columns.</source>
-        <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь четыре столбца.</translation>
-    </message>
-    <message>
-        <source>Validation error: the fifth column of the table with sources does not fit the description of &quot;isCatching&quot; INTEGER NOT NULL.</source>
-        <translation>Ошибка в ходе проверки: пятый столбец таблицы с источниками не соответствует описанию &quot;isCatching&quot; INTEGER NOT NULL.</translation>
-    </message>
-    <message>
-        <source>Validation error: the table with sources contains only five columns.</source>
-        <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь пять столбцов.</translation>
-    </message>
-    <message>
-        <source>Validation error: the sixth column of the table with sources does not fit the description of &quot;isPrioritised&quot; INTEGER NOT NULL.</source>
-        <translation>Ошибка в ходе проверки: шестой столбец таблицы с источниками не соответствует описанию &quot;isPrioritised&quot; INTEGER NOT NULL.</translation>
-    </message>
-    <message>
         <source>Database &quot;%1&quot;, source &quot;%2&quot;.</source>
         <translation>База данных &quot;%1&quot;, источник &quot;%2&quot;.</translation>
     </message>
@@ -614,6 +653,10 @@
     <message>
         <source>Validation error: the fifth column of the source does not fit the description of &quot;adprops&quot; TEXT.</source>
         <translation>Ошибка в ходе проверки: пятый столбец источника не соответствует описанию &quot;adprops&quot; TEXT.</translation>
+    </message>
+    <message>
+        <source>Validation error: the third column of the table with sources does not fit the description of &quot;weight&quot; INTEGER.</source>
+        <translation>Ошибка в ходе проверки: первый столбец таблицы с источниками не соответствует описанию &quot;weight&quot; INTEGER.</translation>
     </message>
 </context>
 <context>

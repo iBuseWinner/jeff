@@ -81,7 +81,10 @@ PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)
 }
 
 /*! @brief Limits the maximum size of the header so that long text does not stretch the editor. */
-void PhraseEditorBrief::resizeEvent(QResizeEvent *event) { header.setMaximumWidth(width() - 10); }
+void PhraseEditorBrief::resizeEvent(QResizeEvent *event) {
+  Q_UNUSED(event)
+  header.setMaximumWidth(width() - 10);
+}
 
 /*! @brief Sets up brief widget. */
 bool PhraseEditorBrief::setup(Source _source, Phrases _phrases, int address) {
@@ -112,7 +115,7 @@ bool PhraseEditorBrief::setup(Source _source, Phrases _phrases, int address) {
   header.setText(phrase.expression);
   address_label.setText(tr("The address of the phrase is %1.").arg(phrase.address));
   disconnect(&exec_checkbox, &QCheckBox::stateChanged, nullptr, nullptr);
-  exec_checkbox.setChecked(phrase.exec == true ? Qt::Checked : Qt::Unchecked);
+  exec_checkbox.setChecked((phrase.exec == true) ? true : false);
   connect(&exec_checkbox, &QCheckBox::stateChanged, this, &PhraseEditorBrief::change_exec);
   return true;
 }
@@ -129,7 +132,7 @@ void PhraseEditorBrief::edit_phrase_text() {
   if (exec_checkbox.isChecked()) {
     if (not script_editor) {
       script_editor = new ScriptEditor(this, basis);
-      script_editor->set_stype(1); /*!< @details This is hidden function in @a ScriptEditor 
+      script_editor->set_stype(1); /*!< @details This is hidden function in @a ScriptEditor
                                     *   for @a ScriptType::React scripts. */
       script_editor->setMaximumWidth(maximumWidth() - 6);
     }

@@ -38,7 +38,9 @@ public:
   ExtensionsManager(HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent = nullptr);
   ~ExtensionsManager();
   void add_extension(ExtensionMeta *extension_meta);
+  void start_extension(ExtensionMeta *extension_meta);
   void remove_extension(ExtensionMeta *extension_meta);
+  void stop_extension(ExtensionMeta *extension_meta);
   bool is_running(ExtensionMeta *extension_meta);
   ExtensionsMeta get_extensions_meta();
   void startup();
@@ -56,9 +58,6 @@ private:
   ExtensionsMeta _extensions_meta;
   RunningExtensions _running;
   QString _current_path;
-  
-  // Functions described in `extensions-manager.cpp`:
-  void start_extension(ExtensionMeta *extension_meta);
 };
 
 #endif

@@ -5,10 +5,8 @@
 #include <QMutex>
 #include <QObject>
 
-/*!
- * @class Cacher
- * @brief Manages the expression cache.
- */
+/*! @class Cacher
+ *  @brief Manages the expression cache. */
 class Cacher : public QObject {
   Q_OBJECT
 public:

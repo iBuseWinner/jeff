@@ -1,6 +1,6 @@
 #include "card.h"
 
-/*! @brief The constructor. 
+/*! @brief The constructor.
  *  @details Widget's layout:
  *  <---------------------->
  *  [      Ext's name      ]
@@ -9,16 +9,17 @@
  *  <---------------------->  */
 ExtensionsViewerCard::ExtensionsViewerCard(
   ExtensionMeta *_extension_meta, ExtensionsManager *_em, QWidget *parent
-) : QWidget(parent), em(_em), extension_meta(_extension_meta) {
+) : Board(parent), em(_em), extension_meta(_extension_meta) {
+  setStyleSheet(styling.light_theme ? card_light_theme_style : card_dark_theme_style);
   auto *open_btn = new Button(tr("See details"), this);
-  auto *extension_name = new QLabel(extension_meta->name, this);
-  auto *extension_description = new QLabel(extension_meta->desc, this);
-  auto *extension_status = new QLabel(this);
+  extension_name = new QLabel("<b>" + extension_meta->name + "</b>", this);
+  extension_name->setTextFormat(Qt::RichText);
+  extension_description = new QLabel(extension_meta->desc, this);
+  extension_description->setWordWrap(true);
+  extension_status = new QLabel(this);
   extension_status->setTextFormat(Qt::RichText);
-  if (em->is_running(extension_meta))
-    extension_status->setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
-  else
-    extension_status->setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
+  extension_status->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  update_status();
   setLayout(VLineLt::another()
     ->addw(extension_name)->addw(extension_description)
     ->addlt(
@@ -26,4 +27,19 @@ ExtensionsViewerCard::ExtensionsViewerCard(
     )
   );
   connect(open_btn, &Button::clicked, this, [this] { emit clicked_to_open(extension_meta); });
+}
+
+/*! @brief Updates the card with updated metadata if needed. */
+void ExtensionsViewerCard::update() {
+  extension_name->setText(extension_meta->name);
+  extension_description->setText(extension_meta->desc);
+  update_status();
+}
+
+/*! @brief Updates running status. */
+void ExtensionsViewerCard::update_status() {
+  if (em->is_running(extension_meta))
+    extension_status->setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
+  else
+    extension_status->setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
 }

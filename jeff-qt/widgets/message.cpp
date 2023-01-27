@@ -39,8 +39,8 @@ void Message::update_text(const QString &text) {
 
 /*! @brief Adjusts the message to the content type. */
 void Message::content_type(ContentType _ct) {
-  if (_ct == ContentType::Picture or 
-      md.content.toLower().endsWith(".jpg") or 
+  if (_ct == ContentType::Picture or
+      md.content.toLower().endsWith(".jpg") or
       md.content.toLower().endsWith(".png")) {
     auto info = QFileInfo(md.content);
     if (info.exists() and info.isFile()) {
@@ -58,8 +58,8 @@ void Message::content_type(ContentType _ct) {
 
 /*! @brief Sets the message colors. */
 void Message::theme(Theme _t) {
-  if (_t == Theme::Std) return; /*!< This theme is by default, and message theme 
-                                /*!  cannot be changed after sending. */
+  if (_t == Theme::Std) return; /*!< This theme is by default, and message theme
+                                 *   cannot be changed after sending. */
   auto *board = static_cast<Board *>(layout()->itemAt(0)->widget());
   if (board == nullptr) board = static_cast<Board *>(layout()->itemAt(1)->widget());
   if (board == nullptr) return; /*!< C'est impossible... */

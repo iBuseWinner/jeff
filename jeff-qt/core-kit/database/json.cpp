@@ -49,8 +49,8 @@ ExtensionsMeta Json::read_extensions() {
   if (not store.exists()) return ExtensionsMeta();
   QJsonArray scripts_json = read_json(&store);
   ExtensionsMeta extensions_meta;
-  for (auto obj : scripts_json) {
-    auto *extension_meta = new ExtensionMeta(obj.toObject());
+  for (auto script_origin : scripts_json) {
+    auto *extension_meta = ExtensionMeta::from_origin(script_origin.toString());
     if (not extension_meta) continue;
     extensions_meta.append(extension_meta);
   }
@@ -107,7 +107,7 @@ void Json::write_NLP_cache(Cache cache) {
 /*! @brief Saves extensions' metadata. */
 void Json::write_extensions(ExtensionsMeta extensions_meta) {
   QJsonArray json_arr;
-  for (auto *extension_meta : extensions_meta) json_arr.append(extension_meta->to_json());
+  for (auto *extension_meta : extensions_meta) json_arr.append(extension_meta->origin);
   QFile file = QFile(_settings_path + QDir::separator() + extensions_store_filename);
   write_json(&file, json_arr);
 }

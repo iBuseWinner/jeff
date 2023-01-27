@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import locale, os, openai, credentials, uuid
+import locale, os, openai, credentials, uuid, argparse
 
 lang, _ = locale.getdefaultlocale()
 KEEP_QNA = 9
 
+# WARNING To use credentials, you have to fill it in `credentials-example.py` file and rename it to `credentials.py`.
 if lang == "ru_RU":
   os.environ["http_proxy"] = credentials.HTTP_PROXY
   os.environ["https_proxy"] = credentials.HTTPS_PROXY
@@ -14,6 +15,16 @@ ai_sequence = "\nAI: "
 human_sequence = "\nHuman: "
 
 prompt = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff created by Mark CDA and Victor Shamshin. I use an AI model created by OpenAI. How can I help you today?"
+
+# parser = argparse.ArgumentParser(description="Darknet & YOLOv7 Objects-on-Image Recognition Jeff's extension.")
+# parser.add_argument("extension_port", type=int, help="extension's server port")
+# parser.add_argument("jeff_port", type=int, help="Jeff port")
+# parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+# 
+# args = parser.parse_args()
+# extension_port = args.extension_port
+# jeff_port = args.jeff_port
+# verbose = args.verbose
 
 def generate_response(prompt):
   """"""

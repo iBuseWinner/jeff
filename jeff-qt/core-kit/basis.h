@@ -69,19 +69,19 @@ public:
   static constexpr const char *greetingsMsg              = "core-kit/greetings";
   static constexpr const char *scenarioExitMsg           = "core-kit/scenarioexitter";
   static constexpr const char *serverPortSt              = "core-kit/serverport";
-  
+
   static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
   static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";
-  
+
   static constexpr const char *serverAuthorizationOnSt = "server/authorize";
   static constexpr const char *serverAuthKeySt         = "server/auth_key";
-  
+
   static constexpr const char *customScannerSt    = "scripts/custom_scanner";
   static constexpr const char *customScannerFnSt  = "scripts/custom_scanner_fn_name";
   static constexpr const char *customComposerSt   = "scripts/custom_composer";
   static constexpr const char *customComposerFnSt = "scripts/custom_composer_fn_name";
   static constexpr const char *customComposerSASt = "scripts/custom_composer_send_adprops";
-  
+
   static constexpr const char *scriptPathWk       = "path";
   static constexpr const char *funcNameWk         = "fn_name";
   static constexpr const char *getHistWk          = "hist_parts";
@@ -104,7 +104,7 @@ public:
   static constexpr const char *sendStatusWk       = "send_status";
   static constexpr const char *sendWarningWk      = "send_warning";
   static constexpr const char *authKeyWk          = "auth_key";
-  
+
 #ifdef JEFF_WITH_QT_WIDGETS
   static constexpr const char *source_manager_cmd    = "/sources";
   static constexpr const char *script_manager_cmd    = "/scripts";
@@ -125,7 +125,7 @@ public:
     load_sources();
     load_memory();
   }
-  
+
   /*! @brief The destructor. */
   ~Basis() { save_memory(); }
 
@@ -139,12 +139,12 @@ public:
   inline bool correct() { return _settings.status() != QSettings::FormatError; }
   /*! @brief Clears scenario's token. */
   inline void clear_stoken() { _scenario_token = QString(); }
-  
+
   /*! @brief Reads the setting. */
   inline QVariant read(const QString &key)       { return _settings.value(key); }
   inline QVariant operator[](const char *key)    { return _settings.value(key); }
   inline QVariant operator[](const QString &key) { return read(key); }
-  
+
   /*! @brief Says if there is a parameter with this key in the settings. */
   inline bool contains(const char *key) { return _settings.contains(key); }
   /*! @brief Determines where application settings are stored. */
@@ -175,7 +175,7 @@ signals:
   /*! @brief Notifies of a message from a script that should be shown on the screen as a user message
    *  (on the right side of the screen).  */
   QString send_as_user(QString outter_message);
-  /*! @brief Notifies of a message from a script that should be displayed on the screen 
+  /*! @brief Notifies of a message from a script that should be displayed on the screen
    *  and may change over time.  */
   QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
   /*! @brief Reports that sources has been changed. */
@@ -187,15 +187,15 @@ signals:
 
 private:
   // Objects:
-  Sources _sources;      /*!< List of sources for @a JCK. */
-  KeyStore _memory;      /*!< Long-life memory. */
-  QString _scenario_token; /*!< Token for scenarios. */
-  
+  Sources _sources = Sources();   /*!< List of sources for @a JCK. */
+  KeyStore _memory = KeyStore();  /*!< Long-life memory. */
+  QString _scenario_token = "";   /*!< Token for scenarios. */
+
   /*! Qt settings object. */
   QSettings _settings = QSettings(
     QSettings::IniFormat, QSettings::UserScope, companyName, applicationName
   );
-  
+
   // Functions described in `basis.cpp`:
   void set_first_source_as_default();
 };

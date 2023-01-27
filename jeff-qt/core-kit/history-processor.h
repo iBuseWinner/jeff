@@ -36,8 +36,8 @@ signals:
 private:
   // Objects:
   Basis *basis = nullptr;
-  MessagesMeta message_history;
-  
+  MessagesMeta message_history = MessagesMeta();
+
   // Constants:
   const int maximum_number_of_recent_messages_to_be_sent = 20;
 };

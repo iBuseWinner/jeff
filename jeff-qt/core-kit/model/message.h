@@ -52,9 +52,9 @@ public:
     theme = Theme(json_object["theme"].toInt());
   }
   /*! Content. */
-  QString content = QString();
+  QString content = "";
   /*! Data and time of creation/change. */
-  QDateTime datetime;
+  QDateTime datetime = QDateTime::currentDateTime();
   /*! Message author. */
   Author author = Author::undefA;
   /*! Type of message content. */

@@ -1,7 +1,7 @@
 #include "daemon-process.h"
 
 /*! @brief The constructor. */
-DaemonProcess::DaemonProcess(ExtensionMeta *_extension_meta, Basis *_basis, QObject *parent)
+DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObject *parent)
   : QProcess(parent), basis(_basis), extension_meta(_extension_meta)
 {
   setProgram(extension_meta->program);
@@ -15,6 +15,10 @@ DaemonProcess::DaemonProcess(ExtensionMeta *_extension_meta, Basis *_basis, QObj
   }
   setArguments(args);
   if (not extension_meta->working_dir.isEmpty()) setWorkingDirectory(extension_meta->working_dir);
+  else if (not extension_meta->origin.isEmpty()) {
+    QFileInfo fi(extension_meta->origin);
+    setWorkingDirectory(fi.canonicalPath());
+  }
   if (not extension_meta->envs.isEmpty()) {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     for (auto key : extension_meta->envs.keys()) env.insert(key, extension_meta->envs[key]);
@@ -63,4 +67,9 @@ QJsonObject DaemonProcess::request_output(
   QJsonDocument out_doc = QJsonDocument::fromJson(process.readAll(), &errors);
   if (errors.error != QJsonParseError::NoError) return QJsonObject();
   return out_doc.object();
+}
+
+/*! @brief Reads all standard output. */
+QByteArray DaemonProcess::get_output() {
+  return readAllStandardOutput();
 }

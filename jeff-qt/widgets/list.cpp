@@ -17,7 +17,7 @@ List::List(QWidget *parent) : QTreeWidget(parent) {
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &List::show_items);
 }
 
-/*! @brief Adds a top-level element to the list, while ensuring that no more than a certain number 
+/*! @brief Adds a top-level element to the list, while ensuring that no more than a certain number
  *  of elements are displayed on the screen.  */
 void List::addTopLevelItem(QTreeWidgetItem *item) {
   items_counter++;
@@ -35,7 +35,10 @@ void List::clear() {
 
 /*! @brief Makes it so that when you add as many elements as you like, the most recent ones
  *  are displayed on the screen.  */
-void List::scroll(int min, int max) { verticalScrollBar()->setValue(max); }
+void List::scroll(int min, int max) {
+  Q_UNUSED(min)
+  verticalScrollBar()->setValue(max);
+}
 
 /*! @brief Shows neccessary widgets when scrolling. */
 void List::show_items(int value) {
@@ -56,7 +59,7 @@ void List::show_items(int value) {
       scrollTo(model()->index(3, 0), QAbstractItemView::PositionAtTop);
     } else if (value == verticalScrollBar()->maximum()) {
       int max_index = top_level_items.indexOf(topLevelItem(topLevelItemCount() - 1));
-      short portion = (top_level_items.length() - max_index - 1) < normal_portion ? 
+      short portion = (top_level_items.length() - max_index - 1) < normal_portion ?
         (top_level_items.length() - max_index - 1) : normal_portion;
       if (portion < 1) {
         scroll_update.unlock();

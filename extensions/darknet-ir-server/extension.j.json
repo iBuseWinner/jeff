@@ -5,12 +5,11 @@
     {
       "author": "Mark CDA",
       "contacts": {
-        "Email": "aclo.create@gmail.com"
+        "email": "aclo.create@gmail.com"
       }
     },
     {
-      "author": "Joseph Redmon",
-      "contacts": {}
+      "author": "Joseph Redmon"
     }
   ],
   "license": "MIT",
@@ -23,12 +22,12 @@
     "https://github.com/AlexeyAB/darknet"
   ],
   "envs": {},
-  "command": "python",
+  "program": "python",
   "args": [
     "darknet-ir.py",
     "15203",
     "<JEFF_PORT>"
   ],
-  "server_addr": "",
+  "server_ip": "",
   "server_port": 15203
 }
