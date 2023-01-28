@@ -1,0 +1,3 @@
+[submodule "jeff-qt/jeff-qt/lib/maddy"]
+	path = jeff-qt/jeff-qt/lib/maddy
+	url = https://github.com/progsource/maddy
