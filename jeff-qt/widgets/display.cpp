@@ -3,9 +3,11 @@
 /*! @brief The constructor. */
 Display::Display(HProcessor *_hp, short _max_message_amount, QWidget *parent)
     : ScrollArea(parent), hp(_hp), max_message_amount(_max_message_amount) {
+  std::shared_ptr<maddy::ParserConfig> markdown_config = std::make_shared<maddy::ParserConfig>();
+  markdown_config->isHTMLWrappedInParagraph = false;
+  markdown_parser = new maddy::Parser(markdown_config);
   connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scroll_down);
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scroller);
-  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
   setObjectName(object_name);
   setStyleSheet(box_style_sheet);
   start();
@@ -22,7 +24,6 @@ void Display::prepare_message(Message *message) {
 /*! @brief Really adds a message to the display. @sa ..._by_md and ..._with_widget. */
 void Display::add_message(Message *message) {
   prepare_message(message);
-  messages_mutex.lock();
   message_counter++;
   all_messages.append(message);
   vt_layout->addw(message);
@@ -41,32 +42,27 @@ void Display::add_message(Message *message) {
       delete message;
       message_counter--;
     }
-  messages_mutex.unlock();
 }
 
 /*! @brief Constructs @a Message and adds it to the display. */
 void Display::add_message_by_md(MessageMeta message_data) {
-  add_message(new Message(message_data));
+  add_message(new Message(markdown_parser, message_data));
 }
 
 /*! @brief Updates the text of a message by its ID, or adds a new message with that ID. */
 void Display::update_status(QPair<QString, MessageMeta> id_and_message_data) {
   if (not status_messages.contains(id_and_message_data.first)) {
-    auto *message = new Message(id_and_message_data.second);
+    auto *message = new Message(markdown_parser, id_and_message_data.second);
     add_message(message);
-    messages_mutex.lock();
     status_messages[id_and_message_data.first] = message;
-    messages_mutex.unlock();
   } else {
-    messages_mutex.lock();
     status_messages[id_and_message_data.first]->update_text(id_and_message_data.second.content);
-    messages_mutex.unlock();
   }
 }
 
 /*! @brief Constructs @a Message and adds it to the display. */
 void Display::add_message_with_widget(MessageMeta message_data, ModalHandler *handler) {
-  auto *message = new Message(message_data);
+  auto *message = new Message(markdown_parser, message_data);
   handler->getPrisoner()->setParent(message);
   message->widget(handler);
   add_message(message);
@@ -75,7 +71,7 @@ void Display::add_message_with_widget(MessageMeta message_data, ModalHandler *ha
 /*! @brief Sets the widget to its initial state.
  *  @details The method is also used to reset an existing state.  */
 void Display::start() {
-  messages_mutex.lock();
+  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
   message_counter = 0;
   all_messages.clear();
   status_messages.clear();
@@ -89,7 +85,6 @@ void Display::start() {
   box->setObjectName(box_object_name);
   box->setLayout(vt_layout);
   setWidget(box);
-  messages_mutex.unlock();
 }
 
 /*! @details Of the given message history, it only shows the last 50. This is because the widget
@@ -100,14 +95,12 @@ void Display::start_by(MessagesMeta history) {
   int m /*!< @brief Max messages to be shown now. */ = history.length() > max_message_amount ?
     max_message_amount : history.length();
   int l = history.length();
-  messages_mutex.lock();
   for (int i = 0; i < l - m; i++) {
-    auto *message = new Message(history[i]);
+    auto *message = new Message(markdown_parser, history[i]);
     prepare_message(message);
     message_counter++;
     all_messages.append(message);
   }
-  messages_mutex.unlock();
   for (int i = l - m; i < l; i++) add_message_by_md(history[i]);
 }
 
@@ -142,7 +135,7 @@ void Display::scroller(int value) {
     if (message_counter + portion > length) portion = length - message_counter;
     auto *messages = hp->messages();
     while (portion--) {
-      auto *message = new Message(messages->at(messages->length() - message_counter - 1));
+      auto *message = new Message(markdown_parser, messages->at(messages->length() - message_counter - 1));
       all_messages.insert(0, message);
       int pos = 0;
       if (spacer) pos = 1;
@@ -156,13 +149,11 @@ void Display::scroller(int value) {
 
 /*! @brief Removes the message from Display. */
 void Display::remove_message(Message *message) {
-  messages_mutex.lock();
   message->close();
   vt_layout->rem(message);
   all_messages.removeOne(message);
   disconnect(message);
   message_counter--;
-  messages_mutex.unlock();
 }
 
 /*! @brief When resizing, calls the @a fit_messages function again. */
@@ -173,8 +164,6 @@ void Display::resizeEvent(QResizeEvent *event) {
 
 /*! @brief Controls the size of messages on the screen, limiting them to 80% of the display width. */
 void Display::fit_messages() {
-  if (not messages_mutex.try_lock()) return;
   auto max_width = int(width() * 0.8);
   for (auto *message : all_messages) message->setWidth(max_width);
-  messages_mutex.unlock();
 }

@@ -42,4 +42,5 @@ void ExtensionsViewerCard::update_status() {
     extension_status->setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
   else
     extension_status->setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
+  QTimer::singleShot(1000, this, &ExtensionsViewerCard::update_status);
 }

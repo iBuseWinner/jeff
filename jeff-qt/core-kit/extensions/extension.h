@@ -19,7 +19,7 @@ public:
   QJsonObject to_json() const;
   QString to_string() const;
   static ExtensionMeta *from_string(QString string);
-  static ExtensionMeta *from_origin(const QString &origin);
+  static ExtensionMeta *from_origin(const QString &origin, bool enabled);
 
   // Objects:
   bool valid = false;
@@ -37,6 +37,7 @@ public:
   QHostAddress server_addr;
   quint16 server_port;
   bool notify_when_no_suggestions = false;
+  bool enabled = true;
 };
 
 /*! @brief Container for scripts of different types. */

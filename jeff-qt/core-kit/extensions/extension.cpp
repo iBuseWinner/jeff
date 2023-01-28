@@ -118,7 +118,7 @@ ExtensionMeta *ExtensionMeta::from_string(QString string) {
 }
 
 /*! @brief Reads extension's metadata from @a origin file. */
-ExtensionMeta *ExtensionMeta::from_origin(const QString &origin) {
+ExtensionMeta *ExtensionMeta::from_origin(const QString &origin, bool enabled) {
   QFile file(origin);
   if (not file.exists()) return nullptr;
   if (not file.open(QIODevice::ReadOnly | QIODevice::Text)) return nullptr;
@@ -128,5 +128,6 @@ ExtensionMeta *ExtensionMeta::from_origin(const QString &origin) {
   auto *extension_meta = from_string(text);
   if (not extension_meta) return nullptr;
   extension_meta->origin = origin;
+  extension_meta->enabled = enabled;
   return extension_meta;
 }

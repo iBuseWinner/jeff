@@ -1,11 +1,11 @@
 {
   "name": "5-Sec Precision Clock",
-  "desc": "Clock that sends status message to Jeff every 5 seconds.",
+  "desc": "Example extension. It's just a clock that sends status message to Jeff every 5 seconds.",
   "authors": [
     {
       "author": "Mark CDA",
       "contacts": {
-        "email": "aclo.create@gmail.com"
+        "telegram": "@markcda"
       }
     }
   ],

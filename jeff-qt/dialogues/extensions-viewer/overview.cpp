@@ -17,8 +17,11 @@ ExtensionsViewerOverview::ExtensionsViewerOverview(ExtensionsManager *_em, QWidg
     QIcon::fromTheme("collapse-all", QIcon(":/arts/icons/16/collapse-all.svg")));
   connect(add_extension_btn, &Button::clicked, this, &ExtensionsViewerOverview::read_from_file);
   connect(close_btn, &Button::clicked, this, [this] { emit close_viewer(); });
-  viewer_list_lt = VLineLt::another();
-  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding);
+  no_extensions_yet = new QLabel("<i>" + tr("Jeff doesn't have extensions yet. You can add them yourself by downloading from the Internet and clicking on the \"Add from file\" button.") + "</i>", this);
+  no_extensions_yet->setWordWrap(true);
+  no_extensions_yet->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  viewer_list_lt = VLineLt::another()->addw(no_extensions_yet);
+  spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
   auto *scroll_area = new ScrollArea(this);
   auto *area_widget = new QWidget(this);
   area_widget->setContentsMargins(0, 0, 5, 0);
@@ -100,7 +103,7 @@ void ExtensionsViewerOverview::read_from_file() {
     nullptr, tr("Select extension's configuration"), nullptr, tr("Jeff's extension") + "(extension*.j.json)"
   );
   if (filename.isEmpty()) return;
-  auto *extension_meta = ExtensionMeta::from_origin(filename);
+  auto *extension_meta = ExtensionMeta::from_origin(filename, true);
   if (not extension_meta) return;
   em->add_extension(extension_meta);
   fill_extensions_cards();

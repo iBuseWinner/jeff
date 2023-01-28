@@ -17,7 +17,6 @@ verbose = args.verbose
 
 
 def try_locate(cli):
-  """"""
   if not os.path.exists('darknet'):
     err_msg = 'Darknet is not installed. Please install it from <a href=\"https://github.com/AlexeyAB/darknet\">this link</a> before using the extension.' if lang != 'ru_RU' else 'Darknet не установлен. Пожалуйста, установите его по <a href=\"https://github.com/AlexeyAB/darknet\">ссылке</a>, прежде чем использовать расширение.'
     if verbose:
@@ -49,7 +48,6 @@ def try_locate(cli):
 
 
 def recognize(cli, request, savepath):
-  """"""
   if request["author"] == 1:
     return
   if not (request["content"].endswith('.jpg') or request["content"].endswith('.png')):
@@ -74,7 +72,6 @@ def recognize(cli, request, savepath):
 
 
 def main():
-  """"""
   srv = server.Server(None, extension_port)
   cli = client.Client('localhost', jeff_port)
   if not try_locate(cli):

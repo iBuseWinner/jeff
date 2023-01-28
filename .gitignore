@@ -2,7 +2,6 @@
 __pycache__
 jeff-api/dist
 jeff-api/src/*.egg-info
-extensions/alice-aiml-server/files
 extensions/gpt3-server/credentials.py
 extensions/gpt3-server/proxy-scraper
 extensions/darknet-ir-server/darknet

@@ -4,10 +4,11 @@
 #include "core-kit/history-processor.h"
 #include "core-kit/model/message.h"
 #include "dialogues/modal-handler.h"
+#include "maddy/parser.h"
 #include "widgets/message.h"
 #include "widgets/scrollarea.h"
 #include "widgets/layouts/linears.h"
-#include <QMutex>
+#include <memory>
 #include <QWidget>
 
 /*! @class Display
@@ -20,6 +21,7 @@ public:
   // Functions:
   /*! @brief Sets the scroll state. */
   void set_scroll_enabled(bool _scroll_enabled) { scroll_enabled = _scroll_enabled; }
+  ~Display() { delete markdown_parser; }
 
   // Functions described in `display.cpp`:
   Display(HProcessor *_hp = nullptr, short _max_message_amount = 50, QWidget *parent = nullptr);
@@ -32,11 +34,11 @@ public:
 
 private:
   // Objects:
+  maddy::Parser *markdown_parser = nullptr;
   HProcessor *hp = nullptr;
   VLineLt *vt_layout = nullptr;
   QSpacerItem *spacer = nullptr;
   bool scroll_enabled = true;
-  QMutex messages_mutex;
   QList<Message *> all_messages;
   QMap<QString, Message *> status_messages;
   short message_counter = 0;

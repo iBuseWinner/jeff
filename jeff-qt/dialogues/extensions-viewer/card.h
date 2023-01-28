@@ -8,6 +8,7 @@
 #include "widgets/styling.h"
 #include "widgets/layouts/linears.h"
 #include <QLabel>
+#include <QTimer>
 
 /*! @class ExtensionsViewerCard
  *  @brief A card with a brief description of the extension.  */

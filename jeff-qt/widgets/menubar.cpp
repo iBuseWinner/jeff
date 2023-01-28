@@ -94,11 +94,11 @@ MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), c
   edit_menu.addSeparator();
   edit_menu.addAction(&select_all_text_action);
   connect(&clear_history_action, &QAction::triggered, this, [this] { emit clear_history_triggered(); });
-  connect(&delete_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::backspace);
-  connect(&cut_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::cut);
-  connect(&copy_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::copy);
-  connect(&paste_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::paste);
-  connect(&select_all_text_action, &QAction::triggered, &(line->line_edit), &LineEdit::selectAll);
+  connect(&delete_text_action, &QAction::triggered, &(line->line_edit), &TextEdit::backspace);
+  connect(&cut_text_action, &QAction::triggered, &(line->line_edit), &TextEdit::cut);
+  connect(&copy_text_action, &QAction::triggered, &(line->line_edit), &TextEdit::copy);
+  connect(&paste_text_action, &QAction::triggered, &(line->line_edit), &TextEdit::paste);
+  connect(&select_all_text_action, &QAction::triggered, &(line->line_edit), &TextEdit::selectAll);
   addMenu(&edit_menu);
   // Extensions
   extensions_menu.setTitle(tr("Extensions"));

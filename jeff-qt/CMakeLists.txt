@@ -22,6 +22,7 @@ include_directories(
   dialogues
   dialogues/phrase-editor
   dialogues/sources
+  lib/maddy/include
   widgets
 )
 
@@ -147,6 +148,8 @@ set(SRCS_UI
   widgets/spoiler.h
   widgets/styling.cpp
   widgets/styling.h
+  widgets/textedit.cpp
+  widgets/textedit.h
   widgets/layouts/grid.h
   widgets/layouts/linears.h
   jeff-ui.cpp

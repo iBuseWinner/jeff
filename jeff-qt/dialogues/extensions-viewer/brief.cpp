@@ -62,16 +62,22 @@ void ExtensionsViewerBrief::update_status() {
   if (not extension_meta) return;
   if (em->is_running(extension_meta)) {
     disconnect(&on_off_btn, &Button::clicked, nullptr, nullptr);
-    on_off_btn.setText(tr("Turn the extension off"));
+    on_off_btn.setText(tr("Disable the extension"));
     on_off_btn.setIcon(QIcon::fromTheme("media-playback-stop", QIcon(":/arts/icons/16/media-playback-stop.svg")));
-    connect(&on_off_btn, &Button::clicked, this, [this] { em->stop_extension(extension_meta); });
+    connect(&on_off_btn, &Button::clicked, this, [this] {
+      em->stop_extension(extension_meta);
+      extension_meta->enabled = false;
+    });
     status_lbl.setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
   }
   else {
     disconnect(&on_off_btn, &Button::clicked, nullptr, nullptr);
-    on_off_btn.setText(tr("Turn the extension on"));
+    on_off_btn.setText(tr("Enable the extension"));
     on_off_btn.setIcon(QIcon::fromTheme("media-playback-start", QIcon(":/arts/icons/16/media-playback-start.svg")));
-    connect(&on_off_btn, &Button::clicked, this, [this] { em->start_extension(extension_meta); });
+    connect(&on_off_btn, &Button::clicked, this, [this] {
+      em->start_extension(extension_meta);
+      extension_meta->enabled = true;
+    });
     status_lbl.setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
   }
   QTimer::singleShot(1000, this, &ExtensionsViewerBrief::update_status);

@@ -7,6 +7,7 @@ ExtensionsViewer::ExtensionsViewer(
   // Sets up overview widget.
   overview = new ExtensionsViewerOverview(_em, this);
   overview->setFixedWidth(480);
+  overview->setFixedHeight(320);
   connect(overview, &ExtensionsViewerOverview::open_brief_by_extension_meta,
           this, &ExtensionsViewer::open_brief_by_extension_meta);
   connect(overview, &ExtensionsViewerOverview::close_viewer, this, &Dialog::close);

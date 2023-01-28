@@ -47,10 +47,13 @@ Cache Json::read_NLP_cache() {
 ExtensionsMeta Json::read_extensions() {
   QFile store = QFile(_settings_path + QDir::separator() + extensions_store_filename);
   if (not store.exists()) return ExtensionsMeta();
-  QJsonArray scripts_json = read_json(&store);
+  QJsonArray extensions_json = read_json(&store);
   ExtensionsMeta extensions_meta;
-  for (auto script_origin : scripts_json) {
-    auto *extension_meta = ExtensionMeta::from_origin(script_origin.toString());
+  for (auto extension_props : extensions_json) {
+    if (not extension_props.isObject()) continue;
+    auto ext_props_obj = extension_props.toObject();
+    if (not ext_props_obj.contains("origin") and not ext_props_obj.contains("enabled")) continue;
+    auto *extension_meta = ExtensionMeta::from_origin(ext_props_obj["origin"].toString(), ext_props_obj["enabled"].toBool());
     if (not extension_meta) continue;
     extensions_meta.append(extension_meta);
   }
@@ -107,7 +110,10 @@ void Json::write_NLP_cache(Cache cache) {
 /*! @brief Saves extensions' metadata. */
 void Json::write_extensions(ExtensionsMeta extensions_meta) {
   QJsonArray json_arr;
-  for (auto *extension_meta : extensions_meta) json_arr.append(extension_meta->origin);
+  for (auto *extension_meta : extensions_meta) json_arr.append(QJsonObject({
+    {"origin", extension_meta->origin},
+    {"enabled", extension_meta->enabled}
+  }));
   QFile file = QFile(_settings_path + QDir::separator() + extensions_store_filename);
   write_json(&file, json_arr);
 }

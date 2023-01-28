@@ -3,7 +3,7 @@
 
 #include "widgets/board.h"
 #include "widgets/button.h"
-#include "widgets/lineedit.h"
+#include "widgets/textedit.h"
 #include "widgets/layouts/linears.h"
 #include <QLayout>
 #include <QLineEdit>
@@ -18,7 +18,7 @@ class Line : public Board {
 public:
   // Objects:
   Button send_button;
-  LineEdit line_edit;
+  TextEdit line_edit;
 
   // Functions described in `line.cpp`:
   Line(QWidget *parent = nullptr);

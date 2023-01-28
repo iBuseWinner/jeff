@@ -1,0 +1,34 @@
+{
+  "name": "Alice AIML",
+  "desc": "Alice AIML is an extension that integrates the PyAIML processor into Jeff. (From original project: \"PyAIML is an interpreter for AIML (the Artificial Intelligence Markup Language), implemented entirely in standard Python.\")",
+  "authors": [
+    {
+      "author": "Paulo Villegas",
+      "contacts": {
+        "gitHub": "https://github.com/paulovn"
+      }
+    },
+    {
+      "author": "Cort Stratton"
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "telegram": "@markcda"
+      }
+    }
+  ],
+  "license": "BSD-2-Clause",
+  "links": [
+    "https://github.com/paulovn/python-aiml"
+  ],
+  "envs": {},
+  "program": "python",
+  "args": [
+    "alice.py",
+    "8017",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 8017
+}

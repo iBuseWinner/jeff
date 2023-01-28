@@ -3,12 +3,15 @@
 
 #include "core-kit/model/message.h"
 #include "dialogues/modal-handler.h"
+#include "maddy/parser.h"
 #include "widgets/board.h"
 #include "widgets/menu.h"
 #include "widgets/layouts/grid.h"
 #include "widgets/layouts/linears.h"
+#include <string>
 #include <QAction>
 #include <QClipboard>
+#include <QDesktopServices>
 #include <QFileInfo>
 #include <QLabel>
 #include <QPair>
@@ -17,6 +20,7 @@
 #include <QSizePolicy>
 #include <QSpacerItem>
 #include <QTextDocument>
+#include <QUrl>
 
 /*! @class Message
  *  @brief Widget that displays single piece of data.
@@ -27,16 +31,11 @@ class Message : public QWidget {
   Q_DISABLE_COPY(Message)
 public:
   // Functions:
-  Author author() { return md.author; }
-  ContentType content_type() { return md.content_type; }
-  Theme theme() { return md.theme; }
-  QString content() { return md.content; }
-  QDateTime date_time() { return md.datetime; }
   MessageMeta message_data() { return md; }
 
   // Functions described in `message.cpp`:
-  Message();
-  Message(MessageMeta _md);
+  Message(maddy::Parser *_markdown_parser);
+  Message(maddy::Parser *_markdown_parser, MessageMeta _md);
   void message_data(MessageMeta _md);
   void widget(ModalHandler *modal_handler);
   void update_text(const QString &text);
@@ -49,6 +48,7 @@ signals:
 
 private:
   // Objects:
+  maddy::Parser *markdown_parser = nullptr;
   MessageMeta md;
   GridLt *grid_layout = nullptr;
   QWidget *w = nullptr;
@@ -60,22 +60,21 @@ private:
   static const bool text_ideal_width = false;
 
   // Functions described in `message.cpp`:
-  void author(Author _a);
-  void content_type(ContentType _ct);
-  void theme(Theme _t);
+  void author();
+  void content_type();
+  void theme();
   void setup_jeff();
   void setup_user();
-  void setup_text(const QString &content);
-  void setup_markdown(const QString &content);
-  void setup_picture(const QString &content);
-  // void setup_file(const QString &content);
-  void setup_warning(const QString &content);
-  void setup_error(const QString &content);
+  void setup_text();
+  void setup_markdown();
+  void setup_picture();
+  // void setup_file();
+  void setup_warning();
+  void setup_error();
   void prepare_to_widget();
   QPair<QSpacerItem *, Board *> make_layout();
-  QString optimal_line(
-    const QString &remaining, QTextDocument &document, int max_width, ContentType ct
-  );
+  QString from_plain_to_markdown(QString content);
+  QString optimal_line(const QString &remaining, QTextDocument &document, int max_width);
   QString optimal_line(const QString &remaining, int max_sym_width);
 };
 

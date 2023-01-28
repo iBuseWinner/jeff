@@ -33,9 +33,6 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_M) emit send(basis->monologue_mode_cmd);
     if (event->key() == Qt::Key_Less) emit send(basis->settings_cmd);
   }
-  if (event->key() == Qt::Key_Return)
-    event->modifiers() == Qt::ControlModifier ? line->line_edit.insert("\n")
-                                              : line->send_button.click();
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H) menubar->setVisible(not menubar->isVisible());
     if (event->key() == Qt::Key_M) emit send(basis->source_manager_cmd);
@@ -47,7 +44,7 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
     /*! If the menu bar is hidden, it does not send signals. */
     if (menubar->isHidden()) full_screen_handler();
   }
-  if ((event->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) && (event->key() == Qt::Key_D))
+  if ((event->modifiers() == (Qt::ControlModifier | Qt::AltModifier)) and (event->key() == Qt::Key_D))
     clear();
 }
 

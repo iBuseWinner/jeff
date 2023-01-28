@@ -116,20 +116,20 @@
         <translation>Ссылки:</translation>
     </message>
     <message>
-        <source>Turn the extension off</source>
-        <translation>Выключить расширение</translation>
-    </message>
-    <message>
         <source>Running</source>
         <translation>Запущено</translation>
     </message>
     <message>
-        <source>Turn the extension on</source>
-        <translation>Включить расширение</translation>
-    </message>
-    <message>
         <source>Stopped</source>
         <translation>Остановлено</translation>
+    </message>
+    <message>
+        <source>Disable the extension</source>
+        <translation>Отключить расширение</translation>
+    </message>
+    <message>
+        <source>Enable the extension</source>
+        <translation>Включить расширение</translation>
     </message>
 </context>
 <context>
@@ -411,6 +411,10 @@
     <message>
         <source>Copy message text</source>
         <translation>Скопировать текст сообщения</translation>
+    </message>
+    <message>
+        <source>Open</source>
+        <translation>Открыть</translation>
     </message>
 </context>
 <context>

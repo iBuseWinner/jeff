@@ -1,9 +1,27 @@
 {
   "name": "GPT-3 Chat",
   "desc": "Chat resolver written on top of OpenAI's GPT-3 model, also used in a similar way in ChatGPT.",
-  "authors": [],
+  "authors": [
+    {
+      "author": "Tom B Brown (+30 more at arXiv)",
+      "contacts": {
+        "email": "nottombrown@gmail.com"
+      }
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "telegram": "@markcda"
+      }
+    }
+  ],
   "license": "MIT",
-  "links": [],
+  "links": [
+    "https://arxiv.org/abs/2005.14165",
+    "https://openai.com/api/",
+    "https://openai.com/blog/chatgpt/",
+    "https://github.com/openai/"
+  ],
   "envs": {},
   "program": "python",
   "args": [

@@ -19,24 +19,17 @@ void HProcessor::remove_one(MessageMeta message) { message_history.removeOne(mes
 /*! @brief Saves @a _message_history to file. */
 void HProcessor::save(const QString &filename) {
   MessagesMeta _message_history;
-  for (auto msg : message_history)
-    if (msg.content_type != ContentType::Widget) _message_history.append(msg);
-  if (filename.isEmpty())
-    basis->json->write_message_history(_message_history);
-  else
-    basis->json->write_message_history(_message_history, new QFile(filename));
+  for (auto msg : message_history) if (msg.content_type != ContentType::Widget) _message_history.append(msg);
+  if (filename.isEmpty()) basis->json->write_message_history(_message_history);
+  else basis->json->write_message_history(_message_history, new QFile(filename));
 }
 
 /*! @brief Returns the latest messages. */
 MessagesMeta HProcessor::recent(int amount) {
   MessagesMeta messages;
-  if (amount > message_history.length())
-    amount = message_history.length();
-  if (amount > maximum_number_of_recent_messages_to_be_sent)
-    amount = maximum_number_of_recent_messages_to_be_sent;
-  for (int i = 0; i < amount; i++) {
-    messages.append(message_history[message_history.length() - i - 1]);
-  }
+  if (amount > message_history.length()) amount = message_history.length();
+  if (amount > maximum_number_of_recent_messages_to_be_sent) amount = maximum_number_of_recent_messages_to_be_sent;
+  for (int i = 0; i < amount; i++) messages.append(message_history[message_history.length() - i - 1]);
   return messages;
 }
 

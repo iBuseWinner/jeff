@@ -24,7 +24,7 @@ void ExtensionsManager::shutdown_extensions() {
 
 /*! @brief Runs commands from daemons' metadata intended to start when Jeff starts. */
 void ExtensionsManager::startup() {
-  for (auto *extension_meta : _extensions_meta) start_extension(extension_meta);
+  for (auto *extension_meta : _extensions_meta) if (extension_meta->enabled) start_extension(extension_meta);
 }
 
 /*! @brief Adds an extension to the general list. */

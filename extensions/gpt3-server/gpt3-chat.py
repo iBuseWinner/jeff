@@ -16,18 +16,18 @@ human_sequence = "\nHuman: "
 
 prompt = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff created by Mark CDA and Victor Shamshin. I use an AI model created by OpenAI. How can I help you today?"
 
-# parser = argparse.ArgumentParser(description="Darknet & YOLOv7 Objects-on-Image Recognition Jeff's extension.")
-# parser.add_argument("extension_port", type=int, help="extension's server port")
-# parser.add_argument("jeff_port", type=int, help="Jeff port")
-# parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
-# 
-# args = parser.parse_args()
-# extension_port = args.extension_port
-# jeff_port = args.jeff_port
-# verbose = args.verbose
+parser = argparse.ArgumentParser(description="Chat resolver written on top of OpenAI's GPT-3 model, also used in a similar way in ChatGPT.")
+parser.add_argument("extension_port", type=int, help="extension's server port")
+parser.add_argument("jeff_port", type=int, help="Jeff port")
+parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+
+args = parser.parse_args()
+extension_port = args.extension_port
+jeff_port = args.jeff_port
+verbose = args.verbose
+
 
 def generate_response(prompt):
-  """"""
   try:
     completions = openai.Completion.create(
       model="text-davinci-003",
@@ -50,7 +50,6 @@ def generate_response(prompt):
 
 
 def history_reducer(history):
-  """"""
   if len(history) > KEEP_QNA >= 3:
     del history[2]
     del history[1]
@@ -62,14 +61,10 @@ def make_prompt(history):
 
 
 def main():
-  """"""
   from jeff_api import client, server
-  
-  srv = server.Server(None, 23174)
-  cli = client.Client('localhost', 8005)
-  
+  srv = server.Server(None, extension_port)
+  cli = client.Client('localhost', jeff_port)
   history = [prompt]
-  
   print('ChatGPT activated.' if lang != 'ru_RU' else 'ChatGPT активирован.')
   while True:
     data = srv.listen()
@@ -81,17 +76,20 @@ def main():
       continue
     msg_id = str(uuid.uuid4())
     cli.send_status(msg_id, '*[ChatGPT]* Waiting...' if lang != 'ru_RU' else '*[ChatGPT]* Ожидание...')
+    if verbose:
+      print('*[ChatGPT]* Waiting...' if lang != 'ru_RU' else '*[ChatGPT]* Ожидание...')
     history.append(human_sequence + data['content'])
     response = generate_response(make_prompt(history)).strip()
     if len(response) == 0:
       cli.send_status(msg_id, '')
     history.append(response)
     cli.send_status(msg_id, response.replace(ai_sequence, ''))
+    if verbose:
+      print(response.replace(ai_sequence, ''))
     history = history_reducer(history)
 
 
-if __name__ == '__main__':
-  try:
-    main()
-  except KeyboardInterrupt:
-    print('\nChatGPT disabled.' if lang != 'ru_RU' else '\nChatGPT отключён.')
+try:
+  main()
+except KeyboardInterrupt:
+  print('\nChatGPT disabled.' if lang != 'ru_RU' else '\nChatGPT отключён.')

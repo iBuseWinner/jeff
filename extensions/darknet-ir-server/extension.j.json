@@ -3,13 +3,23 @@
   "desc": "Darknet & YOLOv7 Objects-on-Image Recognition, NN that recognizes some object cathegories on pictures and sends back new picture with recognized objects' labels. Pretrained with MS COCO dataset.",
   "authors": [
     {
-      "author": "Mark CDA",
+      "author": "Joseph Redmon",
       "contacts": {
-        "email": "aclo.create@gmail.com"
+        "gitHub": "https://github.com/pjreddie",
+        "twitter": "https://twitter.com/pjreddie"
       }
     },
     {
-      "author": "Joseph Redmon"
+      "author": "Chien-Yao Wang (+2 more at arXiv)",
+      "contacts": {
+        "email": "kinyiu@iis.sinica.edu.tw"
+      }
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "telegram": "@markcda"
+      }
     }
   ],
   "license": "MIT",
