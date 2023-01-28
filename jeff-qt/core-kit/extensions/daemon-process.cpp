@@ -1,4 +1,4 @@
-#include "daemon-process.h"
+#include "daemon-process.hpp"
 
 /*! @brief The constructor. */
 DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObject *parent)

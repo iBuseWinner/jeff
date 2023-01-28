@@ -1,4 +1,4 @@
-#include "help.h"
+#include "help.hpp"
 
 /*! @brief The constructor. */
 Help::Help(QWidget *parent) : QWidget(parent) {

@@ -23,54 +23,55 @@ include_directories(
   dialogues/phrase-editor
   dialogues/sources
   lib/maddy/include
+  lib/BSlogger/src
   widgets
 )
 
 set(SRCS
   core-kit/basis.cpp
-  core-kit/basis.h
+  core-kit/basis.hpp
   core-kit/core.cpp
-  core-kit/core.h
+  core-kit/core.hpp
   core-kit/history-processor.cpp
-  core-kit/history-processor.h
+  core-kit/history-processor.hpp
   core-kit/jeff-core-kit.cpp
-  core-kit/jeff-core-kit.h
+  core-kit/jeff-core-kit.hpp
   core-kit/local-server.cpp
-  core-kit/local-server.h
+  core-kit/local-server.hpp
   core-kit/notify-client.cpp
-  core-kit/notify-client.h
+  core-kit/notify-client.hpp
   core-kit/extensions-manager.cpp
-  core-kit/extensions-manager.h
+  core-kit/extensions-manager.hpp
   core-kit/standard-templates.cpp
-  core-kit/standard-templates.h
+  core-kit/standard-templates.hpp
   core-kit/database/json.cpp
-  core-kit/database/json.h
+  core-kit/database/json.hpp
   core-kit/database/sqlite.cpp
-  core-kit/database/sqlite.h
+  core-kit/database/sqlite.hpp
   core-kit/extensions/daemon-process.cpp
-  core-kit/extensions/daemon-process.h
+  core-kit/extensions/daemon-process.hpp
   core-kit/extensions/extension.cpp
-  core-kit/extensions/extension.h
+  core-kit/extensions/extension.hpp
   core-kit/extensions/script.cpp
-  core-kit/extensions/script.h
-  core-kit/model/keystore.h
-  core-kit/model/message.h
-  core-kit/model/phrase.h
-  core-kit/model/source.h
-  core-kit/model/nlp/cache.h
+  core-kit/extensions/script.hpp
+  core-kit/model/keystore.hpp
+  core-kit/model/message.hpp
+  core-kit/model/phrase.hpp
+  core-kit/model/source.hpp
+  core-kit/model/nlp/cache.hpp
   core-kit/model/nlp/cacher.cpp
-  core-kit/model/nlp/cacher.h
-  core-kit/model/nlp/expression.h
-  core-kit/model/nlp/options.h
+  core-kit/model/nlp/cacher.hpp
+  core-kit/model/nlp/expression.hpp
+  core-kit/model/nlp/options.hpp
   core-kit/model/nlp/stringssearch.cpp
-  core-kit/model/nlp/stringssearch.h
-  core-kit/model/python/object.h
+  core-kit/model/nlp/stringssearch.hpp
+  core-kit/model/python/object.hpp
   core-kit/model/python/worker.cpp
-  core-kit/model/python/worker.h
+  core-kit/model/python/worker.hpp
   main.cpp
 )
 
-add_executable(jeff-cli ${SRCS} jeff.cpp jeff.h resources.qrc)
+add_executable(jeff-cli ${SRCS} jeff.cpp jeff.hpp resources.qrc)
 
 target_link_libraries(
   jeff-cli PRIVATE
@@ -83,77 +84,77 @@ target_link_libraries(
 
 set(SRCS_UI
   dialogues/about.cpp
-  dialogues/about.h
+  dialogues/about.hpp
   dialogues/add-script.cpp
-  dialogues/add-script.h
-  dialogues/dialog.h
+  dialogues/add-script.hpp
+  dialogues/dialog.hpp
   dialogues/extensions-viewer.cpp
-  dialogues/extensions-viewer.h
+  dialogues/extensions-viewer.hpp
   dialogues/firststart.cpp
-  dialogues/firststart.h
+  dialogues/firststart.hpp
   dialogues/help.cpp
-  dialogues/help.h
-  dialogues/modal-handler.h
+  dialogues/help.hpp
+  dialogues/modal-handler.hpp
   dialogues/phrase-editor.cpp
-  dialogues/phrase-editor.h
+  dialogues/phrase-editor.hpp
   dialogues/settings.cpp
-  dialogues/settings.h
+  dialogues/settings.hpp
   dialogues/sources-editor.cpp
-  dialogues/sources-editor.h
+  dialogues/sources-editor.hpp
   dialogues/extensions-viewer/brief.cpp
-  dialogues/extensions-viewer/brief.h
+  dialogues/extensions-viewer/brief.hpp
   dialogues/extensions-viewer/card.cpp
-  dialogues/extensions-viewer/card.h
+  dialogues/extensions-viewer/card.hpp
   dialogues/extensions-viewer/overview.cpp
-  dialogues/extensions-viewer/overview.h
+  dialogues/extensions-viewer/overview.hpp
   dialogues/phrase-editor/brief.cpp
-  dialogues/phrase-editor/brief.h
+  dialogues/phrase-editor/brief.hpp
   dialogues/phrase-editor/overview.cpp
-  dialogues/phrase-editor/overview.h
+  dialogues/phrase-editor/overview.hpp
   dialogues/phrase-editor/selector.cpp
-  dialogues/phrase-editor/selector.h
+  dialogues/phrase-editor/selector.hpp
   dialogues/sources-editor/create-source.cpp
-  dialogues/sources-editor/create-source.h
+  dialogues/sources-editor/create-source.hpp
   widgets/board.cpp
-  widgets/board.h
+  widgets/board.hpp
   widgets/button.cpp
-  widgets/button.h
+  widgets/button.hpp
   widgets/combobox.cpp
-  widgets/combobox.h
+  widgets/combobox.hpp
   widgets/display.cpp
-  widgets/display.h
+  widgets/display.hpp
   widgets/editlist.cpp
-  widgets/editlist.h
+  widgets/editlist.hpp
   widgets/explanationlabel.cpp
-  widgets/explanationlabel.h
+  widgets/explanationlabel.hpp
   widgets/line.cpp
-  widgets/line.h
+  widgets/line.hpp
   widgets/lineedit.cpp
-  widgets/lineedit.h
+  widgets/lineedit.hpp
   widgets/list.cpp
-  widgets/list.h
+  widgets/list.hpp
   widgets/menu.cpp
-  widgets/menu.h
+  widgets/menu.hpp
   widgets/menubar.cpp
-  widgets/menubar.h
+  widgets/menubar.hpp
   widgets/message.cpp
-  widgets/message.h
+  widgets/message.hpp
   widgets/pairwidget.cpp
-  widgets/pairwidget.h
+  widgets/pairwidget.hpp
   widgets/scripteditor.cpp
-  widgets/scripteditor.h
-  widgets/scrollarea.h
-  widgets/scrollfreezerwidget.h
+  widgets/scripteditor.hpp
+  widgets/scrollarea.hpp
+  widgets/scrollfreezerwidget.hpp
   widgets/spoiler.cpp
-  widgets/spoiler.h
+  widgets/spoiler.hpp
   widgets/styling.cpp
-  widgets/styling.h
+  widgets/styling.hpp
   widgets/textedit.cpp
-  widgets/textedit.h
-  widgets/layouts/grid.h
-  widgets/layouts/linears.h
+  widgets/textedit.hpp
+  widgets/layouts/grid.hpp
+  widgets/layouts/linears.hpp
   jeff-ui.cpp
-  jeff-ui.h
+  jeff-ui.hpp
 )
 
 add_executable(jeff-qt ${SRCS} ${SRCS_UI} resources.qrc ui-resources.qrc)

@@ -1,4 +1,4 @@
-#include "brief.h"
+#include "brief.hpp"
 
 /*! @brief The constructor. */
 PhraseEditorBrief::PhraseEditorBrief(Basis *_basis, QWidget *parent)

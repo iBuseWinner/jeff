@@ -1,4 +1,4 @@
-#include "phrase-editor.h"
+#include "phrase-editor.hpp"
 
 /*! 
  * @brief The constructor. 

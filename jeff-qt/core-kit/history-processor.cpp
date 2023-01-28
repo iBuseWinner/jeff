@@ -1,4 +1,4 @@
-#include "history-processor.h"
+#include "history-processor.hpp"
 
 /*! @brief Loads @a _message_history from file. */
 void HProcessor::load(const QString &filename) {

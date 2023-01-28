@@ -1,4 +1,4 @@
-#include "about.h"
+#include "about.hpp"
 
 /*! @brief The constructor.
  *  @details Layout scheme:

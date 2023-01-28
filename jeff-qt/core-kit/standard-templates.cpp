@@ -1,4 +1,4 @@
-#include "standard-templates.h"
+#include "standard-templates.hpp"
 
 #ifdef JEFF_WITH_QT_WIDGETS
 /*! @brief Looking for a command in the expression. If found, then shows a Jeff dialog box. */

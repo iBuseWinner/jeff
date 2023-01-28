@@ -1,4 +1,4 @@
-#include "pairwidget.h"
+#include "pairwidget.hpp"
 
 /*! @brief The constructor. */
 PairWidget::PairWidget(QWidget *w1, QWidget *w2, QWidget *parent) : QWidget(parent) {

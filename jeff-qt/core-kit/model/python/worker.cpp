@@ -1,4 +1,4 @@
-#include "worker.h"
+#include "worker.hpp"
 
 PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent)
   : QObject(parent), basis(_basis), hp(_hp)

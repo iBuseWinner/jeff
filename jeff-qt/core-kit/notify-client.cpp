@@ -1,4 +1,4 @@
-#include "notify-client.h"
+#include "notify-client.hpp"
 
 /*! @brief The constructor. */
 NotifyClient::NotifyClient(QObject *parent) : QObject(parent) {}

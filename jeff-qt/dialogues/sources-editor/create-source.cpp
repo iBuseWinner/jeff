@@ -1,4 +1,4 @@
-#include "create-source.h"
+#include "create-source.hpp"
 
 /*! @brief The constructor. */
 CreateSourceDialog::CreateSourceDialog(Basis *_basis, QWidget *parent) : QWidget(parent), basis(_basis) {

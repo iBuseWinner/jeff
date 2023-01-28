@@ -1,4 +1,4 @@
-#include "core.h"
+#include "core.hpp"
 
 /*! @brief The constructor. */
 Core::Core(QObject *parent) : QObject(parent) {

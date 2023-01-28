@@ -1,4 +1,4 @@
-#include "sqlite.h"
+#include "sqlite.hpp"
 
 /*! @brief Creates source. */
 bool SQLite::create_source(const Source &source, QString *uuid) {

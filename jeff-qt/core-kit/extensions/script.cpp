@@ -1,4 +1,4 @@
-#include "script.h"
+#include "script.hpp"
 
 /*! @brief The constructors. */
 ScriptMeta::ScriptMeta() {}

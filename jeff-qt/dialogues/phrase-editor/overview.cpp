@@ -1,4 +1,4 @@
-#include "overview.h"
+#include "overview.hpp"
 
 /*! @brief The constructor. */
 PhraseEditorOverview::PhraseEditorOverview(Basis *_basis, QWidget *parent)

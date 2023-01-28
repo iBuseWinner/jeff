@@ -1,4 +1,4 @@
-#include "extensions-viewer.h"
+#include "extensions-viewer.hpp"
 
 /*! @brief The constructor. */
 ExtensionsViewer::ExtensionsViewer(

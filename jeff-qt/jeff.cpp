@@ -1,4 +1,4 @@
-#include "jeff.h"
+#include "jeff.hpp"
 
 /*! @brief The constructor. */
 Jeff::Jeff(int argc, char *argv[]) : QObject() {

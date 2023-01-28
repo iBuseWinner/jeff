@@ -1,4 +1,4 @@
-#include "card.h"
+#include "card.hpp"
 
 /*! @brief The constructor.
  *  @details Widget's layout:

@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settings.hpp"
 
 /*! @brief The constructor. */
 Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *mhandler)

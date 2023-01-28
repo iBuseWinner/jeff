@@ -1,4 +1,4 @@
-#include "display.h"
+#include "display.hpp"
 
 /*! @brief The constructor. */
 Display::Display(HProcessor *_hp, short _max_message_amount, QWidget *parent)

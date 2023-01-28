@@ -1,4 +1,4 @@
-#include "explanationlabel.h"
+#include "explanationlabel.hpp"
 
 /*! @brief The constructor. */
 ExplanationLabel::ExplanationLabel(const QString &text, QWidget *parent) : QLabel(parent) {

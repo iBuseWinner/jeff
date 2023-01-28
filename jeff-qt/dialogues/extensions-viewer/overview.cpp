@@ -1,4 +1,4 @@
-#include "overview.h"
+#include "overview.hpp"
 
 /*! @brief The constructor.
  *  @details Widget's layout:

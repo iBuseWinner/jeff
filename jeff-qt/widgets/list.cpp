@@ -1,4 +1,4 @@
-#include "list.h"
+#include "list.hpp"
 
 /*! @brief The constructor. */
 List::List(QWidget *parent) : QTreeWidget(parent) {
@@ -42,16 +42,12 @@ void List::scroll(int min, int max) {
 
 /*! @brief Shows neccessary widgets when scrolling. */
 void List::show_items(int value) {
-  if (not scroll_update.try_lock()) return;
   int total = topLevelItemCount();
   if (items_counter > total) {
     if (value == verticalScrollBar()->minimum()) {
       int min_index = top_level_items.indexOf(topLevelItem(0));
       short portion = min_index < normal_portion ? min_index : normal_portion;
-      if (portion < 1) {
-        scroll_update.unlock();
-        return;
-      }
+      if (portion < 1) return;
       while (portion--) {
         takeTopLevelItem(total - 1);
         insertTopLevelItem(0, top_level_items[--min_index]);
@@ -61,10 +57,7 @@ void List::show_items(int value) {
       int max_index = top_level_items.indexOf(topLevelItem(topLevelItemCount() - 1));
       short portion = (top_level_items.length() - max_index - 1) < normal_portion ?
         (top_level_items.length() - max_index - 1) : normal_portion;
-      if (portion < 1) {
-        scroll_update.unlock();
-        return;
-      }
+      if (portion < 1) return;
       while (portion--) {
         takeTopLevelItem(0);
         insertTopLevelItem(total - 1, top_level_items[++max_index]);
@@ -72,5 +65,4 @@ void List::show_items(int value) {
       scrollTo(model()->index(max_items_amount - 3, 0), QAbstractItemView::PositionAtBottom);
     }
   }
-  scroll_update.unlock();
 }

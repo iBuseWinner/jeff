@@ -1,4 +1,4 @@
-#include "local-server.h"
+#include "local-server.hpp"
 
 /*! @brief The constructor. */
 Server::Server(Basis *_basis, QObject *parent) : QObject(parent), basis(_basis) {

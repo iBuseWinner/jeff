@@ -1,4 +1,4 @@
-#include "menubar.h"
+#include "menubar.hpp"
 
 /*! @brief The constructor. */
 MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), core(_core) {

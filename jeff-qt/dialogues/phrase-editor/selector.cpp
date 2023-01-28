@@ -1,4 +1,4 @@
-#include "selector.h"
+#include "selector.hpp"
 
 /*! @brief The constructor. */
 PhraseEditorSelector::PhraseEditorSelector(Basis *_basis, QWidget *parent)

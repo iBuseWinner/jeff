@@ -1,4 +1,4 @@
-#include "sources-editor.h"
+#include "sources-editor.hpp"
 
 /*!
  * @brief The constructor.

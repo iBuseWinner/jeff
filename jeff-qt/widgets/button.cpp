@@ -1,4 +1,4 @@
-#include "button.h"
+#include "button.hpp"
 
 /*! @brief The constructor. */
 Button::Button(const QString &text, QWidget *parent) : QPushButton(parent) {

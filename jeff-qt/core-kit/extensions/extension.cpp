@@ -1,4 +1,4 @@
-#include "extension.h"
+#include "extension.hpp"
 
 /*! @brief The constructors. */
 ExtensionMeta::ExtensionMeta() {}

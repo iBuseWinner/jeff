@@ -1,4 +1,4 @@
-#include "line.h"
+#include "line.hpp"
 
 /*! @brief The constructor. */
 Line::Line(QWidget *parent) : Board(parent) {

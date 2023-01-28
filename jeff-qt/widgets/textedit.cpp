@@ -1,4 +1,4 @@
-#include "textedit.h"
+#include "textedit.hpp"
 
 /*! @brief The constructor. */
 TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent) {

@@ -1,4 +1,4 @@
-#include "stringssearch.h"
+#include "stringssearch.hpp"
 
 /*! @brief Determines the presence of the semantic load @a inner in this expression.
  *  @param[in] that input

@@ -1,4 +1,4 @@
-#include "extensions-manager.h"
+#include "extensions-manager.hpp"
 
 /*! @brief The constructor. */
 ExtensionsManager::ExtensionsManager(

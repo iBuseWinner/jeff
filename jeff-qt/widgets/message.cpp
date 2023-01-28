@@ -1,4 +1,4 @@
-#include "message.h"
+#include "message.hpp"
 
 /*! @brief The constructor. */
 Message::Message(maddy::Parser *_markdown_parser) : markdown_parser(_markdown_parser) {

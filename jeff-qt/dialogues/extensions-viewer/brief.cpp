@@ -1,4 +1,4 @@
-#include "brief.h"
+#include "brief.hpp"
 
 /*! @brief The constructor. */
 ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *parent) : QWidget(parent), em(_em) {

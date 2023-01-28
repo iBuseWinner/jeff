@@ -1,4 +1,4 @@
-#include "editlist.h"
+#include "editlist.hpp"
 
 /*! @brief The constructor. */
 EditList::EditList(QWidget *parent) : QWidget(parent) {

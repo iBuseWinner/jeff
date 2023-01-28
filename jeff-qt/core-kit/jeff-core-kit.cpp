@@ -1,4 +1,4 @@
-#include "jeff-core-kit.h"
+#include "jeff-core-kit.hpp"
 
 /*! @brief The constructor. */
 JCK::JCK(Basis *_basis, HProcessor *_hp, QObject *parent)

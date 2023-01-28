@@ -1,4 +1,4 @@
-#include "lineedit.h"
+#include "lineedit.hpp"
 
 /*! @brief The constructor. */
 LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {

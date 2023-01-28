@@ -1,10 +1,10 @@
 #ifdef JEFF_WITH_QT_WIDGETS
 #ifndef Q_OS_ANDROID
-#include "jeff-ui.h"
-#include "widgets/styling.h"
+#include "jeff-ui.hpp"
+#include "widgets/styling.hpp"
 #endif
 #else
-#include "jeff.h"
+#include "jeff.hpp"
 #endif
 
 #include <QTranslator>

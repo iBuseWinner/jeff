@@ -1,4 +1,4 @@
-#include "combobox.h"
+#include "combobox.hpp"
 
 /*! @brief The constructor. */
 ComboBox::ComboBox(QWidget *parent) : QComboBox(parent) {

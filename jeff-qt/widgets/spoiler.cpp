@@ -1,4 +1,4 @@
-#include "spoiler.h"
+#include "spoiler.hpp"
 
 /*! @brief The constructor. */
 Spoiler::Spoiler(const QString &title, const int _animation_duration, QWidget *parent)

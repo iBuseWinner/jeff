@@ -1,4 +1,4 @@
-#include "scripteditor.h"
+#include "scripteditor.hpp"
 
 /*! TODO исправить все поля, что изменились
  *  TODO исправить сохранение CustomScan/CustomCompose  */

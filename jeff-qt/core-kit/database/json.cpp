@@ -1,4 +1,4 @@
-#include "json.h"
+#include "json.hpp"
 
 /*! @brief The constructor. */
 Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {

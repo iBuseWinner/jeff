@@ -1,4 +1,4 @@
-#include "add-script.h"
+#include "add-script.hpp"
 
 /*! @brief The constructor. */
 AddScriptDialog::AddScriptDialog(QWidget *parent, ModalHandler *mhandler, 
