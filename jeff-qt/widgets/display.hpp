@@ -4,7 +4,7 @@
 #include "core-kit/history-processor.hpp"
 #include "core-kit/model/message.hpp"
 #include "dialogues/modal-handler.hpp"
-#include "maddy/parser.hpp"
+#include "maddy/parser.h"
 #include "widgets/message.hpp"
 #include "widgets/scrollarea.hpp"
 #include "widgets/layouts/linears.hpp"

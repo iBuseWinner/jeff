@@ -3,7 +3,7 @@
 
 #include "core-kit/model/message.hpp"
 #include "dialogues/modal-handler.hpp"
-#include "maddy/parser.hpp"
+#include "maddy/parser.h"
 #include "widgets/board.hpp"
 #include "widgets/menu.hpp"
 #include "widgets/layouts/grid.hpp"
