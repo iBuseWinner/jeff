@@ -8,6 +8,7 @@
 #include "core-kit/model/nlp/cacher.hpp"
 #include "core-kit/model/nlp/options.hpp"
 #include "core-kit/model/source.hpp"
+#include "yelloger.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -46,11 +47,6 @@ class Basis : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Basis)
 public:
-  // Objects:
-  SQLite *sql = new SQLite(this);    /*!< SQLite handler. */
-  Cacher *cacher = new Cacher(this); /*!< Cache handler.  */
-  Json *json = nullptr;              /*!< Json handler.   */
-
   // Constants:
   static constexpr const char *companyName     = "cclc";
   static constexpr const char *applicationName = "jeff";
@@ -117,11 +113,18 @@ public:
   static constexpr const char *fast_append_cmd        = "/+ ";
   static constexpr const char *fast_append_script_cmd = "/++ ";
   static constexpr const char *monologue_mode_cmd     = "/mm";
+  
+  // Objects:
+  Json *json = nullptr;     /*!< Json handler.   */
+  SQLite *sql = nullptr;    /*!< SQLite handler. */
+  Cacher *cacher = nullptr; /*!< Cache handler.  */
 
   // Functions:
   /*! @brief The constructor. */
   Basis(QObject *parent = nullptr) : QObject(parent) {
-    json = new Json(get_settings_path(), this);
+    json = new Json(get_settings_path(), this); /*!< @details Json object will be created first 'cause it inits yelloger. */
+    sql = new SQLite(this);
+    cacher = new Cacher(this);
     load_sources();
     load_memory();
   }
@@ -175,8 +178,7 @@ signals:
   /*! @brief Notifies of a message from a script that should be shown on the screen as a user message
    *  (on the right side of the screen).  */
   QString send_as_user(QString outter_message);
-  /*! @brief Notifies of a message from a script that should be displayed on the screen
-   *  and may change over time.  */
+  /*! @brief Notifies of a message from a script that should be displayed on the screen and may change over time. */
   QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
   /*! @brief Reports that sources has been changed. */
   void sources_changed();
@@ -192,9 +194,7 @@ private:
   QString _scenario_token = "";   /*!< Token for scenarios. */
 
   /*! Qt settings object. */
-  QSettings _settings = QSettings(
-    QSettings::IniFormat, QSettings::UserScope, companyName, applicationName
-  );
+  QSettings _settings = QSettings(QSettings::IniFormat, QSettings::UserScope, companyName, applicationName);
 
   // Functions described in `basis.cpp`:
   void set_first_source_as_default();

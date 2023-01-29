@@ -5,6 +5,7 @@ NotifyClient::NotifyClient(QObject *parent) : QObject(parent) {}
 
 /*! @brief Notifies all extensions that have subscribed to notifications about a new message. */
 void NotifyClient::notify(MessageMeta msg_meta, bool no_jck_output) {
+  Yellog::Trace("Notifier working...");
   if (not is_scenario_running)
     for (auto *ext_m : extensions_meta) {
       if (not ext_m->notify_when_no_suggestions and not no_jck_output)

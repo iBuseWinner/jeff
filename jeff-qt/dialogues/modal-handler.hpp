@@ -2,6 +2,7 @@
 #define MODALHANDLER_H
 
 #include <QObject>
+#include <QWidget>
 
 /*! @class ModalHandler
  *  @brief The class that is responsible for the state of the prisoner.
@@ -16,7 +17,12 @@ public:
   ModalHandler(QObject *parent = nullptr, QWidget *prisoner = nullptr)
       : QObject(parent), _prisoner(prisoner) {}
   /*! Closes the @a _prisoner. */
-  void closePrisoner() { emit prisonerClosed(); }
+  void closePrisoner() {
+    emit prisonerClosed();
+    _prisoner->setParent(nullptr);
+    delete _prisoner;
+    _prisoner = nullptr;
+  }
   /*! Sets a @a _prisoner for ModalHandler. */
   void setPrisoner(QWidget *prisoner) { _prisoner = prisoner; }
   /*! @returns the @a _prisoner. */

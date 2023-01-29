@@ -2,6 +2,7 @@
 #define PHRASE_H
 
 #include "core-kit/model/nlp/options.hpp"
+#include "yelloger.h"
 #include <QList>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -9,10 +10,8 @@
 #include <QSet>
 #include <QString>
 
-/*!
- * @class Phrase
- * @brief Contains information about a representation of a sentence in SQL database.
- */
+/*! @class Phrase
+ *  @brief Contains information about a representation of a sentence in SQL database.  */
 class Phrase {
 public:
   // Objects:
@@ -38,7 +37,7 @@ public:
   }
 
   // Functions:
-  /*! @brief Compares two phrases.  */
+  /*! @brief Compares two phrases. */
   friend bool operator==(Phrase p1, Phrase p2) {
     return p1.expression == p2.expression and p1.exec == p2.exec;
   }
@@ -69,9 +68,16 @@ public:
   /*! @brief Parse properties from string. */
   static Options parse_props(QString json_str) {
     Options props;
+    if (json_str.isEmpty()) {
+      Yellog::Trace("Empty properties' string.");
+      return props;
+    }
     QJsonParseError errors;
     QJsonDocument document = QJsonDocument::fromJson(json_str.toUtf8(), &errors);
-    if (errors.error != QJsonParseError::NoError) return props;
+    if (errors.error != QJsonParseError::NoError) {
+      Yellog::Error("It's impossible to parse phrase properties from JSON. Error int: %d", int(errors.error));
+      return props;
+    }
     auto object = document.object();
     for (auto key : object.keys()) props[key] = object[key].toString();
     return props;

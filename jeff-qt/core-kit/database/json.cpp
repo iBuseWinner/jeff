@@ -4,6 +4,7 @@
 Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {
   check_or_create_subdir();
   _settings_path = _settings_path + QDir::separator() + subdir_name;
+  Yellog::EnableFileOutput(QString("%1%2%3").arg(_settings_path).arg(QDir::separator()).arg(log_filename).toStdString().c_str());
 }
 
 /*! @brief Reads the store and loads a list of connected sources. */
@@ -137,14 +138,22 @@ QJsonArray Json::read_json(QFile *file) {
   QTextStream textStream(file);
   QJsonParseError errors;
   QJsonDocument document = QJsonDocument::fromJson(textStream.readAll().toUtf8(), &errors);
-  if (errors.error != QJsonParseError::NoError) return QJsonArray();
+  if (errors.error != QJsonParseError::NoError) {
+    Yellog::Error("At Json::read_json:");
+    Yellog::Error("\tError's parsing code: %d", int(errors.error));
+    return QJsonArray();
+  }
   file->close();
   return document.array();
 }
 
 /*! @brief Checks @a savefile for access and writes @a json_array. */
 void Json::write_json(QFile *savefile, const QJsonArray &json_array) {
-  if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) return;
+  if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) {
+    Yellog::Error("At Json::write_json:");
+    Yellog::Error("\tCannot open savefile \"%s\" as rw/text.", savefile->fileName().toStdString().c_str());
+    return;
+  }
   QJsonDocument doc(json_array);
   QTextStream textStream(savefile);
   textStream << doc.toJson(QJsonDocument::Compact);

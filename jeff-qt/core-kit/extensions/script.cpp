@@ -89,11 +89,18 @@ QString ScriptMeta::to_string() const {
 ScriptMeta *ScriptMeta::from_string(QString string) {
   QJsonParseError errors;
   QJsonDocument document = QJsonDocument::fromJson(string.toUtf8(), &errors);
-  if (errors.error != QJsonParseError::NoError) return nullptr;
+  if (errors.error != QJsonParseError::NoError) {
+    Yellog::Error("It's impossible to parse script from JSON. Error int: %d", int(errors.error));
+    return nullptr;
+  }
   auto json_object = document.object();
   auto *script_meta = new ScriptMeta(json_object);
-  if (not script_meta) return nullptr;
+  if (not script_meta) {
+    Yellog::Error("Unable to make ScriptMeta object from JSON.");
+    return nullptr;
+  }
   if (not script_meta->valid) {
+    Yellog::Error("Unable to make ScriptMeta object from JSON.");
     delete script_meta;
     return nullptr;
   }

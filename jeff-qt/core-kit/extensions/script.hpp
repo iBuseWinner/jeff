@@ -1,6 +1,7 @@
 #ifndef SCRIPT_H
 #define SCRIPT_H
 
+#include "yelloger.h"
 #include <QHostAddress>
 #include <QJsonArray>
 #include <QJsonDocument>

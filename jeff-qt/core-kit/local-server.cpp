@@ -9,9 +9,8 @@ Server::Server(Basis *_basis, QObject *parent) : QObject(parent), basis(_basis) 
 /*! @brief Starts the server at given @a address and @a port. */
 void Server::start(QHostAddress address, quint16 port) {
   if (not server->listen(address, port)) {
-    emit server_error(
-      tr("Unable to start server. Perhaps the port %1 is busy.").arg(QString::number(port))
-    );
+    Yellog::Error("Unable to start server. Perhaps the port %d is busy.", int(port));
+    emit server_error(tr("Unable to start server. Perhaps the port %1 is busy.").arg(QString::number(port)));
   }
 }
 

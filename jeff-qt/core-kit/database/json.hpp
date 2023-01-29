@@ -7,6 +7,7 @@
 #include "core-kit/model/message.hpp"
 #include "core-kit/model/nlp/cache.hpp"
 #include "core-kit/model/source.hpp"
+#include "yelloger.h"
 #include <QDir>
 #include <QFile>
 #include <QJsonArray>
@@ -36,12 +37,13 @@ public:
 
 private:
   // Constants:
-  const char *sources_store_filename    = "jeff_sources.json"    ;
-  const char *cache_store_filename      = "jeff_nlp_cache.json"  ;
-  const char *history_store_filename    = "jeff_history.json"    ;
-  const char *extensions_store_filename = "jeff_extensions.json" ;
-  const char *memory_store_filename     = "jeff_memory.json"     ;
-  const char *subdir_name               = "jeff-qt"              ;
+  const char *sources_store_filename    = "sources.json"    ;
+  const char *cache_store_filename      = "nlp_cache.json"  ;
+  const char *history_store_filename    = "history.json"    ;
+  const char *extensions_store_filename = "extensions.json" ;
+  const char *memory_store_filename     = "memory.json"     ;
+  const char *log_filename              = "log.txt"         ;
+  const char *subdir_name               = "jeff-qt"         ;
 
   // Objects:
   QString _settings_path;

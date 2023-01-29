@@ -131,6 +131,14 @@
         <source>Enable the extension</source>
         <translation>Включить расширение</translation>
     </message>
+    <message>
+        <source>Waiting status...</source>
+        <translation>Ожидание статуса...</translation>
+    </message>
+    <message>
+        <source>Control</source>
+        <translation>Управление</translation>
+    </message>
 </context>
 <context>
     <name>ExtensionsViewerCard</name>
@@ -145,6 +153,10 @@
     <message>
         <source>Stopped</source>
         <translation>Остановлено</translation>
+    </message>
+    <message>
+        <source>Waiting status...</source>
+        <translation>Ожидание статуса...</translation>
     </message>
 </context>
 <context>
@@ -242,6 +254,13 @@
     <message>
         <source>Jeff&apos;s history file</source>
         <translation>Файл истории Джеффа</translation>
+    </message>
+</context>
+<context>
+    <name>Line</name>
+    <message>
+        <source>Enter your message...</source>
+        <translation>Введите сообщение...</translation>
     </message>
 </context>
 <context>
@@ -662,6 +681,18 @@
         <source>Validation error: the third column of the table with sources does not fit the description of &quot;weight&quot; INTEGER.</source>
         <translation>Ошибка в ходе проверки: первый столбец таблицы с источниками не соответствует описанию &quot;weight&quot; INTEGER.</translation>
     </message>
+    <message>
+        <source>Could not create main table.</source>
+        <translation>Невозможно создать главную таблицу.</translation>
+    </message>
+    <message>
+        <source>Could not create source, number of attempts exceeded </source>
+        <translation>Невозможно создать источник, количество попыток превысило </translation>
+    </message>
+    <message>
+        <source>Could not write options and create source table.</source>
+        <translation>Невозможно записать параметры и создать таблицу источника.</translation>
+    </message>
 </context>
 <context>
     <name>ScriptEditor</name>
@@ -837,6 +868,29 @@
     <message>
         <source>Jeff&apos;s database</source>
         <translation>База данных Джеффа</translation>
+    </message>
+</context>
+<context>
+    <name>TextEdit</name>
+    <message>
+        <source>Delete</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Cut</source>
+        <translation>Вырезать</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>Paste</source>
+        <translation>Вставить</translation>
+    </message>
+    <message>
+        <source>Select all</source>
+        <translation>Выбрать всё</translation>
     </message>
 </context>
 </TS>

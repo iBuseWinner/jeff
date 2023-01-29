@@ -30,13 +30,9 @@ public:
   // Functions described in `worker.cpp`:
   PythonWorker(Basis *_basis = nullptr, HProcessor *_hp = nullptr, QObject *parent = nullptr);
   ~PythonWorker();
-  QJsonObject request_answer(
-    ScriptMeta *script, const Expression &expression, const QString &input
-  );
+  QJsonObject request_answer(ScriptMeta *script, const Expression &expression, const QString &input);
   QJsonObject request_scan(ScriptMeta *script, const QString &user_expression);
-  QJsonObject request_compose(
-    ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted
-  );
+  QJsonObject request_compose(ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted);
   
 signals:
   /*! @brief Notifies of a script error. */

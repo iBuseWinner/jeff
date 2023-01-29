@@ -1,17 +1,6 @@
-#ifdef JEFF_WITH_QT_WIDGETS
-#ifndef Q_OS_ANDROID
-#include "jeff-ui.hpp"
-#include "widgets/styling.hpp"
-#endif
-#else
-#include "jeff.hpp"
-#endif
-
-#include <QTranslator>
-
 /*!
- * @copyright 2018-2022 Mark CDA <markcda@protonmail.com>
- * @copyright 2018-2022 Shamshin Victor <androiddeveloper@yandex.ru>
+ * @copyright 2018-2023 Mark CDA <aclo.create@gmail.com>
+ * @copyright 2018-2023 Shamshin Victor <androiddeveloper@yandex.ru>
  *
  * MIT License
  *
@@ -44,10 +33,26 @@
  * throughout the code to give the same names.
  */
 
+#ifdef JEFF_WITH_QT_WIDGETS
+#ifndef Q_OS_ANDROID
+#include "jeff-ui.hpp"
+#include "widgets/styling.hpp"
+#endif
+#else
+#include "jeff.hpp"
+#endif
+
+#include <QTranslator>
+#include <yelloger.h>
+
 /*! @brief Starts Jeff.  */
 int main(int argc, char *argv[]) {
+#ifdef YELLOGER_TRACING
+  Yellog::SetPriority(Yellog::TracePriority);
+#endif
+  
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("2.0.2");
+  QCoreApplication::setApplicationVersion("2.0.3");
   
 #ifdef JEFF_WITH_QT_WIDGETS
   QApplication jeff(argc, argv);

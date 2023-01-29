@@ -106,11 +106,18 @@ QString ExtensionMeta::to_string() const {
 ExtensionMeta *ExtensionMeta::from_string(QString string) {
   QJsonParseError errors;
   QJsonDocument document = QJsonDocument::fromJson(string.toUtf8(), &errors);
-  if (errors.error != QJsonParseError::NoError) return nullptr;
+  if (errors.error != QJsonParseError::NoError) {
+    Yellog::Error("It's impossible to parse extension from JSON. Error int: %d", int(errors.error));
+    return nullptr;
+  }
   auto json_object = document.object();
   auto *extension_meta = new ExtensionMeta(json_object);
-  if (not extension_meta) return nullptr;
+  if (not extension_meta) {
+    Yellog::Error("Unable to make ExtensionMeta object from JSON.");
+    return nullptr;
+  }
   if (not extension_meta->valid) {
+    Yellog::Error("Unable to make ExtensionMeta object from JSON.");
     delete extension_meta;
     return nullptr;
   }
@@ -119,14 +126,24 @@ ExtensionMeta *ExtensionMeta::from_string(QString string) {
 
 /*! @brief Reads extension's metadata from @a origin file. */
 ExtensionMeta *ExtensionMeta::from_origin(const QString &origin, bool enabled) {
+  Yellog::Trace("Given file: %s", origin.toStdString().c_str());
   QFile file(origin);
-  if (not file.exists()) return nullptr;
-  if (not file.open(QIODevice::ReadOnly | QIODevice::Text)) return nullptr;
+  if (not file.exists()) {
+    Yellog::Error("File doesn't exist.");
+    return nullptr;
+  }
+  if (not file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    Yellog::Error("Unable to open file as RO & Text.");
+    return nullptr;
+  }
   QTextStream textStream(&file);
   auto text = textStream.readAll().toUtf8();
   file.close();
   auto *extension_meta = from_string(text);
-  if (not extension_meta) return nullptr;
+  if (not extension_meta) {
+    Yellog::Error("Unable to make ExtensionMeta object from origin.");
+    return nullptr;
+  }
   extension_meta->origin = origin;
   extension_meta->enabled = enabled;
   return extension_meta;

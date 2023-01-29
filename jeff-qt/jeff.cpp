@@ -24,7 +24,7 @@ Jeff::Jeff(int argc, char *argv[]) : QObject() {
         QCoreApplication::instance()->processEvents();
       });
       QTimer::singleShot(2000, this, [this] {
-        std::cout << tr("Answer not found.").toStdString() << std::endl;
+        std::cout << tr("Answer not found.").toStdString() << "\n";
         qt_shutdown();
       });
     }

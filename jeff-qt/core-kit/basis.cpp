@@ -2,17 +2,22 @@
 
 /*! @brief Checks the settings file for any errors. */
 void Basis::check_settings_file() {
-  if (not accessible())
+  if (not accessible()) {
     emit warn(tr("An access error occurred (e.g. trying to write to a read-only file)."));
-  else if (not correct())
+    Yellog::Warn("Settings file' access error occurred.");
+  } else if (not correct()) {
     emit warn(tr("A format error occurred (e.g. loading a malformed file)."));
+    Yellog::Warn("Settings file' format error occurred.");
+  }
 }
 
 /*! @brief Sends a warning to the screen. */
-void Basis::warn_about(QString warning_text) { emit warn(warning_text); }
+void Basis::warn_about(QString warning_text) {
+  Yellog::Warn(warning_text.toStdString().c_str());
+  emit warn(warning_text);
+}
 
-/*! @brief Checks if there is a standard source, and otherwise sets the first source in the list 
- *  as standard.  */
+/*! @brief Checks if there is a standard source, and otherwise sets the first source in the list as standard.  */
 void Basis::check_default_source() {
   QVariant path = read(defaultSourcePath);
   QVariant container = read(defaultSourceContainer);
@@ -30,17 +35,21 @@ void Basis::set_first_source_as_default() {
   if (not _sources.isEmpty()) {
     write(defaultSourcePath, _sources[0].path);
     write(defaultSourceContainer, _sources[0].table_name);
+    Yellog::Info("New default source: %s, %s",
+                 _sources[0].path.toStdString().c_str(),
+                 _sources[0].table_name.toStdString().c_str());
   } else {
     write(defaultSourcePath, "");
     write(defaultSourceContainer, "");
+    Yellog::Info("New empty default source. No choice to save smth.");
   }
 }
 
 /*! @brief Sets the value of the parameter. */
 void Basis::write(const QString &key, const QVariant &data) {
   if (not correct()) {
-    /*! If the file is incorrectly formatted, Basis will not be able to restore the data structure,
-     *  so it clears the file.  */
+    /*! If the file is incorrectly formatted, Basis just clears the file. */
+    Yellog::Warn("Wow!.. Settings file isn't correct. Clearing...");
     _settings.clear();
     _settings.sync();
   }
@@ -56,6 +65,7 @@ void Basis::load_sources() {
       if (not _sources.contains(tmp[i]))
         _sources.append(tmp[i]);
   }
+  Yellog::Trace("Sources loaded from disk.");
   emit sources_changed();
 }
 
@@ -66,6 +76,7 @@ Sources Basis::sources() { return _sources; }
 void Basis::sources(Sources s) {
   _sources = s;
   json->write_source_list(sql, _sources);
+  Yellog::Trace("Sources saved to disk.");
   check_default_source();
   emit sources_changed();
 }

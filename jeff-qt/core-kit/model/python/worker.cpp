@@ -1,8 +1,7 @@
 #include "worker.hpp"
 
-PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent)
-  : QObject(parent), basis(_basis), hp(_hp)
-{
+/*! @brief The constructor. */
+PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent) : QObject(parent), basis(_basis), hp(_hp) {
   Py_InitializeEx(1);
   // Adds current path to sys.path for importing scripts from this directory.
   _current_path = QDir::toNativeSeparators(QDir::currentPath());
@@ -10,10 +9,10 @@ PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent)
   PyRun_SimpleString(command.toStdString().c_str());
 }
 
-PythonWorker::~PythonWorker() {
-  Py_Finalize();
-}
+/*! @brief The destructor. */
+PythonWorker::~PythonWorker() { Py_Finalize(); }
 
+/*! @brief TBD */
 QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transport) {
   QFileInfo module_info(path);
   QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());

@@ -5,6 +5,7 @@
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/extensions/script.hpp"
 #include "core-kit/model/nlp/expression.hpp"
+#include "yelloger.h"
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>

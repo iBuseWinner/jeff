@@ -4,6 +4,7 @@
 #include "core-kit/basis.hpp"
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/model/message.hpp"
+#include "yelloger.h"
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QList>

@@ -23,7 +23,7 @@ include_directories(
   dialogues/phrase-editor
   dialogues/sources
   lib/maddy/include
-  lib/BSlogger/src
+  lib/Yelloger/include
   widgets
 )
 
@@ -72,6 +72,8 @@ set(SRCS
 )
 
 add_executable(jeff-cli ${SRCS} jeff.cpp jeff.hpp resources.qrc)
+
+target_compile_definitions(jeff-cli PRIVATE YELLOGER_TRACING)
 
 target_link_libraries(
   jeff-cli PRIVATE
@@ -159,7 +161,7 @@ set(SRCS_UI
 
 add_executable(jeff-qt ${SRCS} ${SRCS_UI} resources.qrc ui-resources.qrc)
 
-target_compile_definitions(jeff-qt PRIVATE JEFF_WITH_QT_WIDGETS)
+target_compile_definitions(jeff-qt PRIVATE JEFF_WITH_QT_WIDGETS YELLOGER_TRACING)
 
 target_link_libraries(
   jeff-qt PRIVATE

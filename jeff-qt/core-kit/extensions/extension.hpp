@@ -1,6 +1,7 @@
 #ifndef EXTENSION_H
 #define EXTENSION_H
 
+#include "yelloger.h"
 #include <QFile>
 #include <QHostAddress>
 #include <QJsonArray>

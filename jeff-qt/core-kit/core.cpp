@@ -26,10 +26,29 @@ Core::Core(QObject *parent) : QObject(parent) {
   quint16 port = quint16((*basis)[basis->serverPortSt].toInt());
   if (port == 0) port = 8005;
   server->start(QHostAddress::LocalHost, port);
+  Yellog::Trace("All core things are connected. Waiting for Core::start()...");
+}
+
+/*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */
+void Core::start() {
+  em->startup();
+  if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->load();
+  if (not (*basis)[basis->customScannerSt].toString().isEmpty()) {
+    custom_scanner = ScriptMeta::from_string((*basis)[basis->customScannerSt].toString());
+    jck->set_custom_scanner(custom_scanner);
+  }
+  if (not (*basis)[basis->customComposerSt].toString().isEmpty()) {
+    custom_composer = ScriptMeta::from_string((*basis)[basis->customComposerSt].toString());
+    jck->set_custom_composer(custom_composer);
+  }
+  if ((*basis)[basis->isGreetingsEnabledSt].toBool()) got_message_from_user((*basis)[basis->greetingsMsg].toString());
+  Yellog::Trace("All core things are definitely done. Have a nice day!");
 }
 
 /*! @brief The destructor. */
 Core::~Core() {
+  Yellog::Trace("After this message all core things will be definitely GONE.");
+  Yellog::Trace("And again, have a nice day!");
   delete jck;
   delete em;
   delete notifier;
@@ -43,12 +62,12 @@ Core::~Core() {
   if (custom_composer) delete custom_composer;
 }
 
-/*! @brief Handles input @a user_expression, displays a message on the screen and
- *  launches modules.  */
+/*! @brief Handles input @a user_expression, displays a message on the screen and launches modules. */
 void Core::got_message_from_user(const QString &user_expression) {
   /*! Does not respond to blank input. */
   if (user_expression.isEmpty()) return;
   /*! Displays the entered message on the screen. */
+  Yellog::Trace("Got a message from user.");
   MessageMeta message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   hp->append(message);
   emit show(message);
@@ -57,21 +76,23 @@ void Core::got_message_from_user(const QString &user_expression) {
   if (std_templates->dialogues(user_expression)) return;
 #endif
   if (std_templates->fast_commands(user_expression)) return;
+  Yellog::Trace("\tThe message is neither dialogue nor fast command.");
   notifier->notify(message); /*!< Notifies only when message isn't any dialog or command. */
   if (is_scenario_running) return; /*!< @sa ScenarioScript */
+  Yellog::Trace("\tNo scenario, searching for suggests.");
   jck->search_for_suggests(user_expression);
 }
 
-/*! @brief Processes the output of the JCK module @a result_expression and
- *  displays a message on the screen.  */
+/*! @brief Processes the output of the JCK module @a result_expression and displays a message on the screen. */
 void Core::got_message_from_jck(const QString &result_expression) {
   if (result_expression.isEmpty()) return;
+  Yellog::Trace("Got a message from JCK.");
   MessageMeta message = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
+  Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
-          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
-                                       (*basis)[basis->maxDelaySt].toInt())
+          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(), (*basis)[basis->maxDelaySt].toInt())
           : 0,
       this, [this, message, result_expression] {
         hp->append(message);
@@ -82,9 +103,9 @@ void Core::got_message_from_jck(const QString &result_expression) {
       });
 }
 
-/*! @brief Notifies those extensions that are designed to handle cases where JCK cannot
- *  answer a question.  */
+/*! @brief Notifies those extensions that are designed to handle cases where JCK cannot answer a question. */
 void Core::got_no_jck_output(const QString &user_expression) {
+  Yellog::Trace("Got no output from JCK. Gonna notify all others...");
   MessageMeta message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   notifier->notify(message, true);
 }
@@ -94,9 +115,9 @@ void Core::got_extension_start(ExtensionMeta *extension_meta) {
   em->add_extension(extension_meta);
 }
 
-/*! @brief Notifies the extension that the scenario has started and passes the last message
- *  and authentication data.  */
+/*! @brief Notifies the extension that the scenario has started and passes the last message and authentication data. */
 void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
+  Yellog::Trace("Got scenario start. Notifier goes brrr... (it's okay, don't worry.)");
   current_scenario = scenario_meta;
   notifier->set_scenario(current_scenario);
   MessageMeta last;
@@ -112,17 +133,19 @@ void Core::got_scenario_shutting() {
   notifier->finish_scenario();
   basis->clear_stoken();
   is_scenario_running = false;
+  Yellog::Trace("Scenario is finished.");
 }
 
 /*! @brief Shows output from script or outter app on the screen. */
 void Core::got_message_from_script(const QString &outter_message) {
   if (outter_message.isEmpty()) return;
+  Yellog::Trace("Got a message from script.");
   MessageMeta message = get_message(outter_message, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
+  Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
-          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
-                                       (*basis)[basis->maxDelaySt].toInt())
+          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(), (*basis)[basis->maxDelaySt].toInt())
           : 0,
       this, [this, message, outter_message] {
         hp->append(message);
@@ -136,6 +159,7 @@ void Core::got_message_from_script(const QString &outter_message) {
 /*! @brief Searches again. */
 void Core::got_message_to_search_again(const QString &rephrased_message) {
   if (rephrased_message.isEmpty()) return;
+  Yellog::Trace("Got a message to search again.");
 #ifdef JEFF_WITH_QT_WIDGETS
   if (std_templates->dialogues(rephrased_message)) return;
 #endif
@@ -148,6 +172,7 @@ void Core::got_message_from_script_as_user(const QString &outter_message) {
   /*! Does not respond to blank input. */
   if (outter_message.isEmpty()) return;
   /*! Displays the entered message on the screen. */
+  Yellog::Trace("Got a message from script to be sent as from user.");
   MessageMeta message = get_message(outter_message, Author::User, ContentType::Markdown, Theme::Blue);
   hp->append(message);
   notifier->notify(message);
@@ -157,6 +182,9 @@ void Core::got_message_from_script_as_user(const QString &outter_message) {
   if (std_templates->dialogues(outter_message)) return;
 #endif
   if (std_templates->fast_commands(outter_message)) return;
+  Yellog::Trace("\tThe message is neither dialogue nor fast command.");
+  if (is_scenario_running) return; /*!< @sa ScenarioScript */
+  Yellog::Trace("\tNo scenario, searching for suggests.");
   jck->search_for_suggests(outter_message);
 }
 
@@ -164,13 +192,14 @@ void Core::got_message_from_script_as_user(const QString &outter_message) {
 void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
   if (id_and_message.first.isEmpty() or id_and_message.second.isEmpty()) return;
   if (id_and_message.first.length() < 24) return;
-  MessageMeta message = get_message(id_and_message.second, Author::Jeff,
-                                    ContentType::Markdown, Theme::Std);
+  Yellog::Trace("Hello darkness, my old friend, I've come to talk with you again... and again... ");
+  Yellog::Trace("You've just got an updateable message though.");
+  MessageMeta message = get_message(id_and_message.second, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
+  Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(
       (*basis)[basis->isDelayEnabledSt].toBool()
-          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(),
-                                       (*basis)[basis->maxDelaySt].toInt())
+          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(), (*basis)[basis->maxDelaySt].toInt())
           : 0,
       this, [this, message, id_and_message] {
         notifier->notify(message);
@@ -182,6 +211,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
 /*! @brief Displays @a warning_text. */
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
+  Yellog::Trace("Got a warning.");
   MessageMeta message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
   hp->append(message);
   notifier->notify(message);
@@ -191,6 +221,7 @@ void Core::got_warning(const QString &warning_text) {
 /*! @brief Displays @a errorText. */
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
+  Yellog::Trace("Got an error.");
   MessageMeta message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   hp->append(message);
   notifier->notify(message);
@@ -200,15 +231,14 @@ void Core::got_error(const QString &error_text) {
 #ifdef JEFF_WITH_QT_WIDGETS
 /*! @brief Creates Message @a message_widget, inserts a widget into it and displays a message. */
 void Core::got_modal(ModalHandler *m_handler) {
-  MessageMeta message = get_message(m_handler->getPrisoner()->objectName(),
-                                    Author::Jeff, ContentType::Widget, Theme::Std);
+  Yellog::Trace("Got a dialogue.");
+  MessageMeta message = get_message(m_handler->getPrisoner()->objectName(), Author::Jeff, ContentType::Widget, Theme::Std);
   emit show_modal(message, m_handler);
 }
 #endif
 
 /*! @brief Creates @a message. */
-MessageMeta Core::get_message(const QString &content, Author author,
-                              ContentType content_type, Theme theme) {
+MessageMeta Core::get_message(const QString &content, Author author, ContentType content_type, Theme theme) {
   MessageMeta message;
   message.content = content;
   message.author = author;
@@ -223,20 +253,5 @@ void Core::set_monologue_enabled(const bool enabled) {
 #ifdef JEFF_WITH_QT_WIDGETS
   emit change_menubar_mmode(enabled);
 #endif
-}
-
-/*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */
-void Core::start() {
-  em->startup();
-  if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->load();
-  if (not (*basis)[basis->customScannerSt].toString().isEmpty()) {
-    custom_scanner = ScriptMeta::from_string((*basis)[basis->customScannerSt].toString());
-    jck->set_custom_scanner(custom_scanner);
-  }
-  if (not (*basis)[basis->customComposerSt].toString().isEmpty()) {
-    custom_composer = ScriptMeta::from_string((*basis)[basis->customComposerSt].toString());
-    jck->set_custom_composer(custom_composer);
-  }
-  if ((*basis)[basis->isGreetingsEnabledSt].toBool())
-    got_message_from_user((*basis)[basis->greetingsMsg].toString());
+  Yellog::Trace("Monologue mode changed to: %d", int(enabled));
 }

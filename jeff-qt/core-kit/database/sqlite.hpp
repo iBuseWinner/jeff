@@ -6,6 +6,7 @@
 #include "core-kit/model/nlp/stringssearch.hpp"
 #include "core-kit/model/phrase.hpp"
 #include "core-kit/model/source.hpp"
+#include "yelloger.h"
 #include <QFile>
 #include <QMap>
 #include <QMutex>
@@ -23,16 +24,12 @@
 #include <QUuid>
 #include <QVariant>
 
-/*!
- * @enum Check
- * @brief Enumeration of possible types of checking the state of database.
- */
+/*! @enum Check
+ *  @brief Enumeration of possible types of checking the state of database.  */
 enum Check { NoCheck, Exists, Openable, Correct, RecursivelyСorrect };
 
-/*!
- * @enum ToDo
- * @brief Enumeration of possible types of operations with database.
- */
+/*! @enum ToDo
+ *  @brief Enumeration of possible types of operations with database.  */
 enum ToDo {
   NoneToDo,
   CreateMainTableIfNotExists,
@@ -59,11 +56,8 @@ enum ToDo {
   RemoveMainTableIfExists,
 };
 
-/*!
- * @class SQLite
- * @brief Contains methods of working with databases.
- * @sa Json
- */
+/*! @class SQLite
+ *  @brief Contains methods of working with databases.  */
 class SQLite : public QObject {
   Q_OBJECT
 public:

@@ -12,6 +12,7 @@
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/extensions/script.hpp"
 #include "dialogues/modal-handler.hpp"
+#include "yelloger.h"
 #include <QObject>
 #include <QPair>
 #include <QTimer>

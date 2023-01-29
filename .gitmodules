@@ -1,3 +1,6 @@
-[submodule "jeff-qt/lib/BSlogger"]
-	path = jeff-qt/lib/BSlogger
-	url = https://github.com/bschiffthaler/BSlogger
+[submodule "jeff-qt/lib/maddy"]
+	path = jeff-qt/lib/maddy
+	url = https://github.com/progsource/maddy
+[submodule "jeff-qt/lib/Yelloger"]
+	path = jeff-qt/lib/Yelloger
+	url = https://github.com/danielblagy/Yelloger

@@ -11,6 +11,7 @@
 #include "core-kit/model/nlp/cache.hpp"
 #include "core-kit/extensions/daemon-process.hpp"
 #include "core-kit/extensions/script.hpp"
+#include "yelloger.h"
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>

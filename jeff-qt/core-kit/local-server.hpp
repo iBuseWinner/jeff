@@ -2,6 +2,7 @@
 #define LOCAL_SERVER_H
 
 #include "core-kit/basis.hpp"
+#include "yelloger.h"
 #include <QDataStream>
 #include <QHostAddress>
 #include <QJsonObject>

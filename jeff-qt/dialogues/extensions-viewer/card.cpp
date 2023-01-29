@@ -19,6 +19,7 @@ ExtensionsViewerCard::ExtensionsViewerCard(
   extension_status = new QLabel(this);
   extension_status->setTextFormat(Qt::RichText);
   extension_status->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+  extension_status->setText("<i>" + tr("Waiting status...") + "</i>");
   update_status();
   setLayout(VLineLt::another()
     ->addw(extension_name)->addw(extension_description)
@@ -33,14 +34,15 @@ ExtensionsViewerCard::ExtensionsViewerCard(
 void ExtensionsViewerCard::update() {
   extension_name->setText(extension_meta->name);
   extension_description->setText(extension_meta->desc);
-  update_status();
 }
 
 /*! @brief Updates running status. */
 void ExtensionsViewerCard::update_status() {
-  if (em->is_running(extension_meta))
-    extension_status->setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
-  else
-    extension_status->setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
+  if (isVisible()) {
+    if (em->is_running(extension_meta))
+      extension_status->setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
+    else
+      extension_status->setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
+  }
   QTimer::singleShot(1000, this, &ExtensionsViewerCard::update_status);
 }
