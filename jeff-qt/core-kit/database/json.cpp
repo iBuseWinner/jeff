@@ -5,6 +5,7 @@ Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_p
   check_or_create_subdir();
   _settings_path = _settings_path + QDir::separator() + subdir_name;
   Yellog::EnableFileOutput(QString("%1%2%3").arg(_settings_path).arg(QDir::separator()).arg(log_filename).toStdString().c_str());
+  Yellog::Trace("------------NEWSTART------------");
 }
 
 /*! @brief Reads the store and loads a list of connected sources. */

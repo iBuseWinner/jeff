@@ -90,7 +90,7 @@ void ExtensionsViewerOverview::fill_extensions_cards() {
         connect(card, &ExtensionsViewerCard::clicked_to_open, this, [this, extension_meta] {
           emit open_brief_by_extension_meta(extension_meta);
         });
-        viewer_list_lt->addw(card);
+        viewer_list_lt->insertWidget(0, card);
         cards.append(card);
       }
     }

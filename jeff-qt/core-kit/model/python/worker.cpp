@@ -123,20 +123,18 @@ QJsonObject PythonWorker::request_scan(ScriptMeta *script, const QString &user_e
 }
 
 /*! @brief Prepares data for custom composing. */
-QJsonObject PythonWorker::request_compose(
-  ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted
-) {
+QJsonObject PythonWorker::request_compose(ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
   QJsonArray candidates;
-  for (auto key : sorted.keys()) {
+  for (auto ewi : sorted) {
     QJsonObject candidate;
     QJsonObject indices;
-    for (auto first_indice : sorted[key].first.keys()) {
-      indices[QString::number(first_indice)] = sorted[key].first[first_indice];
+    for (auto first_indice : ewi.first.keys()) {
+      indices[QString::number(first_indice)] = ewi.first[first_indice];
     }
     candidate["indices"] = indices;
-    candidate["reagent_expression"] = sorted[key].second.to_json();
+    candidate["reagent_expression"] = ewi.second.to_json();
     candidates.append(candidate);
   }
   transport["candidates"] = candidates;

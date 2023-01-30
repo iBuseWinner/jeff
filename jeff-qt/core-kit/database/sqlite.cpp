@@ -336,10 +336,7 @@ bool SQLite::remove_phrase(const Source &source, int address) {
 }
 
 /*! @brief Finds all activators for the expression. */
-CacheWithIndices SQLite::scan_source(const Source &source,
-                                     const QString &input,
-                                     QString conn_name)
-{
+CacheWithIndices SQLite::scan_source(const Source &source, const QString &input, QString conn_name) {
   auto db = prepare(source.path, conn_name);
   if (db.databaseName().isEmpty()) {
     db.close();
@@ -350,6 +347,7 @@ CacheWithIndices SQLite::scan_source(const Source &source,
   exec(&query, SelectPhrases, {source.table_name});
   query.first();
   while (query.isValid()) {
+    if (query.value(3).toBool()) { query.next(); continue; }
     /*! If the expression includes a value from the table... */
     auto x = StringSearch::contains(input, query.value(1).toString());
     if (x[0] != 0) {
@@ -367,10 +365,7 @@ CacheWithIndices SQLite::scan_source(const Source &source,
         expr.reagent_text = subquery.value(0).toString();
         expr.exec = subquery.value(1).toBool();
         expr.properties = Phrase::parse_props(subquery.value(2).toString());
-        if (selection.keys().length() == 0)
-          selection[0] = ExpressionWithIndices(x, expr);
-        else
-          selection[selection.keys().length()] = ExpressionWithIndices(x, expr);
+        selection.append(ExpressionWithIndices(x, expr));
       }
     }
     query.next();

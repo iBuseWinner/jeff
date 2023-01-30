@@ -10,47 +10,72 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, boo
   QMap<int, int> m;
   QList<WordMetadata> that_metadata, inner_metadata;
   auto p1 = lemmatize(that), p2 = lemmatize(inner);
+  Yellog::Trace("\t\t\tAfter lemmatization: \"%s\", \"%s\"", p1.toStdString().c_str(), p2.toStdString().c_str());
   if (p1.length() < p2.length()) {
+    Yellog::Trace("\t\t\tp1 is less than p2, reversing it...");
     auto x = p1;
     p1 = p2;
     p2 = x;
   }
   int last = 0;
+  Yellog::Trace("\t\t\tWords in p1:");
   for (auto word : p1.split(" ")) {
+    Yellog::Trace("\t\t\t\t%s", word.toStdString().c_str());
     WordMetadata wmd;
     wmd.word = word;
     wmd.i1 = p1.indexOf(wmd.word, last);
     wmd.i2 = wmd.i1 + wmd.word.length();
+    Yellog::Trace("\t\t\t\t\t%d-%d", wmd.i1, wmd.i2);
     last = wmd.i2;
     that_metadata.append(wmd);
   }
   last = 0;
+  Yellog::Trace("\t\t\tWords in p2:");
   for (auto word : p2.split(" ")) {
     WordMetadata wmd;
     if (HA and (word == "*" or word == "_")) wmd.word = locate(p1, last);
     else wmd.word = word;
+    Yellog::Trace("\t\t\t\t%s", wmd.word.toStdString().c_str());
     wmd.i1 = p2.indexOf(wmd.word, last);
     wmd.i2 = wmd.i1 + wmd.word.length();
+    Yellog::Trace("\t\t\t\t\t%d-%d", wmd.i1, wmd.i2);
     last = wmd.i2;
     inner_metadata.append(wmd);
   }
   if (inner_metadata.length() == 0) {
+    Yellog::Trace("\t\t\tNo inner metadata, returning");
     m[0] = 0;
     return m;
   }
   QList<QPair<float, WordMetadata>> common;
+  Yellog::Trace("\t\t\tFor each in inner metadata:");
   for (auto w2 : inner_metadata) {
     QPair<float, WordMetadata> max_POC = {0.0, WordMetadata()};
+    Yellog::Trace("\t\t\t\tFor each in that metadata:");
     // TODO Можно ещё сделать реализацию POC по синонимам.
     for (auto w1 : that_metadata) {
+      Yellog::Trace("\t\t\t\t\tWords are \"%s\" and \"%s\"", w1.word.toStdString().c_str(), w2.word.toStdString().c_str());
       float POC = get_POC(w1.word, w2.word);
-      if (POC >= EL and POC > max_POC.first) max_POC = QPair<float, WordMetadata>(POC, w1);
+      Yellog::Trace("\t\t\t\t\tGot POC = %5.2f", POC);
+      if (POC >= EL and POC > max_POC.first) {
+        Yellog::Trace("\t\t\t\t\tSelected this now!", POC);
+        Yellog::Trace("\t\t\t\t\tIndices: %d-%d", w1.i1, w1.i2);
+        max_POC = QPair<float, WordMetadata>(POC, w1);
+      }
     }
-    common.append(max_POC);
+    if (max_POC.first >= EL) common.append(max_POC);
   }
   if (float(common.length()) / inner_metadata.length() >= EL) {
-    m[0] = -2;
-    for (auto wmd_pair : common) m[wmd_pair.second.i1] = wmd_pair.second.i2;
+    m.remove(0);
+    Yellog::Trace("\t\t\tAppending these wmd_pairs:");
+    for (auto wmd_pair : common) {
+      Yellog::Trace("\t\t\t\t\"%s\": %d-%d", wmd_pair.second.word.toStdString().c_str(), wmd_pair.second.i1, wmd_pair.second.i2);
+      m[wmd_pair.second.i1] = wmd_pair.second.i2;
+    }
+    Yellog::Trace("\t\t\tKeys in common:");
+    for (auto key : m.keys()) {
+      Yellog::Trace("\t\t\t\t%d-%d", key, m[key]);
+    }
     return m;
   }
   m[0] = 0;
@@ -59,7 +84,7 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, boo
 
 /*! @brief Removes punctuation. */
 QString StringSearch::remove_symbols(QString str) {
-  for (auto symbol : ".!?;:,-+='\"") str.remove(symbol);
+  for (auto symbol : ".!?;:,-+='\"*_~[]{}()") str.remove(symbol);
   return str;
 }
 
@@ -108,8 +133,7 @@ QPair<StringSearch::Intersects, int> StringSearch::intersects(QMap<int, int> fir
   }
   if (not is_intersects) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::No, 0);
   else if (first_total == 0) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::Equal, 0);
-  else if (first_total > 0)
-    return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::FirstBetter, first_total);
+  else if (first_total > 0) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::FirstBetter, first_total);
   else return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::SecondBetter, first_total);
 }
 

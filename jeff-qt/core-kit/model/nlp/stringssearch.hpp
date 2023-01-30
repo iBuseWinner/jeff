@@ -1,6 +1,7 @@
 #ifndef STRINGSSEARCH_H
 #define STRINGSSEARCH_H
 
+#include "yelloger.h"
 #include <QList>
 #include <QMap>
 #include <QPair>

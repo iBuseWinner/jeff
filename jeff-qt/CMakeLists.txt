@@ -161,7 +161,10 @@ set(SRCS_UI
 
 add_executable(jeff-qt ${SRCS} ${SRCS_UI} resources.qrc ui-resources.qrc)
 
-target_compile_definitions(jeff-qt PRIVATE JEFF_WITH_QT_WIDGETS YELLOGER_TRACING)
+# Available definitions:
+#
+# YELLOGER_TRACING
+target_compile_definitions(jeff-qt PRIVATE JEFF_WITH_QT_WIDGETS)
 
 target_link_libraries(
   jeff-qt PRIVATE

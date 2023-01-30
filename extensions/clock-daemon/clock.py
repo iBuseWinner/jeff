@@ -22,7 +22,7 @@ try:
   msg_id = str(uuid.uuid4())
   while True:
     curr_time = 'Current time is ' if lang != 'ru_RU' else 'Текущее время: '
-    curr_time += f'{time.strftime("%X")}' + '.'
+    curr_time += f'**{time.strftime("%X")}**' + '.'
     if verbose:
       print('[5-Sec Precision Clock] ' + curr_time)
     cli.send_status(msg_id, curr_time)

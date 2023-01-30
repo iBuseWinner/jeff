@@ -13,6 +13,7 @@
 #include "core-kit/standard-templates.hpp"
 #include <QList>
 #include <QMap>
+#include <QMutableListIterator>
 #include <QObject>
 #include <QPair>
 #include <QRandomGenerator>

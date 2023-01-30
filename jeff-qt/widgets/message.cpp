@@ -33,9 +33,8 @@ void Message::author() {
 
 /*! @brief Updates the text of a message. */
 void Message::update_text(const QString &text) {
-  auto *label = qobject_cast<QLabel *>(w);
-  if (not label) return;
-  label->setText(text);
+  non_ideal_width_completed = false;
+  md.content = text;
   setWidth(_width);
 }
 
