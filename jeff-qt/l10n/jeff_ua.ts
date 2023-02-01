@@ -9,111 +9,111 @@
     </message>
     <message>
         <source>version</source>
-        <translation>версия</translation>
+        <translation>версія</translation>
     </message>
     <message>
         <source>Jeff - chatbot and automation tool</source>
-        <translation>Джефф - чат-бот и средство автоматизации</translation>
+        <translation>Джефф - чат-бот та засіб автоматизації</translation>
     </message>
     <message>
         <source>Jeff Authors</source>
-        <translation>Авторы Джеффа</translation>
+        <translation>Автори Джеффа</translation>
     </message>
     <message>
         <source>License</source>
-        <translation>Лицензия</translation>
+        <translation>Ліцензія</translation>
     </message>
     <message>
         <source>Shamshin Victor</source>
-        <translation>Шамшин Виктор</translation>
+        <translation>Шамшин Віктор</translation>
     </message>
     <message>
         <source>Developer</source>
-        <translation>Разработчик</translation>
+        <translation>Розробник</translation>
     </message>
     <message>
         <source>Mark CDA</source>
-        <translation>Марк Сидиэй</translation>
+        <translation>Марк Сідіей</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрыть</translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>О приложении</translation>
+        <translation>Про додаток</translation>
     </message>
     <message>
         <source>Authors</source>
-        <translation>Авторы</translation>
+        <translation>Автори</translation>
     </message>
 </context>
 <context>
     <name>Basis</name>
     <message>
         <source>An access error occurred (e.g. trying to write to a read-only file).</source>
-        <translation>Произошла ошибка доступа (например, попытка записи в файл только для чтения).</translation>
+        <translation>Відбулася помилка доступу (наприклад, спроба запису в файл тільки для читання).</translation>
     </message>
     <message>
         <source>A format error occurred (e.g. loading a malformed file).</source>
-        <translation>Произошла ошибка формата (например, загрузка поврежденного файла).</translation>
+        <translation>Відбулася помилка формату (наприклад, завантаження пошкодженого файлу).</translation>
     </message>
 </context>
 <context>
     <name>CreateSourceDialog</name>
     <message>
         <source>Save</source>
-        <translation>Сохранить</translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Отменить</translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <source>Enter source name</source>
-        <translation>Введите название источника</translation>
+        <translation>Введіть назву джерела</translation>
     </message>
     <message>
         <source>Select database file...</source>
-        <translation>Выберите файл базы данных...</translation>
+        <translation>Оберіть файл бази даних...</translation>
     </message>
     <message>
         <source>Select database...</source>
-        <translation>Выберите базу данных...</translation>
+        <translation>Оберіть базу даних...</translation>
     </message>
     <message>
         <source>Jeff database</source>
-        <translation>База данных Джеффа</translation>
+        <translation>База даних Джеффа</translation>
     </message>
 </context>
 <context>
     <name>DaemonProcess</name>
     <message>
         <source>An error occurred during daemon execution</source>
-        <translation>Произошла ошибка в процессе выполнения расширения</translation>
+        <translation>Відбулася помилка під час виконання розширення</translation>
     </message>
 </context>
 <context>
     <name>ExtensionsViewerBrief</name>
     <message>
         <source>Remove this extension from Jeff</source>
-        <translation>Удалить это расширение из Джеффа</translation>
+        <translation>Видалити це розширення із Джеффа</translation>
     </message>
     <message>
         <source>Description:</source>
-        <translation>Описание:</translation>
+        <translation>Опис:</translation>
     </message>
     <message>
         <source>Authors:</source>
-        <translation>Авторы:</translation>
+        <translation>Автори:</translation>
     </message>
     <message>
         <source>License:</source>
-        <translation>Лицензия:</translation>
+        <translation>Ліцензія:</translation>
     </message>
     <message>
         <source>Links:</source>
-        <translation>Ссылки:</translation>
+        <translation>Посилання:</translation>
     </message>
     <message>
         <source>Running</source>
@@ -121,30 +121,30 @@
     </message>
     <message>
         <source>Stopped</source>
-        <translation>Остановлено</translation>
+        <translation>Зупинено</translation>
     </message>
     <message>
         <source>Disable the extension</source>
-        <translation>Отключить расширение</translation>
+        <translation>Вимкнути розширення</translation>
     </message>
     <message>
         <source>Enable the extension</source>
-        <translation>Включить расширение</translation>
+        <translation>Ввімкнути розширення</translation>
     </message>
     <message>
         <source>Waiting status...</source>
-        <translation>Ожидание статуса...</translation>
+        <translation>Очікування статусу...</translation>
     </message>
     <message>
         <source>Control</source>
-        <translation>Управление</translation>
+        <translation>Управління</translation>
     </message>
 </context>
 <context>
     <name>ExtensionsViewerCard</name>
     <message>
         <source>See details</source>
-        <translation>Подробнее</translation>
+        <translation>Детальніше</translation>
     </message>
     <message>
         <source>Running</source>
@@ -152,38 +152,38 @@
     </message>
     <message>
         <source>Stopped</source>
-        <translation>Остановлено</translation>
+        <translation>Зупинено</translation>
     </message>
     <message>
         <source>Waiting status...</source>
-        <translation>Ожидание статуса...</translation>
+        <translation>Очікування статусу...</translation>
     </message>
 </context>
 <context>
     <name>ExtensionsViewerOverview</name>
     <message>
         <source>Extensions</source>
-        <translation>Расширения</translation>
+        <translation>Розширення</translation>
     </message>
     <message>
         <source>Add from file</source>
-        <translation>Добавить из файла</translation>
+        <translation>Додати з файлу</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрыть</translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <source>Jeff doesn&apos;t have extensions yet. You can add them yourself by downloading from the Internet and clicking on the &quot;Add from file&quot; button.</source>
-        <translation>У Джеффа ещё нет расширений. Вы можете добавить их самостоятельно, скачивая их из Интернета и нажимая на кнопку &quot;Добавить из файла&quot;.</translation>
+        <translation>У Джеффа ще немає розширень. Ви можете додати їх самостійно, завантажуючи їх з інтернету та натискаючи кнопку &quot;Додати з файлу&quot;.</translation>
     </message>
     <message>
         <source>Select extension&apos;s configuration</source>
-        <translation>Выберите конфигурацию расширения</translation>
+        <translation>Оберіть конфігурацію розширення</translation>
     </message>
     <message>
         <source>Jeff&apos;s extension</source>
-        <translation>Расширение Джеффа</translation>
+        <translation>Розширення Джеффа</translation>
     </message>
 </context>
 <context>
@@ -194,23 +194,23 @@
     </message>
     <message>
         <source>This is the first start of Jeff. Before you start working:</source>
-        <translation>Это первый старт Джеффа. Перед тем, как начать работать:</translation>
+        <translation>Це перший старт Джеффа. Перед тим, як почати роботу:</translation>
     </message>
     <message>
         <source>1) go to the Source Manager...</source>
-        <translation>1) перейдите в Менеджер источников...</translation>
+        <translation>1) перейдіть в Менеджер Джерел...</translation>
     </message>
     <message>
         <source>2) add databases...</source>
-        <translation>2) добавьте базы данных...</translation>
+        <translation>2) додайте бази даних...</translation>
     </message>
     <message>
         <source>And now you&apos;ve done.</source>
-        <translation>И теперь вы можете приступать к работе.</translation>
+        <translation>І тепер ви можете братись за роботу.</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрыть</translation>
+        <translation>Закрити</translation>
     </message>
 </context>
 <context>
@@ -221,73 +221,73 @@
     </message>
     <message>
         <source>Hello!</source>
-        <translation>Привет!</translation>
+        <translation>Привіт!</translation>
     </message>
     <message>
         <source>Save history</source>
-        <translation>Сохранить историю сообщений</translation>
+        <translation>Зберегти історію повідомлень</translation>
     </message>
     <message>
         <source>Import message history?</source>
-        <translation>Импортировать историю сообщений?</translation>
+        <translation>Імпортувати історію повідомлень?</translation>
     </message>
     <message>
         <source>Messages will be added to the beginning of the dialogue.</source>
-        <translation>Сообщения будут добавлены в начало диалога.</translation>
+        <translation>Повідомлення будуть додані на початок діалогу.</translation>
     </message>
     <message>
         <source>Load history</source>
-        <translation>Загрузить историю сообщений</translation>
+        <translation>Завантажити історію повідомлень</translation>
     </message>
     <message>
         <source>You</source>
-        <translation>Вы</translation>
+        <translation>Ви</translation>
     </message>
     <message>
         <source>Answer not found.</source>
-        <translation>Ответ не найден.</translation>
+        <translation>Відповідь не знайдено.</translation>
     </message>
     <message>
         <source>Enter /q to quit</source>
-        <translation>Введите /q для выхода</translation>
+        <translation>Введіть /q для виходу</translation>
     </message>
     <message>
         <source>Jeff&apos;s history file</source>
-        <translation>Файл истории Джеффа</translation>
+        <translation>Файл історії Джеффа</translation>
     </message>
 </context>
 <context>
     <name>Line</name>
     <message>
         <source>Enter your message...</source>
-        <translation>Введите сообщение...</translation>
+        <translation>Введіть повідомлення...</translation>
     </message>
 </context>
 <context>
     <name>LineEdit</name>
     <message>
         <source>Enter your message...</source>
-        <translation>Введите сообщение...</translation>
+        <translation>Введіть повідомлення...</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Вырезать</translation>
+        <translation>Вирізати</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копировать</translation>
+        <translation>Копіювати</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Вставить</translation>
+        <translation>Вставити</translation>
     </message>
     <message>
         <source>Select all</source>
-        <translation>Выбрать всё</translation>
+        <translation>Виділити все</translation>
     </message>
 </context>
 <context>
@@ -298,83 +298,83 @@
     </message>
     <message>
         <source>Source manager</source>
-        <translation>Менеджер источников</translation>
+        <translation>Менеджер джерел</translation>
     </message>
     <message>
         <source>Export message history</source>
-        <translation>Экспортировать историю сообщений</translation>
+        <translation>Експортувати історію повідомлень</translation>
     </message>
     <message>
         <source>Import message history</source>
-        <translation>Импортировать историю сообщений</translation>
+        <translation>Імпортувати історію повідомлень</translation>
     </message>
     <message>
         <source>Enable monologue mode</source>
-        <translation>Включить режим монолога</translation>
+        <translation>Увімкнути режим монологу</translation>
     </message>
     <message>
         <source>&amp;Exit</source>
-        <translation>&amp;Выход</translation>
+        <translation>&amp;Вихід</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Правка</translation>
+        <translation>Редагувати</translation>
     </message>
     <message>
         <source>Clear message history</source>
-        <translation>Очистить историю сообщений</translation>
+        <translation>Очистити історію повідомлень</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Вырезать</translation>
+        <translation>Вирізати</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копировать</translation>
+        <translation>Копіювати</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Вставить</translation>
+        <translation>Вставити</translation>
     </message>
     <message>
         <source>Select all</source>
-        <translation>Выбрать всё</translation>
+        <translation>Виділити все</translation>
     </message>
     <message>
         <source>Tools</source>
-        <translation>Инструменты</translation>
+        <translation>Інструменти</translation>
     </message>
     <message>
         <source>Hide menubar</source>
-        <translation>Скрыть меню</translation>
+        <translation>Приховати меню</translation>
     </message>
     <message>
         <source>Full screen</source>
-        <translation>Полноэкранный режим</translation>
+        <translation>Повноекранний режим</translation>
     </message>
     <message>
         <source>Settings...</source>
-        <translation>Параметры...</translation>
+        <translation>Налаштування...</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation>Справка</translation>
+        <translation>Довідка</translation>
     </message>
     <message>
         <source>About</source>
-        <translation>О приложении</translation>
+        <translation>Про додаток</translation>
     </message>
     <message>
         <source>About Qt</source>
-        <translation>О Qt</translation>
+        <translation>Про Qt</translation>
     </message>
     <message>
         <source>Disable monologue mode</source>
-        <translation>Отключить режим монолога</translation>
+        <translation>Вимкнути режим монологу</translation>
     </message>
     <message>
         <source>Phrase editor</source>
@@ -382,72 +382,72 @@
     </message>
     <message>
         <source>Scripts&apos; manager</source>
-        <translation>Менеджер скриптов</translation>
+        <translation>Менеджер скриптів</translation>
     </message>
     <message>
         <source>Extensions</source>
-        <translation>Расширения</translation>
+        <translation>Розширення</translation>
     </message>
     <message>
         <source>Extensions viewer</source>
-        <translation>Просмотр расширений</translation>
+        <translation>Перегляд розширень</translation>
     </message>
     <message>
         <source>No scenario running</source>
-        <translation>Нет запущенных сценариев</translation>
+        <translation>Немає запущених сценаріїв</translation>
     </message>
     <message>
         <source>No custom scanner enabled</source>
-        <translation>Нет пользовательского сканера</translation>
+        <translation>Немає користувацького сканера</translation>
     </message>
     <message>
         <source>Select custom scanner...</source>
-        <translation>Выбрать сканер...</translation>
+        <translation>Вибрати сканер...</translation>
     </message>
     <message>
         <source>No custom composer enabled</source>
-        <translation>Нет пользовательского композитора</translation>
+        <translation>Немає користувацького композитора</translation>
     </message>
     <message>
         <source>Select custom composer...</source>
-        <translation>Выбрать композитор...</translation>
+        <translation>Вибрати композитор...</translation>
     </message>
 </context>
 <context>
     <name>Message</name>
     <message>
         <source>Warning: </source>
-        <translation>Предупреждение: </translation>
+        <translation>Попередження: </translation>
     </message>
     <message>
         <source>Error: </source>
-        <translation>Ошибка: </translation>
+        <translation>Помилка: </translation>
     </message>
     <message>
         <source>Copy image path</source>
-        <translation>Копировать путь до изображения</translation>
+        <translation>Скопіювати шлях до зображення</translation>
     </message>
     <message>
         <source>Copy message text</source>
-        <translation>Скопировать текст сообщения</translation>
+        <translation>Скопіювати текст повідомлення</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation>Открыть</translation>
+        <translation>Відкрити</translation>
     </message>
 </context>
 <context>
     <name>PhraseEditor</name>
     <message>
         <source>New phrase</source>
-        <translation>Новая фраза</translation>
+        <translation>Нова фраза</translation>
     </message>
 </context>
 <context>
     <name>PhraseEditorBrief</name>
     <message>
         <source>Edit text</source>
-        <translation>Редактировать текст</translation>
+        <translation>Редагувати текст</translation>
     </message>
     <message>
         <source>Back</source>
@@ -455,54 +455,54 @@
     </message>
     <message>
         <source>Process via script</source>
-        <translation>Обработать в скрипте</translation>
+        <translation>Опрацювати скриптом</translation>
     </message>
     <message>
         <source>The address of the phrase is %1.</source>
-        <translation>Адрес фразы - %1.</translation>
+        <translation>Адреса фрази - %1.</translation>
     </message>
     <message>
         <source>Addresses</source>
-        <translation>Адреса</translation>
+        <translation>Адреси</translation>
     </message>
     <message>
         <source>Activators</source>
-        <translation>Активаторы</translation>
+        <translation>Активатори</translation>
     </message>
     <message>
         <source>Reagents</source>
-        <translation>Реагенты</translation>
+        <translation>Реагенти</translation>
     </message>
     <message>
         <source>New phrase</source>
-        <translation>Новая фраза</translation>
+        <translation>Нова фраза</translation>
     </message>
     <message>
         <source>Connect another phrase</source>
-        <translation>Присоединить фразу</translation>
+        <translation>Приєднати фразу</translation>
     </message>
     <message>
         <source>Disconnect phrase</source>
-        <translation>Отключить эту фразу</translation>
+        <translation>Відключити цю фразу</translation>
     </message>
     <message>
         <source>Edit this phrase...</source>
-        <translation>Редактировать эту фразу...</translation>
+        <translation>Редагувати цю фразу...</translation>
     </message>
     <message>
         <source>Delete this phrase</source>
-        <translation>Удалить эту фразу</translation>
+        <translation>Видалити цю фразу</translation>
     </message>
     <message>
         <source>Edit script</source>
-        <translation>Редактировать скрипт</translation>
+        <translation>Редагувати скрипт</translation>
     </message>
 </context>
 <context>
     <name>PhraseEditorOverview</name>
     <message>
         <source>Address</source>
-        <translation>Адрес</translation>
+        <translation>Адреса</translation>
     </message>
     <message>
         <source>Phrase</source>
@@ -510,30 +510,30 @@
     </message>
     <message>
         <source>Double click on the desired phrase to edit it.</source>
-        <translation>Дважды кликните на нужную фразу, чтобы редактировать её.</translation>
+        <translation>Двічі клацніть на потрібну фразу, щоб її редагувати.</translation>
     </message>
     <message>
         <source>New phrase</source>
-        <translation>Новая фраза</translation>
+        <translation>Нова фраза</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation>Закрыть</translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <source>Edit this phrase...</source>
-        <translation>Редактировать эту фразу...</translation>
+        <translation>Редагувати цю фразу...</translation>
     </message>
     <message>
         <source>Delete this phrase</source>
-        <translation>Удалить эту фразу</translation>
+        <translation>Видалити цю фразу</translation>
     </message>
 </context>
 <context>
     <name>PhraseEditorSelector</name>
     <message>
         <source>Address</source>
-        <translation>Адрес</translation>
+        <translation>Адреса</translation>
     </message>
     <message>
         <source>Phrase</source>
@@ -541,7 +541,7 @@
     </message>
     <message>
         <source>Select a phrase...</source>
-        <translation>Выберите фразу...</translation>
+        <translation>Виберіть фразу...</translation>
     </message>
     <message>
         <source>Back</source>
@@ -552,165 +552,165 @@
     <name>PythonWorker</name>
     <message>
         <source>Failed to connect the module.</source>
-        <translation>Не удалось подключить модуль.</translation>
+        <translation>Не вдалося під'єднати модуль.</translation>
     </message>
     <message>
         <source>Could not find &quot;answer&quot; attribute in module.</source>
-        <translation>Не удалось найти атрибут answer в модуле.</translation>
+        <translation>Не вдалося знайти атрибут answer в модулі.</translation>
     </message>
     <message>
         <source>Cannot call &quot;answer&quot;: this is not a function!</source>
-        <translation>Невозможно вызвать &quot;answer&quot;: это не функция!</translation>
+        <translation>Неможливо викликати &quot;answer&quot;: це не функція!</translation>
     </message>
     <message>
         <source>Failed to construct argument from string.</source>
-        <translation>Не удалось составить аргумент из строки.</translation>
+        <translation>Не вдалося скласти аргумент зі строки.</translation>
     </message>
     <message>
         <source>Failed to construct a tuple from a string.</source>
-        <translation>Не удалось составить кортеж из строки.</translation>
+        <translation>Не вдалося скласти кортеж зі строки.</translation>
     </message>
     <message>
         <source>The function could not execute correctly because it did not return a result.</source>
-        <translation>Не удалось выполнить функцию корректно, так как она не вернула результат.</translation>
+        <translation>Не вдалося коректно виконати функцію, бо вона не повернула результат.</translation>
     </message>
     <message>
         <source>No valid JSON received.</source>
-        <translation>Не получен валидный JSON.</translation>
+        <translation>Не отримано дійсний JSON.</translation>
     </message>
     <message>
         <source>No JSON object received.</source>
-        <translation>Не получен объект JSON.</translation>
+        <translation>Не отримано обєкт JSON.</translation>
     </message>
     <message>
         <source>The function name is empty.</source>
-        <translation>Имя функции пустое.</translation>
+        <translation>Імя функції пусте.</translation>
     </message>
     <message>
         <source>The filepath to the module is empty.</source>
-        <translation>Путь до файла модуля пуст.</translation>
+        <translation>Шлях до файла модуля пустий.</translation>
     </message>
 </context>
 <context>
     <name>SQLite</name>
     <message>
         <source>Database &quot;%1&quot; doesn&apos;t exist.</source>
-        <translation>Базы данных &quot;%1&quot; не существует.</translation>
+        <translation>Бази даних &quot;%1&quot; не існує.</translation>
     </message>
     <message>
         <source>Opening error. Error text: </source>
-        <translation>Ошибка открытия. Текст ошибки: </translation>
+        <translation>Помилка відкриття. Текст помилки: </translation>
     </message>
     <message>
         <source>Database &quot;%1&quot;.</source>
-        <translation>База данных &quot;%1&quot;.</translation>
+        <translation>База даних &quot;%1&quot;.</translation>
     </message>
     <message>
         <source>Validation error: table with sources does not exist.</source>
-        <translation>Ошибка в ходе проверки: таблицы с источниками не существует.</translation>
+        <translation>Помилка в ході перевірки: таблиці з джерелами не існує.</translation>
     </message>
     <message>
         <source>Validation error: table with sources is empty.</source>
-        <translation>Ошибка в ходе проверки: таблица с источниками пуста.</translation>
+        <translation>Помилка в ході перевірки: таблиця з джерелами пуста.</translation>
     </message>
     <message>
         <source>Validation error: the first column of the table with sources does not fit the description of &quot;source&quot; TEXT NOT NULL UNIQUE.</source>
-        <translation>Ошибка в ходе проверки: первый столбец таблицы с источниками не соответствует описанию &quot;source&quot; TEXT NOT NULL UNIQUE.</translation>
+        <translation>Помилка в ході перевірки: перший стовпець таблиці з джерелами не відповідає опису &quot;source&quot; TEXT NOT NULL UNIQUE.</translation>
     </message>
     <message>
         <source>Validation error: the table with sources contains only one column.</source>
-        <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь один столбец.</translation>
+        <translation>Помилка в ході перевірки: таблиця з джерелами має лише один стовпець.</translation>
     </message>
     <message>
         <source>Validation error: the second column of the table with sources does not fit the description of &quot;title&quot; TEXT.</source>
-        <translation>Ошибка в ходе проверки: второй столбец таблицы с источниками не соответствует описанию &quot;title&quot; TEXT.</translation>
+        <translation>Помилка в ході перевірки: другий стовпець таблиці з джерелами не відповідає опису &quot;title&quot; TEXT.</translation>
     </message>
     <message>
         <source>Validation error: the table with sources contains only two columns.</source>
-        <translation>Ошибка в ходе проверки: таблица с источниками содержит лишь два столбца.</translation>
+        <translation>Помилка в ході перевірки: таблиця з джерелами має лише два стовпці.</translation>
     </message>
     <message>
         <source>Database &quot;%1&quot;, source &quot;%2&quot;.</source>
-        <translation>База данных &quot;%1&quot;, источник &quot;%2&quot;.</translation>
+        <translation>База даних &quot;%1&quot;, джерело &quot;%2&quot;.</translation>
     </message>
     <message>
         <source>Validation error: source does not exist.</source>
-        <translation>Ошибка в ходе проверки: источника не существует.</translation>
+        <translation>Помилка в ході перевірки: джерела не існує.</translation>
     </message>
     <message>
         <source>Validation error: source is empty.</source>
-        <translation>Ошибка в ходе проверки: источник пуст.</translation>
+        <translation>Помилка в ході перевірки: джерело пусте.</translation>
     </message>
     <message>
         <source>Validation error: the first column of the source does not fit the description of &quot;address&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE.</source>
-        <translation>Ошибка в ходе проверки: первый столбец источника не соответствует описанию &quot;address&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE.</translation>
+        <translation>Помилка в ході перевірки: перший стовпець джерела не відповідає опису &quot;address&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE.</translation>
     </message>
     <message>
         <source>Validation error: the source contains only one column.</source>
-        <translation>Ошибка в ходе проверки: источник содержит лишь один столбец.</translation>
+        <translation>Помилка в ході перевірки: джерело має лише один стовпець.</translation>
     </message>
     <message>
         <source>Validation error: the second column of the source does not fit the description of &quot;expression&quot; TEXT.</source>
-        <translation>Ошибка в ходе проверки: второй столбец источника не соответствует описанию &quot;expression&quot; TEXT.</translation>
+        <translation>Помилка в ході перевірки: другий стовпець джерела не відповідає опису &quot;expression&quot; TEXT.</translation>
     </message>
     <message>
         <source>Validation error: the source contains only two columns.</source>
-        <translation>Ошибка в ходе проверки: источник содержит лишь два столбца.</translation>
+        <translation>Помилка в ході перевірки: джерело має лише два стовпці.</translation>
     </message>
     <message>
         <source>Validation error: the third column of the source does not fit the description of &quot;links&quot; TEXT.</source>
-        <translation>Ошибка в ходе проверки: третий столбец источника не соответствует описанию &quot;links&quot; TEXT.</translation>
+        <translation>Помилка в ході перевірки: третій стовпець джерела не відповідає опису &quot;links&quot; TEXT.</translation>
     </message>
     <message>
         <source>Validation error: the source contains only three columns.</source>
-        <translation>Ошибка в ходе проверки: источник содержит лишь три столбца.</translation>
+        <translation>Помилка в ході перевірки: джерело має лише три стовпці.</translation>
     </message>
     <message>
         <source>Validation error: the fourth column of the source does not fit the description of &quot;exec&quot; INTEGER NOT NULL.</source>
-        <translation>Ошибка в ходе проверки: четвёртый столбец источника не соответствует описанию &quot;exec&quot; INTEGER NOT NULL.</translation>
+        <translation>Помилка в ході перевірки: четвертий стовпець джерела не відповідає опису &quot;exec&quot; INTEGER NOT NULL.</translation>
     </message>
     <message>
         <source>Validation error: the source contains only four columns.</source>
-        <translation>Ошибка в ходе проверки: источник содержит всего лишь четыре столбца.</translation>
+        <translation>Помилка в ході перевірки: джерело має лише чотири стовпці.</translation>
     </message>
     <message>
         <source>Validation error: the fifth column of the source does not fit the description of &quot;adprops&quot; TEXT.</source>
-        <translation>Ошибка в ходе проверки: пятый столбец источника не соответствует описанию &quot;adprops&quot; TEXT.</translation>
+        <translation>Помилка в ході перевірки: п'ятий стовпець джерела не відповідає опису &quot;adprops&quot; TEXT.</translation>
     </message>
     <message>
         <source>Validation error: the third column of the table with sources does not fit the description of &quot;weight&quot; INTEGER.</source>
-        <translation>Ошибка в ходе проверки: первый столбец таблицы с источниками не соответствует описанию &quot;weight&quot; INTEGER.</translation>
+        <translation>Помилка в ході перевірки: перший стовпець таблиці з джерелами не відповідає опису &quot;weight&quot; INTEGER.</translation>
     </message>
     <message>
         <source>Could not create main table.</source>
-        <translation>Невозможно создать главную таблицу.</translation>
+        <translation>Неможливо створити головну таблицю.</translation>
     </message>
     <message>
         <source>Could not create source, number of attempts exceeded </source>
-        <translation>Невозможно создать источник, количество попыток превысило </translation>
+        <translation>Неможливо створити джерело, кількість спроб перевищила </translation>
     </message>
     <message>
         <source>Could not write options and create source table.</source>
-        <translation>Невозможно записать параметры и создать таблицу источника.</translation>
+        <translation>Неможливо записати параметри та створити таблицю джерела.</translation>
     </message>
 </context>
 <context>
     <name>ScriptEditor</name>
     <message>
         <source>Specify script path:</source>
-        <translation>Укажите путь к скрипту:</translation>
+        <translation>Вкажіть шлях до скрипту:</translation>
     </message>
     <message>
         <source>Specify script type:</source>
-        <translation>Укажите тип скрипта:</translation>
+        <translation>Вкажіть тип скрипту:</translation>
     </message>
     <message>
         <source>Select a file...</source>
-        <translation>Выберите файл...</translation>
+        <translation>Оберіть файл...</translation>
     </message>
     <message>
         <source>Select file...</source>
-        <translation>Выбрать файл...</translation>
+        <translation>Вибрати файл...</translation>
     </message>
     <message>
         <source>Python script</source>
@@ -718,15 +718,15 @@
     </message>
     <message>
         <source>Custom scanner (another answering system)</source>
-        <translation>Пользовательский сканер (другой автоответчик)</translation>
+        <translation>Користувацький сканер (інший автовідповідач)</translation>
     </message>
     <message>
         <source>Custom composer (receives chosen variants and answers on them in another manner)</source>
-        <translation>Пользовательский композитор (получает выбранные варианты и отвечает на них другим способом)</translation>
+        <translation>Користувацький композитор (отримує обрані варіанти та відповідає на них іншим способом)</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Отменить</translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <source>Add script</source>
@@ -734,81 +734,81 @@
     </message>
     <message>
         <source>Save script</source>
-        <translation>Сохранить скрипт</translation>
+        <translation>Зберегти скрипт</translation>
     </message>
     <message>
         <source>Specify function name:</source>
-        <translation>Укажите название функции:</translation>
+        <translation>Вкажіть назву функції:</translation>
     </message>
     <message>
         <source>Function name...</source>
-        <translation>Название функции...</translation>
+        <translation>Назва функції...</translation>
     </message>
     <message>
         <source>Add the memory cells to be passed to the script:</source>
-        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
+        <translation>Додайте комірки пам'яті які потрібно передати в скрипт:</translation>
     </message>
     <message>
         <source>Add memory cell</source>
-        <translation>Добавить ячейку памяти</translation>
+        <translation>Додати комірку пам'яті</translation>
     </message>
     <message>
         <source>Remove selected cell</source>
-        <translation>Удалить выбранную ячейку</translation>
+        <translation>Видалити обрану комірку</translation>
     </message>
     <message>
         <source>Memory cell name...</source>
-        <translation>Название ячейки памяти...</translation>
+        <translation>Назва комірки пам'яті...</translation>
     </message>
     <message>
         <source>Cells list</source>
-        <translation>Список ячеек</translation>
+        <translation>Список комірок</translation>
     </message>
     <message>
         <source>Please complete path and function name fields before saving.</source>
-        <translation>Пожалуйста, укажите путь и название функции перед сохранением.</translation>
+        <translation>Будь ласка, вкажіть шлях та назву функції перед збереженням.</translation>
     </message>
     <message>
         <source>Specify amount of message history to be sent:</source>
-        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
+        <translation>Вкажіть кількість останніх повідомлень які потрібно надіслати:</translation>
     </message>
     <message>
         <source>Check if script needs whole user input</source>
-        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
+        <translation>Відмітьте, якщо скрипт потребує все введене користувачем</translation>
     </message>
     <message>
         <source>Check if you need to pass additional values to the script</source>
-        <translation>Отметьте, если вам нужно передавать дополнительные свойства в скрипт</translation>
+        <translation>Відмітьте, якщо вам потрібно передавати додаткові властивості в скрипт</translation>
     </message>
     <message>
         <source>Any executable</source>
-        <translation>Любая программа</translation>
+        <translation>Будь-яка програма</translation>
     </message>
 </context>
 <context>
     <name>Server</name>
     <message>
         <source>Unable to start server. Perhaps the port %1 is busy.</source>
-        <translation>Не удалось запустить сервер. Возможно, порт %1 занят.</translation>
+        <translation>Не вдалося запустити сервер. Можливо, порт %1 зайнятий.</translation>
     </message>
 </context>
 <context>
     <name>Settings</name>
     <message>
         <source>Enable delay</source>
-        <translation>Включить задержку</translation>
+        <translation>Увімкнути затримку</translation>
     </message>
     <message>
         <source>Enables Jeff&apos;s response delay.</source>
-        <translation>Добавить задержку для ответа Джеффа.</translation>
+        <translation>Додати затримку для відповіді Джеффа.</translation>
     </message>
     <message>
         <source>From</source>
-        <translation>От</translation>
+        <translation>Від</translation>
     </message>
     <message>
         <source>to</source>
-        <translation>до</translation>
+        <translation>для</translation>
     </message>
     <message>
         <source>ms</source>
@@ -816,19 +816,19 @@
     </message>
     <message>
         <source>Keep history</source>
-        <translation>Хранить историю</translation>
+        <translation>Зберігати історію</translation>
     </message>
     <message>
         <source>Enables keeping the message history after exiting the application.</source>
-        <translation>Позволяет сохранить историю сообщений после выхода из приложения.</translation>
+        <translation>Дозволяє зберегти історію після повідомлень після виходу із додатку.</translation>
     </message>
     <message>
         <source>Enable greetings message on start</source>
-        <translation>Включить приветствие при запуске</translation>
+        <translation>Увімкнути привітання при запуску</translation>
     </message>
     <message>
         <source>Allows you to automatically send a message to Jeff at startup so that he prepares the information you need in advance for you.</source>
-        <translation>Позволяет вам автоматически отправлять Джеффу сообщение при запуске, чтобы он заранее готовил информацию, которая вам нужна.</translation>
+        <translation>Дозволяє вам автоматично надсилати Джеффу повідомлення при запуску, щоб він заздалегідь готував інформацію яка вам потрібна.</translation>
     </message>
     <message>
         <source>OK</source>
@@ -839,58 +839,58 @@
     <name>SourcesEditor</name>
     <message>
         <source>Source actions...</source>
-        <translation>Действия с источниками...</translation>
+        <translation>Дії з джерелами...</translation>
     </message>
     <message>
         <source>Add sources</source>
-        <translation>Добавить источники</translation>
+        <translation>Додати джерела</translation>
     </message>
     <message>
         <source>Create source</source>
-        <translation>Создать источник</translation>
+        <translation>Створити джерело</translation>
     </message>
     <message>
         <source>Remove source</source>
-        <translation>Удалить источник</translation>
+        <translation>Видалити джерело</translation>
     </message>
     <message>
         <source>Save and close</source>
-        <translation>Сохранить и закрыть</translation>
+        <translation>Зберегти і закрити</translation>
     </message>
     <message>
         <source>Sources</source>
-        <translation>Источники</translation>
+        <translation>Джерела</translation>
     </message>
     <message>
         <source>Select database</source>
-        <translation>Выбрать базу данных</translation>
+        <translation>Вибрати базу даних</translation>
     </message>
     <message>
         <source>Jeff&apos;s database</source>
-        <translation>База данных Джеффа</translation>
+        <translation>База даних Джеффа</translation>
     </message>
 </context>
 <context>
     <name>TextEdit</name>
     <message>
         <source>Delete</source>
-        <translation>Удалить</translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <source>Cut</source>
-        <translation>Вырезать</translation>
+        <translation>Вирізати</translation>
     </message>
     <message>
         <source>Copy</source>
-        <translation>Копировать</translation>
+        <translation>Копіювати</translation>
     </message>
     <message>
         <source>Paste</source>
-        <translation>Вставить</translation>
+        <translation>Вставити</translation>
     </message>
     <message>
         <source>Select all</source>
-        <translation>Выбрать всё</translation>
+        <translation>Виділити все</translation>
     </message>
 </context>
 </TS>
