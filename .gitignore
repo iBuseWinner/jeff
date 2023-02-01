@@ -10,3 +10,5 @@ extensions/vosk-voice-input-daemon/models
 jeff-qt/target
 jeff-core/Cargo.lock
 jeff-core/target
+extensions/alice-aiml-server/brain.brn
+extensions/alice-aiml-server/sessions.brn

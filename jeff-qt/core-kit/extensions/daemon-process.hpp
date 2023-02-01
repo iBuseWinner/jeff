@@ -21,7 +21,7 @@ class DaemonProcess : public QProcess {
 public:
   // Functions described in `daemon-process.cpp`:
   DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObject *parent = nullptr);
-  void stop(int msecs = 1500);
+  void stop(int msecs = 5000);
   /*! @brief Tells if this process is spawned by given extension' metadata. */
   bool is_spawner(ExtensionMeta *e) { return extension_meta == e; }
   static QJsonObject request_output(

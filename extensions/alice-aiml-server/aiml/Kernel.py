@@ -1,6 +1,7 @@
 """This file contains the public interface to the aiml module."""
 
 import copy
+import marshal
 import glob
 import os
 import random
@@ -64,7 +65,7 @@ class Kernel:
 
         # Set up the bot predicates
         self._botPredicates = {}
-        self.setBotPredicate("name", "Nameless")
+        self.setBotPredicate("name", "Jeff")
 
         # set up the word substitutors (subbers):
         self._subbers = {}
@@ -108,12 +109,15 @@ class Kernel:
             "version":      self._processVersion,
         }
 
-    def bootstrap(self, brainFile=None, learnFiles=[], commands=[],
+    def bootstrap(self, brainFile=None, sessionsFile=None, learnFiles=[], commands=[],
                   chdir=None):
         """Prepare a Kernel object for use.
 
         If a `brainFile` argument is provided, the Kernel attempts to
         load the brain at the specified filename.
+
+        If a `sessionsFile` argument is provided, the Kernel attempts to
+        load sessions data and all setted predicates.
 
         If `learnFiles` is provided, the Kernel attempts to load the
         specified AIML files.
@@ -129,6 +133,8 @@ class Kernel:
         start = time.time()
         if brainFile:
             self.loadBrain(brainFile)
+        if sessionsFile:
+            self.loadSessions(sessionsFile)
 
         prev = os.getcwd()
         try:
@@ -153,7 +159,7 @@ class Kernel:
                 os.chdir(prev)
 
         if self._verboseMode:
-            print("Kernel bootstrap completed in %.2f seconds" % (time.time() - start))
+            print("Kernel bootstrap completed in %.2f seconds\n" % (time.time() - start))
 
     def verbose(self, isVerbose=True):
         """Enable/disable verbose output mode."""
@@ -193,11 +199,43 @@ class Kernel:
             end = time.time() - start
             print( "done (%d categories in %.2f seconds)" % (self._brain.numTemplates(), end) )
 
-    def saveBrain(self, filename):
-        """Dump the contents of the bot's brain to a file on disk."""
-        if self._verboseMode: print( "Saving brain to %s..." % filename, end="")
+    def loadSessions(self, filename):
+        """Attempt to load a previously-saved 'kernel' from the
+        specified filename.
+
+        NOTE: the current contents of the 'self._sessions' and 'self._botPredicates' will be discarded!
+
+        """
+        if self._verboseMode: print( "Loading brain from %s..." % filename, end="" )
         start = time.time()
-        self._brain.save(filename)
+        try:
+            inFile = open(filename, "rb")
+            self._sessions = marshal.load(inFile)
+            self._botPredicates = marshal.load(inFile)
+            inFile.close()
+        except Exception as e:
+            print( "Error restoring Kernel from file %s:" % filename )
+            raise
+        if self._verboseMode:
+            print( "done (%.2f seconds)" % (time.time() - start) )
+
+    def saveBrain(self, pattern_mgr_filename, kernel_filename):
+        """Dump the contents of the bot's brain to a file on disk."""
+        if self._verboseMode: print( "Saving brain to %s..." % pattern_mgr_filename, end="")
+        start = time.time()
+        self._brain.save(pattern_mgr_filename)
+        if self._verboseMode:
+            print("done (%.2f seconds)" % (time.time() - start))
+        if self._verboseMode: print( "Saving sessions to %s..." % kernel_filename, end="")
+        start = time.time()
+        try:
+            outFile = open(kernel_filename, "wb")
+            marshal.dump(self._sessions, outFile)
+            marshal.dump(self._botPredicates, outFile)
+            outFile.close()
+        except Exception as e:
+            print( "Error saving Kernel to file %s:" % kernel_filename )
+            raise
         if self._verboseMode:
             print("done (%.2f seconds)" % (time.time() - start))
 

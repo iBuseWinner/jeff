@@ -94,7 +94,6 @@ void Message::setup_text() {
   label->setTextFormat(Qt::PlainText);
   label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
   label->setFocusPolicy(Qt::NoFocus);
-  label->setContextMenuPolicy(Qt::CustomContextMenu);
   auto *copy_text_action = new QAction(
     QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy message text"), this
   );
@@ -104,7 +103,8 @@ void Message::setup_text() {
   });
   auto *context_menu = new Menu(this);
   context_menu->addAction(copy_text_action);
-  connect(label, &QLabel::customContextMenuRequested, this, [this, context_menu] {
+  setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(this, &Message::customContextMenuRequested, this, [this, context_menu] {
     context_menu->exec(QCursor::pos());
   });
   grid_layout->addw(w);

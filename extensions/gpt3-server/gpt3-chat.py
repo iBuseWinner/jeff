@@ -75,9 +75,9 @@ def main():
     if len(data['content']) < 10:
       continue
     msg_id = str(uuid.uuid4())
-    cli.send_status(msg_id, '*[ChatGPT]* Waiting...' if lang != 'ru_RU' else '*[ChatGPT]* Ожидание...')
+    cli.send_status(msg_id, '*[ChatGPT] Waiting...*' if lang != 'ru_RU' else '*[ChatGPT] Ожидание...*')
     if verbose:
-      print('*[ChatGPT]* Waiting...' if lang != 'ru_RU' else '*[ChatGPT]* Ожидание...')
+      print('*[ChatGPT] Waiting...*' if lang != 'ru_RU' else '*[ChatGPT] Ожидание...*')
     history.append(human_sequence + data['content'])
     response = generate_response(make_prompt(history)).strip()
     if len(response) == 0:

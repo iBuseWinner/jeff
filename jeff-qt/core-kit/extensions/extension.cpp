@@ -49,9 +49,9 @@ ExtensionMeta::ExtensionMeta(const QJsonObject &json_object) {
     server_addr = QHostAddress(json_object["server_addr"].toString());
     if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
     server_port = quint16(json_object["server_port"].toInt());
-    if (json_object.contains("notify_when_no_suggestions")) {
-      if (json_object["notify_when_no_suggestions"].toBool())
-        notify_when_no_suggestions = true;
+    if (json_object.contains("always_send")) {
+      if (json_object["always_send"].toBool())
+        always_send = true;
     }
   }
   valid = true;
@@ -89,8 +89,7 @@ QJsonObject ExtensionMeta::to_json() const {
   if (is_server) {
     result["server_addr"] = server_addr.toString();
     result["server_port"] = int(server_port);
-    if (notify_when_no_suggestions)
-      result["notify_when_no_suggestions"] = notify_when_no_suggestions;
+    if (always_send) result["always_send"] = always_send;
   }
   if (not working_dir.isEmpty()) result["working_dir"] = working_dir;
   return result;

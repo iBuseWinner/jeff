@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import aiml, asyncio, json, os.path, locale
+import aiml, asyncio, json, os.path, locale, argparse, signal, sys, uuid
 from jeff_api import client, server
 
 lang, _ = locale.getdefaultlocale()
@@ -21,28 +21,40 @@ def main():
   cli = client.Client('localhost', jeff_port)
   aiml_kernel = aiml.Kernel()
   aiml_kernel.setTextEncoding(None)
-  current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
-  aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
-  # chdir = os.path.join(aiml.__path__[0], 'botdata', 'alice')
-  # kern.bootstrap(learnFiles="startup.xml", commands="load alice", chdir=chdir)
-  # kern.saveBrain(args.save)
-  # kern.bootstrap(brainFile=args.brain)
-  while True:
-    data = srv.listen()
-    if len(data) == 0:
-      continue
-    if data['author'] == 1: # Jeff
-      continue
-    if len(data['content']) == 0:
-      continue
-    if verbose:
-      print('Got message: ' + data['content'])
-    msg = aiml_kernel.respond(data['content'])
-    if not len(msg):
-      continue
-    if verbose:
-      print('AIML answer: ' + msg)
-    cli.send_msg(msg)
+  load_status_id = str(uuid.uuid4())
+  cli.send_status(load_status_id, '*[Alice] Waiting...*' if lang != 'ru_RU' else '*[Alice] Ожидание...*')
+  if os.path.isfile('brain.brn') and os.path.isfile('sessions.brn'):
+    aiml_kernel.bootstrap(brainFile='brain.brn', sessionsFile='sessions.brn')
+  else:
+    current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'alice')
+    aiml_kernel.bootstrap(learnFiles="startup.xml", commands="load alice", chdir=current_path)
+    current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
+    aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
+  cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru_RU' else '[Alice] Ядро готово к работе.')
+  
+  class Responder:
+    def __init__(self, aiml_kernel):
+      self.aiml_kernel = aiml_kernel
+      signal.signal(signal.SIGINT, self.exit_gracefully)
+      signal.signal(signal.SIGTERM, self.exit_gracefully)
+
+    def exit_gracefully(self, *args):
+      self.aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
+      sys.exit(0)
+      
+    def run_loop(self, cli, srv):
+      while True:
+        data = srv.listen()
+        if len(data) == 0: continue
+        if data['author'] == 1: continue
+        if len(data['content']) == 0: continue
+        if verbose: print('Got message: ' + data['content'])
+        msg = self.aiml_kernel.respond(data['content'])
+        if not len(msg): continue
+        if verbose: print('AIML answer: ' + msg)
+        cli.send_msg(msg)
+        
+  Responder(aiml_kernel).run_loop(cli, srv)
 
 
 try:

@@ -37,7 +37,7 @@ public:
   bool is_server = false;
   QHostAddress server_addr;
   quint16 server_port;
-  bool notify_when_no_suggestions = false;
+  bool always_send = false;
   bool enabled = true;
 };
 

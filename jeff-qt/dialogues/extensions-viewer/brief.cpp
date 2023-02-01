@@ -14,9 +14,6 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
   links_lbl.setTextFormat(Qt::RichText);
   status_lbl.setTextFormat(Qt::RichText);
   status_lbl.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-  status_lbl.setText("<i>" + tr("Waiting status...") + "</i>");
-  on_off_btn.setText(tr("Control"));
-  on_off_btn.setEnabled(false);
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   setLayout(
     VLineLt::another()
@@ -57,6 +54,9 @@ void ExtensionsViewerBrief::setup(ExtensionMeta *_extension_meta) {
     for (auto link : extension_meta->links) links += "<br><a href=\"" + link + "\">" + link + "</a>";
     links_lbl.setText(links);
   }
+  status_lbl.setText("<i>" + tr("Waiting status...") + "</i>");
+  on_off_btn.setText(tr("Control"));
+  on_off_btn.setEnabled(false);
   update_status();
 }
 
