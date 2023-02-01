@@ -576,7 +576,7 @@
     </message>
     <message>
         <source>No valid JSON received.</source>
-        <translation>Не получен валидный JSON.</translation>
+        <translation>Не получен действительный JSON.</translation>
     </message>
     <message>
         <source>No JSON object received.</source>
