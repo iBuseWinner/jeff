@@ -12,7 +12,7 @@
         <translation>версия</translation>
     </message>
     <message>
-        <source>Jeff - chat bot and automatization tool</source>
+        <source>Jeff - chatbot and automation tool</source>
         <translation>Джефф - чат-бот и средство автоматизации</translation>
     </message>
     <message>
@@ -721,7 +721,7 @@
         <translation>Пользовательский сканер (другой автоответчик)</translation>
     </message>
     <message>
-        <source>Custom composer (receives chosed variants and answers on them in another manner)</source>
+        <source>Custom composer (receives chosen variants and answers on them in another manner)</source>
         <translation>Пользовательский композитор (получает выбранные варианты и отвечает на них другим способом)</translation>
     </message>
     <message>
