@@ -67,7 +67,7 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Відмінити</translation>
+        <translation>Скасувати</translation>
     </message>
     <message>
         <source>Enter source name</source>
@@ -198,7 +198,7 @@
     </message>
     <message>
         <source>1) go to the Source Manager...</source>
-        <translation>1) перейдіть в Менеджер Джерел...</translation>
+        <translation>1) перейдіть до Менеджера Джерел...</translation>
     </message>
     <message>
         <source>2) add databases...</source>
@@ -580,15 +580,15 @@
     </message>
     <message>
         <source>No JSON object received.</source>
-        <translation>Не отримано обєкт JSON.</translation>
+        <translation>Не отримано об'єкт JSON.</translation>
     </message>
     <message>
         <source>The function name is empty.</source>
-        <translation>Імя функції пусте.</translation>
+        <translation>Ім'я функції пусте.</translation>
     </message>
     <message>
         <source>The filepath to the module is empty.</source>
-        <translation>Шлях до файла модуля пустий.</translation>
+        <translation>Шлях до файлу модуля пустий.</translation>
     </message>
 </context>
 <context>
@@ -726,11 +726,11 @@
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Відмінити</translation>
+        <translation>Скасувати</translation>
     </message>
     <message>
         <source>Add script</source>
-        <translation>Добавить скрипт</translation>
+        <translation>Додати скрипт</translation>
     </message>
     <message>
         <source>Save script</source>
@@ -820,7 +820,7 @@
     </message>
     <message>
         <source>Enables keeping the message history after exiting the application.</source>
-        <translation>Дозволяє зберегти історію після повідомлень після виходу із додатку.</translation>
+        <translation>Дозволяє зберегти історію після повідомлень після виходу із додатка.</translation>
     </message>
     <message>
         <source>Enable greetings message on start</source>
@@ -855,7 +855,7 @@
     </message>
     <message>
         <source>Save and close</source>
-        <translation>Зберегти і закрити</translation>
+        <translation>Зберегти та закрити</translation>
     </message>
     <message>
         <source>Sources</source>
