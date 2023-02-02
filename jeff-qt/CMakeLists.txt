@@ -73,7 +73,10 @@ set(SRCS
 
 add_executable(jeff-cli ${SRCS} jeff.cpp jeff.hpp resources.qrc)
 
-target_compile_definitions(jeff-cli PRIVATE YELLOGER_TRACING)
+# Available definitions:
+#
+# YELLOGER_TRACING
+# target_compile_definitions(jeff-cli PRIVATE YELLOGER_TRACING)
 
 target_link_libraries(
   jeff-cli PRIVATE

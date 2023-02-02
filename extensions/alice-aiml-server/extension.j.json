@@ -26,7 +26,7 @@
   "program": "python",
   "args": [
     "alice.py",
-    "8017",
+    "<SERVER_PORT>",
     "<JEFF_PORT>"
   ],
   "server_ip": "",

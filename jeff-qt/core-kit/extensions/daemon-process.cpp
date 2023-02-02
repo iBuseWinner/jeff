@@ -16,6 +16,11 @@ DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObj
         args[i] = QString::number(8005);
         Yellog::Trace("\tSetted up port 8005");
       }
+    } else if (args[i] == "<SERVER_PORT>") {
+      if (extension_meta->is_server) {
+        args[i] = QString::number(extension_meta->server_port);
+        Yellog::Trace("\tSetted up server port given in extension.j.json.");
+      }
     }
   }
   setArguments(args);

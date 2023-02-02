@@ -1159,3 +1159,4 @@ class Kernel:
 
         """
         return self.version()
+

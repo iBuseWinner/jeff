@@ -22,7 +22,10 @@ ExtensionsManager::~ExtensionsManager() {
 
 /*! @brief Kills daemons' and servers' processes. */
 void ExtensionsManager::shutdown_extensions() {
-  for (auto *extension : _running) extension->stop();
+  bool ok = true;
+  int ms = (*basis)[basis->extensionKillSecSt].toInt(&ok);
+  if (not ok) ms = 10000;
+  for (auto *extension : _running) extension->stop(ms);
   Yellog::Trace("All extensions have been stopped.");
   notifier->unsubscribe_all();
   Yellog::Trace("All extensions have been unsubscribed from notifier.");
@@ -65,8 +68,11 @@ void ExtensionsManager::stop_extension(ExtensionMeta *extension_meta) {
     Yellog::Trace("\tUnsubscribing from notifier...");
     notifier->unsubscribe(extension_meta);
   }
+  bool ok = true;
+  int ms = (*basis)[basis->extensionKillSecSt].toInt(&ok);
+  if (not ok) ms = 10000;
   for (auto *proc : _running) if (proc->is_spawner(extension_meta)) {
-    proc->stop();
+    proc->stop(ms);
     Yellog::Trace("\tStopped the process");
     disconnect(proc, &DaemonProcess::daemon_exception, nullptr, nullptr);
     _running.removeOne(proc);

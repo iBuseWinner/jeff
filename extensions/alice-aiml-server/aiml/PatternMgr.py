@@ -82,7 +82,7 @@ class PatternMgr:
 
         # Navigate through the node tree to the template's location, adding
         # nodes if necessary.
-        # node = self._root
+        node = self._root
         for word in pattern.split():
             key = word
             if key == u"_":
@@ -95,15 +95,15 @@ class PatternMgr:
                 key = self._SHARP
             elif key == u"BOT_NAME":
                 key = self._BOT_NAME
-            if key not in self._root:
-                self._root[key] = {}
-            self._root = self._root[key]
+            if key not in node:
+                node[key] = {}
+            node = node[key]
 
         # navigate further down, if a non-empty "that" pattern was included
         if len(that) > 0:
-            if self._THAT not in self._root:
-                self._root[self._THAT] = {}
-            self._root = self._root[self._THAT]
+            if self._THAT not in node:
+                node[self._THAT] = {}
+            node = node[self._THAT]
             for word in that.split():
                 key = word
                 if key == u"_":
@@ -114,15 +114,15 @@ class PatternMgr:
                     key = self._CARET
                 elif key == u"#":
                     key = self._SHARP
-                if key not in self._root:
-                    self._root[key] = {}
-                self._root = self._root[key]
+                if key not in node:
+                    node[key] = {}
+                node = node[key]
 
         # navigate yet further down, if a non-empty "topic" string was included
         if len(topic) > 0:
-            if self._TOPIC not in self._root:
-                self._root[self._TOPIC] = {}
-            self._root = self._root[self._TOPIC]
+            if self._TOPIC not in node:
+                node[self._TOPIC] = {}
+            node = node[self._TOPIC]
             for word in topic.split():
                 key = word
                 if key == u"_":
@@ -133,15 +133,15 @@ class PatternMgr:
                     key = self._CARET
                 elif key == u"#":
                     key = self._SHARP
-                if key not in self._root:
-                    self._root[key] = {}
-                self._root = self._root[key]
+                if key not in node:
+                    node[key] = {}
+                node = node[key]
 
 
         # add the template.
-        if self._TEMPLATE not in self._root:
+        if self._TEMPLATE not in node:
             self._templateCount += 1    
-        self._root[self._TEMPLATE] = template
+        node[self._TEMPLATE] = template
 
     def match(self, pattern, that, topic):
         """Return the template which is the closest match to pattern. The
