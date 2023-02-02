@@ -1,36 +1,56 @@
 # jeff
 
-Джефф --- настраиваемый и расширяемый чат-бот со свободной лицензией и поддержкой множества платформ.
+Jeff is a highly customizable, extensible and cross-platform chatbot with a MIT license.
 
-## Сборка
+## Capabilities
 
-### Сборка jeff-qt
+1. Interaction in the "question-answer" mode.
+2. Interaction in scenarios.
+3. Interaction through extensions communicating with Jeff over TCP sockets.
+4. [In development] Multi-user interaction via HTTP server.
+5. [In development] Interaction via Telegram Bot.
 
-```bash
-cd jeff-qt/
-cmake -S . -B ./target
-cd target/
-make
-```
+## Features
 
-При сборке командой `$ make` создаётся два исполняемых файла: `jeff-cli` (ncurses-версия бота) и `jeff-qt` (оконная версия).
+1. TCP-server with JSON message format.
+2. Extensions Notifier.
+3. SQLite databases for phrases.
+4. Storage of message history.
+5. Extensions and scripts configurations with additional Python API - `jeff-api`.
+6. [In development] Bundles with pre-installed extensions.
 
-### Сборка jeff-core
+## Project structure
 
-```bash
-cd jeff-core/
-cargo build --release
-```
+There are several subprojects:
 
-### Библиотека jeff-api
+1. `jeff-qt` desktop app
+2. `jeff-api` extensions API for Python
+3. `jeff-core` server
 
-Предназначается для упрощения взаимодействия с Джеффом по сокетам.
+## Screenshots
 
-## Возможности
+*TBD*
 
-1. Статичные ответы (свой формат баз данных и встроенный редактор).
-2. Скрипты.
-3. Сервер приёма сообщений и клиент оповещений.
-4. Хранение истории сообщений.
-5. Сборки *(в процессе)*.
+## Databases development and Jeff Core Kit
 
+*TBD*
+
+## Extensions and scripts development
+
+### `extension.j.json` format
+
+*TBD*
+
+### Using `jeff-api` in your projects
+
+*TBD*
+
+## Building and running
+
+### `jeff-qt`
+
+*TBD*
+
+### `jeff-core`
+
+*TBD*
