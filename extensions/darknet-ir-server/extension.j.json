@@ -35,7 +35,7 @@
   "program": "python",
   "args": [
     "darknet-ir.py",
-    "15203",
+    "<SERVER_PORT>",
     "<JEFF_PORT>"
   ],
   "server_ip": "",

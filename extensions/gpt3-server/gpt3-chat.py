@@ -42,11 +42,11 @@ def generate_response(prompt):
     message = completions.choices[0].text
     return message
   except openai.error.RateLimitError:
-    return "*[ChatGPT]* Server is overloaded. Try again later." if lang != 'ru_RU' else "[ChatGPT]* Сервер перегружен. Попробуйте повторить попытку позже."
+    return "*[ChatGPT]* Server is overloaded. Try again later." if lang != 'ru_RU' else "*[ChatGPT]* Сервер перегружен. Попробуйте повторить попытку позже."
   except openai.error.ServiceUnavailableError:
-    return "*[ChatGPT]* Server is unaccessible. Try again using proxy." if lang != 'ru_RU' else "[ChatGPT]* Сервер недоступен. Попробуйте использовать прокси."
+    return "*[ChatGPT]* Server is unaccessible. Try again using proxy." if lang != 'ru_RU' else "*[ChatGPT]* Сервер недоступен. Попробуйте использовать прокси."
   except openai.error.APIConnectionError:
-    return "*[ChatGPT]* Unable to connect to API. Try to change proxy." if lang != 'ru_RU' else "[ChatGPT]* Не удалось подключиться к API. Попробуйте сменить прокси."
+    return "*[ChatGPT]* Unable to connect to API. Try to change proxy." if lang != 'ru_RU' else "*[ChatGPT]* Не удалось подключиться к API. Попробуйте сменить прокси."
 
 
 def history_reducer(history):

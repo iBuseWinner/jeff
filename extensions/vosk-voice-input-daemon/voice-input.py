@@ -1,11 +1,22 @@
 #!/usr/bin/env python
 
 from jeff_api import client
+import argparse
 
 # Shutdown flag. Used in main() to stop script.
 SHUTDOWN = False
 # A list of words that indicate that a person is talking to the bot.
-ATTENTION_WORDS = [word for word in 'эй, хэй, хай, ваня'.split(', ')]
+ATTENTION_WORDS = [word for word in 'эй, хэй, хай, слушай'.split(', ')]
+
+parser = argparse.ArgumentParser(description="VVR is an extension that allows voice input in Jeff. Works on Vosk models from AlphaCephei.")
+parser.add_argument("jeff_port", type=int, help="Jeff port")
+parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+
+args = parser.parse_args()
+jeff_port = args.jeff_port
+verbose = args.verbose
+
+cli = client.Client('localhost', jeff_port)
 
 
 def list_subdirs(path):
@@ -20,44 +31,44 @@ def shutdown():
   SHUTDOWN = True
 
 
-# def try_import():
-#   """Checks if required modules are installed and installs otherwise."""
-#   import locale
-#   lang, _ = locale.getdefaultlocale()
-#   try:
-#     import sounddevice, vosk
-#   except ImportError:
-#     import subprocess
-#     try:
-#       print('Installing modules via "pip"...' if lang != 'ru_RU' else 'Установка модулей через "pip"...')
-#       print(subprocess.run(
-#         ["pip", "install", "sounddevice", "vosk", "--user"], capture_output=True).stdout.decode()
-#       )
-#     except subprocess.CalledProcessError:
-#       msg = 'Installation failed. Please install "sounddevice" and "vosk" Python modules manually before using vosk-voice-input so that Jeff can hear and listen to you.' if lang != 'ru_RU' else 'Установка не удалась. Пожалуйста, установите модули "sounddevice" и "vosk" самостоятельно перед тем, как использовать vosk-voice-input, чтобы Джефф мог вас слышать и слушать.'
-#       print(msg)
-#       cli.send_msg(msg)
-#       return False
-#   import platform, os.path, webbrowser
-#   # The binary library for connecting to a microphone for the sounddevice module is downloaded
-#   # automatically for Windows and Mac OS X. Therefore, we check if you are using Linux.
-#   if platform.system() == 'Linux':
-#     if not os.path.exists('/usr/lib/libportaudio.so'):
-#       msg = 'Your Linux distribution does not have the PortAudio library installed. Install it to use vosk-voice-input. Opening browser...' if lang != 'ru_RU' else 'На вашей системе Linux отсутствует библиотека PortAudio. Установите её для использования vosk-voice-input. Открывается браузер...'
-#       print(msg)
-#       cli.send_msg(msg)
-#       webbrowser.open('https://pkgs.org/search/?q=portaudio')
-#       return False
-#   if not os.path.exists('models') or len(list_subdirs('models')) == 0:
-#     msg = 'You don\'t have any Vosk models installed. Download the one suitable for you from the site, create a "models" folder and unzip the model into it. Opening browser...' if lang != 'ru_RU' else 'У вас нет ни одной установленной модели Vosk. Скачайте подходящую для вас модель с сайта, создайте папку "models" и распакуйте модель туда. Открывается браузер...'
-#     print(msg)
-#     cli.send_msg(msg)
-#     webbrowser.open('https://alphacephei.com/vosk/models')
-#     return False
-#   return True
+def try_import():
+  """Checks if required modules are installed and installs otherwise."""
+  import locale
+  lang, _ = locale.getdefaultlocale()
+  try:
+    import sounddevice, vosk
+  except ImportError:
+    import subprocess
+    try:
+      print('Installing modules via "pip"...' if lang != 'ru_RU' else 'Установка модулей через "pip"...')
+      print(subprocess.run(
+        ["pip", "install", "sounddevice", "vosk", "--user"], capture_output=True).stdout.decode()
+      )
+    except subprocess.CalledProcessError:
+      msg = 'Installation failed. Please install "sounddevice" and "vosk" Python modules manually before using vosk-voice-input so that Jeff can hear and listen to you.' if lang != 'ru_RU' else 'Установка не удалась. Пожалуйста, установите модули "sounddevice" и "vosk" самостоятельно перед тем, как использовать vosk-voice-input, чтобы Джефф мог вас слышать и слушать.'
+      print(msg)
+      cli.send_msg(msg)
+      return False
+  import platform, os.path, webbrowser
+  # The binary library for connecting to a microphone for the sounddevice module is downloaded
+  # automatically for Windows and Mac OS X. Therefore, we check if you are using Linux.
+  if platform.system() == 'Linux':
+    if not os.path.exists('/usr/lib/libportaudio.so'):
+      msg = 'Your Linux distribution does not have the PortAudio library installed. Install it to use vosk-voice-input. Opening browser...' if lang != 'ru_RU' else 'На вашей системе Linux отсутствует библиотека PortAudio. Установите её для использования vosk-voice-input. Открывается браузер...'
+      print(msg)
+      cli.send_msg(msg)
+      # webbrowser.open('https://pkgs.org/search/?q=portaudio')
+      return False
+  if not os.path.exists('models') or len(list_subdirs('models')) == 0:
+    msg = 'You don\'t have any Vosk models installed. Download the one suitable for you from the site, create a "models" folder and unzip the model into it. Opening browser...' if lang != 'ru_RU' else 'У вас нет ни одной установленной модели Vosk. Скачайте подходящую для вас модель с сайта, создайте папку "models" и распакуйте модель туда. Открывается браузер...'
+    print(msg)
+    cli.send_msg(msg)
+    # webbrowser.open('https://alphacephei.com/vosk/models')
+    return False
+  return True
 
 
-def main(cli):
+def main():
   """Starts speech recognition."""
   import sounddevice, vosk, locale, queue, os.path, json
   
@@ -89,8 +100,10 @@ def main(cli):
   with sounddevice.RawInputStream(blocksize=8000, dtype='int16', channels=1, callback=checkout):
     sample_rate = int(sounddevice.query_devices(sounddevice.default.device, "input")["default_samplerate"])
     vosk_recognizer = vosk.KaldiRecognizer(vosk_model, sample_rate)
-    print('Let\'s start recognizing...' if lang != 'ru_RU' else 'Начинаем распознавание...')
-    cli.send_msg('Voice input activated.' if lang != 'ru_RU' else 'Активирован голосовой ввод.')
+    start_msg = 'Voice input activated.' if lang != 'ru_RU' else 'Активирован голосовой ввод.'
+    if verbose:
+      print(start_msg)
+    cli.send_msg(start_msg)
     try:
       while True:
         if SHUTDOWN:
@@ -106,10 +119,10 @@ def main(cli):
               cli.send_as_user(text)
               break
     except KeyboardInterrupt:
-      print('\nSpeech recognition is off.' if lang != 'ru_RU' else '\nРаспознавание голоса отключено.')
+      if verbose:
+        print('\nSpeech recognition is off.' if lang != 'ru_RU' else '\nРаспознавание голоса отключено.')
 
 
 if __name__ == "__main__":
-  cli = client.Client('localhost', 8005)
-  #if try_import(cli):
-  main(cli)
+  if try_import():
+    main()

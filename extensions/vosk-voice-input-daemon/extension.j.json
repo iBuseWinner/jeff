@@ -1,0 +1,31 @@
+{
+  "name": "Vosk Voice Recognition",
+  "desc": "VVR is an extension that allows voice input in Jeff. Works on Vosk models from AlphaCephei.",
+  "authors": [
+    {
+      "author": "Alpha Cephei",
+      "contacts": {
+        "email": "contact@alphacephei.com",
+        "telegram": "@speech_recognition"
+      }
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "telegram": "@markcda"
+      }
+    }
+  ],
+  "license": "MIT",
+  "links": [
+    "https://github.com/alphacep/vosk-api/tree/master/python/example",
+    "https://alphacephei.com/nsh/2021/06/05/icassp-2021-part1.html",
+    "https://alphacephei.com/vosk/models"
+  ],
+  "envs": {},
+  "program": "python",
+  "args": [
+    "darknet-ir.py",
+    "<JEFF_PORT>"
+  ]
+}
