@@ -25,7 +25,7 @@
   "envs": {},
   "program": "python",
   "args": [
-    "darknet-ir.py",
+    "voice-input.py",
     "<JEFF_PORT>"
   ]
 }

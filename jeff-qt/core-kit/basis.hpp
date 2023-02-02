@@ -65,6 +65,7 @@ public:
   static constexpr const char *greetingsMsg              = "core-kit/greetings";
   static constexpr const char *scenarioExitMsg           = "core-kit/scenarioexitter";
   static constexpr const char *serverPortSt              = "core-kit/serverport";
+  static constexpr const char *extensionKillSecSt        = "core-kit/extensionkillsec"; 
 
   static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
   static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";
