@@ -552,7 +552,7 @@
     <name>PythonWorker</name>
     <message>
         <source>Failed to connect the module.</source>
-        <translation>Не вдалося під'єднати модуль.</translation>
+        <translation>Не вдалося під&apos;єднати модуль.</translation>
     </message>
     <message>
         <source>Could not find &quot;answer&quot; attribute in module.</source>
@@ -580,11 +580,11 @@
     </message>
     <message>
         <source>No JSON object received.</source>
-        <translation>Не отримано об'єкт JSON.</translation>
+        <translation>Не отримано об&apos;єкт JSON.</translation>
     </message>
     <message>
         <source>The function name is empty.</source>
-        <translation>Ім'я функції пусте.</translation>
+        <translation>Ім&apos;я функції пусте.</translation>
     </message>
     <message>
         <source>The filepath to the module is empty.</source>
@@ -675,7 +675,7 @@
     </message>
     <message>
         <source>Validation error: the fifth column of the source does not fit the description of &quot;adprops&quot; TEXT.</source>
-        <translation>Помилка в ході перевірки: п'ятий стовпець джерела не відповідає опису &quot;adprops&quot; TEXT.</translation>
+        <translation>Помилка в ході перевірки: п&apos;ятий стовпець джерела не відповідає опису &quot;adprops&quot; TEXT.</translation>
     </message>
     <message>
         <source>Validation error: the third column of the table with sources does not fit the description of &quot;weight&quot; INTEGER.</source>
@@ -746,11 +746,11 @@
     </message>
     <message>
         <source>Add the memory cells to be passed to the script:</source>
-        <translation>Додайте комірки пам'яті які потрібно передати в скрипт:</translation>
+        <translation>Додайте комірки пам&apos;яті які потрібно передати в скрипт:</translation>
     </message>
     <message>
         <source>Add memory cell</source>
-        <translation>Додати комірку пам'яті</translation>
+        <translation>Додати комірку пам&apos;яті</translation>
     </message>
     <message>
         <source>Remove selected cell</source>
@@ -758,7 +758,7 @@
     </message>
     <message>
         <source>Memory cell name...</source>
-        <translation>Назва комірки пам'яті...</translation>
+        <translation>Назва комірки пам&apos;яті...</translation>
     </message>
     <message>
         <source>Cells list</source>

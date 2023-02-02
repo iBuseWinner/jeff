@@ -18,7 +18,7 @@ ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, ExtensionsManager *_e
   stype_input = new ComboBox(this);
   stype_input->addItems({
     tr("Custom scanner (another answering system)"),
-    tr("Custom composer (receives chosed variants and answers on them in another manner)")
+    tr("Custom composer (receives chosen variants and answers on them in another manner)")
   });
   connect(
     stype_input, QOverload<int>::of(&QComboBox::currentIndexChanged),
