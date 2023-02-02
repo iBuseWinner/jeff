@@ -107,6 +107,7 @@ public:
   static constexpr const char *script_manager_cmd    = "/scripts";
   static constexpr const char *first_start_cmd       = "/first";
   static constexpr const char *about_cmd             = "/about";
+  static constexpr const char *help_cmd              = "/help";
   static constexpr const char *settings_cmd          = "/settings";
   static constexpr const char *phrase_editor_cmd     = "/phrases";
   static constexpr const char *extensions_viewer_cmd = "/extensions";

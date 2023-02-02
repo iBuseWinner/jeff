@@ -1,6 +1,5 @@
 <RCC>
   <qresource prefix="/">
-    <file>../arts/shots/menufile.png</file>
     <file>../arts/icons/16/send.svg</file>
     <file>../arts/icons/16/dialog-ok-apply.svg</file>
     <file>../arts/icons/16/document-new.svg</file>
@@ -32,7 +31,6 @@
     <file>../arts/icons/16/document-edit.svg</file>
     <file>../arts/icons/16/list-remove.svg</file>
     <file>../arts/icons/16/collapse-all.svg</file>
-    <file>../arts/shots/addsource.png</file>
     <file>../arts/icons/16/edit-copy-path.svg</file>
     <file>../arts/icons/16/snap-extension.svg</file>
     <file>../arts/icons/16/edit-find.svg</file>
@@ -42,6 +40,23 @@
     <file>../arts/icons/16/edit-delete.svg</file>
     <file>../arts/icons/16/view-preview.svg</file>
     <file>../arts/icons/2000/icon.png</file>
+    <file>../arts/shots/mainwindow.png</file>
+    <file>../arts/shots/messaging.png</file>
+    <file>../arts/shots/creatingsource.png</file>
+    <file>../arts/shots/extensionsviewer.png</file>
+    <file>../arts/shots/extensionbrief.png</file>
+    <file>../arts/shots/extensionspreview.png</file>
+    <file>../arts/shots/firststep.png</file>
+    <file>../arts/shots/sourcescontextmenu.png</file>
+    <file>../arts/shots/sourcessave.png</file>
+    <file>../arts/shots/secondstep.png</file>
+    <file>../arts/shots/phraseseditor.png</file>
+    <file>../arts/shots/phrasebriefedit.png</file>
+    <file>../arts/shots/connectingphrase.png</file>
+    <file>../arts/shots/selectingphrase.png</file>
+    <file>../arts/shots/settings.png</file>
+    <file>../arts/shots/thirdstep.png</file>
+    <file>../arts/shots/sourcesadd.png</file>
     <file>../arts/jeff.png</file>
   </qresource>
 </RCC>

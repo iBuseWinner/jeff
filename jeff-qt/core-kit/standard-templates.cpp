@@ -10,6 +10,13 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
+  if (expression == basis->help_cmd) {
+    auto *modal_handler = new ModalHandler(this);
+    auto *help = new Help(nullptr, modal_handler);
+    Q_UNUSED(help)
+    emit showModalWidget(modal_handler);
+    return true;
+  }
   if (expression == basis->source_manager_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *sources_editor = new SourcesEditor(basis, nullptr, modal_handler);

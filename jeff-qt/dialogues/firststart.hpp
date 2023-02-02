@@ -9,7 +9,6 @@
 #include "widgets/layouts/linears.hpp"
 #include <QLabel>
 #include <QSpacerItem>
-#include <QTranslator>
 #include <QWidget>
 
 /*! @class FirstStart

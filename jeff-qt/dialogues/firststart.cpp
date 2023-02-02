@@ -14,8 +14,8 @@ FirstStart::FirstStart(QWidget *parent, ModalHandler *mhandler) : Dialog(mhandle
   auto *title = new QLabel("<h1><b>" + tr("Jeff") + "</b></h1>", this);
   auto *startText = new QLabel(
     "<font size=\"3\">" + tr("This is the first start of Jeff. Before you start working:") +
-    "<br>" + tr("1) go to the Source Manager...") + "<p><img src=\":/arts/shots/menufile.png\"></p>" +
-    tr("2) add databases...") + "<p><img src=\":/arts/shots/addsource.png\"></p>" + 
+    "<br>" + tr("1) go to the Source Manager...") + "<p><img src=\":/arts/shots/firststep.png\"></p>" +
+    tr("2) add databases...") + "<p><img src=\":/arts/shots/sourcesadd.png\"></p>" + 
     tr("And now you've done.") + "</font>", this
   );
   startText->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse);
