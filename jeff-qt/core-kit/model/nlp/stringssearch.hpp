@@ -25,11 +25,11 @@ namespace StringSearch {
   enum Intersects { No, FirstBetter, SecondBetter, Equal };
 
   // Functions described in `stringssearch.cpp`:
-  QMap<int, int> contains(QString that, QString inner, float EL = 0.66, bool HA = false);
+  QPair<QMap<int, int>, float> contains(QString that, QString inner, float EL = 0.66, bool HA = false);
   QString remove_symbols(QString str);
   QString lemmatize(const QString &str);
   float get_POC(const QString &e1, const QString &e2);
-  QPair<Intersects, int> intersects(QMap<int, int> first, QMap<int, int> second);
+  Intersects intersects(QMap<int, int> first, QMap<int, int> second);
   QString replace(QString that, QMap<int, int> indices, QString to = "");
   QString locate(const QString &that, int last_index);
 }

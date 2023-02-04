@@ -336,21 +336,21 @@ bool SQLite::remove_phrase(const Source &source, int address) {
 }
 
 /*! @brief Finds all activators for the expression. */
-CacheWithIndices SQLite::scan_source(const Source &source, const QString &input, QString conn_name) {
+CoverageCache SQLite::scan_source(const Source &source, const QString &input, QString conn_name) {
   auto db = prepare(source.path, conn_name);
   if (db.databaseName().isEmpty()) {
     db.close();
-    return CacheWithIndices();
+    return CoverageCache();
   }
-  CacheWithIndices selection;
+  CoverageCache selection;
   QSqlQuery query(db);
   exec(&query, SelectPhrases, {source.table_name});
   query.first();
   while (query.isValid()) {
     if (query.value(3).toBool()) { query.next(); continue; }
     /*! If the expression includes a value from the table... */
-    auto x = StringSearch::contains(input, query.value(1).toString());
-    if (x[0] != 0) {
+    auto indices_and_POC = StringSearch::contains(input, query.value(1).toString());
+    if (indices_and_POC.second != 0.0) {
       /*! ...then this value is an activator. */
       auto links = Phrase::unpack_links(query.value(2).toString());
       auto activator_text = query.value(1).toString();
@@ -365,7 +365,11 @@ CacheWithIndices SQLite::scan_source(const Source &source, const QString &input,
         expr.reagent_text = subquery.value(0).toString();
         expr.exec = subquery.value(1).toBool();
         expr.properties = Phrase::parse_props(subquery.value(2).toString());
-        selection.append(ExpressionWithIndices(x, expr));
+        ExpressionCoverage ec;
+        ec.expression = expr;
+        ec.coverage_indices = indices_and_POC.first;
+        ec.total_POC = indices_and_POC.second;
+        selection.append(ec);
       }
     }
     query.next();

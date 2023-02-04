@@ -116,25 +116,29 @@ QJsonObject PythonWorker::request_answer(
 }
 
 /*! @brief Prepares data for custom scanning. */
-QJsonObject PythonWorker::request_scan(ScriptMeta *script, const QString &user_expression) {
+QJsonObject PythonWorker::request_scan(ScriptMeta *script, const Sources &sources, const QString &user_expression) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
+  QJsonArray sources_obj;
+  for (auto source : sources) sources_obj.append(source.to_json());
+  transport["sources"] = sources_obj;
   return run(script->filepath, script->fn_name, transport);
 }
 
 /*! @brief Prepares data for custom composing. */
-QJsonObject PythonWorker::request_compose(ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted) {
+QJsonObject PythonWorker::request_compose(ScriptMeta *script, const QString &user_expression, CoverageCache sorted) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
   QJsonArray candidates;
-  for (auto ewi : sorted) {
+  for (auto ec : sorted) {
     QJsonObject candidate;
     QJsonObject indices;
-    for (auto first_indice : ewi.first.keys()) {
-      indices[QString::number(first_indice)] = ewi.first[first_indice];
+    for (auto first_indice : ec.coverage_indices.keys()) {
+      indices[QString::number(first_indice)] = ec.coverage_indices[first_indice];
     }
     candidate["indices"] = indices;
-    candidate["reagent_expression"] = ewi.second.to_json();
+    candidate["reagent_expression"] = ec.expression.to_json();
+    candidate["total_POC"] = ec.total_POC;
     candidates.append(candidate);
   }
   transport["candidates"] = candidates;

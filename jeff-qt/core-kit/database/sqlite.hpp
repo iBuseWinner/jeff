@@ -80,7 +80,7 @@ public:
   bool update_exec(const Source &source, bool ex, int address);
   bool update_links(const Source &source, QSet<int> links, int address);
   bool remove_phrase(const Source &source, int address);
-  CacheWithIndices scan_source(const Source &source, const QString &input, QString conn_name = "");
+  CoverageCache scan_source(const Source &source, const QString &input, QString conn_name = "");
   QString generate_uuid();
 
 signals:

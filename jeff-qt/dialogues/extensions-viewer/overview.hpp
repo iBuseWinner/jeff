@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QList>
 #include <QMutableListIterator>
+#include <QScrollBar>
 #include <QSpacerItem>
 #include <QWidget>
 

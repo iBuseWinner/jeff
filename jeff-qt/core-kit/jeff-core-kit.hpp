@@ -65,11 +65,12 @@ private:
   const char *thread_conn_wk = "thread_conn";
 
   // Functions described in `jeff-core-kit.cpp`:
-  CacheWithIndices select_from_cache(const QString &input);
-  CacheWithIndices select_from_db(const QString &input);
-  CacheWithIndices select_candidates(CacheWithIndices selection);
-  QPair<QString, QString> compose_answer(QString input, CacheWithIndices candidates);
-  void reset_cache_use_cases(CacheWithIndices &selection);
+  CoverageCache select_from_cache(const QString &input);
+  CoverageCache select_from_db(const QString &input);
+  CoverageCache select_candidates(CoverageCache selection);
+  QPair<QString, QString> compose_answer(QString input, CoverageCache candidates);
+  void reset_cache_use_cases(CoverageCache &selection);
+  CoverageCache get_from_json(const QJsonArray &array);
 };
 
 /*! @class JCKController

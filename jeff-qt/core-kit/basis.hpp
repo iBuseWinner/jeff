@@ -65,7 +65,8 @@ public:
   static constexpr const char *greetingsMsg              = "core-kit/greetings";
   static constexpr const char *scenarioExitMsg           = "core-kit/scenarioexitter";
   static constexpr const char *serverPortSt              = "core-kit/serverport";
-  static constexpr const char *extensionKillSecSt        = "core-kit/extensionkillsec"; 
+  static constexpr const char *extensionKillSecSt        = "core-kit/extensionkillsec";
+  static constexpr const char *seacrhInDbWhenRepeated    = "core-kit/repeatedexplicitindb";
 
   static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
   static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";
@@ -96,6 +97,7 @@ public:
   static constexpr const char *scenarioContinueWk = "scontinue";
   static constexpr const char *scenarioFinishWk   = "sfinish";
   static constexpr const char *sendWk             = "send";
+  static constexpr const char *selectionWk        = "selection";
   static constexpr const char *searchAgainWk      = "search_again";
   static constexpr const char *sendAsUserWk       = "send_as_user";
   static constexpr const char *sendStatusWk       = "send_status";

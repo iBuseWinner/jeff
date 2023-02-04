@@ -25,11 +25,11 @@ Help::Help(QWidget *parent, ModalHandler *mhandler) : Dialog(mhandler, parent) {
 }
 
 /*! @brief TBD */
-void set_tip(HelpTipListDirection direction = NextTip) {
+void Help::set_tip(HelpTipListDirection direction) {
   
 }
 
 /*! @brief TBD */
-void _set_tip(int tip_number = 0) {
+void Help::_set_tip(int tip_number) {
   
 }

@@ -9,6 +9,6 @@ typedef QList<Expression> Cache;
 
 /*! @typedef CacheWithIndices
  *  @brief Contains cached response expressions and their indexes in user input.  */
-typedef QList<ExpressionWithIndices> CacheWithIndices;
+typedef QList<ExpressionCoverage> CoverageCache;
 
 #endif

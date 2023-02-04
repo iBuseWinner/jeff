@@ -5,8 +5,8 @@
  *  @param[in] inner suggestable semantic load
  *  @param[in] EL entry limit condition
  *  @param[in] HA handle asterics (usable for AIML)
- *  @returns indices of semantic load or zeros  */
-QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, bool HA) {
+ *  @returns indices of semantic load or zeros and total percent of user input coverage (for example, excluding typos)  */
+QPair<QMap<int, int>, float> StringSearch::contains(QString that, QString inner, float EL, bool HA) {
   QMap<int, int> m;
   QList<WordMetadata> that_metadata, inner_metadata;
   auto p1 = lemmatize(that), p2 = lemmatize(inner);
@@ -44,15 +44,16 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, boo
   }
   if (inner_metadata.length() == 0) {
     Yellog::Trace("\t\t\tNo inner metadata, returning");
-    m[0] = 0;
-    return m;
+    return QPair<QMap<int, int>, float>(m, 0.0);
   }
   QList<QPair<float, WordMetadata>> common;
   Yellog::Trace("\t\t\tFor each in inner metadata:");
+  int POC_count = 0;
+  float total_POC = 0.0;
   for (auto w2 : inner_metadata) {
     QPair<float, WordMetadata> max_POC = {0.0, WordMetadata()};
     Yellog::Trace("\t\t\t\tFor each in that metadata:");
-    // TODO Можно ещё сделать реализацию POC по синонимам.
+    /*! @details#lang=ru Можно ещё сделать реализацию POC по синонимам. */
     for (auto w1 : that_metadata) {
       Yellog::Trace("\t\t\t\t\tWords are \"%s\" and \"%s\"", w1.word.toStdString().c_str(), w2.word.toStdString().c_str());
       float POC = get_POC(w1.word, w2.word);
@@ -63,7 +64,11 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, boo
         max_POC = QPair<float, WordMetadata>(POC, w1);
       }
     }
-    if (max_POC.first >= EL) common.append(max_POC);
+    if (max_POC.first >= EL) {
+      POC_count++;
+      total_POC += max_POC.first;
+      common.append(max_POC);
+    }
   }
   if (float(common.length()) / inner_metadata.length() >= EL) {
     m.remove(0);
@@ -76,10 +81,9 @@ QMap<int, int> StringSearch::contains(QString that, QString inner, float EL, boo
     for (auto key : m.keys()) {
       Yellog::Trace("\t\t\t\t%d-%d", key, m[key]);
     }
-    return m;
+    return QPair<QMap<int, int>, float>(m, (total_POC / POC_count));
   }
-  m[0] = 0;
-  return m;
+  return QPair<QMap<int, int>, float>(m, 0.0);
 }
 
 /*! @brief Removes punctuation. */
@@ -113,7 +117,7 @@ float StringSearch::get_POC(const QString &e1, const QString &e2) {
 }
 
 /*! @brief Returns the intersection of expressions, calculating which one covers more text. */
-QPair<StringSearch::Intersects, int> StringSearch::intersects(QMap<int, int> first, QMap<int, int> second) {
+StringSearch::Intersects StringSearch::intersects(QMap<int, int> first, QMap<int, int> second) {
   int first_total = 0;
   bool is_intersects = false;
   for (auto i : first.keys()) {
@@ -131,10 +135,10 @@ QPair<StringSearch::Intersects, int> StringSearch::intersects(QMap<int, int> fir
       }
     }
   }
-  if (not is_intersects) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::No, 0);
-  else if (first_total == 0) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::Equal, 0);
-  else if (first_total > 0) return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::FirstBetter, first_total);
-  else return QPair<StringSearch::Intersects, int>(StringSearch::Intersects::SecondBetter, first_total);
+  if (not is_intersects) return StringSearch::Intersects::No;
+  else if (first_total == 0) return StringSearch::Intersects::Equal;
+  else if (first_total > 0) return StringSearch::Intersects::FirstBetter;
+  else return StringSearch::Intersects::SecondBetter;
 }
 
 /*! @brief Replaces an expression in a string with another, given an accuracy and inaccuracy search. */
