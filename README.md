@@ -62,7 +62,18 @@ Expressions compete with each other for the right to be a reagent for a given ac
 
 ## Usable settings
 
-*TBD*
+1. Monologue mode. Allows Jeff to communicate with himself. Setting: `core-kit/ismonologuemodeenabled` (bool)
+2. Output delay. Sets the time period in milliseconds in which the response message will be displayed and can be used to simulate human delay. Settings: `core-kit/isdelayenabled` (bool), `core-kit/mindelay` (ms), `core-kit/maxdelay` (ms)
+3. Save history. Can save all your correspondence with Jeff. Setting: `core-kit/ishistorykeepingenabled` (bool)
+4. Greeting. Sets the first message that is automatically sent to Jeff on startup. Settings: `core-kit/isgreetingsenabled` (bool), `core-kit/greetings` (str)
+5. Script exit message. Keyword/expression that forces the script to end. Setting: `core-kit/scenarioexitter`
+6. Server port. The port on which Jeff will listen for incoming connections from extensions. Setting: `core-kit/serverport` (uint16)
+7. The time Jeff waits after sending the `terminate` signal and before forcing the extension to terminate. Setting: `core-kit/extensionkillsec` (sec)
+8. Force search in the sources, not in the cache, if the user's current input is identical to his previous one. Setting: `core-kit/repeatedexplicitindb` (bool)
+9. Default source. Declares a table in the database to which phrases that Jeff learned on his own or with the help of extensions will be added. Settings: `sources/defaultsourcepath`, `sources/defaultsourcecontainer` (both str)
+10. Authorization with a key on the server. Jeff will only process messages that contain the key in JSON (note that `jeff-qt` sockets do not use encryption). Settings: `server/authorize` (bool), `server/auth_key` (str)
+
+**Note:** Depending on whether you are using Jeff Qt or jeff-core, the configuration files may be in different locations.
 
 ## Extensions and scripts development
 

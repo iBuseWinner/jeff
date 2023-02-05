@@ -1,8 +1,5 @@
 #include "scripteditor.hpp"
 
-/*! TODO исправить все поля, что изменились
- *  TODO исправить сохранение CustomScan/CustomCompose  */
-
 /*! @brief The constructor. */
 ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, ExtensionsManager *_em, ModalHandler *mhandler) 
   : QWidget(parent), basis(_basis), em(_em), _mhandler(mhandler)
@@ -18,7 +15,7 @@ ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, ExtensionsManager *_e
   stype_input = new ComboBox(this);
   stype_input->addItems({
     tr("Custom scanner (another answering system)"),
-    tr("Custom composer (receives chosed variants and answers on them in another manner)")
+    tr("Custom composer (receives chosen variants and answers on them in another manner)")
   });
   connect(
     stype_input, QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -123,6 +120,7 @@ void ScriptEditor::change_stype() {
         return;
       }
       auto *react = new ScriptMeta();
+      react->stype = ScriptType::React;
       react->filepath = filepath;
       react->required_memory_cells = memory_cells_list->get_list();
       react->fn_name = fn_name_input->text();
@@ -144,6 +142,7 @@ void ScriptEditor::change_stype() {
         return;
       }
       auto *scanner = new ScriptMeta();
+      scanner->stype = ScriptType::CustomScan;
       scanner->filepath = filepath;
       scanner->fn_name = fn_name_input->text();
       if (_mhandler) {
@@ -169,6 +168,7 @@ void ScriptEditor::change_stype() {
         return;
       }
       auto *composer = new ScriptMeta();
+      composer->stype = ScriptType::CustomCompose;
       composer->filepath = filepath;
       composer->fn_name = fn_name_input->text();
       composer->required_adprops = send_adprops->isChecked();

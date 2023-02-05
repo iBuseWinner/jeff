@@ -22,6 +22,7 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(std_templates, &StandardTemplates::shutdown_scenario, this, &Core::got_scenario_shutting);
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
+  connect(std_templates, &StandardTemplates::show_info, this, &Core::got_info);
   set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
   quint16 port = quint16((*basis)[basis->serverPortSt].toInt());
   if (port == 0) port = 8005;
@@ -206,6 +207,16 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
         QPair<QString, MessageMeta> id_and_message_data(id_and_message.first, message);
         emit show_status(id_and_message_data);
       });
+}
+
+/*! @brief Displays @a info_text. */
+void Core::got_info(const QString &info_text) {
+  /*! The warning color is green. */
+  Yellog::Trace("Got an info.");
+  MessageMeta message = get_message(info_text, Author::Jeff, ContentType::Markdown, Theme::Green);
+  hp->append(message);
+  notifier->notify(message);
+  emit show(message);
 }
 
 /*! @brief Displays @a warning_text. */

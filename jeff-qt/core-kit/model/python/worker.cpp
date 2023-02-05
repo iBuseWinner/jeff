@@ -12,7 +12,7 @@ PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent) : QO
 /*! @brief The destructor. */
 PythonWorker::~PythonWorker() { Py_Finalize(); }
 
-/*! @brief TBD */
+/*! @brief Provides data transfer to the script and unpacking data from the script. */
 QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transport) {
   QFileInfo module_info(path);
   QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());

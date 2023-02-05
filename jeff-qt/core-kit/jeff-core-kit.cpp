@@ -19,7 +19,7 @@ void JCK::thread_setup() {
   QSqlDatabase::addDatabase("QSQLITE", thread_conn_wk);
 }
 
-/*! @brief TBD */
+/*! @brief Unpacks the JSON received from a script into the CoverageCache structure. */
 CoverageCache JCK::get_from_json(const QJsonArray &array) {
   CoverageCache ccache;
   for (auto ec_val : array) {

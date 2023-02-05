@@ -24,12 +24,12 @@ Help::Help(QWidget *parent, ModalHandler *mhandler) : Dialog(mhandler, parent) {
   _set_tip();
 }
 
-/*! @brief TBD */
+/*! @brief Sets the next or previous note. */
 void Help::set_tip(HelpTipListDirection direction) {
   
 }
 
-/*! @brief TBD */
+/*! @brief Sets the note by index. */
 void Help::_set_tip(int tip_number) {
   
 }

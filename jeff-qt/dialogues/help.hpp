@@ -12,7 +12,7 @@
 #include <QWidget>
 
 /*! @enum HelpTipListDirection
- *  @brief TBD  */
+ *  @brief Note selection direction.  */
 enum HelpTipListDirection { NextTip, PreviousTip };
 
 /*! @class Help

@@ -70,13 +70,10 @@ public:
 };
 
 /*! @struct ExpressionCoverage
- *  @brief TBD  */
+ *  @brief Contains the expression, its percentage of user input coverage, and the indices of the occurrence.  */
 struct ExpressionCoverage {
-  /*! @brief TBD */
   Expression expression;
-  /*! @brief TBD */
   QMap<int, int> coverage_indices;
-  /*! @brief TBD */
   float total_POC = 0.0;
 };
 

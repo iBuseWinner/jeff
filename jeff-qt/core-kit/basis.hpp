@@ -117,6 +117,10 @@ public:
   static constexpr const char *fast_append_cmd        = "/+ ";
   static constexpr const char *fast_append_script_cmd = "/++ ";
   static constexpr const char *monologue_mode_cmd     = "/mm";
+  static constexpr const char *stop_scanner_cmd       = "/-s";
+  static constexpr const char *stop_composer_cmd      = "/-c";
+  static constexpr const char *add_scanner_cmd        = "/+s";
+  static constexpr const char *add_composer_cmd       = "/+c";
   
   // Objects:
   Json *json = nullptr;     /*!< Json handler.   */
