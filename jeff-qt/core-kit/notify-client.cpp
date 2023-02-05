@@ -15,12 +15,12 @@ void NotifyClient::notify(MessageMeta msg_meta, bool no_jck_output) {
 }
 
 /*! @brief Passes authentication data to the extension. */
-void NotifyClient::notify_scenario_first_time(MessageMeta msg_meta, QString auth_key) {
+void NotifyClient::notify_scenario_first_time(QString auth_key) {
   if (not is_scenario_running) return;
   auto *socket = new QTcpSocket(this);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
-  connect(socket, &QTcpSocket::connected, this, [this, msg_meta, socket, auth_key] {
-    auto transport = msg_meta.to_json();
+  connect(socket, &QTcpSocket::connected, this, [this, socket, auth_key] {
+    auto transport = QJsonObject();
     transport[Basis::scenarioTokenWk] = auth_key;
     QJsonDocument doc_to_script(transport);
     auto bytes_to_send = doc_to_script.toJson();

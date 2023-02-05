@@ -40,7 +40,7 @@ public:
   }
   
   /*! @brief Turns @a source into a JSON object. */
-  QJsonObject to_json() {
+  QJsonObject to_json() const {
     return {{"container", table_name},
             {"disabled", is_disabled},
             {"path", path},

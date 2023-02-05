@@ -56,16 +56,18 @@ public:
   static constexpr const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   static constexpr const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  static constexpr const char *isMonologueEnabledSt      = "core-kit/ismonologuemodeenabled";
-  static constexpr const char *isDelayEnabledSt          = "core-kit/isdelayenabled";
-  static constexpr const char *minDelaySt                = "core-kit/mindelay";
-  static constexpr const char *maxDelaySt                = "core-kit/maxdelay";
-  static constexpr const char *isHistoryKeepingEnabledSt = "core-kit/ishistorykeepingenabled";
-  static constexpr const char *isGreetingsEnabledSt      = "core-kit/isgreetingsenabled";
-  static constexpr const char *greetingsMsg              = "core-kit/greetings";
-  static constexpr const char *scenarioExitMsg           = "core-kit/scenarioexitter";
-  static constexpr const char *serverPortSt              = "core-kit/serverport";
-  static constexpr const char *extensionKillSecSt        = "core-kit/extensionkillsec"; 
+  static constexpr const char *isMonologueEnabledSt          = "core-kit/ismonologuemodeenabled";
+  static constexpr const char *isDelayEnabledSt              = "core-kit/isdelayenabled";
+  static constexpr const char *minDelaySt                    = "core-kit/mindelay";
+  static constexpr const char *maxDelaySt                    = "core-kit/maxdelay";
+  static constexpr const char *isHistoryKeepingEnabledSt     = "core-kit/ishistorykeepingenabled";
+  static constexpr const char *isGreetingsEnabledSt          = "core-kit/isgreetingsenabled";
+  static constexpr const char *greetingsMsg                  = "core-kit/greetings";
+  static constexpr const char *scenarioExitMsg               = "core-kit/scenarioexitter";
+  static constexpr const char *serverPortSt                  = "core-kit/serverport";
+  static constexpr const char *extensionKillSecSt            = "core-kit/extensionkillsec";
+  static constexpr const char *seacrhInDbWhenRepeated        = "core-kit/repeatedexplicitindb";
+  static constexpr const char *disableMessagesTransmissionSt = "core-kit/nomessagetransmission";
 
   static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
   static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";
@@ -96,6 +98,7 @@ public:
   static constexpr const char *scenarioContinueWk = "scontinue";
   static constexpr const char *scenarioFinishWk   = "sfinish";
   static constexpr const char *sendWk             = "send";
+  static constexpr const char *selectionWk        = "selection";
   static constexpr const char *searchAgainWk      = "search_again";
   static constexpr const char *sendAsUserWk       = "send_as_user";
   static constexpr const char *sendStatusWk       = "send_status";
@@ -107,6 +110,7 @@ public:
   static constexpr const char *script_manager_cmd    = "/scripts";
   static constexpr const char *first_start_cmd       = "/first";
   static constexpr const char *about_cmd             = "/about";
+  static constexpr const char *help_cmd              = "/help";
   static constexpr const char *settings_cmd          = "/settings";
   static constexpr const char *phrase_editor_cmd     = "/phrases";
   static constexpr const char *extensions_viewer_cmd = "/extensions";
@@ -114,6 +118,10 @@ public:
   static constexpr const char *fast_append_cmd        = "/+ ";
   static constexpr const char *fast_append_script_cmd = "/++ ";
   static constexpr const char *monologue_mode_cmd     = "/mm";
+  static constexpr const char *stop_scanner_cmd       = "/-s";
+  static constexpr const char *stop_composer_cmd      = "/-c";
+  static constexpr const char *add_scanner_cmd        = "/+s";
+  static constexpr const char *add_composer_cmd       = "/+c";
   
   // Objects:
   Json *json = nullptr;     /*!< Json handler.   */

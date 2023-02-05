@@ -1,14 +1,14 @@
 # jeff-api
 
-Библиотека Python для взаимодействия с Джеффом. Поддерживает как `jeff-qt`, так и `jeff-core`.
+Python library for Jeff interaction. Supports both `jeff-qt` and `jeff-core`.
 
-## Установка из публичного репозитория PyPi.org
+## Installing from PyPi.org
 
 ```bash
 pip install jeff-api
 ```
 
-## Использование
+## Usage
 
 ```python
 from jeff_api import server, client
@@ -20,7 +20,7 @@ data = srv.listen()
 cli.send_msg(data)
 ```
 
-## Сборка
+## Building
 
 ```bash
 cd jeff-api

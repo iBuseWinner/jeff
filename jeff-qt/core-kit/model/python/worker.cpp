@@ -12,7 +12,7 @@ PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent) : QO
 /*! @brief The destructor. */
 PythonWorker::~PythonWorker() { Py_Finalize(); }
 
-/*! @brief TBD */
+/*! @brief Provides data transfer to the script and unpacking data from the script. */
 QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transport) {
   QFileInfo module_info(path);
   QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());
@@ -89,7 +89,7 @@ QJsonObject PythonWorker::request_answer(
     for (auto key : script->required_memory_cells) memory_cells[key] = basis->memory(key);
     transport[basis->memoryValuesWk] = memory_cells;
   }
-  if (script->required_history_parts) {
+  if (script->required_history_parts and not (*basis)[basis->disableMessagesTransmissionSt].toBool()) {
     QJsonArray history_array;
     auto history = hp->recent(script->required_history_parts);
     for (auto msg : history) 
@@ -98,7 +98,7 @@ QJsonObject PythonWorker::request_answer(
       );
     transport[basis->recentMessagesWk] = history_array;
   }
-  if (script->required_user_input) transport["user_expression"] = user_expression;
+  if (script->required_user_input) transport["user_input"] = user_expression;
   if (not expression.properties.isEmpty()) {
     transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }
@@ -116,25 +116,29 @@ QJsonObject PythonWorker::request_answer(
 }
 
 /*! @brief Prepares data for custom scanning. */
-QJsonObject PythonWorker::request_scan(ScriptMeta *script, const QString &user_expression) {
+QJsonObject PythonWorker::request_scan(ScriptMeta *script, const Sources &sources, const QString &user_expression) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
+  QJsonArray sources_obj;
+  for (auto source : sources) sources_obj.append(source.to_json());
+  transport["sources"] = sources_obj;
   return run(script->filepath, script->fn_name, transport);
 }
 
 /*! @brief Prepares data for custom composing. */
-QJsonObject PythonWorker::request_compose(ScriptMeta *script, const QString &user_expression, CacheWithIndices sorted) {
+QJsonObject PythonWorker::request_compose(ScriptMeta *script, const QString &user_expression, CoverageCache sorted) {
   QJsonObject transport;
   transport["user_expression"] = user_expression;
   QJsonArray candidates;
-  for (auto ewi : sorted) {
+  for (auto ec : sorted) {
     QJsonObject candidate;
     QJsonObject indices;
-    for (auto first_indice : ewi.first.keys()) {
-      indices[QString::number(first_indice)] = ewi.first[first_indice];
+    for (auto first_indice : ec.coverage_indices.keys()) {
+      indices[QString::number(first_indice)] = ec.coverage_indices[first_indice];
     }
     candidate["indices"] = indices;
-    candidate["reagent_expression"] = ewi.second.to_json();
+    candidate["reagent_expression"] = ec.expression.to_json();
+    candidate["total_POC"] = ec.total_POC;
     candidates.append(candidate);
   }
   transport["candidates"] = candidates;

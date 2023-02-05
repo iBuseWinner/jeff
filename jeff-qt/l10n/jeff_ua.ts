@@ -214,6 +214,21 @@
     </message>
 </context>
 <context>
+    <name>Help</name>
+    <message>
+        <source>Previous tip</source>
+        <translation>Попередня порада</translation>
+    </message>
+    <message>
+        <source>Next tip</source>
+        <translation>Наступна порада</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрити</translation>
+    </message>
+</context>
+<context>
     <name>Jeff</name>
     <message>
         <source>Jeff</source>
@@ -650,10 +665,6 @@
         <translation>Помилка в ході перевірки: джерело має лише один стовпець.</translation>
     </message>
     <message>
-        <source>Validation error: the second column of the source does not fit the description of &quot;expression&quot; TEXT.</source>
-        <translation>Помилка в ході перевірки: другий стовпець джерела не відповідає опису &quot;expression&quot; TEXT.</translation>
-    </message>
-    <message>
         <source>Validation error: the source contains only two columns.</source>
         <translation>Помилка в ході перевірки: джерело має лише два стовпці.</translation>
     </message>
@@ -692,6 +703,10 @@
     <message>
         <source>Could not write options and create source table.</source>
         <translation>Неможливо записати параметри та створити таблицю джерела.</translation>
+    </message>
+    <message>
+        <source>Validation error: the second column of the source does not fit the description of &quot;phrase&quot; TEXT.</source>
+        <translation>Помилка в ході перевірки: другий стовпець джерела не відповідає опису &quot;phrase&quot; TEXT.</translation>
     </message>
 </context>
 <context>
@@ -868,6 +883,13 @@
     <message>
         <source>Jeff&apos;s database</source>
         <translation>База даних Джеффа</translation>
+    </message>
+</context>
+<context>
+    <name>StandardTemplates</name>
+    <message>
+        <source>Expression added successfully!</source>
+        <translation>Вираз успішно додано!</translation>
     </message>
 </context>
 <context>

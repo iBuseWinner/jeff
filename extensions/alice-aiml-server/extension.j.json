@@ -22,7 +22,6 @@
   "links": [
     "https://github.com/paulovn/python-aiml"
   ],
-  "envs": {},
   "program": "python",
   "args": [
     "alice.py",

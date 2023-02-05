@@ -134,16 +134,16 @@ MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), c
     emit stop_scenario_triggered();
   });
   connect(&current_scanner_info, &QAction::triggered, this, [this] {
-    emit stop_scanner_triggered();
+    core->got_message_from_user(Basis::stop_scanner_cmd);
   });
   connect(&select_scanner_action, &QAction::triggered, this, [this] {
-    emit select_scanner_triggered();
+    core->got_message_from_user(Basis::add_scanner_cmd);
   });
   connect(&current_composer_info, &QAction::triggered, this, [this] {
-    emit stop_composer_triggered();
+    core->got_message_from_user(Basis::stop_composer_cmd);
   });
   connect(&select_composer_action, &QAction::triggered, this, [this] {
-    emit select_composer_triggered();
+    core->got_message_from_user(Basis::add_composer_cmd);
   });
   addMenu(&extensions_menu);
   // Tools

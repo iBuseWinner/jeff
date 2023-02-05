@@ -105,14 +105,14 @@ bool PhraseEditorBrief::setup(Source _source, Phrases _phrases, int address) {
   for (auto _phrase : phrases) {
     if (_phrase.links.contains(phrase.address))
       activators_list.addTopLevelItem(
-        new QTreeWidgetItem(act_parent, {QString::number(_phrase.address), _phrase.expression})
+        new QTreeWidgetItem(act_parent, {QString::number(_phrase.address), _phrase.phrase})
       );
     if (phrase.links.contains(_phrase.address))
       reagents_list.addTopLevelItem(
-        new QTreeWidgetItem(rea_parent, {QString::number(_phrase.address), _phrase.expression})
+        new QTreeWidgetItem(rea_parent, {QString::number(_phrase.address), _phrase.phrase})
       );
   }
-  header.setText(phrase.expression);
+  header.setText(phrase.phrase);
   address_label.setText(tr("The address of the phrase is %1.").arg(phrase.address));
   disconnect(&exec_checkbox, &QCheckBox::stateChanged, nullptr, nullptr);
   exec_checkbox.setChecked((phrase.exec == true) ? true : false);
@@ -157,10 +157,10 @@ void PhraseEditorBrief::edit_phrase_text() {
 void PhraseEditorBrief::save_phrase_text() {
   auto text = phrase_expression_edit_line.text();
   if (text.isEmpty()) return;
-  phrase.expression = text;
-  if (not basis->sql->update_expression(source, phrase.expression, phrase.address)) return;
+  phrase.phrase = text;
+  if (not basis->sql->update_phrase(source, phrase.phrase, phrase.address)) return;
   phrase_expression_edit_widget.hide();
-  header.setText(phrase.expression);
+  header.setText(phrase.phrase);
   widget_layout->replaceWidget(&phrase_expression_edit_widget, &header);
   header.show();
   edit_expression.show();
@@ -173,8 +173,8 @@ void PhraseEditorBrief::save_phrase_text() {
 
 /*! @brief Saves information about the script as JSON. */
 void PhraseEditorBrief::save_script(QString script_json) {
-  phrase.expression = script_json;
-  if (not basis->sql->update_expression(source, phrase.expression, phrase.address)) return;
+  phrase.phrase = script_json;
+  if (not basis->sql->update_phrase(source, phrase.phrase, phrase.address)) return;
   script_editor->hide();
   header.setText(script_json);
   widget_layout->replaceWidget(script_editor, &header);
@@ -349,7 +349,7 @@ void PhraseEditorBrief::waits_for_choosed(int address) {
   for (auto _phrase : phrases) {
     if (_phrase.address == address)
       widget->addTopLevelItem(
-        new QTreeWidgetItem(list_parent, {QString::number(_phrase.address), _phrase.expression})
+        new QTreeWidgetItem(list_parent, {QString::number(_phrase.address), _phrase.phrase})
       );
   }
 }

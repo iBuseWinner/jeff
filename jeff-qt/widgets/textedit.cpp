@@ -91,7 +91,9 @@ void TextEdit::resize_on_text_height() {
   setFixedHeight(curr_height);
 }
 
-/*! @brief TBD */
+/*! @brief Clears the content of the input field.
+ *  @details When created, the widget requires the widget's height to be forced before the content is cleared,
+ *  otherwise the height will be 0 pixels.  */
 void TextEdit::clear(int presize) {
   QTextEdit::clear();
   curr_height = (presize == -1) ? text_height() : presize;
@@ -99,7 +101,7 @@ void TextEdit::clear(int presize) {
   line_cntr = 1;
 }
 
-/*! @brief TBD */
+/*! @brief Calculates the height of the text in pixels. */
 int TextEdit::text_height() {
   auto size = document()->size().toSize();
   return size.height();

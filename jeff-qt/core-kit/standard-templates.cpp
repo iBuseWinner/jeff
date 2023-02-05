@@ -10,6 +10,13 @@ bool StandardTemplates::dialogues(const QString &expression) {
     emit showModalWidget(modal_handler);
     return true;
   }
+  if (expression == basis->help_cmd) {
+    auto *modal_handler = new ModalHandler(this);
+    auto *help = new Help(nullptr, modal_handler);
+    Q_UNUSED(help)
+    emit showModalWidget(modal_handler);
+    return true;
+  }
   if (expression == basis->source_manager_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *sources_editor = new SourcesEditor(basis, nullptr, modal_handler);
@@ -59,7 +66,7 @@ bool StandardTemplates::fast_commands(const QString &expression) {
     if (expression.length() > QString(basis->fast_append_cmd).length()) {
       QString reagent_text = expression;
       reagent_text.remove(0, QString(basis->fast_append_cmd).length());
-      QString activator_text = hp->last_user_message();
+      QString activator_text = hp->last_user_message(); /*!< This works 'cause in this moment @a expression is not in history. */
       if (not activator_text.isEmpty()) {
         Expression e;
         e.activator_text = activator_text;
@@ -69,6 +76,7 @@ bool StandardTemplates::fast_commands(const QString &expression) {
         s.table_name = basis->read(basis->defaultSourceContainer).toString();
         basis->sql->insert_expression(s, e);
         basis->cacher->append(e);
+        emit show_info(tr("Expression added successfully!"));
       }
     }
     return true;

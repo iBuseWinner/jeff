@@ -31,7 +31,6 @@
     "https://github.com/WongKinYiu/yolov7",
     "https://github.com/AlexeyAB/darknet"
   ],
-  "envs": {},
   "program": "python",
   "args": [
     "darknet-ir.py",

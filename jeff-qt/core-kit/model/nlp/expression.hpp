@@ -18,7 +18,7 @@ public:
   /*! Answer expression. */
   QString reagent_text = "";
   /*! Reagents properties (name, value). */
-  Options properties = Options();
+  Options properties = Phrase::parse_props(QJsonObject());
   /*! How much times this expression used. */
   ushort use_cases = 0;
   /*! Is the reagent a script to be executed? */
@@ -29,7 +29,7 @@ public:
   Expression(const QJsonObject &json_object) {
     activator_text = json_object["activator_text"].toString();
     reagent_text = json_object["reagent_text"].toString();
-    properties = Phrase::parse_props(json_object["properties"]);
+    properties = Phrase::parse_props(json_object["properties"].toObject());
     use_cases = json_object["use_cases"].toInt();
     exec = json_object["exec"].toBool();
   }
@@ -51,6 +51,17 @@ public:
             {"use_cases", use_cases},
             {"exec", exec}};
   }
+  
+  /*! @brief Translates @a object into an expression. */
+  static Expression from_object(const QJsonObject &object, bool *err = nullptr) {
+    auto expression = Expression(object);
+    if (expression.activator_text.isEmpty() or expression.reagent_text.isEmpty()) {
+      Yellog::Error("It's impossible to parse expression from JSON.");
+      if (err) *err = true;
+      return Expression();
+    }
+    return expression;
+  }
 
   /*! @brief Returns @a weight of expression. */
   int weight() { return properties.value("weight").toInt(); }
@@ -58,7 +69,14 @@ public:
   bool consonant() { return bool(properties.value("consonant").toInt()); }
 };
 
+/*! @struct ExpressionCoverage
+ *  @brief Contains the expression, its percentage of user input coverage, and the indices of the occurrence.  */
+struct ExpressionCoverage {
+  Expression expression;
+  QMap<int, int> coverage_indices;
+  float total_POC = 0.0;
+};
+
 typedef QList<Expression> Expressions;
-typedef QPair<QMap<int, int>, Expression> ExpressionWithIndices;
 
 #endif

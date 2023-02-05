@@ -10,8 +10,6 @@
     }
   ],
   "license": "MIT",
-  "links": [],
-  "envs": {},
   "program": "python",
   "args": [
     "clock.py",

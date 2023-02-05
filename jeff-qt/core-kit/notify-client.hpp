@@ -21,7 +21,7 @@ public:
   void unsubscribe(ExtensionMeta *extension_meta);
   void unsubscribe_all();
   void notify(MessageMeta msg_meta, bool no_jck_output = false);
-  void notify_scenario_first_time(MessageMeta msg_meta, QString auth_key);
+  void notify_scenario_first_time(QString auth_key);
   void set_scenario(ScenarioServerMeta _scenario_server_meta);
   void finish_scenario();
   void unset_scenario();

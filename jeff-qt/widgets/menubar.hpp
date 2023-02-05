@@ -31,10 +31,6 @@ signals:
   void export_triggered();
   void import_triggered();
   void stop_scenario_triggered();
-  void stop_scanner_triggered();
-  void select_scanner_triggered();
-  void stop_composer_triggered();
-  void select_composer_triggered();
   void exit_triggered();
   // void help_triggered();
 

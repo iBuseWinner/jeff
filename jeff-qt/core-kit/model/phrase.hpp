@@ -18,43 +18,45 @@ public:
   /*! Phrase address in the database table. */
   int address = -1;
   /*! Phrase text. */
-  QString expression = "";
+  QString phrase = "";
   /*! Links to other phrases (reagents). */
   QSet<int> links = QSet<int>();
   /*! If this phrase is a reagent, indicates whether a script needs to be run. */
   bool exec = false;
   /*! Additional phrase properties stored in the database. */
-  Options properties = Options();
+  Options properties = Phrase::parse_props(QJsonObject());
 
   // Constructors:
   Phrase() {}
   Phrase(const QJsonObject &json_object) {
     address = json_object["address"].toInt();
-    expression = json_object["expression"].toString();
+    phrase = json_object["phrase"].toString();
     links = unpack_links(json_object["links"].toString());
     exec = json_object["exec"].toBool();
-    properties = parse_props(json_object["properties"]);
+    properties = parse_props(json_object["properties"].toObject());
   }
 
   // Functions:
   /*! @brief Compares two phrases. */
   friend bool operator==(Phrase p1, Phrase p2) {
-    return p1.expression == p2.expression and p1.exec == p2.exec;
+    return p1.phrase == p2.phrase and p1.exec == p2.exec and p1.properties == p2.properties;
   }
 
   /*! @brief Turns @a phrase into a JSON object. */
   QJsonObject to_json() {
     return {{"address", address},
-            {"expression", expression},
+            {"phrase", phrase},
             {"links", pack_links(links)},
             {"exec", exec},
             {"properties", pack_props(properties)}};
   }
 
   /*! @brief Properties' parser. */
-  static Options parse_props(QJsonValue _aps) {
+  static Options parse_props(QJsonObject _aps) {
     Options aps;
-    for (auto _ap_key : _aps.toObject().keys()) aps[_ap_key] = _aps[_ap_key].toString();
+    for (auto _ap_key : _aps.keys()) aps[_ap_key] = _aps[_ap_key].toString();
+    if (not aps.contains("weight")) aps["weight"] = "0";
+    if (not aps.contains("consonant")) aps["consonant"] = "0";
     return aps;
   }
 
@@ -67,20 +69,18 @@ public:
 
   /*! @brief Parse properties from string. */
   static Options parse_props(QString json_str) {
-    Options props;
     if (json_str.isEmpty()) {
       Yellog::Trace("Empty properties' string.");
-      return props;
+      return parse_props(QJsonObject());
     }
     QJsonParseError errors;
     QJsonDocument document = QJsonDocument::fromJson(json_str.toUtf8(), &errors);
     if (errors.error != QJsonParseError::NoError) {
       Yellog::Error("It's impossible to parse phrase properties from JSON. Error int: %d", int(errors.error));
-      return props;
+      return parse_props(QJsonObject());
     }
     auto object = document.object();
-    for (auto key : object.keys()) props[key] = object[key].toString();
-    return props;
+    return parse_props(object);
   }
 
   /*! @brief Pack properties into string. */

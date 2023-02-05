@@ -20,7 +20,6 @@ public:
 
 private:
   // Objects:
-  QMutex cache_mutex;
   Cache *cache = nullptr;
 };
 

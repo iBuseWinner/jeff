@@ -8,7 +8,7 @@
 #include <QWidget>
 
 /*! @class ScrollArea
- *  @brief TBD  */
+ *  @brief The class responsible for stylish scrolling of elements in Jeff.  */
 class ScrollArea : public QScrollArea {
   Q_OBJECT
   Q_DISABLE_COPY(ScrollArea)

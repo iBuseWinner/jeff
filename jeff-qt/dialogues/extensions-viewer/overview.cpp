@@ -23,6 +23,7 @@ ExtensionsViewerOverview::ExtensionsViewerOverview(ExtensionsManager *_em, QWidg
   viewer_list_lt = VLineLt::another()->addw(no_extensions_yet);
   spacer = new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::MinimumExpanding);
   auto *scroll_area = new ScrollArea(this);
+  scroll_area->verticalScrollBar()->setSingleStep(3);
   auto *area_widget = new QWidget(this);
   area_widget->setContentsMargins(0, 0, 5, 0);
   area_widget->setLayout(viewer_list_lt);

@@ -43,6 +43,6 @@ void Server::handle_connection() {
 /*! @brief If protection against malicious connections is enabled, authorizes the connection by key. */
 bool Server::authorize_connection(const QString &key) {
   if (not (*basis)[basis->serverAuthorizationOnSt].toBool()) return true;
-  if (key == (*basis)[basis->serverAuthKeySt]) return true;
+  if (key == (*basis)[basis->serverAuthKeySt].toString()) return true;
   return false;
 }

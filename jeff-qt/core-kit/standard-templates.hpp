@@ -43,6 +43,8 @@ signals:
   void changeMonologueMode();
   /*! @brief Notifies that the scenario has finished running. @sa ScenarioScript */
   void shutdown_scenario();
+  /*! @brief Sends an informational message. */
+  QString show_info(QString info);
 
 private:
   // Objects:

@@ -12,10 +12,6 @@
         <translation>версия</translation>
     </message>
     <message>
-        <source>Jeff - chatbot and automation tool</source>
-        <translation>Джефф - чат-бот и средство автоматизации</translation>
-    </message>
-    <message>
         <source>Jeff Authors</source>
         <translation>Авторы Джеффа</translation>
     </message>
@@ -46,6 +42,10 @@
     <message>
         <source>Authors</source>
         <translation>Авторы</translation>
+    </message>
+    <message>
+        <source>Jeff - chatbot and automation tool</source>
+        <translation>Джефф - чат-бот и средство автоматизации</translation>
     </message>
 </context>
 <context>
@@ -207,6 +207,21 @@
     <message>
         <source>And now you&apos;ve done.</source>
         <translation>И теперь вы можете приступать к работе.</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Закрыть</translation>
+    </message>
+</context>
+<context>
+    <name>Help</name>
+    <message>
+        <source>Previous tip</source>
+        <translation>Предыдущий совет</translation>
+    </message>
+    <message>
+        <source>Next tip</source>
+        <translation>Следующий совет</translation>
     </message>
     <message>
         <source>Close</source>
@@ -650,10 +665,6 @@
         <translation>Ошибка в ходе проверки: источник содержит лишь один столбец.</translation>
     </message>
     <message>
-        <source>Validation error: the second column of the source does not fit the description of &quot;expression&quot; TEXT.</source>
-        <translation>Ошибка в ходе проверки: второй столбец источника не соответствует описанию &quot;expression&quot; TEXT.</translation>
-    </message>
-    <message>
         <source>Validation error: the source contains only two columns.</source>
         <translation>Ошибка в ходе проверки: источник содержит лишь два столбца.</translation>
     </message>
@@ -692,6 +703,10 @@
     <message>
         <source>Could not write options and create source table.</source>
         <translation>Невозможно записать параметры и создать таблицу источника.</translation>
+    </message>
+    <message>
+        <source>Validation error: the second column of the source does not fit the description of &quot;phrase&quot; TEXT.</source>
+        <translation>Ошибка в ходе проверки: второй столбец источника не соответствует описанию &quot;phrase&quot; TEXT.</translation>
     </message>
 </context>
 <context>
@@ -868,6 +883,13 @@
     <message>
         <source>Jeff&apos;s database</source>
         <translation>База данных Джеффа</translation>
+    </message>
+</context>
+<context>
+    <name>StandardTemplates</name>
+    <message>
+        <source>Expression added successfully!</source>
+        <translation>Выражение успешно добавлено!</translation>
     </message>
 </context>
 <context>
