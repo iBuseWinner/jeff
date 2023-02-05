@@ -100,21 +100,32 @@ QJsonObject Basis::handle_to_script(const QJsonObject &object) {
       for (auto key : val_keys) {
         if (not key.isString()) continue;
         QString k = key.toString();
+        auto val = memory(k);
+        if (val.isNull()) continue;
         obj[k] = memory(k);
       }
-      transport[memoryValuesWk] = obj;
+      if (not obj.keys().isEmpty()) transport[memoryValuesWk] = obj;
     }
   }
   return transport;
 }
 
-/*! @brief Handles @an object that came from script. */
+/*! @brief Handles @an object that came from script or extension. */
 void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
+  /*! @details Common logic part. */
+  if (object.contains(writeMemoryWk)) {
+    QJsonObject to_store = object[writeMemoryWk].toObject();
+    for (auto key : to_store.keys()) {
+      auto value = to_store[key];
+      memory(key, value);
+    }
+  }
+  /*! @details Scenario logic part. */
   bool send_auth = false;
   if (
     object.contains(scenarioReadyWk) and
     object.contains(scenarioAddrWk) and
-    object.contains(scenarioPortWk)
+    object.contains(scenarioPortWk) and not except_send
   ) {
     if (object[scenarioReadyWk].toBool()) {
       auto server_addr = QHostAddress(object[scenarioAddrWk].toString());
@@ -128,34 +139,22 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
       emit start_scenario(scenario_meta);
       send_auth = true;
     }
-  } else if (object.contains(scenarioContinueWk) and object.contains(scenarioTokenWk)) {
+  } else if (object.contains(scenarioContinueWk) and object.contains(scenarioTokenWk) and not except_send) {
     if (
       object[scenarioContinueWk].toBool() and
       object[scenarioTokenWk].toString() == _scenario_token
     ) {
       send_auth = true;
     }
-  } else if (object.contains(scenarioFinishWk) and object.contains(scenarioTokenWk)) {
+  } else if (object.contains(scenarioFinishWk) and object.contains(scenarioTokenWk) and not except_send) {
     if (object[scenarioFinishWk].toBool() and object[scenarioTokenWk].toString() == _scenario_token) {
       clear_stoken();
       emit shutdown_scenario();
       send_auth = true;
     }
   } else { send_auth = _scenario_token.isEmpty(); }
-  if (object.contains(writeMemoryWk)) {
-    QJsonArray to_store = object[writeMemoryWk].toArray();
-    if (not to_store.isEmpty()) {
-      for (auto pair : to_store) {
-        if (not pair.isObject()) continue;
-        auto pair_obj = pair.toObject();
-        if (not pair_obj.contains("key") or not pair_obj.contains("value")) continue;
-        if (not pair_obj["key"].isString()) continue;
-        memory(pair_obj["key"].toString(), pair_obj["value"]);
-      }
-    }
-  }
+  /*! @details Daemons and servers logic part. */
   if (not except_send and send_auth) {
-    /*! This block have used to send messages by daemons and servers. */
     if (object.contains(sendWk)) {
       QString message = object[sendWk].toString();
       emit send(message);

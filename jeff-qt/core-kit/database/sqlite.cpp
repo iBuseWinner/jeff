@@ -129,7 +129,7 @@ Phrases SQLite::select_all(const Source &source) {
   while (query.isValid()) {
     Phrase phrase;
     phrase.address = query.value(0).toInt();
-    phrase.expression = query.value(1).toString();
+    phrase.phrase = query.value(1).toString();
     phrase.links = Phrase::unpack_links(query.value(2).toString());
     phrase.exec = bool(query.value(3).toInt());
     phrase.properties = Phrase::parse_props(query.value(4).toString());
@@ -211,7 +211,7 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
   return result;
 }
 
-/*! @brief Inserts a new expression into the source. */
+/*! @brief Inserts a new phrase into the source. */
 bool SQLite::insert_phrase(const Source &source, const Phrase &phrase) {
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
@@ -222,7 +222,7 @@ bool SQLite::insert_phrase(const Source &source, const Phrase &phrase) {
   auto result = exec(
     &query, InsertPhrase,
     {
-      source.table_name, QString::number(phrase.address), phrase.expression,
+      source.table_name, QString::number(phrase.address), phrase.phrase,
       Phrase::pack_links(phrase.links), QString::number(int(phrase.exec)),
       Phrase::text_props(phrase.properties)
     }
@@ -244,7 +244,7 @@ Phrase SQLite::get_phrase_by_address(const Source &source, int address) {
   Phrase phrase;
   if (query.isValid()) {
     phrase.address = address;
-    phrase.expression = query.value(1).toString();
+    phrase.phrase = query.value(1).toString();
     phrase.links = Phrase::unpack_links(query.value(2).toString());
     phrase.exec = bool(query.value(3).toInt());
     phrase.properties = Phrase::parse_props(query.value(4).toString());
@@ -268,7 +268,8 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
   auto result = exec(
     &query, InsertPhrase,
     {
-      source.table_name, QString::number(new_id), text, "", QString::number(0), ""
+      source.table_name, QString::number(new_id), text, "", QString::number(0),
+      Phrase::text_props(Phrase::parse_props(QJsonObject()))
     }
   );
   db.close();
@@ -276,7 +277,7 @@ int SQLite::create_new_phrase(const Source &source, const QString &text) {
 }
 
 /*! @brief Edits the content of a phrase. */
-bool SQLite::update_expression(const Source &source, const QString &expression, int address) {
+bool SQLite::update_phrase(const Source &source, const QString &phrase, int address) {
   auto db = prepare(source.path);
   if (db.databaseName().isEmpty()) {
     db.close();
@@ -284,7 +285,7 @@ bool SQLite::update_expression(const Source &source, const QString &expression, 
   }
   QSqlQuery query(db);
   auto result = exec(
-    &query, UpdateExpressionByAddress, {source.table_name, expression, QString::number(address)}
+    &query, UpdatePhraseByAddress, {source.table_name, phrase, QString::number(address)}
   );
   db.close();
   return result;
@@ -335,7 +336,7 @@ bool SQLite::remove_phrase(const Source &source, int address) {
   return result;
 }
 
-/*! @brief Finds all activators for the expression. */
+/*! @brief Finds all activators for the input. */
 CoverageCache SQLite::scan_source(const Source &source, const QString &input, QString conn_name) {
   auto db = prepare(source.path, conn_name);
   if (db.databaseName().isEmpty()) {
@@ -567,13 +568,13 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
     return false;
   }
   auto expressionColumnValid = true;
-  expressionColumnValid &= query.value(1).toString() == "expression";
+  expressionColumnValid &= query.value(1).toString() == "phrase";
   expressionColumnValid &= query.value(2).toString() == "TEXT";
   if (not expressionColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
-                  "of \"expression\" TEXT. %s", db_source_suffix.toStdString().c_str());
+                  "of \"phrase\" TEXT. %s", db_source_suffix.toStdString().c_str());
     emit sqlite_error(
-      tr("Validation error: the second column of the source does not fit the description of \"expression\" TEXT.") + " " + db_source_suffix
+      tr("Validation error: the second column of the source does not fit the description of \"phrase\" TEXT.") + " " + db_source_suffix
     );
     return false;
   }
@@ -642,7 +643,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       break;
     case CreateSourceTable:
       query->prepare(
-        QString("create table \"%1\" (address integer not null primary key autoincrement unique, expression text, links text, exec integer not null, adprops text)").arg(values[0])
+        QString("create table \"%1\" (address integer not null primary key autoincrement unique, phrase text, links text, exec integer not null, adprops text)").arg(values[0])
       );
       break;
     case LoadOptions:
@@ -677,12 +678,12 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       query->prepare(QString("select * from \"%1\"").arg(values[0]));
       break;
     case SelectAddressesByExpression:
-      query->prepare(QString("select address from \"%1\" where expression = :x").arg(values[0]));
+      query->prepare(QString("select address from \"%1\" where phrase = :x").arg(values[0]));
       query->bindValue(":x", values[1]);
       break;
     case SelectAddressesByExpressionAndExec:
       query->prepare(
-        QString("select address from \"%1\" where expression = :x and exec = :e").arg(values[0])
+        QString("select address from \"%1\" where phrase = :x and exec = :e").arg(values[0])
       );
       query->bindValue(":x", values[1]);
       query->bindValue(":e", values[2].toInt());
@@ -700,7 +701,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       break;
     case SelectEEPByAddress:
       query->prepare(QString(
-        "select expression, exec, adprops from \"%1\" where address = :a").arg(values[0])
+        "select phrase, exec, adprops from \"%1\" where address = :a").arg(values[0])
       );
       query->bindValue(":a", values[1].toInt());
       break;
@@ -710,9 +711,9 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
       );
       query->bindValue(":a", values[1].toInt());
       break;
-    case UpdateExpressionByAddress:
+    case UpdatePhraseByAddress:
       query->prepare(QString(
-        "update \"%1\" set expression = :ex where address = :a").arg(values[0])
+        "update \"%1\" set phrase = :ex where address = :a").arg(values[0])
       );
       query->bindValue(":ex", values[1]);
       query->bindValue(":a", values[2].toInt());

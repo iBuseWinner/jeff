@@ -89,7 +89,7 @@ QJsonObject PythonWorker::request_answer(
     for (auto key : script->required_memory_cells) memory_cells[key] = basis->memory(key);
     transport[basis->memoryValuesWk] = memory_cells;
   }
-  if (script->required_history_parts) {
+  if (script->required_history_parts and not (*basis)[basis->disableMessagesTransmissionSt].toBool()) {
     QJsonArray history_array;
     auto history = hp->recent(script->required_history_parts);
     for (auto msg : history) 
@@ -98,7 +98,7 @@ QJsonObject PythonWorker::request_answer(
       );
     transport[basis->recentMessagesWk] = history_array;
   }
-  if (script->required_user_input) transport["user_expression"] = user_expression;
+  if (script->required_user_input) transport["user_input"] = user_expression;
   if (not expression.properties.isEmpty()) {
     transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }

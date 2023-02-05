@@ -54,7 +54,9 @@ void DaemonProcess::stop(int msecs) {
 }
 
 /*! @brief Requests output from external program. */
-QJsonObject DaemonProcess::request_output(ScriptMeta *script_meta, const Expression &expression, const QString &input) {
+QJsonObject DaemonProcess::request_output(
+  HProcessor *hp, Basis *basis, ScriptMeta *script_meta, const Expression &expression, const QString &input
+) {
   Yellog::Trace("Got extension %p", script_meta);
   QProcess process;
   process.setProgram(script_meta->program);
@@ -68,11 +70,26 @@ QJsonObject DaemonProcess::request_output(ScriptMeta *script_meta, const Express
     for (auto key : script_meta->envs.keys()) env.insert(key, script_meta->envs[key]);
     process.setProcessEnvironment(env);
   }
-  QJsonObject json_payload = {
-    {"expression", expression.to_json()},
-    {"input", input}
-  };
-  QJsonDocument payload_doc(json_payload);
+  QJsonObject transport;
+  if (not script_meta->required_memory_cells.isEmpty()) {
+    QJsonObject memory_cells;
+    for (auto key : script_meta->required_memory_cells) memory_cells[key] = basis->memory(key);
+    transport[basis->memoryValuesWk] = memory_cells;
+  }
+  if (script_meta->required_history_parts and not (*basis)[basis->disableMessagesTransmissionSt].toBool()) {
+    QJsonArray history_array;
+    auto history = hp->recent(script_meta->required_history_parts);
+    for (auto msg : history) 
+      history_array.append(
+        QString("%1: %2").arg(msg.author == Author::User ? "User" : "Jeff").arg(msg.content)
+      );
+    transport[basis->recentMessagesWk] = history_array;
+  }
+  if (script_meta->required_user_input) transport["user_input"] = input;
+  if (not expression.properties.isEmpty()) {
+    transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
+  }
+  QJsonDocument payload_doc(transport);
   process.start();
   process.waitForStarted(500);
   Yellog::Trace("\tProcess must be started at this point.");
@@ -84,13 +101,17 @@ QJsonObject DaemonProcess::request_output(ScriptMeta *script_meta, const Express
   }
   if (not process.canReadLine()) {
     Yellog::Warn("\tNo line given at stdout.");
-    return QJsonObject();
+    return QJsonObject({{basis->errorTypeWk, 13}});
   }
   QJsonParseError errors;
   QJsonDocument out_doc = QJsonDocument::fromJson(process.readAll(), &errors);
   if (errors.error != QJsonParseError::NoError) {
     Yellog::Error("\tIt's impossible to parse response from JSON. Error int: %d", int(errors.error));
-    return QJsonObject();
+    return QJsonObject({{basis->errorTypeWk, 7}});
+  }
+  if (not out_doc.isObject()) {
+    Yellog::Error("\tIt's impossible to get object from response JSON. Error int: %d", int(errors.error));
+    return {{basis->errorTypeWk, 8}};
   }
   return out_doc.object();
 }

@@ -23,8 +23,12 @@ public:
   static ExtensionMeta *from_origin(const QString &origin, bool enabled);
 
   // Objects:
+  /*! @brief inner props */
   bool valid = false;
+  bool is_server = false;
+  bool enabled = true;
   QString origin;
+  /*! @brief props from file */
   QString name;
   QString desc;
   QMap<QString, QMap<QString, QString>> authors;
@@ -34,11 +38,9 @@ public:
   QString program;
   QMap<QString, QString> envs;
   QStringList args;
-  bool is_server = false;
   QHostAddress server_addr;
   quint16 server_port;
   bool always_send = false;
-  bool enabled = true;
 };
 
 /*! @brief Container for scripts of different types. */

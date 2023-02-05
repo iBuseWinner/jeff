@@ -255,7 +255,7 @@ QPair<QString, QString> JCK::compose_answer(QString input, CoverageCache candida
         if (script_meta->is_for_embedded_python) {
           obj = pw->request_answer(script_meta, ec.expression, input);
         } else {
-          obj = DaemonProcess::request_output(script_meta, ec.expression, input);
+          obj = DaemonProcess::request_output(hp, basis, script_meta, ec.expression, input);
         }
         delete script_meta;
         if (obj.contains(basis->errorTypeWk)) continue;

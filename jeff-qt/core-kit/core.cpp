@@ -116,17 +116,13 @@ void Core::got_extension_start(ExtensionMeta *extension_meta) {
   em->add_extension(extension_meta);
 }
 
-/*! @brief Notifies the extension that the scenario has started and passes the last message and authentication data. */
+/*! @brief Notifies the extension that the scenario has started and passes the authentication data. */
 void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
   Yellog::Trace("Got scenario start. Notifier goes brrr... (it's okay, don't worry.)");
+  is_scenario_running = true;
   current_scenario = scenario_meta;
   notifier->set_scenario(current_scenario);
-  MessageMeta last;
-  {
-    auto recent = hp->recent(1);
-    if (not recent.isEmpty()) last = recent[0];
-  }
-  notifier->notify_scenario_first_time(last, current_scenario.auth_key);
+  notifier->notify_scenario_first_time(current_scenario.auth_key);
 }
 
 /*! @brief Disables scenario. */

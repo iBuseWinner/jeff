@@ -112,7 +112,7 @@ void PhraseEditorOverview::fill_phrases() {
   phrases_list.clear();
   for (auto phrase : phrases) {
     phrases_list.addTopLevelItem(
-      new QTreeWidgetItem(parent, {QString::number(phrase.address), phrase.expression})
+      new QTreeWidgetItem(parent, {QString::number(phrase.address), phrase.phrase})
     );
   }
 }

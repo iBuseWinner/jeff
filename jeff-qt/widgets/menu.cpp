@@ -13,7 +13,7 @@ void Menu::setup() {
   setAttribute(Qt::WA_TranslucentBackground);
   setStyleSheet(
     QString(
-      "Menu { padding: 3px; border: 2px solid transparent; border-radius: 7px;"
+      "Menu { padding: 3px; border: 1px solid %3; border-radius: 7px;"
       "background-color: %1; color: %2; } Menu::item { border: 2px solid transparent;"
       "border-radius: 5px; padding: 5px 0px 5px 3px; } Menu::item:selected { background-color: %3; }"
       "Menu::item:pressed { background-color: %4; } Menu::icon { padding-left: 3px; }")

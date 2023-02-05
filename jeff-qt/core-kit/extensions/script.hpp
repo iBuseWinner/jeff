@@ -29,9 +29,11 @@ public:
   static ScriptMeta *from_string(QString string);
 
   // Objects:
+  /*! @brief inner props */
   bool valid = false;
-  ScriptType stype = NoneScript;
   bool is_for_embedded_python = true;
+  /*! @brief props from file */
+  ScriptType stype = NoneScript;
   QString filepath;
   QString fn_name;
   QString working_dir;

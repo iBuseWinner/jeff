@@ -18,7 +18,7 @@ public:
   /*! Phrase address in the database table. */
   int address = -1;
   /*! Phrase text. */
-  QString expression = "";
+  QString phrase = "";
   /*! Links to other phrases (reagents). */
   QSet<int> links = QSet<int>();
   /*! If this phrase is a reagent, indicates whether a script needs to be run. */
@@ -30,7 +30,7 @@ public:
   Phrase() {}
   Phrase(const QJsonObject &json_object) {
     address = json_object["address"].toInt();
-    expression = json_object["expression"].toString();
+    phrase = json_object["phrase"].toString();
     links = unpack_links(json_object["links"].toString());
     exec = json_object["exec"].toBool();
     properties = parse_props(json_object["properties"].toObject());
@@ -39,13 +39,13 @@ public:
   // Functions:
   /*! @brief Compares two phrases. */
   friend bool operator==(Phrase p1, Phrase p2) {
-    return p1.expression == p2.expression and p1.exec == p2.exec and p1.properties == p2.properties;
+    return p1.phrase == p2.phrase and p1.exec == p2.exec and p1.properties == p2.properties;
   }
 
   /*! @brief Turns @a phrase into a JSON object. */
   QJsonObject to_json() {
     return {{"address", address},
-            {"expression", expression},
+            {"phrase", phrase},
             {"links", pack_links(links)},
             {"exec", exec},
             {"properties", pack_props(properties)}};

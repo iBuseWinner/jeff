@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 #endif
   
   QCoreApplication::setApplicationName("jeff");
-  QCoreApplication::setApplicationVersion("2.0.3");
+  QCoreApplication::setApplicationVersion("2.1.0");
   
 #ifdef JEFF_WITH_QT_WIDGETS
   QApplication jeff(argc, argv);

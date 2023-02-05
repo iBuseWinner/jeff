@@ -2,6 +2,7 @@
 #define DAEMONPROCESS_H
 
 #include "core-kit/basis.hpp"
+#include "core-kit/history-processor.hpp"
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/extensions/script.hpp"
 #include "core-kit/model/nlp/expression.hpp"
@@ -25,7 +26,8 @@ public:
   /*! @brief Tells if this process is spawned by given extension' metadata. */
   bool is_spawner(ExtensionMeta *e) { return extension_meta == e; }
   static QJsonObject request_output(
-    ScriptMeta *script_meta, const Expression &expression, const QString &input
+    HProcessor *hp, Basis *basis, ScriptMeta *script_meta,
+    const Expression &expression, const QString &input
   );
   QByteArray get_output();
 

@@ -56,17 +56,18 @@ public:
   static constexpr const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   static constexpr const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
 
-  static constexpr const char *isMonologueEnabledSt      = "core-kit/ismonologuemodeenabled";
-  static constexpr const char *isDelayEnabledSt          = "core-kit/isdelayenabled";
-  static constexpr const char *minDelaySt                = "core-kit/mindelay";
-  static constexpr const char *maxDelaySt                = "core-kit/maxdelay";
-  static constexpr const char *isHistoryKeepingEnabledSt = "core-kit/ishistorykeepingenabled";
-  static constexpr const char *isGreetingsEnabledSt      = "core-kit/isgreetingsenabled";
-  static constexpr const char *greetingsMsg              = "core-kit/greetings";
-  static constexpr const char *scenarioExitMsg           = "core-kit/scenarioexitter";
-  static constexpr const char *serverPortSt              = "core-kit/serverport";
-  static constexpr const char *extensionKillSecSt        = "core-kit/extensionkillsec";
-  static constexpr const char *seacrhInDbWhenRepeated    = "core-kit/repeatedexplicitindb";
+  static constexpr const char *isMonologueEnabledSt          = "core-kit/ismonologuemodeenabled";
+  static constexpr const char *isDelayEnabledSt              = "core-kit/isdelayenabled";
+  static constexpr const char *minDelaySt                    = "core-kit/mindelay";
+  static constexpr const char *maxDelaySt                    = "core-kit/maxdelay";
+  static constexpr const char *isHistoryKeepingEnabledSt     = "core-kit/ishistorykeepingenabled";
+  static constexpr const char *isGreetingsEnabledSt          = "core-kit/isgreetingsenabled";
+  static constexpr const char *greetingsMsg                  = "core-kit/greetings";
+  static constexpr const char *scenarioExitMsg               = "core-kit/scenarioexitter";
+  static constexpr const char *serverPortSt                  = "core-kit/serverport";
+  static constexpr const char *extensionKillSecSt            = "core-kit/extensionkillsec";
+  static constexpr const char *seacrhInDbWhenRepeated        = "core-kit/repeatedexplicitindb";
+  static constexpr const char *disableMessagesTransmissionSt = "core-kit/nomessagetransmission";
 
   static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
   static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";

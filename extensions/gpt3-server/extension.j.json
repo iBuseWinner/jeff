@@ -22,7 +22,6 @@
     "https://openai.com/blog/chatgpt/",
     "https://github.com/openai/"
   ],
-  "envs": {},
   "program": "python",
   "args": [
     "gpt3-chat.py",
