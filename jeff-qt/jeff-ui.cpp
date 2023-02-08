@@ -20,7 +20,9 @@ Jeff::Jeff() : QMainWindow() {
     QString("#cw { background-color: %1; }")
     .arg(styling.light_theme ? styling.css_light_wbg : styling.css_dark_wbg)
   );
-  centralWidget->setLayout(VLineLt::another()->margin(6)->spacing()->addw(display)->addw(line));
+  centralWidget->setLayout(VLineLt::another()->margin(6)->spacing()->addw(display)->addlt(
+    HLineLt::another()->spacing()->cmargins(5, 0, 5, 0)->addw(line)
+  ));
   setCentralWidget(centralWidget);
   setMenuBar(menubar);
   connect_all();

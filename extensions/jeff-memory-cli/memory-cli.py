@@ -4,7 +4,7 @@ import json, socket
 
 
 def send_value(k, v):
-  data = json.dumps({"store_values": [{"key": k, "value": v}]}).encode()
+  data = json.dumps({"store_in_memory": {k: v}}).encode()
   try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
       sock.connect(('localhost', 8005))
@@ -14,15 +14,17 @@ def send_value(k, v):
 
 
 def read_value(k):
-  data = json.dumps({"need_values": [k]}).encode()
+  data = json.dumps({"memory_cells": [k]}).encode()
   try:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
       sock.connect(('localhost', 8005))
       sock.sendall(data)
       data = sock.recv(4096)
+      while not len(data):
+        data = sock.recv(4096)
   except ConnectionRefusedError:
     print('\tСервер отключен.')
-  return json.loads(data.decode())['values'][k]
+  return json.loads(data.decode())['memory_values'][k]
 
 
 def main():
@@ -44,4 +46,4 @@ def main():
 try:
   main()
 except KeyboardInterrupt:
-  print('\nЧасы отключены.')
+  print('\nКлиент памяти отключен.')

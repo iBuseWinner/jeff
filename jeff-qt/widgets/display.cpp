@@ -29,9 +29,8 @@ void Display::add_message(Message *message) {
   vt_layout->addw(message);
   /*! If the scroll is approximately below the middle, and the number of
    *  displayed messages is greater than the maximum...  */
-  if ((verticalScrollBar()->value() >
-       ((verticalScrollBar()->minimum() + verticalScrollBar()->maximum()) / 2)) and
-      (message_counter > max_message_amount))
+  auto *vsb = verticalScrollBar();
+  if ((vsb->value() > ((vsb->minimum() + vsb->maximum()) / 2)) and (message_counter > max_message_amount))
     /*! ...we delete all unnecessary messages */
     while (message_counter > max_message_amount) {
       auto *message = all_messages.takeAt(0);
@@ -78,8 +77,7 @@ void Display::start() {
   if (vt_layout) delete vt_layout;
   auto *w = takeWidget();
   if (w) delete w;
-  vt_layout = VLineLt::another()
-    ->spacing()->addi(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
+  vt_layout = VLineLt::another()->spacing()->addi(new QSpacerItem(0, 0, QSizePolicy::Fixed, QSizePolicy::Expanding));
   QWidget *box = new QWidget(this);
   box->setContentsMargins(5, 0, 5, 0);
   box->setObjectName(box_object_name);

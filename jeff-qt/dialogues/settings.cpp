@@ -82,7 +82,7 @@ void Settings::delayChecked() { delayBox.setEnabled(delay.isChecked()); }
 void Settings::greetingsChecked() { greetingsMsg.setEnabled(greetings.isChecked()); }
 /*! @brief Changes maxDelay value, if minDelay value is bigger than that. */
 void Settings::minDelayValueChanged(int value) { 
-  if (minDelay.value() > value) maxDelay.setValue(value); }
+  if (value > maxDelay.value()) maxDelay.setValue(value); }
 /*! @brief Changes minDelay value, if maxDelay value is smaller than that. */
 void Settings::maxDelayValueChanged(int value) {
-  if (maxDelay.value() < value) minDelay.setValue(value); }
+  if (value < minDelay.value()) minDelay.setValue(value); }

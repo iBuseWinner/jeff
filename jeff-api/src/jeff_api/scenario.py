@@ -76,7 +76,7 @@ class Scenario:
     if not self.init or self.nis:
       return None
     j = {"memory_cells": keys_arr}
-    j = Scenario._decode_json(self._accept(Scenario._encode_json(j), buffer_size))
+    j = Scenario._decode_json(self.cli._accept(Scenario._encode_json(j), buffer_size))
     if "memory_values" not in j:
       return None
     else:

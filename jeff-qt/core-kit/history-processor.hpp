@@ -16,7 +16,7 @@ class HProcessor : public QObject {
 public:
   // Functions:
   /*! @brief The constructor. */
-  HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent) { basis = _basis; }
+  HProcessor(Basis *_basis, QObject *parent = nullptr) : QObject(parent), basis(_basis) {}
 
   // Functions described in `history-processor.cpp`:
   void load(const QString &filename = QString());

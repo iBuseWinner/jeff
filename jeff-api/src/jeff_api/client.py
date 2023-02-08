@@ -19,6 +19,8 @@ class Client:
         sock.connect((self.ip, self.socket_port))
         sock.sendall(data)
         data = sock.recv(buffer_size)
+        while not len(data):
+          data = sock.recv(buffer_size)
     except ConnectionRefusedError:
       print('Jeff\'s socket is disabled.')
     return data
