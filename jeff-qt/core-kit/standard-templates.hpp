@@ -16,10 +16,8 @@
 #include "core-kit/history-processor.hpp"
 #include <QString>
 
-/*!
- * @class StandardTemplates
- * @brief Provides some kinds of widgets by command.
- */
+/*! @class StandardTemplates
+ *  @brief Provides some kinds of widgets by command.  */
 class StandardTemplates : public QObject {
   Q_OBJECT
 public:

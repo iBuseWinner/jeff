@@ -9,7 +9,7 @@
 #include <QString>
 
 /*! @class Expression
- *  @brief Contains information about a single expression of NLPmodule.  */
+ *  @brief Contains information about a single expression of JCK module.  */
 class Expression {
 public:
   // Objects:

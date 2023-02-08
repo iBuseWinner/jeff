@@ -22,11 +22,9 @@
 #include <QThread>
 #include <QTime>
 
-/*!
- * @class JeffCoreKit @aka JCK
- * @brief Looks for regular expressions in user input and displays answers to them.
- * @sa Basis, JCKController
- */
+/*! @class JeffCoreKit @aka JCK
+ *  @brief Looks for regular expressions in user input and displays answers to them.
+ *  @sa Basis, JCKController  */
 class JCK : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(JCK)

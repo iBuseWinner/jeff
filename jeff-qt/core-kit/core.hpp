@@ -17,12 +17,10 @@
 #include <QPair>
 #include <QTimer>
 
-/*!
- * @class Core
- * @brief Controls I/O.
- * @details Manages objects associated with receiving messages from different sources.
- * @sa Basis, HProcessor, NLPmodule, StdTemplates, MessageMeta
- */
+/*! @class Core
+ *  @brief Controls I/O.
+ *  @details Manages objects associated with receiving messages from different sources.
+ *  @sa Basis, HProcessor, JCK && JCKController, StandardTemplates, MessageMeta  */
 class Core : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Core)

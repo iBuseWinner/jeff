@@ -7,7 +7,7 @@
  *  @brief Contains cached response expressions.  */
 typedef QList<Expression> Cache;
 
-/*! @typedef CacheWithIndices
+/*! @typedef CoverageCache
  *  @brief Contains cached response expressions and their indexes in user input.  */
 typedef QList<ExpressionCoverage> CoverageCache;
 

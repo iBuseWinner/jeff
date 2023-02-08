@@ -5,7 +5,7 @@
 #include <QString>
 
 /*! @typedef Options
- *  @brief QMap (option_name, option_value) (uses in @a PythonModule and other modules). */
+ *  @brief QMap (option_name, option_value) (used by Phrases). */
 typedef QMap<QString, QString> Options;
 
 #endif

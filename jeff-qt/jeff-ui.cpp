@@ -1,15 +1,13 @@
 #include "jeff-ui.hpp"
 
-/*!
- * @brief The constructor.
- * @details Layout scheme:
- * <--------------->
- * [    Display    ]
- * {  Scroll area  }
- * [     Line      ]
- * {Text line}{Send}
- * <--------------->
- */
+/*! @brief The constructor.
+ *  @details Layout scheme:
+ *  <--------------->
+ *  [    Display    ]
+ *  {  Scroll area  }
+ *  [     Line      ]
+ *  {Text line}{Send}
+ *  <--------------->  */
 Jeff::Jeff() : QMainWindow() {
   setWindowIcon(QIcon(":/arts/icons/2000/icon.png"));
   setWindowTitle(tr("Jeff"));
@@ -27,6 +25,45 @@ Jeff::Jeff() : QMainWindow() {
   setMenuBar(menubar);
   connect_all();
   apply_settings();
+}
+
+/*! @brief Establishes communications for user interaction through the window. */
+void Jeff::connect_all() {
+  // menubar
+  connect(&(menubar->full_screen_action), &QAction::triggered, this, &Jeff::full_screen_handler);
+  connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
+  connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
+  connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
+  connect(menubar, &MenuBar::exit_triggered, this, [this] { close(); });
+  connect(menubar, &MenuBar::stop_scenario_triggered, this, [this] { emit send((*basis)[basis->scenarioExitMsg].toString()); });
+  // others
+  connect(&(line->send_button), &Button::clicked, this, &Jeff::user_input_handler);
+  connect(this, &Jeff::ready_state, core, &Core::start);
+  connect(this, &Jeff::send, core, &Core::got_message_from_user);
+  connect(core, &Core::show, display, &Display::add_message_by_md);
+  connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
+  connect(core, &Core::show_status, display, &Display::update_status);
+  connect(history_processor, &HProcessor::history_loaded, display, &Display::start_by);
+}
+
+/*! @brief Reads the settings from the file and applies them. */
+void Jeff::apply_settings() {
+  /*! If settings file does not exist, sets default settings. */
+  if (not basis->exists() or not basis->correct()) {
+    resize(defaultWidth, defaultHeight);
+    emit send(basis->first_start_cmd);
+    basis->write(basis->isGreetingsEnabledSt, true);
+    basis->write(basis->greetingsMsg, tr("Hello!"));
+    basis->write(basis->scenarioExitMsg, "//e");
+    basis->write(basis->serverPortSt, 8005);
+    save_window_settings();
+    return;
+  }
+  resize((*basis)[basis->sizeSt].toSize());
+  menubar->full_screen_action.setChecked((*basis)[basis->isFullScreenSt].toBool());
+  emit menubar->full_screen_action.triggered();
+  menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
+  menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueEnabledSt].toBool());
 }
 
 /*! @brief Handles keyboard shortcuts. */
@@ -56,26 +93,6 @@ void Jeff::closeEvent(QCloseEvent *event) {
   event->accept();
 }
 
-/*! @brief Reads the settings from the file and applies them. */
-void Jeff::apply_settings() {
-  /*! If settings file does not exist, sets default settings. */
-  if (not basis->exists() or not basis->correct()) {
-    resize(defaultWidth, defaultHeight);
-    emit send(basis->first_start_cmd);
-    basis->write(basis->isGreetingsEnabledSt, true);
-    basis->write(basis->greetingsMsg, tr("Hello!"));
-    basis->write(basis->scenarioExitMsg, "//e");
-    basis->write(basis->serverPortSt, 8005);
-    save_window_settings();
-    return;
-  }
-  resize((*basis)[basis->sizeSt].toSize());
-  menubar->full_screen_action.setChecked((*basis)[basis->isFullScreenSt].toBool());
-  emit menubar->full_screen_action.triggered();
-  menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
-  menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueEnabledSt].toBool());
-}
-
 /*! @brief Writes changes to window settings to a file. */
 void Jeff::save_window_settings() {
   if (not basis->accessible()) return;
@@ -84,25 +101,6 @@ void Jeff::save_window_settings() {
   basis->write(basis->isFullScreenSt, isFullScreen());
   basis->write(basis->isNotFirstStartSt, true);
   basis->write(basis->isMonologueEnabledSt, menubar->enable_monologue_mode.isChecked());
-}
-
-/*! @brief Establishes communications for user interaction through the window. */
-void Jeff::connect_all() {
-  // menubar
-  connect(&(menubar->full_screen_action), &QAction::triggered, this, &Jeff::full_screen_handler);
-  connect(menubar, &MenuBar::clear_history_triggered, this, &Jeff::clear);
-  connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
-  connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
-  connect(menubar, &MenuBar::exit_triggered, this, [this] { close(); });
-  connect(menubar, &MenuBar::stop_scenario_triggered, this, [this] { emit send((*basis)[basis->scenarioExitMsg].toString()); });
-  // others
-  connect(&(line->send_button), &Button::clicked, this, &Jeff::user_input_handler);
-  connect(this, &Jeff::ready_state, core, &Core::start);
-  connect(this, &Jeff::send, core, &Core::got_message_from_user);
-  connect(core, &Core::show, display, &Display::add_message_by_md);
-  connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
-  connect(core, &Core::show_status, display, &Display::update_status);
-  connect(history_processor, &HProcessor::history_loaded, display, &Display::start_by);
 }
 
 /*! @brief Shows a window in full screen or in normal mode. */
