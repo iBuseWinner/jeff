@@ -23,7 +23,7 @@
 #include <QTime>
 
 /*! @class JeffCoreKit @aka JCK
- *  @brief Looks for regular expressions in user input and displays answers to them.
+ *  @brief Looks for phrases in user input and answers to them.
  *  @sa Basis, JCKController  */
 class JCK : public QObject {
   Q_OBJECT

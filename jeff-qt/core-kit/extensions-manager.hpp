@@ -25,7 +25,7 @@
 #include <QString>
 #include <QVariantMap>
 
-/*! @typedef Daemons
+/*! @typedef RunningExtensions
  *  @brief List of working daemons.  */
 typedef QList<DaemonProcess *> RunningExtensions;
 

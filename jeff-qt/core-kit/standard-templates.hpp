@@ -17,7 +17,7 @@
 #include <QString>
 
 /*! @class StandardTemplates
- *  @brief Provides some kinds of widgets by command.  */
+ *  @brief Provides some kinds of widgets and operations by command in user input.  */
 class StandardTemplates : public QObject {
   Q_OBJECT
 public:

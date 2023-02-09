@@ -32,17 +32,15 @@ struct ScenarioServerMeta {
   QString auth_key;
 };
 
-/*!
- * @class Basis
- * @brief Provides methods for intra-component work.
- * @details Basis does a lot of important things:
+/*! @class Basis
+ *  @brief Provides methods for intra-component work.
+ *  @details Basis does a lot of important things:
  *   - provides identifiers for saving settings
  *   - reads and writes a list of sources, settings and message history
  *   - stores a list of sources and cached expressions
  *   - checks the settings file for errors
  *   - stores context and memory map.
- * @sa SQLite, Json, PythonModule, NLPmodule, QSettings
- */
+ *  @sa SQLite, Json, PythonModule, NLPmodule, QSettings  */
 class Basis : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Basis)

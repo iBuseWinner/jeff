@@ -11,7 +11,7 @@
 #include <QString>
 
 /*! @class Phrase
- *  @brief Contains information about a representation of a sentence in SQL database.  */
+ *  @brief Represents a sentence in SQL database.  */
 class Phrase {
 public:
   // Objects:

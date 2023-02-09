@@ -50,7 +50,7 @@ Address - a unique phrase number in this table. The `links` column lists, separa
 
 *Example 3.* Let the table `t1` contain two expressions with the same activators, which, nevertheless, have different additional properties. *If you want to process them and compose the response yourself,* write your own implementation of the composer in Python and include it in Jeff. *And if you also want to scan sources yourself or even connect your own sources,* write your own implementation of the scanner in Python and connect it too.
 
-### Complete set of conditions for the selection of candidates
+### <a name="select_candidates">Complete set of conditions for the selection of candidates</a>
 
 Expressions compete with each other for the right to be a reagent for a given activator. There are the following conditions for choosing an expression (in descending order of importance):
 

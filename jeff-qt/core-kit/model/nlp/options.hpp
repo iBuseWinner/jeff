@@ -1,5 +1,5 @@
-#ifndef NLPOPTIONS_H
-#define NLPOPTIONS_H
+#ifndef PHRASE_OPTIONS_H
+#define PHRASE_OPTIONS_H
 
 #include <QMap>
 #include <QString>

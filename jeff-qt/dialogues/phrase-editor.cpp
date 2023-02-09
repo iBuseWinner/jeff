@@ -1,29 +1,27 @@
 #include "phrase-editor.hpp"
 
-/*! 
- * @brief The constructor. 
- * @details Overview layout scheme:
- * <--------------->
- * {   Select db   }
- * { Select  table }
- * [  Phrase list  ]
- * <      Tip      >
- * [ New ] [ Close ]
- * <--------------->
- * @details Brief layout scheme:
- * <--------------->
- * {  Phrase text  }
- * [ Edit this one ]
- * [ Pre- ][ Post- ]
- * [Add...][ Add...]
- * [    <  Back    ]
- * <--------------->
- * @details Selector layout scheme:
- * <--------------->
- * [  Phrase list  ]
- * [    <  Back    ]
- * <--------------->
- */
+/*! @brief The constructor. 
+ *  @details Overview layout scheme:
+ *  <--------------->
+ *  {   Select db   }
+ *  { Select  table }
+ *  [  Phrase list  ]
+ *  <      Tip      >
+ *  [ New ] [ Close ]
+ *  <--------------->
+ *  @details Brief layout scheme:
+ *  <--------------->
+ *  {  Phrase text  }
+ *  [ Edit this one ]
+ *  [ Pre- ][ Post- ]
+ *  [Add...][ Add...]
+ *  [    <  Back    ]
+ *  <--------------->
+ *  @details Selector layout scheme:
+ *  <--------------->
+ *  [  Phrase list  ]
+ *  [    <  Back    ]
+ *  <--------------->  */
 PhraseEditor::PhraseEditor(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
     : Dialog(mhandler, parent), basis(_basis) {
   setFixedWidth(490);

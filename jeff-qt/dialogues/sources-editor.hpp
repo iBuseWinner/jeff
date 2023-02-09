@@ -36,11 +36,11 @@ private:
   CreateSourceDialog *create_source_dialog = nullptr;
   List *source_list = nullptr;
   GridLt *layout = nullptr;
-  Button *source_actions = nullptr;
+  Button *source_actions_btn = nullptr;
   QAction *add_source = nullptr;
   QAction *create_source = nullptr;
   QAction *remove_source = nullptr;
-  Button *save_and_close = nullptr;
+  Button *save_and_close_btn = nullptr;
   QAction *cancel = nullptr;
   bool edited = false;
 
@@ -51,9 +51,9 @@ private:
   void connector();
   void append(Sources sources);
   void appendSingle(Source source);
-  void sncl();
-  void openCS();
-  void closeCS();
+  void save_and_close();
+  void open_create_source();
+  void close_create_source();
   void load();
 };
 

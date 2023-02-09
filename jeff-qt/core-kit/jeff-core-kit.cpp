@@ -59,7 +59,8 @@ CoverageCache JCK::get_from_json(const QJsonArray &array) {
   return ccache;
 }
 
-/*! @brief Matches the answer based on the input. */
+/*! @brief Matches the answer based on the input. 
+ *  TBD And what happens if `scanner` turns out to be program?  */
 void JCK::search_for_suggests(const QString &input) {
   Yellog::Trace("Searching in JCK now: %s", input.toStdString().c_str());
   CoverageCache selection;
@@ -75,7 +76,10 @@ void JCK::search_for_suggests(const QString &input) {
     } else if (json_object.contains(basis->selectionWk)) {
       auto selection_arr = json_object[basis->selectionWk].toArray();
       selection = get_from_json(selection_arr);
-    } else return;
+    } else {
+      emit empty(input);
+      return;
+    }
   } else {
     /*! @details If user sent the same message as previous one, we should update cache from database and unset use cases counter.
      *  @note Only when setting is setted.  */

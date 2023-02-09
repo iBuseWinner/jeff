@@ -12,7 +12,7 @@
 #include <ncurses.h>
 #include <thread>
 
-/*! @mainclass Jeff
+/*! @class Jeff
  *  @brief Application class.  */
 class Jeff : public QObject {
   Q_OBJECT

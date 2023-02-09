@@ -5,18 +5,12 @@
 #include <QJsonObject>
 #include <QString>
 
-/*!
- * @enum Author
- * @brief Enumeration of possible authors of messages.
- * @sa MessageMeta
- */
+/*! @enum Author
+ *  @brief Enumeration of possible authors of messages.  */
 enum Author { undefA, Jeff, User };
 
-/*!
- * @enum ContentType
- * @brief Enumeration of possible content types.
- * @sa MessageMeta
- */
+/*! @enum ContentType
+ *  @brief Enumeration of possible content types.  */
 enum ContentType {
   undefC,
   Text,
@@ -28,18 +22,12 @@ enum ContentType {
   Widget
 };
 
-/*!
- * @enum Theme
- * @brief Enumeration of possible message themes for Display.
- * @sa MessageMeta
- */
+/*! @enum Theme
+ *  @brief Enumeration of possible message themes for Display.  */
 enum Theme { undefT, Std, White, Black, Red, Green, Blue, Yellow };
 
-/*!
- * @class MessageMeta
- * @brief Contains the message and its properties.
- * @sa Author, ContentType, Theme
- */
+/*! @class MessageMeta
+ *  @brief Contains the message and its properties.  */
 class MessageMeta {
 public:
   /*! Constructors. */

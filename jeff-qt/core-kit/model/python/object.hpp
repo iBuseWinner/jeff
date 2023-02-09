@@ -15,10 +15,10 @@ public:
   
   operator PyObject*() { return object; }
   PyObject* operator->() { return object; }
-	PyObject* operator=(PyObject* object2) { object = object2; return object; }
-	bool is() { return object ? true : false; }
-	operator bool() { return object ? true : false; }
-	PyObject *get() { return object; }
+  PyObject* operator=(PyObject* object2) { object = object2; return object; }
+  bool is() { return object ? true : false; }
+  operator bool() { return object ? true : false; }
+  PyObject *get() { return object; }
   
 private:
   PyObject *object = nullptr;

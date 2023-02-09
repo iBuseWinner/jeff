@@ -4,10 +4,8 @@
 #include <QJsonObject>
 #include <QString>
 
-/*!
- * @class Source
- * @brief Contains data about the source of regular expressions for the NLPmodule.
- */
+/*! @class Source
+ *  @brief Contains data about a source of phrases for the JCK.  */
 class Source {
 public:
   // Objects:
@@ -49,10 +47,6 @@ public:
   }
 };
 
-/*!
- * @typedef Sources
- * @brief Contains list of sources.
- */
 typedef QList<Source> Sources;
 
 #endif
