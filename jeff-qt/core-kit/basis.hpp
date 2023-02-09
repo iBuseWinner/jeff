@@ -127,15 +127,6 @@ public:
   Cacher *cacher = nullptr; /*!< Cache handler.  */
 
   // Functions:
-  /*! @brief The constructor. */
-  Basis(QObject *parent = nullptr) : QObject(parent) {
-    json = new Json(get_settings_path(), this); /*!< @details Json object will be created first 'cause it inits yelloger. */
-    sql = new SQLite(this);
-    cacher = new Cacher(this);
-    load_sources();
-    load_memory();
-  }
-
   /*! @brief The destructor. */
   ~Basis() { save_memory(); }
 
@@ -161,6 +152,7 @@ public:
   inline QString get_settings_path() { return QFileInfo(_settings.fileName()).absolutePath(); }
 
   // Functions described in `basis.cpp`:
+  Basis(QObject *parent = nullptr);
   void write(const QString &key, const QVariant &data);
   void check_settings_file();
   void check_default_source();

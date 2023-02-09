@@ -1,15 +1,13 @@
 #include "sources-editor.hpp"
 
-/*!
- * @brief The constructor.
- * @details Layout scheme:
- * <----------------------->
- * [     Sources  list     ]
- * [Add button][S&C  button]
- * {|> Create }
- * {|> Remove }
- * <----------------------->
- */
+/*! @brief The constructor.
+ *  @details Layout scheme:
+ *  <----------------------->
+ *  [     Sources  list     ]
+ *  [Add button][S&C  button]
+ *  {|> Create }
+ *  {|> Remove }
+ *  <----------------------->  */
 SourcesEditor::SourcesEditor(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
     : Dialog(mhandler, parent), basis(_basis) {
   setObjectName(object_name);

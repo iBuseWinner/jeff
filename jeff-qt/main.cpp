@@ -4,7 +4,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2018-2022 Mark CDA, Shamshin Victor
+ * Copyright (c) 2018-2023 Mark CDA, Shamshin Victor
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,8 +62,8 @@ int main(int argc, char *argv[]) {
 #endif
   
   auto *jeff_locals = new QTranslator(&jeff);
-  jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());
-  jeff.installTranslator(jeff_locals);
+  bool found = jeff_locals->load(":/l10n/jeff_" + QLocale::system().name());
+  if (found) jeff.installTranslator(jeff_locals);
   
 #ifdef JEFF_WITH_QT_WIDGETS
   class Jeff jeff_window;

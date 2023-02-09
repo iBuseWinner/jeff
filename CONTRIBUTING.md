@@ -7,7 +7,7 @@
 3. If possible, it is better to fit the construction in one line or without curly braces. The opening curly brace should ideally be on the same line as the declaration or construct.
 4. Variables should have understandable names, otherwise the variables should only help in solving the problem and disappear instantly.
 5. It's better to write `TBD` in a comment than to never write a comment.
-6. If there are many similar designs, it is better to align them.
+6. If there are many similar things, it is better to align them.
 
 ### Comments in Jeff Qt
 
@@ -19,7 +19,7 @@ Functions and methods are commented like this:
 /*! @brief Comment text. */
 
 /*! @brief One more comment text.
- * @details You can reveal the details of the work and / or purpose. */
+ *  @details You can reveal the details of the work and/or purpose.  */
 ```
 
 Class constructors and destructors are almost always commented without a description:

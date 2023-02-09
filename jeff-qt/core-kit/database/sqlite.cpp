@@ -602,7 +602,7 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   auto execColumnValid = true;
   execColumnValid &= query.value(1).toString() == "exec";
   execColumnValid &= query.value(2).toString() == "INTEGER";
-  execColumnValid &= query.value(3).toString() == 1;
+  execColumnValid &= query.value(3).toInt() == 1;
   if (not execColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
                   "of \"exec\" INTEGER NOT NULL. %s", db_source_suffix.toStdString().c_str());

@@ -13,7 +13,6 @@
 #include <QJsonParseError>
 #include <QProcess>
 #include <QProcessEnvironment>
-#include <QRegExp>
 #include <QStringList>
 
 class DaemonProcess : public QProcess {

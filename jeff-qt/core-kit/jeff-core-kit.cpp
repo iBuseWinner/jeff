@@ -323,7 +323,7 @@ CoverageCache JCK::select_from_db(const QString &input) {
                     ec.expression.reagent_text.toStdString().c_str());
       for (auto key : ec.coverage_indices.keys()) { Yellog::Trace("\t\tIts indices are %d-%d.", key, ec.coverage_indices[key]); }
       // Appending source weight:
-      ec.expression.properties["weight"] = ec.expression.weight() + sources[i].weight;
+      ec.expression.properties["weight"] = QString::number(ec.expression.weight() + sources[i].weight);
       // Removing duplicates:
       for (auto _ec : selection) if (_ec.expression == ec.expression) continue;
       // Inserting in cache:

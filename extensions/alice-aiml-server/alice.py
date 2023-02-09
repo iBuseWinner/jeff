@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
-import aiml, asyncio, json, os.path, locale, argparse, signal, sys, uuid
+import aiml, asyncio, json, os.path, argparse, signal, sys, uuid
 from jeff_api import client, server
-
-lang, _ = locale.getdefaultlocale()
 
 parser = argparse.ArgumentParser(description="Alice AIML is an extension that integrates the PyAIML processor into Jeff.")
 parser.add_argument("extension_port", type=int, help="extension's server port")
@@ -15,14 +13,15 @@ extension_port = args.extension_port
 jeff_port = args.jeff_port
 verbose = args.verbose
 
+srv = server.Server(None, extension_port)
+cli = client.Client('localhost', jeff_port)
+lang = cli.read_cells(['jeff-lang'])['memory_values']['jeff-lang']
 
 def main():
-  srv = server.Server(None, extension_port)
-  cli = client.Client('localhost', jeff_port)
   aiml_kernel = aiml.Kernel()
   aiml_kernel.setTextEncoding(None)
   load_status_id = str(uuid.uuid4())
-  cli.send_status(load_status_id, '*[Alice] Waiting...*' if lang != 'ru_RU' else '*[Alice] Ожидание...*')
+  cli.send_status(load_status_id, '*[Alice] Waiting...*' if lang != 'ru' else '*[Alice] Ожидание...*')
   if os.path.isfile('brain.brn') and os.path.isfile('sessions.brn'):
     aiml_kernel.bootstrap(brainFile='brain.brn', sessionsFile='sessions.brn')
   else:
@@ -30,7 +29,7 @@ def main():
     aiml_kernel.bootstrap(learnFiles="startup.xml", commands="load alice", chdir=current_path)
     current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
     aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
-  cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru_RU' else '[Alice] Ядро готово к работе.')
+  cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
   
   class Responder:
     def __init__(self, aiml_kernel):
@@ -60,4 +59,4 @@ def main():
 try:
   main()
 except KeyboardInterrupt:
-  print('\nДемон AIML отключен.' if lang != 'ru_RU' else '\nAIML daemon is off.')
+  print('\nДемон AIML отключен.' if lang != 'ru' else '\nAIML daemon is off.')

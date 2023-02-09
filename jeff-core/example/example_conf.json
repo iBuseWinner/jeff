@@ -2,13 +2,5 @@
   "pg": "host=localhost user='username' password='pass' connect_timeout=10 keepalives=0",
   "admin_key": "7016954044713488495610357872868821215871528863508495594769251880",
   "hyper_addr": "0.0.0.0:55219",
-  "daemons": [
-    {
-      "cmd": "/usr/local/jeff-core/vosk-daemon"
-    },
-    {
-      "cmd": "/usr/local/jeff-core/chatgpt-server",
-      "server": "0.0.0.0:55220"
-    }
-  ]
+  "daemons": []
 }

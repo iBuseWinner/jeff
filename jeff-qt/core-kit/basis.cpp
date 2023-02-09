@@ -1,5 +1,18 @@
 #include "basis.hpp"
 
+/*! @brief The constructor. */
+Basis::Basis(QObject *parent) : QObject(parent) {
+  json = new Json(get_settings_path(), this); /*!< @details Json object will be created first 'cause it inits yelloger. */
+  sql = new SQLite(this);
+  cacher = new Cacher(this);
+  load_sources();
+  load_memory();
+  // Setting the `jeff-lang` value:
+  auto l = QLocale::system().name();
+  l.truncate(2);
+  memory("jeff-lang", l);
+}
+
 /*! @brief Checks the settings file for any errors. */
 void Basis::check_settings_file() {
   if (not accessible()) {
