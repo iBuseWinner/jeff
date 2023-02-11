@@ -31,9 +31,13 @@ def wiki_navigator(query, at_words):
       scn.send_msg(msg)
     except wiki.DisambiguationError as e:
       if verbose: print('Several options')
-      variants = str(e).split('\n')
-      variants[0] = 'Select one of these articles:' if lang != 'ru' else 'Выберите одну из этих статей:'
-      msg = '\n'.join(['. '.join(str(i), variants[i]) for i in range(1, len(variants))])
+      # variants = str(e).split('\n')
+      variants = wiki.search(query, results=10, suggestion=True)
+      if verbose: print(variants[1])
+      variants = [v for v in variants[0]]
+      ep = 'Select one of these articles:' if lang != 'ru' else 'Выберите одну из этих статей:'
+      variants = [ep] + variants
+      msg = '\n'.join([variants[0]] + ['. '.join([str(i), variants[i]]) for i in range(1, len(variants))])
       scn.send_msg(msg)
       op = scn.wait()
       if not op.isdigit():
@@ -44,8 +48,12 @@ def wiki_navigator(query, at_words):
         scn.terminate()
         return
       query = variants[op]
-      msg = wiki.summary(query)
-      scn.send_msg(msg)
+      try:
+        msg = wiki.summary(query)
+        scn.send_msg(msg)
+      except:
+        scn.terminate()
+        return
     scn.send_msg('Want to know more? (y/[n])' if lang != 'ru' else 'Хотите узнать больше? (y/[n])')
     op = scn.wait()
     if verbose: print(op)
@@ -55,10 +63,17 @@ def wiki_navigator(query, at_words):
       return
     page = wiki.page(query)
     msg = page.content
+    if len(msg) > 8000:
+      for i in range((len(msg) // 8000) - 1):
+        tmp = msg[ : 8000]
+        scn.send_msg(tmp)
+        msg = msg[8000 : ]
     scn.send_msg(msg, last=True)
   except scenario.ScenarioTerminatedException:
     pass
   except scenario.ScenarioNotStartedException:
+    pass
+  except wiki.exceptions.PageError:
     pass
 
 

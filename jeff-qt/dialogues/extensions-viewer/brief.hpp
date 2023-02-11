@@ -4,7 +4,10 @@
 #include "core-kit/extensions-manager.hpp"
 #include "core-kit/extensions/extension.hpp"
 #include "widgets/button.hpp"
+#include "widgets/menu.hpp"
 #include "widgets/layouts/linears.hpp"
+#include <QAction>
+#include <QClipboard>
 #include <QLabel>
 #include <QSpacerItem>
 #include <QTimer>

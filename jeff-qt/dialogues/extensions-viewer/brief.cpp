@@ -10,8 +10,23 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
   desc_lbl.setTextFormat(Qt::RichText);
   desc_lbl.setWordWrap(true);
   authors_lbl.setTextFormat(Qt::RichText);
+  authors_lbl.setTextInteractionFlags(Qt::TextSelectableByMouse);
+  authors_lbl.setContextMenuPolicy(Qt::CustomContextMenu);
+  auto *copy_text_action = new QAction(
+    QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy selected text"), this
+  );
+  connect(copy_text_action, &QAction::triggered, this, [this] {
+    auto *clipboard = QGuiApplication::clipboard();
+    clipboard->setText(authors_lbl.selectedText());
+  });
+  auto *context_menu = new Menu(this);
+  context_menu->addAction(copy_text_action);
+  connect(&authors_lbl, &QLabel::customContextMenuRequested, this, [this, context_menu] {
+    context_menu->exec(QCursor::pos());
+  });
   license_lbl.setTextFormat(Qt::RichText);
   links_lbl.setTextFormat(Qt::RichText);
+  links_lbl.setContextMenuPolicy(Qt::NoContextMenu);
   status_lbl.setTextFormat(Qt::RichText);
   status_lbl.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);

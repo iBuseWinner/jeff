@@ -40,11 +40,11 @@ Jeff uses the SQLite portable database format. Each individual database must hav
 
 Each individual source is listed in the `sources` table and created with the query: `CREATE TABLE "table_name" ("address" integer NOT NULL UNIQUE, "phrase" text, "links" text, "exec" integer NOT NULL, "adprops" TEXT, PRIMARY KEY("address" AUTOINCREMENT))`.
 
-Address - a unique phrase number in this table. The `links` column lists, separated by commas, the addresses of phrases for which this phrase is an activator. In other words, if the current phrase occurs in the user's input, Jeff will respond to him with those phrases whose addresses are indicated in the `links` column of the current phrase.
+Address is a unique phrase number in this table. The `links` column lists, separated by commas, the addresses of phrases for which this phrase is an activator. In other words, if the current phrase occurs in the user's input, Jeff will respond to him with those phrases whose addresses are indicated in the `links` column of the current phrase.
 
 #### Properties `weight` and `adprops` in action
 
-*Example 1.* Let the `t1` table contain an expression that looks for the `Turn on the TV` activator and issue the `Good!` reagent on it, while the `t2` table contains an expression that launches the script for turning on the TV on exactly the same activator. *There are two options for improving the output of the second expression:* you can set the weight for the table (so that all expressions from this table acquire such a weight), or you can set the weight for a specific expression (the `adprops` field stores JSON, the weight is set as an integer).
+*Example 1.* Let the `t1` table contain an expression that looks for the `Turn on the TV` activator and issue the `Good!` reagent on it, while the `t2` table contains an expression that launches the script for turning on the TV on exactly the same activator. *There are three options for improving the output of the second expression:* you can set the weight for the table (so that all expressions from this table acquire such a weight), or you can set the weight for a specific expression (the `adprops` field stores JSON, the weight is set as an integer), or you also can set `consonant` additional property to `true`, and your message will be always used in Jeff output.
 
 *Example 2.* Let there be an expression in table `t1` that looks for the `Turn on the light in the bedroom` activator, while there is another expression that looks for the `Turn on the light in the kitchen` activator. If the user enters `Turn on the light` or even `Turn on the lights` twice, the first time a random light will turn on, and the second time another light will turn on. This will happen because the percentage of `total_POC` input covered by both the first and second activators will be equal, and other things being equal, a random expression is chosen. But then the expression that was used less often than the others is always selected. In this way, a uniform use of the cache is achieved. *If you want to set one expression as the preferred expression in case of incomplete activation,* set its weight one or more units higher.
 
@@ -150,6 +150,8 @@ insert into "source" values ('x+1', '{
   "stype": 1
 }', '', '1', '');
 ```
+
+**Note** that you should replace `x` and `x+1` with unique addresses (not necessarily different by one).
 
 And this can be easily done inside Jeff: the Qt version supports creating and editing React scripts.
 
@@ -278,7 +280,7 @@ Accordingly, if your extension wants to store something in Jeff, it should send 
 {"store_in_memory": {"some_key": "some value, even decimal, double, boolean, object or array"}}
 ```
 
-Scripts, if specified in their JSON configuration, can also request a list of memory values and set new values, as well as receive additional properties specified in the phrase containing the script, the input of the user who called this script, and additionally a certain number of messages from the history (but first look at [parameter 11](#usable_settings)).
+Scripts, if specified in their JSON configuration, *can also request a list of memory values and set new values*, as well as receive additional properties specified in the phrase containing the script, the input of the user who called this script, and additionally a certain number of messages from the history (but first look at [parameter 11](#usable_settings)).
 
 Also, scripts cannot request something while they are being executed, so their scope is often limited. On the other hand, this is for the best; in addition, Jeff Qt supports the execution of scripts written in Python using a built-in interpreter, so it is guaranteed that if Jeff is built for the target platform, Python scripts will be executed on it.
 
@@ -294,7 +296,7 @@ Yes, there is a way, and it's called a scenario. An extension can run its own sc
 
 There are 3 stages of the scenario:
 
-1. Send JSON including any of the above fields (`send` or others, `memory_cells` and `store_in_memory`) if needed, and include three more fields: `"sready": true, "saddr": "socket address- extension server", "sport": "extension server socket port (as a number)"`.  
+1. Send JSON including any of the above fields (`send` or others, `memory_cells` and `store_in_memory`) if needed, and include three more fields: `"sready": true, "saddr": "extension server socket address", "sport": "extension server socket port (as a number)"`.  
 *For example,* if your extension is using localhost server with port 15239, add these fields: `"sready": true, "saddr": "", "sport": 15239`.  
 Immediately after that, a message with the token `stoken` will be sent to your server. This token must be sent in the second and third steps of the scenario.
 2. Form a message including your next message and the values `{"stoken": "token", "scontinue": true}` to continue the scenario.
@@ -318,6 +320,14 @@ scn = scenario.Scenario(cli, srv)
 ## Building and running
 
 ### `jeff-qt`
+
+Dependencies:
+
+| Dependency | Supported version |
+| ---------- | ----------------- |
+| Qt         | >=5.14.x          |
+| Python     | >=3.6             |
+| ncurses    | >=6.4             |
 
 Building:
 

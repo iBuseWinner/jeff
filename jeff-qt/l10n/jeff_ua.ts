@@ -139,6 +139,10 @@
         <source>Control</source>
         <translation>Управління</translation>
     </message>
+    <message>
+        <source>Copy selected text</source>
+        <translation>Копіювати виділений текст</translation>
+    </message>
 </context>
 <context>
     <name>ExtensionsViewerCard</name>

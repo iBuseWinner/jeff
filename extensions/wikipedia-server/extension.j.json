@@ -7,6 +7,12 @@
       "contacts": {
         "telegram": "@markcda"
       }
+    },
+    {
+      "author": "Martin Majlis",
+      "contacts": {
+        "email": "martin@majlis.cz"
+      }
     }
   ],
   "license": "MIT",
