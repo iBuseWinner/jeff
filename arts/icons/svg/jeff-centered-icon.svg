@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="512"
+   height="512"
+   viewBox="0 0 135.46666 135.46667"
+   version="1.1"
+   id="svg10167"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   sodipodi:docname="Jeff (centered icon).svg"
+   inkscape:export-filename="/home/markcda/Документы/Творческая Корпорация/02. CRB - Cerber Cyber Agency (IT)/Проекты/02. CC Jeff (чат-бот)/Арты/2022.01.15 - Jeff (at glance)/Эксперименты с цветами/Jeff (centered icon).png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview10169"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="0.69922028"
+     inkscape:cx="447.64148"
+     inkscape:cy="237.4073"
+     inkscape:window-width="1366"
+     inkscape:window-height="739"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <defs
+     id="defs10164">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1135"
+       id="linearGradient1137"
+       x1="157.06686"
+       y1="114.20041"
+       x2="348.19971"
+       y2="397.80078"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.26458333,0,0,0.26458333,1.0217951,1e-6)" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1135">
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1"
+         offset="0"
+         id="stop1131" />
+      <stop
+         style="stop-color:#fffe00;stop-opacity:0.98823529"
+         offset="1"
+         id="stop1133" />
+    </linearGradient>
+  </defs>
+  <g
+     inkscape:label="Слой 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g10791"
+       transform="matrix(1.527578,0,0,1.527578,-35.734617,-35.734617)">
+      <path
+         id="path1035"
+         style="font-weight:bold;font-size:105.833px;line-height:1.25;font-family:'IBM Plex Sans';-inkscape-font-specification:'IBM Plex Sans Bold';text-align:end;text-anchor:end;fill:#000000;fill-opacity:1;stroke:url(#linearGradient1137);stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none"
+         d="m 64.762543,30.215725 -2e-6,12.911356 12.300603,3e-6 v 25.544695 l -34.4842,6.797 1.78181,9.039241 c 0.49388,3.104435 1.37584,5.926674 2.64583,8.466666 1.27,2.539992 2.89289,4.726919 4.86844,6.561357 2.0461,1.834437 4.4448,3.245567 7.19646,4.233337 2.82221,0.98777 6.06748,1.48156 9.73635,1.48156 3.80999,0 7.19678,-0.52917 10.16011,-1.5875 3.03388,-1.12889 5.60896,-2.64563 7.72562,-4.550627 2.11666,-1.975548 3.70417,-4.339381 4.7625,-7.091039 1.12889,-2.822213 1.69344,-5.926471 1.69344,-9.313127 V 74.891553 65.501428 30.215727 Z m 12.300601,47.846693 v 3.905705 c 0,3.174989 -0.84657,5.502926 -2.53989,6.984587 -1.62278,1.481662 -3.59845,2.222603 -5.92677,2.222603 -4.93846,0 -8.00754,-3.209927 -9.20719,-9.629386 z"
+         sodipodi:nodetypes="ccccccsccscccscccccscscc" />
+      <circle
+         style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:3;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path9038"
+         cx="49.034889"
+         cy="36.674885"
+         r="6.4558148" />
+    </g>
+  </g>
+</svg>
