@@ -1,4 +1,6 @@
-# jeff
+<p align="center">
+    <img src="https://github.com/markcda/jeff/raw/master/arts/icons/svg/jeff-logo.svg" width="400">
+</p>
 
 Jeff is a highly customizable, extensible and cross-platform chatbot with a MIT license.
 
