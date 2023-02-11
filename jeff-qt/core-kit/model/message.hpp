@@ -67,6 +67,6 @@ public:
 
 /*! @typedef MessagesMeta
  *  @brief Contains a part of message history.  */
-typedef QList<MessageMeta> MessagesMeta;
+typedef QList<MessageMeta *> MessagesMeta;
 
 #endif

@@ -20,7 +20,7 @@ public:
   void subscribe(ExtensionMeta *extension_meta);
   void unsubscribe(ExtensionMeta *extension_meta);
   void unsubscribe_all();
-  void notify(MessageMeta msg_meta, bool no_jck_output = false);
+  void notify(MessageMeta *msg_meta, bool no_jck_output = false);
   void notify_scenario_first_time(QString auth_key);
   void set_scenario(ScenarioServerMeta _scenario_server_meta);
   void finish_scenario();
@@ -33,7 +33,7 @@ private:
   ScenarioServerMeta scenario_server_meta;
   
   // Functions described in `notify-client.cpp`:
-  void send_event(MessageMeta msg_meta, QHostAddress addr, quint16 port);
+  void send_event(MessageMeta *msg_meta, QHostAddress addr, quint16 port);
 };
 
 #endif

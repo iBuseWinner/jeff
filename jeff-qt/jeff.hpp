@@ -43,8 +43,8 @@ private:
   bool ncurses_getstr(int y, int x, int available_space);
   void qt_shutdown();
   void start_by(MessagesMeta _messages);
-  void add_message_by_md(MessageMeta message);
-  void handle_once(MessageMeta message);
+  void add_message_by_md(MessageMeta *message);
+  void handle_once(MessageMeta *message);
 };
 
 #endif

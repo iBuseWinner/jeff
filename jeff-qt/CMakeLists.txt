@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(jeff-cli)
 
+# Common part
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -22,10 +24,11 @@ include_directories(
   dialogues
   dialogues/phrase-editor
   dialogues/sources
-  lib/maddy/include
   lib/Yelloger/include
   widgets
 )
+
+# Jeff-Cli part
 
 set(SRCS
   core-kit/basis.cpp
@@ -87,7 +90,29 @@ target_link_libraries(
     ncursesw
 )
 
+# Jeff-Qt part
+
+set(HOEDOWN_LIB_SRC
+  lib/hoedown/src/autolink.c
+  lib/hoedown/src/autolink.h
+  lib/hoedown/src/buffer.c
+  lib/hoedown/src/buffer.h
+  lib/hoedown/src/document.c
+  lib/hoedown/src/document.h
+  lib/hoedown/src/escape.c
+  lib/hoedown/src/escape.h
+  lib/hoedown/src/html_blocks.c
+  lib/hoedown/src/html_smartypants.c
+  lib/hoedown/src/html.c
+  lib/hoedown/src/html.h
+  lib/hoedown/src/stack.c
+  lib/hoedown/src/stack.h
+  lib/hoedown/src/version.c
+  lib/hoedown/src/version.h
+)
+
 set(SRCS_UI
+  ${HOEDOWN_LIB_SRC}
   dialogues/about.cpp
   dialogues/about.hpp
   dialogues/add-script.cpp

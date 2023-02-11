@@ -53,21 +53,21 @@ public:
   void got_modal(ModalHandler *m_handler);
 #endif
   void set_monologue_enabled(const bool enabled);
-  MessageMeta get_message(const QString &content, Author author, 
+  MessageMeta *get_message(const QString &content, Author author, 
                           ContentType content_type, Theme theme);
   void start();
 
 signals:
 #ifdef JEFF_WITH_QT_WIDGETS
   /*! @brief Sends a message to Display. */
-  ModalHandler *show_modal(MessageMeta message_data, ModalHandler *handler);
+  ModalHandler *show_modal(MessageMeta *message_data, ModalHandler *handler);
   /*! @brief Sets the monologue mode in MenuBar. */
   bool change_menubar_mmode(bool enabled);
 #endif
   /*! @brief Sends a message. */
-  MessageMeta show(MessageMeta message_data);
+  MessageMeta *show(MessageMeta *message_data);
   /*! @brief Sends an updateable message. */
-  QPair<QString, MessageMeta> show_status(QPair<QString, MessageMeta> id_and_message_data);
+  QPair<QString, MessageMeta *> show_status(QPair<QString, MessageMeta *> id_and_message_data);
   /*! @brief Asks the Menubar to set a new script name (it is displayed in the main window). */
   QString change_menubar_scenario_name(QString scenario_name);
 

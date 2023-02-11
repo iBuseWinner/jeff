@@ -8,6 +8,7 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);
   connect(basis, &Basis::send_status, this, &Core::got_status_from_script);
   connect(basis, &Basis::start_scenario, this, &Core::got_scenario_start);
+  connect(basis, &Basis::shutdown_scenario, this, &Core::got_scenario_shutting);
   basis->check_settings_file();
   basis->check_default_source();
   connect(server, &Server::server_error, this, &Core::got_error);
@@ -69,7 +70,7 @@ void Core::got_message_from_user(const QString &user_expression) {
   if (user_expression.isEmpty()) return;
   /*! Displays the entered message on the screen. */
   Yellog::Trace("Got a message from user.");
-  MessageMeta message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
+  auto *message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   hp->append(message);
   emit show(message);
   /*! If user has entered any command, there is no need to run other modules. */
@@ -88,7 +89,7 @@ void Core::got_message_from_user(const QString &user_expression) {
 void Core::got_message_from_jck(const QString &result_expression) {
   if (result_expression.isEmpty()) return;
   Yellog::Trace("Got a message from JCK.");
-  MessageMeta message = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
+  auto *message = get_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(
@@ -107,7 +108,7 @@ void Core::got_message_from_jck(const QString &result_expression) {
 /*! @brief Notifies those extensions that are designed to handle cases where JCK cannot answer a question. */
 void Core::got_no_jck_output(const QString &user_expression) {
   Yellog::Trace("Got no output from JCK. Gonna notify all others...");
-  MessageMeta message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
+  auto *message = get_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   notifier->notify(message, true);
 }
 
@@ -137,7 +138,7 @@ void Core::got_scenario_shutting() {
 void Core::got_message_from_script(const QString &outter_message) {
   if (outter_message.isEmpty()) return;
   Yellog::Trace("Got a message from script.");
-  MessageMeta message = get_message(outter_message, Author::Jeff, ContentType::Markdown, Theme::Std);
+  auto *message = get_message(outter_message, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(
@@ -170,7 +171,7 @@ void Core::got_message_from_script_as_user(const QString &outter_message) {
   if (outter_message.isEmpty()) return;
   /*! Displays the entered message on the screen. */
   Yellog::Trace("Got a message from script to be sent as from user.");
-  MessageMeta message = get_message(outter_message, Author::User, ContentType::Markdown, Theme::Blue);
+  auto *message = get_message(outter_message, Author::User, ContentType::Markdown, Theme::Blue);
   hp->append(message);
   notifier->notify(message);
   emit show(message);
@@ -191,7 +192,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
   if (id_and_message.first.length() < 24) return;
   Yellog::Trace("Hello darkness, my old friend, I've come to talk with you again... and again... ");
   Yellog::Trace("You've just got an updateable message though.");
-  MessageMeta message = get_message(id_and_message.second, Author::Jeff, ContentType::Markdown, Theme::Std);
+  auto *message = get_message(id_and_message.second, Author::Jeff, ContentType::Markdown, Theme::Std);
   /*! Delay is triggered if enabled. */
   Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(
@@ -200,7 +201,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
           : 0,
       this, [this, message, id_and_message] {
         notifier->notify(message);
-        QPair<QString, MessageMeta> id_and_message_data(id_and_message.first, message);
+        QPair<QString, MessageMeta *> id_and_message_data(id_and_message.first, message);
         emit show_status(id_and_message_data);
       });
 }
@@ -209,7 +210,7 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
 void Core::got_info(const QString &info_text) {
   /*! The warning color is green. */
   Yellog::Trace("Got an info.");
-  MessageMeta message = get_message(info_text, Author::Jeff, ContentType::Markdown, Theme::Green);
+  auto *message = get_message(info_text, Author::Jeff, ContentType::Markdown, Theme::Green);
   hp->append(message);
   notifier->notify(message);
   emit show(message);
@@ -219,7 +220,7 @@ void Core::got_info(const QString &info_text) {
 void Core::got_warning(const QString &warning_text) {
   /*! The warning color is yellow. */
   Yellog::Trace("Got a warning.");
-  MessageMeta message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
+  auto *message = get_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
   hp->append(message);
   notifier->notify(message);
   emit show(message);
@@ -229,7 +230,7 @@ void Core::got_warning(const QString &warning_text) {
 void Core::got_error(const QString &error_text) {
   /*! The error color is red. */
   Yellog::Trace("Got an error.");
-  MessageMeta message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
+  auto *message = get_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
   hp->append(message);
   notifier->notify(message);
   emit show(message);
@@ -239,18 +240,18 @@ void Core::got_error(const QString &error_text) {
 /*! @brief Creates Message @a message_widget, inserts a widget into it and displays a message. */
 void Core::got_modal(ModalHandler *m_handler) {
   Yellog::Trace("Got a dialogue.");
-  MessageMeta message = get_message(m_handler->getPrisoner()->objectName(), Author::Jeff, ContentType::Widget, Theme::Std);
+  auto *message = get_message(m_handler->getPrisoner()->objectName(), Author::Jeff, ContentType::Widget, Theme::Std);
   emit show_modal(message, m_handler);
 }
 #endif
 
 /*! @brief Creates @a message. */
-MessageMeta Core::get_message(const QString &content, Author author, ContentType content_type, Theme theme) {
-  MessageMeta message;
-  message.content = content;
-  message.author = author;
-  message.content_type = content_type;
-  message.theme = theme;
+MessageMeta *Core::get_message(const QString &content, Author author, ContentType content_type, Theme theme) {
+  auto *message = new MessageMeta();
+  message->content = content;
+  message->author = author;
+  message->content_type = content_type;
+  message->theme = theme;
   return message;
 }
 

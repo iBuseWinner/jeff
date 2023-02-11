@@ -42,33 +42,44 @@ class Scenario:
     j |= {"stoken": self.token, "sfinish": True}
     self.token = None
     self.init = False
+    self.nis = False
     self.cli._send(Scenario._encode_json(j))
 
   def _decide(self, j):
-    if self.init:
-      self._continue_scenario(j)
-    elif self.nis:
+    if self.nis:
       self._terminate_scenario(j)
+    elif self.init:
+      self._continue_scenario(j)
     else:
       self._init_scenario(j)
 
-  def send_msg(self, msg):
+  def send_msg(self, msg, last=False):
+    if last:
+      self.nis = True
     j = {"send": msg}
     self._decide(j)
 
-  def send_as_user(self, msg):
+  def send_as_user(self, msg, last=False):
+    if last:
+      self.nis = True
     j = {"send_as_user": msg}
     self._decide(j)
 
-  def send_status(self, msg_id, msg):
+  def send_status(self, msg_id, msg, last=False):
+    if last:
+      self.nis = True
     j = {"send_status": {"id": msg_id, "msg": msg}}
     self._decide(j)
 
-  def send_error(self, msg):
+  def send_error(self, msg, last=False):
+    if last:
+      self.nis = True
     j = {"send_warning": msg}
     self._decide(j)
 
-  def store_cells(self, values_dict):
+  def store_cells(self, values_dict, last=False):
+    if last:
+      self.nis = True
     j = {"store_in_memory": values_dict}
     self._decide(j)
 
@@ -80,25 +91,29 @@ class Scenario:
     if "memory_values" not in j:
       return None
     else:
-      return j
+      return j["memory_values"]
 
-  def listen(self):
+  def listen(self, buffer_size=8192):
     if not self.init or self.nis:
       raise ScenarioNotStartedException
-    j = Scenario._decode_json(self.srv._waits_for())
+    try:
+      j = Scenario._decode_json(self.srv._waits_for(buffer_size))
+    except UnicodeDecodeError:
+      print('Unicode decode error.')
+      return {}
     if "sfinish" in j:
       if j["sfinish"] is True:
         raise ScenarioTerminatedException
     return j
 
-  def next_is_last(self):
-    self.nis = True
-
-  def wait(self):
+  def wait(self, buffer_size=8192):
     while True:
-      msg = self.listen()
+      msg = self.listen(buffer_size)
       if len(msg) == 0:
         continue
       if msg['author'] == 1:
         continue
-      return msg
+      return msg['content']
+
+  def terminate(self):
+    self._terminate_scenario(dict())

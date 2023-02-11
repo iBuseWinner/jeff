@@ -15,8 +15,10 @@
   ],
   "program": "python",
   "args": [
-    "wikipedia.py",
+    "wikipedia-server.py",
     "<SERVER_PORT>",
     "<JEFF_PORT>"
-  ]
+  ],
+  "server_ip": "",
+  "server_port": 23175
 }

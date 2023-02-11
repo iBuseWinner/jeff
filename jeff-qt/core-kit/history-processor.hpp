@@ -20,9 +20,9 @@ public:
 
   // Functions described in `history-processor.cpp`:
   void load(const QString &filename = QString());
-  void append(const MessageMeta &message);
+  void append(MessageMeta *message);
   void clear();
-  void remove_one(MessageMeta message);
+  void remove_one(MessageMeta *message);
   void save(const QString &filename = QString());
   MessagesMeta recent(int amount);
   QString last_user_message(int i = 0);

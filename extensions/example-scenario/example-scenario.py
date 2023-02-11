@@ -13,8 +13,7 @@ try:
   scn.send_msg('2nd message')
   msg = scn.wait()
   print(msg)
-  scn.next_is_last()
-  scn.send_msg('Bye!')
+  scn.send_msg('Bye!', last=True)
 except scenario.ScenarioTerminatedException:
   print('terminated')
 except scenario.ScenarioNotStartedException:

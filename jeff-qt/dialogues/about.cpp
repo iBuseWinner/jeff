@@ -30,7 +30,7 @@ About::About(QWidget *parent, ModalHandler *mhandler) : ScrollFreezerWidget(pare
   );
   auto *tab1 = new QLabel(this);
   tab1->setText(
-    tr("Jeff - chatbot and automation tool") + "<br><br>© 2018-2022 " +
+    tr("Jeff - chatbot and automation tool") + "<br><br>© 2018-2023 " +
     tr("Jeff Authors") + "<br><br><a href=\"https://github.com/markcda/jeff\">"
     "https://github.com/markcda/jeff</a><br>" + tr("License") + ": <a href=\"https://raw.githubusercontent.com/markcda/jeff/master/LICENSE\">MIT License"
   );

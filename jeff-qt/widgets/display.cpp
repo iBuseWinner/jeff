@@ -3,9 +3,6 @@
 /*! @brief The constructor. */
 Display::Display(HProcessor *_hp, short _max_message_amount, QWidget *parent)
     : ScrollArea(parent), hp(_hp), max_message_amount(_max_message_amount) {
-  std::shared_ptr<maddy::ParserConfig> markdown_config = std::make_shared<maddy::ParserConfig>();
-  markdown_config->isHTMLWrappedInParagraph = false;
-  markdown_parser = new maddy::Parser(markdown_config);
   connect(verticalScrollBar(), &QScrollBar::rangeChanged, this, &Display::scroll_down);
   connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &Display::scroller);
   setObjectName(object_name);
@@ -44,24 +41,24 @@ void Display::add_message(Message *message) {
 }
 
 /*! @brief Constructs @a Message and adds it to the display. */
-void Display::add_message_by_md(MessageMeta message_data) {
-  add_message(new Message(markdown_parser, message_data));
+void Display::add_message_by_md(MessageMeta *message_data) {
+  add_message(new Message(message_data));
 }
 
 /*! @brief Updates the text of a message by its ID, or adds a new message with that ID. */
-void Display::update_status(QPair<QString, MessageMeta> id_and_message_data) {
+void Display::update_status(QPair<QString, MessageMeta *> id_and_message_data) {
   if (not status_messages.contains(id_and_message_data.first)) {
-    auto *message = new Message(markdown_parser, id_and_message_data.second);
+    auto *message = new Message(id_and_message_data.second);
     add_message(message);
     status_messages[id_and_message_data.first] = message;
   } else {
-    status_messages[id_and_message_data.first]->update_text(id_and_message_data.second.content);
+    status_messages[id_and_message_data.first]->update_text(id_and_message_data.second->content);
   }
 }
 
 /*! @brief Constructs @a Message and adds it to the display. */
-void Display::add_message_with_widget(MessageMeta message_data, ModalHandler *handler) {
-  auto *message = new Message(markdown_parser, message_data);
+void Display::add_message_with_widget(MessageMeta *message_data, ModalHandler *handler) {
+  auto *message = new Message(message_data);
   handler->getPrisoner()->setParent(message);
   message->widget(handler);
   add_message(message);
@@ -94,7 +91,7 @@ void Display::start_by(MessagesMeta history) {
     max_message_amount : history.length();
   int l = history.length();
   for (int i = 0; i < l - m; i++) {
-    auto *message = new Message(markdown_parser, history[i]);
+    auto *message = new Message(history[i]);
     prepare_message(message);
     message_counter++;
     all_messages.append(message);
@@ -133,7 +130,7 @@ void Display::scroller(int value) {
     if (message_counter + portion > length) portion = length - message_counter;
     auto *messages = hp->messages();
     while (portion--) {
-      auto *message = new Message(markdown_parser, messages->at(messages->length() - message_counter - 1));
+      auto *message = new Message(messages->at(messages->length() - message_counter - 1));
       all_messages.insert(0, message);
       int pos = 0;
       if (spacer) pos = 1;

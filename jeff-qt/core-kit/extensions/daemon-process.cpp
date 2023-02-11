@@ -81,7 +81,7 @@ QJsonObject DaemonProcess::request_output(
     auto history = hp->recent(script_meta->required_history_parts);
     for (auto msg : history) 
       history_array.append(
-        QString("%1: %2").arg(msg.author == Author::User ? "User" : "Jeff").arg(msg.content)
+        QString("%1: %2").arg(msg->author == Author::User ? "User" : "Jeff").arg(msg->content)
       );
     transport[basis->recentMessagesWk] = history_array;
   }

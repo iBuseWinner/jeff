@@ -15,7 +15,7 @@ verbose = args.verbose
 
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
-lang = cli.read_cells(['jeff-lang'])['memory_values']['jeff-lang']
+lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
 def main():
   aiml_kernel = aiml.Kernel()

@@ -60,4 +60,4 @@ class Client:
     if "memory_values" not in j:
       return None
     else:
-      return j
+      return j["memory_values"]

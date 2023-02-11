@@ -1,2 +1,2 @@
-wikipedia-api
+wikipedia
 jeff_api

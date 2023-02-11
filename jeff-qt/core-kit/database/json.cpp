@@ -25,7 +25,7 @@ Sources Json::read_source_list(SQLite *sql) {
 MessagesMeta Json::read_message_history(QFile *file) {
   QJsonArray messages_json = read_json(file);
   MessagesMeta message_history;
-  for (auto obj : messages_json) message_history.append(MessageMeta(obj.toObject()));
+  for (auto obj : messages_json) message_history.append(new MessageMeta(obj.toObject()));
   return message_history;
 }
 
@@ -91,7 +91,7 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
 /*! @brief Saves @a message_history. */
 void Json::write_message_history(MessagesMeta message_history, QFile *file) {
   QJsonArray message_history_json;
-  for (auto message : message_history) message_history_json.append(message.to_json());
+  for (auto message : message_history) message_history_json.append(message->to_json());
   write_json(file, message_history_json);
 }
 

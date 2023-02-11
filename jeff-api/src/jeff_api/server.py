@@ -8,13 +8,16 @@ class Server:
     self.server_socket.bind((host if host is not None else socket.gethostname(), port))
     self.server_socket.listen()
   
-  def _waits_for(self):
+  def _waits_for(self, buffer_size=8192):
     (socket, address) = self.server_socket.accept()
     try:
-      data = socket.recv(8192)
+      data = socket.recv(buffer_size)
       return data
     except ConnectionRefusedError:
       print("Connection refused.")
+      return b"{}"
+    except json.decoder.JSONDecodeError:
+      print('JSON decode error.')
       return b"{}"
   
   def _encode_json(j):

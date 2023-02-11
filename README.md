@@ -282,9 +282,13 @@ Scripts, if specified in their JSON configuration, can also request a list of me
 
 Also, scripts cannot request something while they are being executed, so their scope is often limited. On the other hand, this is for the best; in addition, Jeff Qt supports the execution of scripts written in Python using a built-in interpreter, so it is guaranteed that if Jeff is built for the target platform, Python scripts will be executed on it.
 
+#### Usable memory cells
+
+1. `jeff-lang` - Jeff's language chosen with `QLocale::system().name()`
+
 #### Scenarios
 
-But what if the extension needs to be asked something from the user? Including several times in a row? And so that other extensions suddenly do not interfere?
+What if the extension needs to be asked something from the user? Including several times in a row? And so that other extensions suddenly do not interfere?
 
 Yes, there is a way, and it's called a scenario. An extension can run its own scenario at any time, as long as no other is running at that time, and in the course of the scenario can receive all output from the user, bypassing JCK and all other extensions.
 

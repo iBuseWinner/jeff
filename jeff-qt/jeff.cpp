@@ -23,8 +23,8 @@ Jeff::Jeff(int argc, char *argv[]) : QObject() {
       QTimer::singleShot(0, this, [this] {
         QCoreApplication::instance()->processEvents();
       });
-      QTimer::singleShot(2000, this, [this] {
-        std::cout << tr("Answer not found.").toStdString() << "\n";
+      QTimer::singleShot(5000, this, [this] {
+        std::cout << tr("Answer not found.").toStdString() << std::endl;
         qt_shutdown();
       });
     }
@@ -119,13 +119,13 @@ bool Jeff::ncurses_getstr(int y, int x, int available_space) {
 
 /*! @brief Adds several messages to the screen. */
 void Jeff::start_by(MessagesMeta _messages) {
-  for (auto message : _messages) add_message_by_md(message);
+  for (auto *message : _messages) add_message_by_md(message);
 }
 
 /*! @brief Adds a message to the screen (interactive mode). */
-void Jeff::add_message_by_md(MessageMeta message) {
-  if (message.author == Author::Jeff) messages.push_back(tr("Jeff") + ": " + message.content);
-  else messages.push_back(tr("You") + ": " + message.content);
+void Jeff::add_message_by_md(MessageMeta *message) {
+  if (message->author == Author::Jeff) messages.push_back(tr("Jeff") + ": " + message->content);
+  else messages.push_back(tr("You") + ": " + message->content);
   int h, w;
   getmaxyx(stdscr, h, w);
   if (messages.length() + 3 > h) messages.pop_front();
@@ -139,14 +139,14 @@ void Jeff::qt_shutdown() {
 }
 
 /*! @brief Processes a single message, returns a response, and terminates the application. */
-void Jeff::handle_once(MessageMeta message) {
+void Jeff::handle_once(MessageMeta *message) {
   once_mutex.lock();
   if (not once) {
     once = true;
     once_mutex.unlock();
     return;
   }
-  std::cout << message.content.toStdString() << std::endl;
+  std::cout << message->content.toStdString() << std::endl;
   once_mutex.unlock();
   qt_shutdown();
 }
