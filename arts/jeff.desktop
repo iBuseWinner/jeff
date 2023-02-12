@@ -1,0 +1,14 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Version=1.0
+Name=Jeff
+Name[ru_RU]=Джефф
+Comment=Extensible chatbot and automation tool
+Comment[ru_RU]=Расширяемый чат-бот и инструмент автоматизации
+Path=/usr/bin
+Exec=jeff
+Icon=jeff
+Terminal=false
+StartupNotify=true
+Categories=Education;Science;ArtificialIntelligence

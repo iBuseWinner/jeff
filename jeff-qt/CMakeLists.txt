@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
-add_compile_options(-flto -Wall -Wextra -pedantic -Wstrict-aliasing -Wno-format -Wno-format-security)
+add_compile_options(-flto=1 -Wall -Wextra -pedantic -Wstrict-aliasing -Wno-format -Wno-format-security)
 
 include_directories(
   .
