@@ -46,6 +46,10 @@ class Client:
     j = {"send_status": {"id": msg_id, "msg": msg}}
     self._send(Client._encode_json(j))
 
+  def send_info(self, msg):
+    j = {"send_info": msg}
+    self._send(Client._encode_json(j))
+
   def send_error(self, msg):
     j = {"send_warning": msg}
     self._send(Client._encode_json(j))

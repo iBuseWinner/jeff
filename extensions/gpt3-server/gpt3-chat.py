@@ -1,15 +1,9 @@
 #!/usr/bin/env python
 
 import locale, os, openai, credentials, uuid, argparse
+from jeff_api import client, server
 
-lang, _ = locale.getdefaultlocale()
 KEEP_QNA = 9
-
-# WARNING To use credentials, you have to fill it in `credentials-example.py` file and rename it to `credentials.py`.
-if lang == "ru_RU":
-  os.environ["http_proxy"] = credentials.HTTP_PROXY
-  os.environ["https_proxy"] = credentials.HTTPS_PROXY
-openai.api_key = credentials.API_KEY
 
 ai_sequence = "\nAI: "
 human_sequence = "\nHuman: "
@@ -25,6 +19,16 @@ args = parser.parse_args()
 extension_port = args.extension_port
 jeff_port = args.jeff_port
 verbose = args.verbose
+
+srv = server.Server(None, extension_port)
+cli = client.Client('localhost', jeff_port)
+lang = cli.read_cells(['jeff-lang'])['jeff-lang']
+
+# WARNING To use credentials, you have to fill it in `credentials-example.py` file and rename it to `credentials.py`.
+if lang == "ru":
+  os.environ["http_proxy"] = credentials.HTTP_PROXY
+  os.environ["https_proxy"] = credentials.HTTPS_PROXY
+openai.api_key = credentials.API_KEY
 
 
 def generate_response(prompt):
@@ -42,11 +46,11 @@ def generate_response(prompt):
     message = completions.choices[0].text
     return message
   except openai.error.RateLimitError:
-    return "*[ChatGPT]* Server is overloaded. Try again later." if lang != 'ru_RU' else "*[ChatGPT]* Сервер перегружен. Попробуйте повторить попытку позже."
+    return "*[ChatGPT]* Server is overloaded. Try again later." if lang != 'ru' else "*[ChatGPT]* Сервер перегружен. Попробуйте повторить попытку позже."
   except openai.error.ServiceUnavailableError:
-    return "*[ChatGPT]* Server is unaccessible. Try again using proxy." if lang != 'ru_RU' else "*[ChatGPT]* Сервер недоступен. Попробуйте использовать прокси."
+    return "*[ChatGPT]* Server is unaccessible. Try again using proxy." if lang != 'ru' else "*[ChatGPT]* Сервер недоступен. Попробуйте использовать прокси."
   except openai.error.APIConnectionError:
-    return "*[ChatGPT]* Unable to connect to API. Try to change proxy." if lang != 'ru_RU' else "*[ChatGPT]* Не удалось подключиться к API. Попробуйте сменить прокси."
+    return "*[ChatGPT]* Unable to connect to API. Try to change proxy." if lang != 'ru' else "*[ChatGPT]* Не удалось подключиться к API. Попробуйте сменить прокси."
 
 
 def history_reducer(history):
@@ -61,11 +65,8 @@ def make_prompt(history):
 
 
 def main():
-  from jeff_api import client, server
-  srv = server.Server(None, extension_port)
-  cli = client.Client('localhost', jeff_port)
   history = [prompt]
-  print('ChatGPT activated.' if lang != 'ru_RU' else 'ChatGPT активирован.')
+  print('ChatGPT activated.' if lang != 'ru' else 'ChatGPT активирован.')
   while True:
     data = srv.listen()
     if len(data) == 0:
@@ -75,9 +76,9 @@ def main():
     if len(data['content']) < 10:
       continue
     msg_id = str(uuid.uuid4())
-    cli.send_status(msg_id, '*[ChatGPT] Waiting...*' if lang != 'ru_RU' else '*[ChatGPT] Ожидание...*')
+    cli.send_status(msg_id, '*[ChatGPT] Waiting...*' if lang != 'ru' else '*[ChatGPT] Ожидание...*')
     if verbose:
-      print('*[ChatGPT] Waiting...*' if lang != 'ru_RU' else '*[ChatGPT] Ожидание...*')
+      print('*[ChatGPT] Waiting...*' if lang != 'ru' else '*[ChatGPT] Ожидание...*')
     history.append(human_sequence + data['content'])
     response = generate_response(make_prompt(history)).strip()
     if len(response) == 0:
@@ -92,4 +93,4 @@ def main():
 try:
   main()
 except KeyboardInterrupt:
-  print('\nChatGPT disabled.' if lang != 'ru_RU' else '\nChatGPT отключён.')
+  print('\nChatGPT disabled.' if lang != 'ru' else '\nChatGPT отключён.')

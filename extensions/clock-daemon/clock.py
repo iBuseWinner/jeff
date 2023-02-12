@@ -16,12 +16,12 @@ port = args.port
 verbose = args.verbose
 
 cli = client.Client('localhost', port)
-lang, _ = locale.getdefaultlocale()
+lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
 try:
   msg_id = str(uuid.uuid4())
   while True:
-    curr_time = 'Current time is ' if lang != 'ru_RU' else 'Текущее время: '
+    curr_time = 'Current time is ' if lang != 'ru' else 'Текущее время: '
     curr_time += f'**{time.strftime("%X")}**' + '.'
     if verbose:
       print('[5-Sec Precision Clock] ' + curr_time)

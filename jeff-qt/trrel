@@ -1,0 +1,4 @@
+#!/bin/sh
+
+lrelease l10n/jeff_ru.ts -qm l10n/jeff_ru.qm
+lrelease l10n/jeff_ua.ts -qm l10n/jeff_ua.qm

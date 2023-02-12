@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import aiml, asyncio, json, os.path, argparse, signal, sys, uuid
+import aiml, json, os.path, argparse, signal, sys, uuid
+import argostranslate.package, argostranslate.translate
 from jeff_api import client, server
 
 parser = argparse.ArgumentParser(description="Alice AIML is an extension that integrates the PyAIML processor into Jeff.")
@@ -17,6 +18,86 @@ srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
 lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
+
+class Argos2Alice:
+  def __init__(self, alice_lang, jeff_lang):
+    self.alice_lang = alice_lang
+    self.jeff_lang = jeff_lang
+    if self.alice_lang != self.jeff_lang:
+      cells = cli.read_cells(['argos2alice-downloaded'])
+      if 'argos2alice-downloaded' not in cells:
+        self.download()
+      elif cells['argos2alice-downloaded'] != f'{self.jeff_lang}-{self.alice_lang}':
+        self.download()
+      installed_languages = argostranslate.translate.get_installed_languages()
+      from_lang = list(filter(lambda x: x.code == self.jeff_lang, installed_languages))[0]
+      to_lang = list(filter(lambda x: x.code == self.alice_lang, installed_languages))[0]
+      self.j2al = from_lang.get_translation(to_lang)
+      self.al2j = to_lang.get_translation(from_lang)
+
+  def download(self):
+    if verbose: print('Installing translations')
+    cli.send_info('[Alice] Translation models are downloading. This may take some time....' if lang != 'ru' else '[Alice] Скачиваются модели перевода. Это может занять какое-то время...')
+    argostranslate.package.update_package_index()
+    available_packages = argostranslate.package.get_available_packages()
+    package_to_install = next(
+      filter(lambda x: x.from_code == self.alice_lang and x.to_code == self.jeff_lang, available_packages)
+    )
+    if verbose: print(f'Found from {self.alice_lang} to {self.jeff_lang}')
+    argostranslate.package.install_from_path(package_to_install.download())
+    package_to_install = next(
+      filter(lambda x: x.from_code == self.jeff_lang and x.to_code == self.alice_lang, available_packages)
+    )
+    if verbose: print(f'Found from {self.jeff_lang} to {self.alice_lang}')
+    argostranslate.package.install_from_path(package_to_install.download())
+    if verbose: print('Downloaded translations')
+    cli.store_cells({'argos2alice-downloaded': f'{self.jeff_lang}-{self.alice_lang}'})
+    cli.send_info('[Alice] Translations downloaded.' if lang != 'ru' else '[Alice] Переводы скачаны.')
+
+  def to_aiml(self, text):
+    if self.alice_lang == self.jeff_lang: return text
+    return self.j2al.translate(text)
+  
+  def from_aiml(self, text):
+    if self.alice_lang == self.jeff_lang: return text
+    return self.al2j.translate(text)
+
+
+class AliceResponder:
+  def __init__(self, aiml_kernel):
+    self.aiml_kernel = aiml_kernel
+    self.tr = None
+    signal.signal(signal.SIGINT, self.exit_gracefully)
+    signal.signal(signal.SIGTERM, self.exit_gracefully)
+
+  def exit_gracefully(self, *args):
+    self.aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
+    sys.exit(0)
+
+  def with_tr(self, tr):
+    self.tr = tr
+    return self
+
+  def run_loop(self, cli, srv):
+    while True:
+      data = srv.listen()
+      if len(data) == 0: continue
+      if data['author'] == 1: continue
+      if len(data['content']) == 0: continue
+      received = data['content']
+      if verbose: print(f'Got message: {received}')
+      if self.tr:
+        received = self.tr.to_aiml(received)
+        if verbose: print(f'Translated to: {received}')
+      msg = self.aiml_kernel.respond(received)
+      if not len(msg): continue
+      if verbose: print('AIML answer: ' + msg)
+      if self.tr:
+        msg = self.tr.from_aiml(msg)
+        if verbose: print(f'Translated back to: {msg}')
+      cli.send_msg(msg)
+
+
 def main():
   aiml_kernel = aiml.Kernel()
   aiml_kernel.setTextEncoding(None)
@@ -29,34 +110,12 @@ def main():
     aiml_kernel.bootstrap(learnFiles="startup.xml", commands="load alice", chdir=current_path)
     current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
     aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
+  translator = Argos2Alice('en', lang)
   cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
-  
-  class Responder:
-    def __init__(self, aiml_kernel):
-      self.aiml_kernel = aiml_kernel
-      signal.signal(signal.SIGINT, self.exit_gracefully)
-      signal.signal(signal.SIGTERM, self.exit_gracefully)
-
-    def exit_gracefully(self, *args):
-      self.aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
-      sys.exit(0)
-      
-    def run_loop(self, cli, srv):
-      while True:
-        data = srv.listen()
-        if len(data) == 0: continue
-        if data['author'] == 1: continue
-        if len(data['content']) == 0: continue
-        if verbose: print('Got message: ' + data['content'])
-        msg = self.aiml_kernel.respond(data['content'])
-        if not len(msg): continue
-        if verbose: print('AIML answer: ' + msg)
-        cli.send_msg(msg)
-        
-  Responder(aiml_kernel).run_loop(cli, srv)
+  AliceResponder(aiml_kernel).with_tr(translator).run_loop(cli, srv)
 
 
 try:
   main()
 except KeyboardInterrupt:
-  print('\nДемон AIML отключен.' if lang != 'ru' else '\nAIML daemon is off.')
+  print('\nAIML daemon is off.' if lang != 'ru' else '\nДемон AIML отключен.')

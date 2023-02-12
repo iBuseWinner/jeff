@@ -10,7 +10,7 @@ def send_value(k, v):
       sock.connect(('localhost', 8005))
       sock.sendall(data)
   except ConnectionRefusedError:
-    print('\tСервер отключен.')
+    print('\tServer is off.')
 
 
 def read_value(k):
@@ -23,27 +23,27 @@ def read_value(k):
       while not len(data):
         data = sock.recv(4096)
   except ConnectionRefusedError:
-    print('\tСервер отключен.')
+    print('\tServer is off.')
   return json.loads(data.decode())['memory_values'][k]
 
 
 def main():
   while True:
-    option = input('Выберите вариант:\n1. Отправить значение\n2. Принять значение\n')
+    option = input('Select an option:\n1. Send value\n2. Get value\n')
     if option != '1' and option != '2':
       return
     elif option == '1':
-      k = input('\tВведите ключ: ')
-      v = input('\tВведите значение: ')
+      k = input('\tEnter the key: ')
+      v = input('\tEnter the value: ')
       send_value(k, v)
-      print('\tОтправлено.')
+      print('\tSent.')
     else:
-      k = input('\tВведите ключ: ')
+      k = input('\tEnter the key: ')
       v = read_value(k)
-      print(f'\tПолучено: {v}')
+      print(f'\tGot: {v}')
 
 
 try:
   main()
 except KeyboardInterrupt:
-  print('\nКлиент памяти отключен.')
+  print('\nMemory client is off.')

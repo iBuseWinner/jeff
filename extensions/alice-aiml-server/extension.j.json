@@ -1,6 +1,6 @@
 {
-  "name": "Alice AIML",
-  "desc": "Alice AIML is an extension that integrates the PyAIML processor into Jeff. (From original project: \"PyAIML is an interpreter for AIML (the Artificial Intelligence Markup Language), implemented entirely in standard Python.\")",
+  "name": "Alice AIML & Argos",
+  "desc": "Alice AIML is an extension that integrates the PyAIML processor into Jeff (from original project: \"PyAIML is an interpreter for AIML (the Artificial Intelligence Markup Language), implemented entirely in standard Python.\").<br><br>The extension also uses the Argos Translate tool to translate the target language to and from AIML files.",
   "authors": [
     {
       "author": "Paulo Villegas",
@@ -12,15 +12,26 @@
       "author": "Cort Stratton"
     },
     {
+      "author": "Argos Open Tech",
+      "contacts": {
+        "email": "admin@argosopentech.com",
+        "youTube": "https://www.youtube.com/channel/UCUhFxpTpgsu0rXKPrybCQSA",
+        "discord": "https://discord.gg/6KXH5yNvzG",
+        "telegram": "https://t.me/argosopentech"
+      }
+    },
+    {
       "author": "Mark CDA",
       "contacts": {
         "telegram": "@markcda"
       }
     }
   ],
-  "license": "BSD-2-Clause / GNU GPL",
+  "license": "BSD-2-Clause & GNU GPL (Alice) // MIT (Argos)",
   "links": [
-    "https://github.com/paulovn/python-aiml"
+    "https://github.com/paulovn/python-aiml",
+    "https://github.com/argosopentech/argos-translate",
+    "https://www.argosopentech.com/"
   ],
   "program": "python",
   "args": [

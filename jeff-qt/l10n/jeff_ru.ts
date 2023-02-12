@@ -274,6 +274,14 @@
         <source>Jeff&apos;s history file</source>
         <translation>Файл истории Джеффа</translation>
     </message>
+    <message>
+        <source>Enter your message...</source>
+        <translation>Введите сообщение...</translation>
+    </message>
+    <message>
+        <source>Running: </source>
+        <translation>Запущено: </translation>
+    </message>
 </context>
 <context>
     <name>Line</name>
@@ -457,6 +465,10 @@
     <message>
         <source>Open</source>
         <translation>Открыть</translation>
+    </message>
+    <message>
+        <source>Copy selected text</source>
+        <translation>Скопировать выделенный текст</translation>
     </message>
 </context>
 <context>
