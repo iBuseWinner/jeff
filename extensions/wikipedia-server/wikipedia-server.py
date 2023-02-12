@@ -18,8 +18,10 @@ verbose = args.verbose
 
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
-scn = scenario.Scenario(cli, srv)
 lang = cli.read_cells(['jeff-lang'])['jeff-lang']
+
+scn_name = 'Summaries from Wikipedia' if lang != 'ru' else 'Выжимки из Википедии'
+scn = scenario.Scenario(cli, srv, scn_name)
 
 
 def wiki_navigator(query, at_words):
@@ -31,7 +33,6 @@ def wiki_navigator(query, at_words):
       scn.send_msg(msg)
     except wiki.DisambiguationError as e:
       if verbose: print('Several options')
-      # variants = str(e).split('\n')
       variants = wiki.search(query, results=10, suggestion=True)
       if verbose: print(variants[1])
       variants = [v for v in variants[0]]
@@ -54,7 +55,7 @@ def wiki_navigator(query, at_words):
       except:
         scn.terminate()
         return
-    scn.send_msg('Want to know more? (y/[n])' if lang != 'ru' else 'Хотите узнать больше? (y/[n])')
+    scn.send_msg('Want to know more? **(y/[n])**' if lang != 'ru' else 'Хотите узнать больше? **(y/[n])**')
     op = scn.wait()
     if verbose: print(op)
     if op != 'y':

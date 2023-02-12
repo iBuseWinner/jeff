@@ -4,7 +4,7 @@ from jeff_api import client, server, scenario
 
 srv = server.Server(None, 30003)
 cli = client.Client('localhost', 8005)
-scn = scenario.Scenario(cli, srv)
+scn = scenario.Scenario(cli, srv, "Example scenario")
 
 try:
   scn.send_msg('Hello! You\'re in the scenario now!')

@@ -10,12 +10,16 @@ class ScenarioNotStartedException(Exception):
   pass
 
 class Scenario:
-  def __init__(self, cli, srv):
+  def __init__(self, cli, srv, name=None):
     self.cli = cli
     self.srv = srv
     self.init = False
     self.token = None
     self.nis = False
+    if not name:
+      self.name = f'Scenario at {self.srv.host}:{self.srv.port}'
+    else:
+      self.name = name
 
   def _encode_json(j):
     return json.dumps(j).encode()
@@ -25,7 +29,7 @@ class Scenario:
 
   def _init_scenario(self, j):
     self.srv.server_socket.settimeout(5)
-    j |= {"sready": True, "saddr": self.srv.host, "sport": self.srv.port}
+    j |= {"sready": True, "saddr": self.srv.host, "sport": self.srv.port, "sname": self.name}
     self.cli._send(Scenario._encode_json(j))
     res = Scenario._decode_json(self.srv._waits_for())
     self.srv.server_socket.settimeout(None)

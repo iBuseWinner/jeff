@@ -298,8 +298,8 @@ Yes, there is a way, and it's called a scenario. An extension can run its own sc
 
 There are 3 stages of the scenario:
 
-1. Send JSON including any of the above fields (`send` or others, `memory_cells` and `store_in_memory`) if needed, and include three more fields: `"sready": true, "saddr": "extension server socket address", "sport": "extension server socket port (as a number)"`.  
-*For example,* if your extension is using localhost server with port 15239, add these fields: `"sready": true, "saddr": "", "sport": 15239`.  
+1. Send JSON including any of the above fields (`send` or others, `memory_cells` and `store_in_memory`) if needed, and include three more fields: `"sready": true, "saddr": "extension server socket address", "sport": "extension server socket port (as a number)", "sname": "Some Scenario Name To Be Shown In Jeff"`.  
+*For example,* if your extension is using localhost server with port 15239, add these fields: `"sready": true, "saddr": "", "sport": 15239, "sname": "My Scenario"`.  
 Immediately after that, a message with the token `stoken` will be sent to your server. This token must be sent in the second and third steps of the scenario.
 2. Form a message including your next message and the values `{"stoken": "token", "scontinue": true}` to continue the scenario.
 3. Form a message including your last scenario message and the values `{"stoken": "token", "sfinish": true}` to end the scenario.  
@@ -316,7 +316,7 @@ from jeff_api import client, server, scenario
 
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
-scn = scenario.Scenario(cli, srv)
+scn = scenario.Scenario(cli, srv, "My scenario")
 ```
 
 ## Building and running

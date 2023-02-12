@@ -124,6 +124,7 @@ void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
   current_scenario = scenario_meta;
   notifier->set_scenario(current_scenario);
   notifier->notify_scenario_first_time(current_scenario.auth_key);
+  emit change_menubar_scenario_name(current_scenario.name);
 }
 
 /*! @brief Disables scenario. */
@@ -131,6 +132,7 @@ void Core::got_scenario_shutting() {
   notifier->finish_scenario();
   basis->clear_stoken();
   is_scenario_running = false;
+  emit change_menubar_scenario_name(QString());
   Yellog::Trace("Scenario is finished.");
 }
 

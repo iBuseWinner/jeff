@@ -105,6 +105,17 @@ MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), c
   extensions_viewer_action.setText(tr("Extensions viewer") + space + Basis::extensions_viewer_cmd);
   scenario_running_info.setText(tr("No scenario running"));
   scenario_running_info.setEnabled(false);
+  connect(core, &Core::change_menubar_scenario_name, this, [this](QString name) {
+    if (name.isEmpty()) {
+      disconnect(&scenario_running_info, &QAction::triggered, nullptr, nullptr);
+      scenario_running_info.setText(tr("No scenario running"));
+      scenario_running_info.setEnabled(false);
+    } else {
+      scenario_running_info.setText(tr("Running: ") + name);
+      scenario_running_info.setEnabled(true);
+      connect(&scenario_running_info, &QAction::triggered, core, &Core::got_scenario_shutting);
+    }
+  });
   current_scanner_info.setText(tr("No custom scanner enabled"));
   current_scanner_info.setEnabled(false);
   select_scanner_action.setText(tr("Select custom scanner..."));
