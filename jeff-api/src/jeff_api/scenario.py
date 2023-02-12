@@ -75,6 +75,12 @@ class Scenario:
     j = {"send_status": {"id": msg_id, "msg": msg}}
     self._decide(j)
 
+  def send_info(self, msg, last=False):
+    if last:
+      self.nis = True
+    j = {"send_info": msg}
+    self._decide(j)
+
   def send_error(self, msg, last=False):
     if last:
       self.nis = True

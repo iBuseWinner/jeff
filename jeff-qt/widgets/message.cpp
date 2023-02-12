@@ -31,6 +31,7 @@ void Message::author() {
 /*! @brief Updates the text of a message. */
 void Message::update_text(const QString &text) {
   md->content = text;
+  if (md->content_type == ContentType::Markdown) precached_md = from_plain_to_markdown(md->content);
   fit_text(_width);
 }
 
@@ -88,19 +89,27 @@ void Message::setup_text() {
   w = label;
   label->setObjectName("text");
   label->setTextFormat(Qt::PlainText);
-  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse);
+  label->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::TextSelectableByMouse);
+  label->setContextMenuPolicy(Qt::NoContextMenu);
   label->setFocusPolicy(Qt::NoFocus);
   auto *copy_text_action = new QAction(
     QIcon::fromTheme("edit-copy", QIcon(":/arts/icons/16/copy.svg")), tr("Copy message text"), this
   );
-  connect(copy_text_action, &QAction::triggered, this, [this] {
+  connect(copy_text_action, &QAction::triggered, this, [this, label] {
     auto *clipboard = QGuiApplication::clipboard();
-    clipboard->setText(this->message_data()->content);
+    if (not label->selectedText().isEmpty())
+      clipboard->setText(label->selectedText());
+    else
+      clipboard->setText(this->message_data()->content);
   });
   auto *context_menu = new Menu(this);
   context_menu->addAction(copy_text_action);
   setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, &Message::customContextMenuRequested, this, [this, context_menu] {
+  connect(this, &Message::customContextMenuRequested, this, [this, label, copy_text_action, context_menu] {
+    if (not label->selectedText().isEmpty())
+      copy_text_action->setText(tr("Copy selected text"));
+    else
+      copy_text_action->setText(tr("Copy message text"));
     context_menu->exec(QCursor::pos());
   });
   grid_layout->addw(w);

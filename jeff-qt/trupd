@@ -1,0 +1,3 @@
+#!/bin/sh
+
+lupdate . -ts l10n/jeff_ru.ts l10n/jeff_ua.ts

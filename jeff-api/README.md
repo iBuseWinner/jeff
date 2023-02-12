@@ -13,11 +13,19 @@ pip install jeff-api
 ```python
 from jeff_api import server, client
 
-srv = server.Server(None, port)
-cli = client.Client('localhost', 8005)
+srv = server.Server(None, ext_port)
+cli = client.Client('localhost', jeff_port)
 
 data = srv.listen()
 cli.send_msg(data)
+```
+
+```python
+from jeff_api import client, server, scenario
+
+srv = server.Server(None, ext_port)
+cli = client.Client('localhost', jeff_port)
+scn = scenario.Scenario(cli, srv, "Example scenario")
 ```
 
 ## Building

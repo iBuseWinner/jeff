@@ -153,7 +153,7 @@ insert into "source" values ('x+1', '{
 }', '', '1', '');
 ```
 
-**Note** that you should replace `x` and `x+1` with unique addresses (not necessarily different by one).
+**Note that** you should replace `x` and `x+1` with unique addresses (not necessarily different by one).
 
 And this can be easily done inside Jeff: the Qt version supports creating and editing React scripts.
 
@@ -167,12 +167,19 @@ The `extensions` folder contains several examples of extensions. Some, like `vos
 {
   "name": "Darknet",
   "desc": "Some Darknet description",
-  "authors": [{"author": "Gnihtyna Ydobyna", "contacts": {"gitHub": "somelink"}}],
+  "authors": [{
+    "author": "Gnihtyna Ydobyna",
+    "contacts": {"gitHub": "somelink"}
+  }],
   "license": "MIT",
   "links": ["somelink"],
   "envs": {"some_var": "var_value"},
   "program": "python",
-  "args": ["darknet.py", "<SERVER_PORT>", "<JEFF_PORT>"],
+  "args": [
+    "darknet.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>"
+  ],
   "server_ip": "",
   "server_port": 23234
 }
@@ -260,6 +267,7 @@ And this is how the your extension can react:
 ```json
 {"send": "some message to be sent"}
 {"send_as_user": "some message to be sent as from user (for example, voice input)"}
+{"send_info": "some information from the extension"}
 {"send_warning": "some warning from the extension"}
 {"send_status": {"id": "for example, random uuid", "msg": "message that can be updated later with the same id"}}
 ```
@@ -267,19 +275,29 @@ And this is how the your extension can react:
 Note that Jeff notifies you, but will ignore any attempt to reply to the same socket. That is why, most often, the extension has two sockets: the first is for receiving, the second is for transmitting. The only exceptions are the following requests:
 
 ```json
-{"memory_cells": ["needed_memory_cell_1", "needed_2", "needed_3_etc"]}
+{"memory_cells": [
+  "needed_memory_cell_1",
+  "needed_2",
+  "needed_3_etc"
+]}
 ```
 
 Such a request uses Jeff's internal memory, which is shared by all extensions and scripts and stores some public data. Jeff responds to such a request on the same socket with the following content:
 
 ```json
-{"memory_values": {"needed_memory_cell_1": "val_1", "needed_2": "val_2", "needed_3_etc": ["val_3_1", "val_3_2_etc"]}}
+{"memory_values": {
+  "needed_memory_cell_1": "val_1",
+  "needed_2": "val_2",
+  "needed_3_etc": ["val_3_1", "val_3_2_etc"]
+}}
 ```
 
 Accordingly, if your extension wants to store something in Jeff, it should send a request like this:
 
 ```json
-{"store_in_memory": {"some_key": "some value, even decimal, double, boolean, object or array"}}
+{"store_in_memory": {
+  "some_key": "some value, even decimal, double, boolean, object or array"
+}}
 ```
 
 Scripts, if specified in their JSON configuration, *can also request a list of memory values and set new values*, as well as receive additional properties specified in the phrase containing the script, the input of the user who called this script, and additionally a certain number of messages from the history (but first look at [parameter 11](#usable_settings)).
@@ -319,17 +337,21 @@ cli = client.Client('localhost', jeff_port)
 scn = scenario.Scenario(cli, srv, "My scenario")
 ```
 
+### Limitations
+
+If you're going to route large amounts of text through Jeff, it's a good idea to break it up into smaller chunks. **It is recommended to send no more than 8000 characters at a time.**
+
 ## Building and running
 
 ### `jeff-qt`
 
 Dependencies:
 
-| Dependency | Supported version |
-| ---------- | ----------------- |
-| Qt         | >=5.14.x          |
-| Python     | >=3.6             |
-| ncurses    | >=6.4             |
+| Dependency                    | Supported version |
+| ----------------------------- | ----------------- |
+| Qt                            | >=5.14.x          |
+| Python                        | >=3.6             |
+| ncurses (only to cli version) | >=6.4             |
 
 Building:
 
@@ -364,3 +386,7 @@ Running:
 ```bash
 cargo run --release
 ```
+
+### Extensions
+
+All extensions in the `extensions` folder are written in Python, so there is a `requirements.txt` file in almost every folder that contains the extension's dependencies. To make the extension work, run `$ pip install -r requirements.txt`.

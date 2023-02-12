@@ -117,7 +117,7 @@ QJsonObject Basis::handle_to_script(const QJsonObject &object) {
         if (val.isNull()) continue;
         obj[k] = memory(k);
       }
-      if (not obj.keys().isEmpty()) transport[memoryValuesWk] = obj;
+      transport[memoryValuesWk] = obj;
     }
   }
   return transport;
@@ -191,6 +191,9 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
     } else if (object.contains(sendWarningWk)) {
       QString warn_message = object[sendWarningWk].toString();
       emit warn(warn_message);
+    } else if (object.contains(sendInfoWk)) {
+      QString info_message = object[sendInfoWk].toString();
+      emit info(info_message);
     }
   }
 }

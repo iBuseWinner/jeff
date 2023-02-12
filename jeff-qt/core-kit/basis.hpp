@@ -54,6 +54,7 @@ public:
   static constexpr const char *sizeSt            = "jeff-qt/size";
   static constexpr const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   static constexpr const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
+  static constexpr const char *helpTipSt         = "jeff-qt/helptip";
 
   static constexpr const char *isMonologueEnabledSt          = "core-kit/ismonologuemodeenabled";
   static constexpr const char *isDelayEnabledSt              = "core-kit/isdelayenabled";
@@ -103,6 +104,7 @@ public:
   static constexpr const char *sendAsUserWk       = "send_as_user";
   static constexpr const char *sendStatusWk       = "send_status";
   static constexpr const char *sendWarningWk      = "send_warning";
+  static constexpr const char *sendInfoWk         = "send_info";
   static constexpr const char *authKeyWk          = "auth_key";
 
 #ifdef JEFF_WITH_QT_WIDGETS
@@ -170,7 +172,9 @@ public:
   void warn_about(QString warning_text);
 
 signals:
-  /*! @brief Reports about something. */
+  /*! @brief Reports some information. */
+  QString info(QString info_text);
+  /*! @brief Reports about a warning. */
   QString warn(QString warning_text);
   /*! @brief Notifies of a message from a script that should be shown on the screen. */
   QString send(QString outter_message);

@@ -43,6 +43,12 @@ void Jeff::connect_all() {
   connect(core, &Core::show, display, &Display::add_message_by_md);
   connect(core, &Core::show_modal, display, &Display::add_message_with_widget);
   connect(core, &Core::show_status, display, &Display::update_status);
+  connect(core, &Core::change_menubar_scenario_name, this, [this](QString name) {
+    if (name.isEmpty())
+      line->line_edit.setPlaceholderText(tr("Enter your message..."));
+    else
+      line->line_edit.setPlaceholderText(tr("Running: ") + name + " | " + tr("Enter your message..."));
+  });
   connect(history_processor, &HProcessor::history_loaded, display, &Display::start_by);
 }
 
