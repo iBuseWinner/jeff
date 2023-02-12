@@ -10,7 +10,7 @@ The first version of Jeff Qt to include security support is version 2.1.0. Previ
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 2.1.x   | :white_check_mark: |
+| 2.2.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
