@@ -30,6 +30,7 @@ struct ScenarioServerMeta {
   QHostAddress server_addr;
   quint16 server_port;
   QString auth_key;
+  QString name;
 };
 
 /*! @class Basis
@@ -92,6 +93,7 @@ public:
   static constexpr const char *scenarioReadyWk    = "sready";
   static constexpr const char *scenarioAddrWk     = "saddr";
   static constexpr const char *scenarioPortWk     = "sport";
+  static constexpr const char *scenarioNameWk     = "sname";
   static constexpr const char *scenarioTokenWk    = "stoken";
   static constexpr const char *scenarioContinueWk = "scontinue";
   static constexpr const char *scenarioFinishWk   = "sfinish";

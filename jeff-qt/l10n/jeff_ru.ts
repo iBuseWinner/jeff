@@ -431,6 +431,10 @@
         <source>Select custom composer...</source>
         <translation>Выбрать композитор...</translation>
     </message>
+    <message>
+        <source>Running: </source>
+        <translation>Запущено: </translation>
+    </message>
 </context>
 <context>
     <name>Message</name>

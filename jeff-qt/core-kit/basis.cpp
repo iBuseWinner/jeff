@@ -137,17 +137,21 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
   bool send_auth = false;
   if (
     object.contains(scenarioReadyWk) and
-    object.contains(scenarioAddrWk) and
-    object.contains(scenarioPortWk) and not except_send
+    object.contains(scenarioAddrWk)  and
+    object.contains(scenarioPortWk)  and 
+    object.contains(scenarioNameWk)  and
+    not except_send
   ) {
-    if (object[scenarioReadyWk].toBool()) {
+    if (object[scenarioReadyWk].toBool() and not object[scenarioNameWk].toString().isEmpty()) {
       auto server_addr = QHostAddress(object[scenarioAddrWk].toString());
       if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
       auto server_port = quint16(object[scenarioPortWk].toInt());
+      auto name = object[scenarioNameWk].toString();
+      _scenario_token = sql->generate_uuid();
       ScenarioServerMeta scenario_meta;
       scenario_meta.server_addr = server_addr;
       scenario_meta.server_port = server_port;
-      _scenario_token = sql->generate_uuid();
+      scenario_meta.name = name;
       scenario_meta.auth_key = _scenario_token;
       emit start_scenario(scenario_meta);
       send_auth = true;
