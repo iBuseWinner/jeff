@@ -1,0 +1,27 @@
+{
+  "name": "Google Cloud TTS",
+  "desc": "The extension voices Jeff's output.",
+  "authors": [{
+    "author": "Mark CDA",
+    "contacts": {"telegram": "@markcda"}
+  }],
+  "license": "Apache-2.0",
+  "links": [
+    "https://cloud.google.com/text-to-speech/docs/libraries#client-libraries-install-python",
+    "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating",
+    "https://cloud.google.com/docs/authentication/client-libraries",
+    "https://console.cloud.google.com/apis/library/texttospeech.googleapis.com"
+  ],
+  "envs": {
+    "GOOGLE_APPLICATION_CREDENTIALS": "ttscreds.json"
+  },
+  "program": "python",
+  "args": [
+    "gtts.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 23176,
+  "always_send": true
+}

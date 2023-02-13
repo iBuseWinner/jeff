@@ -97,7 +97,7 @@ def main():
   with sounddevice.RawInputStream(blocksize=8000, dtype='int16', channels=1, callback=checkout):
     sample_rate = int(sounddevice.query_devices(sounddevice.default.device, "input")["default_samplerate"])
     vosk_recognizer = vosk.KaldiRecognizer(vosk_model, sample_rate)
-    start_msg = 'Voice input activated.' if lang != 'ru' else 'Активирован голосовой ввод.'
+    start_msg = '[Vosk] Voice input activated.' if lang != 'ru' else '[Vosk] Активирован голосовой ввод.'
     if verbose: print(start_msg)
     cli.send_info(start_msg)
     try:
