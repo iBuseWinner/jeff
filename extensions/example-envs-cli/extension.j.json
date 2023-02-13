@@ -1,0 +1,19 @@
+{
+  "name": "Envs Cli Example",
+  "desc": "The example extension with some enviromental variables.",
+  "authors": [{
+    "author": "Mark CDA",
+    "contacts": {"telegram": "@markcda"}
+  }],
+  "license": "MIT",
+  "links": [],
+  "envs": {
+    "VAR1": "val1",
+    "VAR2": "val2"
+  },
+  "program": "python",
+  "args": [
+    "envs.py",
+    "<JEFF_PORT>"
+  ]
+}

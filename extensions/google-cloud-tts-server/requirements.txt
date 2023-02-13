@@ -1,0 +1,4 @@
+google-auth
+google-cloud-texttospeech
+jeff-api
+playsound
