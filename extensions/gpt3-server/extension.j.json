@@ -29,5 +29,6 @@
     "<JEFF_PORT>"
   ],
   "server_ip": "",
-  "server_port": 23174
+  "server_port": 23174,
+  "send_always": true
 }
