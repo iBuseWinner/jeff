@@ -13,3 +13,4 @@ jeff-core/target
 extensions/alice-aiml-server/brain.brn
 extensions/alice-aiml-server/sessions.brn
 extensions/google-tts-server/tts-creds.json
+extensions/wolfram-alpha-server/credentials.py

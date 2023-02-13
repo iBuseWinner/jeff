@@ -84,6 +84,7 @@ class AliceResponder:
       if len(data) == 0: continue
       if data['author'] == 1: continue
       if len(data['content']) == 0: continue
+      if data['content'].startswith('/'): continue
       received = data['content']
       if verbose: print(f'Got message: {received}')
       if self.tr:

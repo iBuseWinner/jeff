@@ -1,0 +1,25 @@
+{
+  "name": "Wolfram Alpha",
+  "desc": "An extension that uses the Wolfram Alpha API to solve problems and answer questions.",
+  "authors": [
+    {
+      "author": "Wolfram Company",
+      "contacts": {"link": "https://www.wolfram.com/company/contact"}
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {"telegram": "@markcda"}
+    }
+  ],
+  "license": "MIT",
+  "links": ["https://www.wolfram.com"],
+  "program": "python",
+  "args": [
+    "wolfram-server.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 23177,
+  "send_always": true
+}
