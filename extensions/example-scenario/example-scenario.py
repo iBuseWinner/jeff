@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# There is no extension.j.json file. Just exec this Python script to start the scenario.
+
 from jeff_api import client, server, scenario
 
 srv = server.Server(None, 30003)

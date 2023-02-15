@@ -165,7 +165,8 @@ The `extensions` folder contains several examples of extensions. Some, like `vos
 
 ```json
 {
-  "name": "Darknet",
+  "name": "darknet",
+  "title": "Darknet",
   "desc": "Some Darknet description",
   "authors": [{
     "author": "Gnihtyna Ydobyna",
@@ -191,6 +192,7 @@ All possible extension fields are listed below:
 
 ```c++
 QString name;
+QString title;
 QString desc;
 QMap<QString, QMap<QString, QString>> authors;
 QString license;
@@ -208,9 +210,10 @@ And the minimal `extension*.j.json` content might look like this:
 
 ```json
 {
-  "name": "some name",
-  "desc": "some desc",
-  "license": "some Open-Source or some proprietary",
+  "name": "some_name",
+  "title": "Some title",
+  "desc": "Some desc",
+  "license": "Some Open-Source or some proprietary",
   "program": "/path/to/program"
 }
 ```
@@ -318,7 +321,8 @@ There are 3 stages of the scenario:
 
 1. Send JSON including any of the above fields (`send` or others, `memory_cells` and `store_in_memory`) if needed, and include three more fields: `"sready": true, "saddr": "extension server socket address", "sport": "extension server socket port (as a number)", "sname": "Some Scenario Name To Be Shown In Jeff"`.  
 *For example,* if your extension is using localhost server with port 15239, add these fields: `"sready": true, "saddr": "", "sport": 15239, "sname": "My Scenario"`.  
-Immediately after that, a message with the token `stoken` will be sent to your server. This token must be sent in the second and third steps of the scenario.
+Immediately after that, a message with the token `stoken` will be sent to your server. This token must be sent in the second and third steps of the scenario.  
+If another scenario is running, you will get `{"squeued": true}` message. Then you should wait for the message with `stoken` property at your server socket.
 2. Form a message including your next message and the values `{"stoken": "token", "scontinue": true}` to continue the scenario.
 3. Form a message including your last scenario message and the values `{"stoken": "token", "sfinish": true}` to end the scenario.  
 You will receive a `{"sfinish": true}` message in response. *If you received such a message before the end of the work,* it means that the scenario was completed by the user himself, and you need to correctly handle this case.

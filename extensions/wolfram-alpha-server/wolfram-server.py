@@ -34,8 +34,11 @@ def main():
     if len(data['content']) <= 3: continue
     text = data['content'][3 : ]
     res = wa_cli.query(text)
-    answer = next(res.results).text
-    cli.send_msg(answer)
+    try:
+      answer = next(res.results).text
+      cli.send_msg(answer)
+    except StopIteration:
+      cli.send_msg('I don\'t know.' if lang != 'ru' else 'Я не знаю.')
 
 
 try:

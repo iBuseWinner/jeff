@@ -4,9 +4,9 @@ jeff-api/dist
 jeff-api/src/*.egg-info
 extensions/gpt3-server/credentials.py
 extensions/gpt3-server/proxy-scraper
-extensions/darknet-ir-server/darknet
-extensions/darknet-ir-server/recognized
 extensions/vosk-voice-input-daemon/models
+extensions/yolo-server/darknet
+extensions/yolo-server/recognized
 jeff-qt/target
 jeff-core/Cargo.lock
 jeff-core/target

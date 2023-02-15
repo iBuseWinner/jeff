@@ -1,5 +1,6 @@
 {
-  "name": "GPT-3 Chat",
+  "name": "gpt3",
+  "title": "GPT-3 Chat",
   "desc": "Chat resolver written on top of OpenAI's GPT-3 model, also used in a similar way in ChatGPT.",
   "authors": [
     {

@@ -143,6 +143,10 @@
         <source>Copy selected text</source>
         <translation>Скопировать выделенный текст</translation>
     </message>
+    <message>
+        <source>Short name:</source>
+        <translation>Короткое имя:</translation>
+    </message>
 </context>
 <context>
     <name>ExtensionsViewerCard</name>

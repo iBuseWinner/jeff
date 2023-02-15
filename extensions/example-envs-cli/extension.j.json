@@ -1,5 +1,6 @@
 {
-  "name": "Envs Cli Example",
+  "name": "envs-cli",
+  "title": "Envs Cli Example",
   "desc": "The example extension with some enviromental variables.",
   "authors": [{
     "author": "Mark CDA",

@@ -1,5 +1,6 @@
 {
-  "name": "5-Sec Precision Clock",
+  "name": "5sclock",
+  "title": "5-Sec Precision Clock",
   "desc": "Example extension. It's just a clock that sends status message to Jeff every 5 seconds.",
   "authors": [
     {

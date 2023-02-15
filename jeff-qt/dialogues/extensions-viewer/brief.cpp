@@ -7,9 +7,7 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
   remove_btn.setText(tr("Remove this extension from Jeff"));
   back_btn.setIcon(QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
   remove_btn.setIcon(QIcon::fromTheme("edit-delete", QIcon(":/arts/icons/16/edit-delete.svg")));
-  desc_lbl.setTextFormat(Qt::RichText);
   desc_lbl.setWordWrap(true);
-  authors_lbl.setTextFormat(Qt::RichText);
   authors_lbl.setTextInteractionFlags(Qt::TextSelectableByMouse);
   authors_lbl.setContextMenuPolicy(Qt::CustomContextMenu);
   auto *copy_text_action = new QAction(
@@ -24,17 +22,14 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
   connect(&authors_lbl, &QLabel::customContextMenuRequested, this, [this, context_menu] {
     context_menu->exec(QCursor::pos());
   });
-  license_lbl.setTextFormat(Qt::RichText);
-  links_lbl.setTextFormat(Qt::RichText);
   links_lbl.setContextMenuPolicy(Qt::NoContextMenu);
-  status_lbl.setTextFormat(Qt::RichText);
   status_lbl.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
   setLayout(
     VLineLt::another()
       ->addlt(HLineLt::another()->addw(&back_btn)->addw(&name_lbl)->addi(spacer))
-      ->addw(&desc_lbl)->addw(&authors_lbl)->addw(&license_lbl)->addw(&links_lbl)
-      ->addlt(HLineLt::another()->addw(&status_lbl)->addw(&on_off_btn))
+      ->addw(&appeal_lbl)->addw(&desc_lbl)->addw(&authors_lbl)->addw(&license_lbl)
+      ->addw(&links_lbl)->addlt(HLineLt::another()->addw(&status_lbl)->addw(&on_off_btn))
       ->addw(&remove_btn)
   );
 }
@@ -42,7 +37,8 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
 /*! @brief Sets up extension details. */
 void ExtensionsViewerBrief::setup(ExtensionMeta *_extension_meta) {
   extension_meta = _extension_meta;
-  name_lbl.setText("<h1>" + extension_meta->name + "</h1>");
+  name_lbl.setText("<h1>" + extension_meta->title + "</h1>");
+  appeal_lbl.setText("<b>" + tr("Short name:") + "</b> " + extension_meta->name);
   desc_lbl.setText("<b>" + tr("Description:") + "</b> " + extension_meta->desc);
   if (extension_meta->authors.keys().isEmpty()) {
     if (authors_lbl.isVisible()) authors_lbl.setVisible(false);
