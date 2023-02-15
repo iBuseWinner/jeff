@@ -31,7 +31,7 @@ private:
   // Objects:
   ExtensionsManager *em = nullptr;
   ExtensionMeta *extension_meta = nullptr;
-  QLabel name_lbl, desc_lbl, authors_lbl, license_lbl, links_lbl, status_lbl;
+  QLabel name_lbl, appeal_lbl, desc_lbl, authors_lbl, license_lbl, links_lbl, status_lbl;
   Button back_btn, remove_btn, on_off_btn;
   
   // Functions described in `brief.cpp`:

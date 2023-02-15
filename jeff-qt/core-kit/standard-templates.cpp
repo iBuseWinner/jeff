@@ -104,5 +104,11 @@ bool StandardTemplates::fast_commands(const QString &expression) {
     emit shutdown_scenario();
     return true;
   }
+  if (expression.startsWith(basis->appeal_cmd)) {
+    auto extension_name = expression.split(' ')[0].mid(2);
+    if (extension_name.isEmpty()) return false;
+    emit send_to_extension(extension_name, expression);
+    return true;
+  }
   return false;
 }

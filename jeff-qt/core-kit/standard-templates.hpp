@@ -43,6 +43,8 @@ signals:
   void shutdown_scenario();
   /*! @brief Sends an informational message. */
   QString show_info(QString info);
+  /*! @brief TBD */
+  QString send_to_extension(QString extension_name, QString text);
 
 private:
   // Objects:

@@ -12,7 +12,7 @@ ExtensionsViewerCard::ExtensionsViewerCard(
 ) : Board(parent), em(_em), extension_meta(_extension_meta) {
   setStyleSheet(styling.light_theme ? card_light_theme_style : card_dark_theme_style);
   auto *open_btn = new Button(tr("See details"), this);
-  extension_name = new QLabel("<b>" + extension_meta->name + "</b>", this);
+  extension_name = new QLabel("<b>" + extension_meta->title + "</b>", this);
   extension_name->setTextFormat(Qt::RichText);
   extension_description = new QLabel(extension_meta->desc, this);
   extension_description->setWordWrap(true);
@@ -32,7 +32,7 @@ ExtensionsViewerCard::ExtensionsViewerCard(
 
 /*! @brief Updates the card with updated metadata if needed. */
 void ExtensionsViewerCard::update() {
-  extension_name->setText(extension_meta->name);
+  extension_name->setText("<b>" + extension_meta->title + "</b>");
   extension_description->setText(extension_meta->desc);
 }
 

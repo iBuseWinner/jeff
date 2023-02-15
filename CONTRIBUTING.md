@@ -127,6 +127,10 @@ The **Json** class contains methods for saving and restoring message history, ex
 
 * core-kit/basis.hpp & basis.cpp
 
+> The **ScenarioServerMeta** struct contains information about running or queued scenarios.
+
+> The **ExtensionBinding** struct contains information about extensions' appeal and their servers.
+
 > The **Basis** class provides methods for intra-component work. In details, Basis does a lot of important things:  
 >  - provides identifiers for saving settings  
 >  - reads and writes a list of sources, settings and message history  

@@ -33,6 +33,13 @@ struct ScenarioServerMeta {
   QString name;
 };
 
+/*! @brief TBD */
+struct ExtensionBinding {
+  QString name;
+  QHostAddress server_addr;
+  quint16 server_port;
+};
+
 /*! @class Basis
  *  @brief Provides methods for intra-component work.
  *  @details Basis does a lot of important things:
@@ -92,6 +99,7 @@ public:
   static constexpr const char *exprPropsWk        = "expression_properties";
   static constexpr const char *writeMemoryWk      = "store_in_memory";
   static constexpr const char *scenarioReadyWk    = "sready";
+  static constexpr const char *scenarioQueuedWk   = "squeued";
   static constexpr const char *scenarioAddrWk     = "saddr";
   static constexpr const char *scenarioPortWk     = "sport";
   static constexpr const char *scenarioNameWk     = "sname";
@@ -119,6 +127,7 @@ public:
 #endif
   static constexpr const char *fast_append_cmd        = "/+ ";
   static constexpr const char *fast_append_script_cmd = "/++ ";
+  static constexpr const char *appeal_cmd             = "@";
   static constexpr const char *monologue_mode_cmd     = "/mm";
   static constexpr const char *stop_scanner_cmd       = "/-s";
   static constexpr const char *stop_composer_cmd      = "/-c";

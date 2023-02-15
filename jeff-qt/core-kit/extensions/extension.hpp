@@ -30,6 +30,7 @@ public:
   QString origin;
   /*! @brief props from file */
   QString name;
+  QString title;
   QString desc;
   QMap<QString, QMap<QString, QString>> authors;
   QString license;

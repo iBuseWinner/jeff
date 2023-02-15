@@ -4,13 +4,17 @@
 ExtensionMeta::ExtensionMeta() {}
 ExtensionMeta::ExtensionMeta(const QJsonObject &json_object) {
   if (not (
-    json_object.contains("name") and
-    json_object.contains("desc") and
+    json_object.contains("name")    and
+    json_object.contains("title")   and
+    json_object.contains("desc")    and
     json_object.contains("license") and
     json_object.contains("program")
   )) return;
-  name = json_object["name"].toString();
-  desc = json_object["desc"].toString();
+  name    = json_object["name"]   .toString();
+  title   = json_object["title"]  .toString();
+  desc    = json_object["desc"]   .toString();
+  license = json_object["license"].toString();
+  program = json_object["program"].toString();
   if (json_object["authors"].isArray()) {
     QJsonArray authors_arr = json_object["authors"].toArray();
     for (auto v : authors_arr) {
@@ -19,21 +23,16 @@ ExtensionMeta::ExtensionMeta(const QJsonObject &json_object) {
       QMap<QString, QString> contacts;
       if (obj["contacts"].isObject()) {
         auto contacts_obj = obj["contacts"].toObject();
-        for (auto key : contacts_obj.keys()) {
-          contacts[key] = contacts_obj[key].toString();
-        }
+        for (auto key : contacts_obj.keys()) contacts[key] = contacts_obj[key].toString();
       }
       authors[author] = contacts;
     }
   }
-  license = json_object["license"].toString();
   if (json_object["links"].isArray()) {
     auto links_arr = json_object["links"].toArray();
     for (auto link : links_arr) links.append(link.toString());
   }
-  if (json_object.contains("working_dir"))
-    working_dir = json_object["working_dir"].toString();
-  program = json_object["program"].toString();
+  if (json_object.contains("working_dir")) working_dir = json_object["working_dir"].toString();
   if (json_object["envs"].isObject()) {
     auto envs_obj = json_object["envs"].toObject();
     for (auto key : envs_obj.keys()) {
@@ -78,6 +77,7 @@ QJsonObject ExtensionMeta::to_json() const {
   for (auto arg : args) args_arr.append(arg);
   QJsonObject result = {
     {"name", name},
+    {"title", title},
     {"desc", desc},
     {"authors", authors_arr},
     {"license", license},

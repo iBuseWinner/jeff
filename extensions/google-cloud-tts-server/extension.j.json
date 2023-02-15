@@ -1,5 +1,6 @@
 {
-  "name": "Google Cloud TTS",
+  "name": "gctts",
+  "title": "Google Cloud TTS",
   "desc": "The extension voices Jeff's output.",
   "authors": [{
     "author": "Mark CDA",
@@ -17,7 +18,7 @@
   },
   "program": "python",
   "args": [
-    "gtts.py",
+    "gctts.py",
     "<SERVER_PORT>",
     "<JEFF_PORT>"
   ],

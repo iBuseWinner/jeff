@@ -1,5 +1,6 @@
 {
-  "name": "Vosk Voice Recognition",
+  "name": "vosk",
+  "title": "Vosk Voice Recognition",
   "desc": "VVR is an extension that allows voice input in Jeff. Works on Vosk models from AlphaCephei.",
   "authors": [
     {
@@ -11,9 +12,7 @@
     },
     {
       "author": "Mark CDA",
-      "contacts": {
-        "telegram": "@markcda"
-      }
+      "contacts": {"telegram": "@markcda"}
     }
   ],
   "license": "MIT",

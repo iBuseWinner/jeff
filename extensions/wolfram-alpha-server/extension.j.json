@@ -1,5 +1,6 @@
 {
-  "name": "Wolfram Alpha",
+  "name": "walpha",
+  "title": "Wolfram Alpha",
   "desc": "An extension that uses the Wolfram Alpha API to solve problems and answer questions.",
   "authors": [
     {

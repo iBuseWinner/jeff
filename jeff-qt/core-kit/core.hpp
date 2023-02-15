@@ -34,6 +34,7 @@ public:
 
   // Functions described in `core.cpp`:
   Core(QObject *parent = nullptr);
+  void start();
   ~Core();
   void got_message_from_user(const QString &user_expression);
   void got_message_from_jck(const QString &result_expression);
@@ -53,9 +54,7 @@ public:
   void got_modal(ModalHandler *m_handler);
 #endif
   void set_monologue_enabled(const bool enabled);
-  MessageMeta *get_message(const QString &content, Author author, 
-                          ContentType content_type, Theme theme);
-  void start();
+  MessageMeta *create_message(const QString &content, Author author, ContentType content_type, Theme theme);
 
 signals:
 #ifdef JEFF_WITH_QT_WIDGETS
@@ -81,6 +80,11 @@ private:
   bool is_scenario_running = false;
   bool is_user_input_already_sent = false;
   ScenarioServerMeta current_scenario;
+  
+  // Functions described in `core.cpp`:
+  bool fits(const QString &input);
+  void add(MessageMeta *message, bool wm = true);
+  int time_bounds();
 };
 
 #endif

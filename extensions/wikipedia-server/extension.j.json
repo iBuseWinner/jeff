@@ -1,24 +1,19 @@
 {
-  "name": "Wikipedia",
+  "name": "wiki",
+  "title": "Wikipedia",
   "desc": "The module that allows you to get brief information about everything from Wikipedia.",
   "authors": [
     {
       "author": "Mark CDA",
-      "contacts": {
-        "telegram": "@markcda"
-      }
+      "contacts": {"telegram": "@markcda"}
     },
     {
       "author": "Martin Majlis",
-      "contacts": {
-        "email": "martin@majlis.cz"
-      }
+      "contacts": {"email": "martin@majlis.cz"}
     }
   ],
   "license": "MIT",
-  "links": [
-    "https://github.com/martin-majlis/Wikipedia-API"
-  ],
+  "links": ["https://github.com/martin-majlis/Wikipedia-API"],
   "program": "python",
   "args": [
     "wikipedia-server.py",
