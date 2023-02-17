@@ -95,6 +95,8 @@ void Jeff::keyPressEvent(QKeyEvent *event) {
 
 /*! @brief Closes the app. */
 void Jeff::closeEvent(QCloseEvent *event) {
+  save_window_settings();
+  hide();
   core->em->shutdown_extensions();
   event->accept();
 }
