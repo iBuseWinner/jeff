@@ -26,10 +26,6 @@ class Jeff : public QMainWindow {
   Q_OBJECT
   Q_DISABLE_COPY(Jeff)
 public:
-  // Functions:
-  /*! @brief Saves window settings. */
-  ~Jeff() override { save_window_settings(); }
-
   // Functions described in `jeff-ui.cpp`:
   Jeff();
 

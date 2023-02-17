@@ -43,7 +43,8 @@ class Argos2Alice:
         self.j2al = from_lang.get_translation(to_lang)
         self.al2j = to_lang.get_translation(from_lang)
       try:
-        self.al2j.translate("Hello!")
+        text = self.al2j.translate("Hello!")
+        self.j2al.translate(text)
       except:
         cli.send_error('[Argos] Unable to get translator.' if lang != 'ru' else '[Argos] Невозможно воспользоваться переводчиком.')
 
