@@ -50,7 +50,7 @@ class Argos2Alice:
 
   def download(self):
     if verbose: print('Installing translations')
-    cli.send_info('[Alice] Translation models are downloading. This may take some time....' if lang != 'ru' else '[Alice] Скачиваются модели перевода. Это может занять какое-то время...')
+    cli.send_info('[Argos] Translation models are downloading. This may take some time....' if lang != 'ru' else '[Argos] Скачиваются модели перевода. Это может занять какое-то время...')
     argostranslate.package.update_package_index()
     available_packages = argostranslate.package.get_available_packages()
     package_to_install = next(
@@ -65,7 +65,7 @@ class Argos2Alice:
     argostranslate.package.install_from_path(package_to_install.download())
     if verbose: print('Downloaded translations')
     cli.store_cells({'argos2alice-downloaded': f'{self.jeff_lang}-{self.alice_lang}'})
-    cli.send_info('[Alice] Translations downloaded.' if lang != 'ru' else '[Alice] Переводы скачаны.')
+    cli.send_info('[Argos] Translations downloaded.' if lang != 'ru' else '[Argos] Переводы скачаны.')
 
   def to_aiml(self, text):
     try:
@@ -128,7 +128,7 @@ def main():
   
   def exit_gracefully(*args):
     aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
-    del translator
+    del translator # you MUST do this before (!) process terminating because of ctranslate2 side effects
     sys.exit(0)
   
   cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
