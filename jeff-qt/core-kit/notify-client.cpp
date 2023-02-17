@@ -31,6 +31,13 @@ void NotifyClient::notify_scenario_first_time(QString auth_key) {
   socket->connectToHost(scenario_server_meta.server_addr, scenario_server_meta.server_port);
 }
 
+/*! @brief TBD */
+void NotifyClient::notify_only(ExtensionMeta *target, MessageMeta *msg_meta) {
+  for (auto *extension_meta : extensions_meta)
+    if (target == extension_meta)
+      send_event(msg_meta, target->server_addr, target->server_port);
+}
+
 /*! @brief Notifies the extension that the script has finished. */
 void NotifyClient::finish_scenario() {
   if (not is_scenario_running) return;

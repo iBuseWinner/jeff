@@ -27,12 +27,11 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
+    print(data)
     if 'author' not in data: continue
-    if data['author'] == 1: continue
+    if data['author'] != 0: continue
     if data['content_type'] not in (1, 2): continue
-    if not data['content'].startswith('/w '): continue
-    if len(data['content']) <= 3: continue
-    text = data['content'][3 : ]
+    text = data['content']
     res = wa_cli.query(text)
     try:
       answer = next(res.results).text

@@ -20,6 +20,10 @@ public:
   // Functions described in `extensions-viewer.cpp`:
   ExtensionsViewer(ExtensionsManager *_em, QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
   
+signals:
+  /*! @brief TBD */
+  QString show_info(QString text);
+  
 private:
   // Objects:
   ExtensionsViewerOverview *overview = nullptr;

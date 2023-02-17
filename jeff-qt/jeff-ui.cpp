@@ -118,7 +118,7 @@ void Jeff::full_screen_handler() {
 void Jeff::user_input_handler() {
   // If user sends a message, the display automatically scrolls to the end.
   display->set_scroll_enabled(true);
-  QString text = line->line_edit.text();
+  QString text = line->line_edit.text().trimmed();
   line->line_edit.clear();
   emit send(text);
 }

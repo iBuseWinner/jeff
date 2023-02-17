@@ -25,6 +25,7 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(std_templates, &StandardTemplates::changeMonologueMode, this,
           [this] { set_monologue_enabled(not monologue_enabled); });
   connect(std_templates, &StandardTemplates::show_info, this, &Core::got_info);
+  connect(std_templates, &StandardTemplates::send_to_extension, this, &Core::got_to_extension);
   set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
   quint16 port = quint16((*basis)[basis->serverPortSt].toInt());
   if (port == 0) port = 8005;
@@ -66,14 +67,15 @@ Core::~Core() {
 }
 
 /*! @brief Jeff does not respond to blank input. */
-bool Core::fits(const QString &input) { if (input.isEmpty()) return false; return true;}
+bool Core::fits(const QString &input) { if (input.isEmpty()) return false; return true; }
 
 /*! @brief TBD */
-void Core::add(MessageMeta *message, bool wm) {
-  hp->append(message);
-  notifier->notify(message);
-  emit show(message);
-  if (wm and monologue_enabled) jck->search_for_suggests(message->content);
+bool Core::check(const QString &input) {
+#ifdef JEFF_WITH_QT_WIDGETS
+  if (std_templates->dialogues(input)) return true;
+#endif
+  if (std_templates->fast_commands(input)) return true;
+  return false;
 }
 
 /*! @brief TBD */
@@ -86,47 +88,40 @@ int Core::time_bounds() {
 /*! @brief Handles input @a user_expression, displays a message on the screen and launches modules. */
 void Core::got_message_from_user(const QString &user_expression) {
   if (not fits(user_expression)) return;
-  /*! Displays the entered message on the screen. */
-  Yellog::Trace("Got a message from user.");
   auto *message = create_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
-  add(message);
-  /*! If user has entered any command, there is no need to run other modules. */
-#ifdef JEFF_WITH_QT_WIDGETS
-  if (std_templates->dialogues(user_expression)) return;
-#endif
-  if (std_templates->fast_commands(user_expression)) return;
-  Yellog::Trace("\tThe message is neither dialogue nor fast command.");
-   /*!< Notifies only when message isn't any dialog or command. */
-  if (is_scenario_running) return; /*!< @sa ScenarioScript */
-  Yellog::Trace("\tNo scenario, searching for suggests.");
+  hp->append(message);
+  emit show(message);
+  if (check(user_expression)) return;
+  notifier->notify(message);
+  if (is_scenario_running) return;
   jck->search_for_suggests(user_expression);
 }
 
 /*! @brief Processes the output of the JCK module @a result_expression and displays a message on the screen. */
 void Core::got_message_from_jck(const QString &result_expression) {
   if (not fits(result_expression)) return;
-  Yellog::Trace("Got a message from JCK.");
-  auto *message = create_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
-  /*! Delay is triggered if enabled. */
-  Yellog::Trace("\tSetting delay and sending message...");
-  QTimer::singleShot(time_bounds(), this, [this, message, result_expression] { add(message); });
+  QTimer::singleShot(time_bounds(), this, [this, result_expression] {
+    auto *message = create_message(result_expression, Author::Jeff, ContentType::Markdown, Theme::Std);
+    hp->append(message);
+    emit show(message);
+    if (check(result_expression)) return;
+    notifier->notify(message);
+    if (monologue_enabled) jck->search_for_suggests(result_expression);
+  });
 }
 
 /*! @brief Notifies those extensions that are designed to handle cases where JCK cannot answer a question. */
 void Core::got_no_jck_output(const QString &user_expression) {
-  Yellog::Trace("Got no output from JCK. Gonna notify all others...");
   auto *message = create_message(user_expression, Author::User, ContentType::Markdown, Theme::Std);
   notifier->notify(message, true);
 }
 
 /*! @brief Runs an extension process and sets notifications if necessary. */
-void Core::got_extension_start(ExtensionMeta *extension_meta) {
-  em->add_extension(extension_meta);
-}
+void Core::got_extension_start(ExtensionMeta *extension_meta) { em->add_extension(extension_meta); }
 
 /*! @brief Notifies the extension that the scenario has started and passes the authentication data. */
+/*! WARNING TBD @sa Basis::handle_from_script and @sa README.md::Queue of scenarios */
 void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
-  Yellog::Trace("Got scenario start. Notifier goes brrr... (it's okay, don't worry.)");
   is_scenario_running = true;
   current_scenario = scenario_meta;
   notifier->set_scenario(current_scenario);
@@ -140,45 +135,36 @@ void Core::got_scenario_shutting() {
   basis->clear_stoken();
   is_scenario_running = false;
   emit change_menubar_scenario_name(QString());
-  Yellog::Trace("Scenario is finished.");
 }
 
 /*! @brief Shows output from script or outter app on the screen. */
 void Core::got_message_from_script(const QString &outter_message) {
   if (not fits(outter_message)) return;
-  Yellog::Trace("Got a message from script.");
-  auto *message = create_message(outter_message, Author::Jeff, ContentType::Markdown, Theme::Std);
-  /*! Delay is triggered if enabled. */
-  Yellog::Trace("\tSetting delay and sending message...");
-  QTimer::singleShot(time_bounds(), this, [this, message, outter_message] { add(message); });
+  QTimer::singleShot(time_bounds(), this, [this, outter_message] {
+    auto *message = create_message(outter_message, Author::Jeff, ContentType::Markdown, Theme::Std);
+    hp->append(message);
+    emit show(message);
+    if (check(outter_message)) return;
+    notifier->notify(message);
+    if (monologue_enabled) jck->search_for_suggests(outter_message);
+  });
 }
 
 /*! @brief Searches again. */
 void Core::got_message_to_search_again(const QString &rephrased_message) {
   if (not fits(rephrased_message)) return;
-  Yellog::Trace("Got a message to search again.");
-#ifdef JEFF_WITH_QT_WIDGETS
-  if (std_templates->dialogues(rephrased_message)) return;
-#endif
-  if (std_templates->fast_commands(rephrased_message)) return;
+  if (check(rephrased_message)) return;
   jck->search_for_suggests(rephrased_message);
 }
 
 /*! @brief Shows the message and searches again. */
 void Core::got_message_from_script_as_user(const QString &outter_message) {
   if (not fits(outter_message)) return;
-  /*! Displays the entered message on the screen. */
-  Yellog::Trace("Got a message from script to be sent as from user.");
   auto *message = create_message(outter_message, Author::User, ContentType::Markdown, Theme::Blue);
-  add(message, false);
-  /*! If a user has entered the command, there is no need to run other modules. */
-#ifdef JEFF_WITH_QT_WIDGETS
-  if (std_templates->dialogues(outter_message)) return;
-#endif
-  if (std_templates->fast_commands(outter_message)) return;
-  Yellog::Trace("\tThe message is neither dialogue nor fast command.");
-  if (is_scenario_running) return; /*!< @sa ScenarioScript */
-  Yellog::Trace("\tNo scenario, searching for suggests.");
+  hp->append(message);
+  emit show(message);
+  if (check(outter_message)) return;
+  notifier->notify(message);
   jck->search_for_suggests(outter_message);
 }
 
@@ -186,11 +172,7 @@ void Core::got_message_from_script_as_user(const QString &outter_message) {
 void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
   if (id_and_message.first.isEmpty() or id_and_message.second.isEmpty()) return;
   if (id_and_message.first.length() < 24) return;
-  Yellog::Trace("Hello darkness, my old friend, I've come to talk with you again... and again... ");
-  Yellog::Trace("You've just got an updateable message though.");
   auto *message = create_message(id_and_message.second, Author::Jeff, ContentType::Markdown, Theme::Std);
-  /*! Delay is triggered if enabled. */
-  Yellog::Trace("\tSetting delay and sending message...");
   QTimer::singleShot(time_bounds(), this, [this, message, id_and_message] {
     hp->append(message);
     notifier->notify(message);
@@ -202,28 +184,37 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
 /*! @brief Displays @a info_text. */
 void Core::got_info(const QString &info_text) {
   if (not fits(info_text)) return;
-  /*! The warning color is green. */
-  Yellog::Trace("Got an info.");
   auto *message = create_message(info_text, Author::Jeff, ContentType::Markdown, Theme::Green);
-  add(message, false);
+  hp->append(message);
+  emit show(message);
+  notifier->notify(message);
 }
 
 /*! @brief Displays @a warning_text. */
 void Core::got_warning(const QString &warning_text) {
   if (not fits(warning_text)) return;
-  /*! The warning color is yellow. */
-  Yellog::Trace("Got a warning.");
   auto *message = create_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
-  add(message, false);
+  hp->append(message);
+  emit show(message);
+  notifier->notify(message);
 }
 
 /*! @brief Displays @a errorText. */
 void Core::got_error(const QString &error_text) {
   if (not fits(error_text)) return;
-  /*! The error color is red. */
-  Yellog::Trace("Got an error.");
   auto *message = create_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
-  add(message, false);
+  hp->append(message);
+  emit show(message);
+  notifier->notify(message);
+}
+
+/*! @brief TBD */
+void Core::got_to_extension(const QString &extension_name, const QString &text) {
+  auto *extension_meta = em->get_ext_meta_by_name(extension_name);
+  if (not extension_meta) return;
+  if (not extension_meta->is_server) return;
+  auto *message = create_message(text, Author::undefA, ContentType::Text, Theme::Std);
+  notifier->notify_only(extension_meta, message);
 }
 
 #ifdef JEFF_WITH_QT_WIDGETS

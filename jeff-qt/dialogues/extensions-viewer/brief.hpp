@@ -26,17 +26,21 @@ public:
 signals:
   /*! @brief Asks to close brief and show overview again. */
   void close_brief();
+  /*! @brief TBD */
+  QString show_info(QString text);
 
 private:
   // Objects:
   ExtensionsManager *em = nullptr;
   ExtensionMeta *extension_meta = nullptr;
   QLabel name_lbl, appeal_lbl, desc_lbl, authors_lbl, license_lbl, links_lbl, status_lbl;
-  Button back_btn, remove_btn, on_off_btn;
+  Button back_btn, on_off_btn, remove_btn, print_stdout_btn, print_stderr_btn;
   
   // Functions described in `brief.cpp`:
   void update_status();
   void remove_extension();
+  void get_ext_stdout();
+  void get_ext_stderr();
 };
 
 #endif

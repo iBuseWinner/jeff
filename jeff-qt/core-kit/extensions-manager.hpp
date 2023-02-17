@@ -46,6 +46,9 @@ public:
   ExtensionsMeta get_extensions_meta();
   void startup();
   void shutdown_extensions();
+  QByteArray get_stdout(ExtensionMeta *extension_meta);
+  QByteArray get_stderr(ExtensionMeta *extension_meta);
+  ExtensionMeta *get_ext_meta_by_name(QString name);
 
 signals:
   /*! @brief Notifies of a extension's error. */

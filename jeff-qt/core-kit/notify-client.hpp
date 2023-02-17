@@ -22,6 +22,7 @@ public:
   void unsubscribe_all();
   void notify(MessageMeta *msg_meta, bool no_jck_output = false);
   void notify_scenario_first_time(QString auth_key);
+  void notify_only(ExtensionMeta *target, MessageMeta *msg_meta);
   void set_scenario(ScenarioServerMeta _scenario_server_meta);
   void finish_scenario();
   void unset_scenario();

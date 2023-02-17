@@ -90,7 +90,7 @@ QJsonObject DaemonProcess::request_output(
     transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
   }
   QJsonDocument payload_doc(transport);
-  process.start();
+  process.start(QProcess::Unbuffered | QProcess::ReadWrite);
   process.waitForStarted(500);
   Yellog::Trace("\tProcess must be started at this point.");
   Yellog::Trace("\tWriting payload and waiting for finished...");
@@ -118,3 +118,6 @@ QJsonObject DaemonProcess::request_output(
 
 /*! @brief Reads all standard output. */
 QByteArray DaemonProcess::get_output() { return readAllStandardOutput(); }
+
+/*! @brief Reads all standard error. */
+QByteArray DaemonProcess::get_error() { return readAllStandardError(); }

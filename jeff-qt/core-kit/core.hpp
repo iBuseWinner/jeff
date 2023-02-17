@@ -50,6 +50,7 @@ public:
   void got_info(const QString &info_text);
   void got_warning(const QString &warning_text);
   void got_error(const QString &error_text);
+  void got_to_extension(const QString &extension_name, const QString &text);
 #ifdef JEFF_WITH_QT_WIDGETS
   void got_modal(ModalHandler *m_handler);
 #endif
@@ -83,7 +84,7 @@ private:
   
   // Functions described in `core.cpp`:
   bool fits(const QString &input);
-  void add(MessageMeta *message, bool wm = true);
+  bool check(const QString &input);
   int time_bounds();
 };
 

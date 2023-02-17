@@ -47,7 +47,6 @@ def try_locate():
 
 
 def recognize(request, savepath):
-  if request["author"] == 1: return
   if not (request["content"].endswith('.jpg') or request["content"].endswith('.png')): return
   path = request["content"]
   file_ext = path[-4:]
