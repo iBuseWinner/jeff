@@ -38,9 +38,10 @@ def wiki_navigator(query, at_words):
       variants = [v for v in variants[0]]
       ep = 'Select one of these articles:' if lang != 'ru' else 'Выберите одну из этих статей:'
       variants = [ep] + variants
-      msg = '\n'.join([variants[0]] + ['. '.join([str(i), variants[i]]) for i in range(1, len(variants))])
+      msg = '  \n'.join([variants[0]] + ['. '.join([str(i), variants[i]]) for i in range(1, len(variants))])
       scn.send_msg(msg)
       op = scn.wait()
+      if verbose: print(f'"{op}"')
       if not op.isdigit():
         scn.terminate()
         return
@@ -58,7 +59,7 @@ def wiki_navigator(query, at_words):
     scn.send_msg('Want to know more? **(y/[n])**' if lang != 'ru' else 'Хотите узнать больше? **(y/[n])**')
     op = scn.wait()
     if verbose: print(op)
-    if op != 'y':
+    if 'y' not in op:
       if verbose: print('Not wanted to know more')
       scn.terminate()
       return
@@ -80,11 +81,11 @@ def wiki_navigator(query, at_words):
 
 def main():
   wiki.set_lang(lang)
+  cli.send_info('[Wiki] Extension started.' if lang != 'ru' else '[Wiki] Расширение запущено.')
   while True:
     data = srv.listen()
     if len(data) == 0: continue
-    if 'author' not in data: continue
-    if data['author'] == 1: continue
+    if not 'content' in data: continue
     cc = data['content'].lower()
     for at_words in ATTENTION_WORDS:
       if at_words in cc:

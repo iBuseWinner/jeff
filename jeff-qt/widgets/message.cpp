@@ -126,7 +126,7 @@ void Message::setup_markdown() {
 
 /*! @brief Turns a plain text with Markdown syntax into HTML. */
 QString Message::from_plain_to_markdown(QString content) {
-  auto preformatted = content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+  auto preformatted = content.replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;").replace("_", "&#95;");
   auto markdown = preformatted.toStdString();
   hoedown_buffer *buf = hoedown_buffer_new(16);
   hoedown_renderer *renderer = hoedown_html_renderer_new(HOEDOWN_HTML_ESCAPE, 0);

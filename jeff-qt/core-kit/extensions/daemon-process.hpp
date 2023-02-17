@@ -29,6 +29,7 @@ public:
     const Expression &expression, const QString &input
   );
   QByteArray get_output();
+  QByteArray get_error();
 
 signals:
   /*! @brief Notifies about execution error. */

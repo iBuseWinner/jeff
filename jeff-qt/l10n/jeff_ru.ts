@@ -147,6 +147,22 @@
         <source>Short name:</source>
         <translation>Короткое имя:</translation>
     </message>
+    <message>
+        <source>Stdout data from @</source>
+        <translation>Данные stdout из @</translation>
+    </message>
+    <message>
+        <source>Stderr data from @</source>
+        <translation>Данные stderr из @</translation>
+    </message>
+    <message>
+        <source>Print stdout</source>
+        <translation>Распечатать stdout</translation>
+    </message>
+    <message>
+        <source>Print stderr</source>
+        <translation>Распечатать stderr</translation>
+    </message>
 </context>
 <context>
     <name>ExtensionsViewerCard</name>

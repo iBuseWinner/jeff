@@ -53,7 +53,7 @@ void ExtensionsManager::start_extension(ExtensionMeta *extension_meta) {
     emit extension_exception(error_text);
   });
   Yellog::Trace("\tStarting a process...");
-  proc->start();
+  proc->start(QProcess::Unbuffered | QProcess::ReadOnly);
   _running.append(proc);
   if (extension_meta->is_server) {
     Yellog::Trace("\tSubscribing to notifier...");
@@ -104,3 +104,27 @@ bool ExtensionsManager::is_running(ExtensionMeta *extension_meta) {
 
 /*! @brief Returns the general list of daemons' metadata. */
 ExtensionsMeta ExtensionsManager::get_extensions_meta() { return _extensions_meta; }
+
+/*! @brief TBD */
+QByteArray ExtensionsManager::get_stdout(ExtensionMeta *extension_meta) {
+  for (auto *extension : _running)
+    if (extension->is_spawner(extension_meta))
+      return extension->get_output();
+  return QByteArray();
+}
+
+/*! @brief TBD */
+QByteArray ExtensionsManager::get_stderr(ExtensionMeta *extension_meta) {
+  for (auto *extension : _running)
+    if (extension->is_spawner(extension_meta))
+      return extension->get_error();
+  return QByteArray();
+}
+
+/*! @brief TBD */
+ExtensionMeta *ExtensionsManager::get_ext_meta_by_name(QString name) {
+  for (auto *extension_meta : _extensions_meta)
+    if (name == extension_meta->name)
+      return extension_meta;
+  return nullptr;
+}

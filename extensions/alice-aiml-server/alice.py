@@ -29,11 +29,23 @@ class Argos2Alice:
         self.download()
       elif cells['argos2alice-downloaded'] != f'{self.jeff_lang}-{self.alice_lang}':
         self.download()
-      installed_languages = argostranslate.translate.get_installed_languages()
-      from_lang = list(filter(lambda x: x.code == self.jeff_lang, installed_languages))[0]
-      to_lang = list(filter(lambda x: x.code == self.alice_lang, installed_languages))[0]
-      self.j2al = from_lang.get_translation(to_lang)
-      self.al2j = to_lang.get_translation(from_lang)
+      try:
+        installed_languages = argostranslate.translate.get_installed_languages()
+        from_lang = list(filter(lambda x: x.code == self.jeff_lang, installed_languages))[0]
+        to_lang = list(filter(lambda x: x.code == self.alice_lang, installed_languages))[0]
+        self.j2al = from_lang.get_translation(to_lang)
+        self.al2j = to_lang.get_translation(from_lang)
+      except Exception as e:
+        self.download()
+        installed_languages = argostranslate.translate.get_installed_languages()
+        from_lang = list(filter(lambda x: x.code == self.jeff_lang, installed_languages))[0]
+        to_lang = list(filter(lambda x: x.code == self.alice_lang, installed_languages))[0]
+        self.j2al = from_lang.get_translation(to_lang)
+        self.al2j = to_lang.get_translation(from_lang)
+      try:
+        self.al2j.translate("Hello!")
+      except:
+        cli.send_error('[Argos] Unable to get translator.' if lang != 'ru' else '[Argos] Невозможно воспользоваться переводчиком.')
 
   def download(self):
     if verbose: print('Installing translations')
@@ -55,24 +67,24 @@ class Argos2Alice:
     cli.send_info('[Alice] Translations downloaded.' if lang != 'ru' else '[Alice] Переводы скачаны.')
 
   def to_aiml(self, text):
-    if self.alice_lang == self.jeff_lang: return text
-    return self.j2al.translate(text)
+    try:
+      if self.alice_lang == self.jeff_lang: return text
+      return self.j2al.translate(text)
+    except:
+      return text
   
   def from_aiml(self, text):
-    if self.alice_lang == self.jeff_lang: return text
-    return self.al2j.translate(text)
+    try:
+      if self.alice_lang == self.jeff_lang: return text
+      return self.al2j.translate(text)
+    except:
+        return text
 
 
 class AliceResponder:
   def __init__(self, aiml_kernel):
     self.aiml_kernel = aiml_kernel
     self.tr = None
-    signal.signal(signal.SIGINT, self.exit_gracefully)
-    signal.signal(signal.SIGTERM, self.exit_gracefully)
-
-  def exit_gracefully(self, *args):
-    self.aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
-    sys.exit(0)
 
   def with_tr(self, tr):
     self.tr = tr
@@ -82,7 +94,6 @@ class AliceResponder:
     while True:
       data = srv.listen()
       if len(data) == 0: continue
-      if data['author'] == 1: continue
       if len(data['content']) == 0: continue
       if data['content'].startswith('/'): continue
       received = data['content']
@@ -112,8 +123,17 @@ def main():
     current_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'files', 'standard')
     aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
   translator = Argos2Alice('en', lang)
+  alice = AliceResponder(aiml_kernel).with_tr(translator)
+  
+  def exit_gracefully(*args):
+    aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
+    del translator
+    sys.exit(0)
+  
   cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
-  AliceResponder(aiml_kernel).with_tr(translator).run_loop(cli, srv)
+  signal.signal(signal.SIGINT, exit_gracefully)
+  signal.signal(signal.SIGTERM, exit_gracefully)
+  alice.run_loop(cli, srv)
 
 
 try:

@@ -48,6 +48,7 @@ bool StandardTemplates::dialogues(const QString &expression) {
   if (expression == basis->extensions_viewer_cmd) {
     auto *modal_handler = new ModalHandler(this);
     auto *extensions_viewer = new ExtensionsViewer(em, nullptr, modal_handler);
+    connect(extensions_viewer, &ExtensionsViewer::show_info, this, [this](QString text) { emit show_info(text); });
     Q_UNUSED(extensions_viewer)
     emit showModalWidget(modal_handler);
     return true;
@@ -105,9 +106,11 @@ bool StandardTemplates::fast_commands(const QString &expression) {
     return true;
   }
   if (expression.startsWith(basis->appeal_cmd)) {
-    auto extension_name = expression.split(' ')[0].mid(2);
+    auto extension_name = expression.split(' ')[0].mid(1);
     if (extension_name.isEmpty()) return false;
-    emit send_to_extension(extension_name, expression);
+    auto text = expression.mid(2 + extension_name.length());
+    if (text.isEmpty()) return false;
+    emit send_to_extension(extension_name, text);
     return true;
   }
   return false;

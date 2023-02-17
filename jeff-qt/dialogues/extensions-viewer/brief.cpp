@@ -4,7 +4,11 @@
 ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *parent) : QWidget(parent), em(_em) {
   connect(&back_btn, &Button::clicked, this, [this] { extension_meta = nullptr; emit close_brief(); });
   connect(&remove_btn, &Button::clicked, this, &ExtensionsViewerBrief::remove_extension);
+  connect(&print_stdout_btn, &Button::clicked, this, &ExtensionsViewerBrief::get_ext_stdout);
+  connect(&print_stderr_btn, &Button::clicked, this, &ExtensionsViewerBrief::get_ext_stderr);
   remove_btn.setText(tr("Remove this extension from Jeff"));
+  print_stdout_btn.setText(tr("Print stdout"));
+  print_stderr_btn.setText(tr("Print stderr"));
   back_btn.setIcon(QIcon::fromTheme("go-previous", QIcon(":/arts/icons/16/go-previous.svg")));
   remove_btn.setIcon(QIcon::fromTheme("edit-delete", QIcon(":/arts/icons/16/edit-delete.svg")));
   desc_lbl.setWordWrap(true);
@@ -30,7 +34,7 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
       ->addlt(HLineLt::another()->addw(&back_btn)->addw(&name_lbl)->addi(spacer))
       ->addw(&appeal_lbl)->addw(&desc_lbl)->addw(&authors_lbl)->addw(&license_lbl)
       ->addw(&links_lbl)->addlt(HLineLt::another()->addw(&status_lbl)->addw(&on_off_btn))
-      ->addw(&remove_btn)
+      ->addw(&remove_btn)->addlt(HLineLt::another()->addw(&print_stdout_btn)->addw(&print_stderr_btn))
   );
 }
 
@@ -68,12 +72,16 @@ void ExtensionsViewerBrief::setup(ExtensionMeta *_extension_meta) {
   status_lbl.setText("<i>" + tr("Waiting status...") + "</i>");
   on_off_btn.setText(tr("Control"));
   on_off_btn.setEnabled(false);
+  print_stdout_btn.setEnabled(false);
+  print_stderr_btn.setEnabled(false);
   update_status();
 }
 
 /*! @brief Displays every second whether an extension is running or not. */
 void ExtensionsViewerBrief::update_status() {
   if (not extension_meta) return;
+  print_stdout_btn.setEnabled(true);
+  print_stderr_btn.setEnabled(true);
   if (isVisible()) {
     if (not on_off_btn.isEnabled()) {
       on_off_btn.setEnabled(true);
@@ -106,4 +114,18 @@ void ExtensionsViewerBrief::update_status() {
 void ExtensionsViewerBrief::remove_extension() {
   em->remove_extension(extension_meta);
   emit close_brief();
+}
+
+/*! @brief TBD */
+void ExtensionsViewerBrief::get_ext_stdout() {
+  auto bytes = em->get_stdout(extension_meta);
+  if (bytes.isEmpty()) return;
+  emit show_info(tr("Stdout data from @") + extension_meta->name + ": \n" + QString::fromUtf8(bytes));
+}
+
+/*! @brief TBD */
+void ExtensionsViewerBrief::get_ext_stderr() {
+  auto bytes = em->get_stderr(extension_meta);
+  if (bytes.isEmpty()) return;
+  emit show_info(tr("Stderr data from @") + extension_meta->name + ": \n" + QString::fromUtf8(bytes));
 }

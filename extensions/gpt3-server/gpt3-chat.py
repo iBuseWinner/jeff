@@ -8,7 +8,7 @@ KEEP_QNA = 9
 ai_sequence = "\nAI: "
 human_sequence = "\nHuman: "
 
-prompt = "The following is a conversation with an AI assistant. The assistant is helpful, sociable, verbose, creative, clever, and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff created by Mark CDA and Victor Shamshin. I use an AI model created by OpenAI. How can I help you today?"
+prompt = "The following is a conversation with an AI assistant. The assistant is helpful, clever and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff, automation tool. I use an AI model created by OpenAI. How can I help you today?"
 
 parser = argparse.ArgumentParser(description="Chat resolver written on top of OpenAI's GPT-3 model, also used in a similar way in ChatGPT.")
 parser.add_argument("extension_port", type=int, help="extension's server port")
@@ -26,8 +26,8 @@ lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
 # WARNING To use credentials, you have to fill it in `credentials-example.py` file and rename it to `credentials.py`.
 if lang == "ru":
-  os.environ["http_proxy"] = credentials.HTTP_PROXY
-  os.environ["https_proxy"] = credentials.HTTPS_PROXY
+  os.environ["HTTP_PROXY"] = credentials.HTTP_PROXY
+  os.environ["HTTPS_PROXY"] = credentials.HTTPS_PROXY
 openai.api_key = credentials.API_KEY
 
 
@@ -74,22 +74,22 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
-    if data['author'] == 1: continue
     if data['content_type'] not in (1, 2): continue
     if len(data['content']) < 10: continue
-    if not data['content'].startswith('/g '): continue
-    if len(data['content']) <= 3: continue
-    text = data['content'][3 : ]
+    if data['author'] != 0: continue
+    text = data['content']
     msg_id = str(uuid.uuid4())
     cli.send_status(msg_id, '*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
     if verbose: print('*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
     history.append(human_sequence + text)
     response = generate_response(make_prompt(history)).strip()
-    if len(response) == 0: cli.send_status(msg_id, '')
-    history.append(response)
-    cli.send_status(msg_id, response.replace(ai_sequence, ''))
-    if verbose: print(response.replace(ai_sequence, ''))
-    history = history_reducer(history)
+    if len(response) == 0:
+      cli.send_status(msg_id, '[GPT-3] Asnwer is not found.' if lang != 'ru' else '[GPT-3] Ответ не найден.')
+    else:
+      history.append(response)
+      cli.send_status(msg_id, response.replace(ai_sequence, ''))
+      if verbose: print(response.replace(ai_sequence, ''))
+      history = history_reducer(history)
 
 
 try:

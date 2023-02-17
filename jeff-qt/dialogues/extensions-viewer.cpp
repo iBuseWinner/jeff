@@ -15,6 +15,7 @@ ExtensionsViewer::ExtensionsViewer(
   brief = new ExtensionsViewerBrief(_em, this);
   brief->setFixedWidth(480);
   connect(brief, &ExtensionsViewerBrief::close_brief, this, &ExtensionsViewer::open_overview);
+  connect(brief, &ExtensionsViewerBrief::show_info, this, [this](QString text) { emit show_info(text); });
   brief->hide();
   // Shows overview.
   viewer_layout = GridLt::another()->spacing()->addw(overview);
