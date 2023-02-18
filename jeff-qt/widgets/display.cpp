@@ -129,13 +129,14 @@ void Display::scroller(int value) {
     short portion = max_message_amount / 2;
     if (message_counter + portion > length) portion = length - message_counter;
     auto *messages = hp->messages();
+    auto max_width = int(width() * 0.8);
     while (portion--) {
       auto *message = new Message(messages->at(messages->length() - message_counter - 1));
       all_messages.insert(0, message);
       int pos = 0;
       if (spacer) pos = 1;
+      message->setWidth(max_width);
       vt_layout->insertWidget(pos, message);
-      message->show();
       message_counter++;
     }
     verticalScrollBar()->setValue(1);
