@@ -4,7 +4,7 @@
 
 from jeff_api import client, server, scenario
 
-srv = server.Server(None, 30003)
+srv = server.Server(None, 30004)
 cli = client.Client('localhost', 8005)
 scn = scenario.Scenario(cli, srv, "Example scenario")
 

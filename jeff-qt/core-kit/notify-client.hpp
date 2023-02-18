@@ -22,8 +22,9 @@ public:
   void unsubscribe_all();
   void notify(MessageMeta *msg_meta, bool no_jck_output = false);
   void notify_scenario_first_time(QString auth_key);
+  void notify_about_queued(ScenarioServerMeta _scenario_meta);
   void notify_only(ExtensionMeta *target, MessageMeta *msg_meta);
-  void set_scenario(ScenarioServerMeta _scenario_server_meta);
+  void set_scenario(ScenarioServerMeta _scenario_meta);
   void finish_scenario();
   void unset_scenario();
   
@@ -31,7 +32,7 @@ private:
   // Objects:
   ExtensionsMeta extensions_meta;
   bool is_scenario_running = false;
-  ScenarioServerMeta scenario_server_meta;
+  ScenarioServerMeta scenario_meta;
   
   // Functions described in `notify-client.cpp`:
   void send_event(MessageMeta *msg_meta, QHostAddress addr, quint16 port);

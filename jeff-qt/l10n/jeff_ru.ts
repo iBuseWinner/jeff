@@ -47,6 +47,18 @@
         <source>Jeff - chatbot and automation tool</source>
         <translation>Джефф - чат-бот и средство автоматизации</translation>
     </message>
+    <message>
+        <source>Help with translation</source>
+        <translation>Помощь с переводом</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Ссылка</translation>
+    </message>
+    <message>
+        <source>Thanks</source>
+        <translation>Благодарности</translation>
+    </message>
 </context>
 <context>
     <name>Basis</name>

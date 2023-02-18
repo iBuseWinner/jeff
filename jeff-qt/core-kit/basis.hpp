@@ -3,6 +3,7 @@
 
 #include "core-kit/database/json.hpp"
 #include "core-kit/database/sqlite.hpp"
+#include "core-kit/extensions/scenario.hpp"
 #include "core-kit/model/keystore.hpp"
 #include "core-kit/model/message.hpp"
 #include "core-kit/model/nlp/cacher.hpp"
@@ -18,27 +19,11 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QList>
-#include <QMutex>
 #include <QPair>
 #include <QSettings>
 #include <QString>
 #include <QTextStream>
 #include <QVariant>
-
-/*! @brief The address and port of the server responsible for the specific scenario. */
-struct ScenarioServerMeta {
-  QHostAddress server_addr;
-  quint16 server_port;
-  QString auth_key;
-  QString name;
-};
-
-/*! @brief TBD */
-struct ExtensionBinding {
-  QString name;
-  QHostAddress server_addr;
-  quint16 server_port;
-};
 
 /*! @class Basis
  *  @brief Provides methods for intra-component work.
@@ -58,6 +43,7 @@ public:
   static constexpr const char *applicationName = "jeff";
 
   static constexpr const char *isMenuBarHiddenSt = "jeff-qt/menubarishidden";
+  static constexpr const char *posSt             = "jeff-qt/pos";
   static constexpr const char *sizeSt            = "jeff-qt/size";
   static constexpr const char *isFullScreenSt    = "jeff-qt/isfullscreen";
   static constexpr const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
@@ -141,7 +127,7 @@ public:
 
   // Functions:
   /*! @brief The destructor. */
-  ~Basis() { save_memory(); }
+  ~Basis() { save_memory(); _settings.sync(); }
 
   /*! @brief Determines if a settings file exists. */
   inline bool exists() { return QFile::exists(_settings.fileName()); }
@@ -153,6 +139,8 @@ public:
   inline bool correct() { return _settings.status() != QSettings::FormatError; }
   /*! @brief Clears scenario's token. */
   inline void clear_stoken() { _scenario_token = QString(); }
+  /*! @brief Sets scenario's token. */
+  inline void set_stoken(const QString &token) { _scenario_token = token; }
 
   /*! @brief Reads the setting. */
   inline QVariant read(const QString &key)       { return _settings.value(key); }
@@ -196,16 +184,18 @@ signals:
   QPair<QString, QString> send_status(QPair<QString, QString> id_and_message);
   /*! @brief Reports that sources has been changed. */
   void sources_changed();
-  /*! @brief Sends last message to scenario. @sa Core */
+  /*! @brief Starts a scenario. @sa Core */
   ScenarioServerMeta start_scenario(ScenarioServerMeta scenario_meta);
+  /*! @brief Adds a script to the queue. */
+  ScenarioServerMeta schedule_scenario(ScenarioServerMeta scenario_meta);
   /*! @brief Stops current scenario. */
   void shutdown_scenario();
 
 private:
   // Objects:
-  Sources _sources = Sources();   /*!< List of sources for @a JCK. */
-  KeyStore _memory = KeyStore();  /*!< Long-life memory. */
-  QString _scenario_token = "";   /*!< Token for scenarios. */
+  Sources _sources = Sources();    /*!< List of sources for @a JCK.  */
+  QString _scenario_token = "";    /*!< Token for scenarios.     */
+  KeyStore _memory = KeyStore();   /*!< Long-life memory.    */
 
   /*! Qt settings object. */
   QSettings _settings = QSettings(QSettings::IniFormat, QSettings::UserScope, companyName, applicationName);

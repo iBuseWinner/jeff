@@ -17,6 +17,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QPair>
+#include <QPoint>
 #include <QResizeEvent>
 #include <QWidget>
 

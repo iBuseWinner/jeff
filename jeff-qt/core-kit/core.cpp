@@ -9,6 +9,7 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::send_as_user, this, &Core::got_message_from_script_as_user);
   connect(basis, &Basis::send_status, this, &Core::got_status_from_script);
   connect(basis, &Basis::start_scenario, this, &Core::got_scenario_start);
+  connect(basis, &Basis::schedule_scenario, this, &Core::add_to_scheduler);
   connect(basis, &Basis::shutdown_scenario, this, &Core::got_scenario_shutting);
   basis->check_settings_file();
   basis->check_default_source();
@@ -80,9 +81,12 @@ bool Core::check(const QString &input) {
 
 /*! @brief TBD */
 int Core::time_bounds() {
-  return (*basis)[basis->isDelayEnabledSt].toBool()
-          ? QRandomGenerator().bounded((*basis)[basis->minDelaySt].toInt(), (*basis)[basis->maxDelaySt].toInt())
-          : 0;
+  auto is_bounded = (*basis)[basis->isDelayEnabledSt].toBool();
+  if (is_bounded) {
+    auto b1 = (*basis)[basis->minDelaySt].toInt();
+    auto b2 = (*basis)[basis->maxDelaySt].toInt();
+    return QRandomGenerator().bounded(b1, b2);
+  } else return 0;
 }
 
 /*! @brief Handles input @a user_expression, displays a message on the screen and launches modules. */
@@ -117,16 +121,23 @@ void Core::got_no_jck_output(const QString &user_expression) {
 }
 
 /*! @brief Runs an extension process and sets notifications if necessary. */
-void Core::got_extension_start(ExtensionMeta *extension_meta) { em->add_extension(extension_meta); }
+void Core::got_extension_start(ExtensionMeta *extension_meta) {
+  em->add_extension(extension_meta);
+}
 
 /*! @brief Notifies the extension that the scenario has started and passes the authentication data. */
-/*! WARNING TBD @sa Basis::handle_from_script and @sa README.md::Queue of scenarios */
-void Core::got_scenario_start(ScenarioServerMeta scenario_meta) {
+void Core::got_scenario_start(const ScenarioServerMeta &scenario_meta) {
   is_scenario_running = true;
   current_scenario = scenario_meta;
   notifier->set_scenario(current_scenario);
   notifier->notify_scenario_first_time(current_scenario.auth_key);
   emit change_menubar_scenario_name(current_scenario.name);
+}
+
+/*! @brief TBD */
+void Core::add_to_scheduler(const ScenarioServerMeta &scenario_meta) {
+  _squeue.append(scenario_meta);
+  notifier->notify_about_queued(scenario_meta);
 }
 
 /*! @brief Disables scenario. */
@@ -135,6 +146,11 @@ void Core::got_scenario_shutting() {
   basis->clear_stoken();
   is_scenario_running = false;
   emit change_menubar_scenario_name(QString());
+  if (not _squeue.isEmpty()) {
+    auto scenario_meta = _squeue.takeFirst();
+    basis->set_stoken(scenario_meta.auth_key);
+    got_scenario_start(scenario_meta);
+  }
 }
 
 /*! @brief Shows output from script or outter app on the screen. */
@@ -171,7 +187,7 @@ void Core::got_message_from_script_as_user(const QString &outter_message) {
 /*! @brief Shows updateable message. @details Checks id's length. */
 void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
   if (id_and_message.first.isEmpty() or id_and_message.second.isEmpty()) return;
-  if (id_and_message.first.length() < 24) return;
+  if (id_and_message.first.length() < 24) return; /*!< Too much small ID; reject now. */
   auto *message = create_message(id_and_message.second, Author::Jeff, ContentType::Markdown, Theme::Std);
   QTimer::singleShot(time_bounds(), this, [this, message, id_and_message] {
     hp->append(message);
