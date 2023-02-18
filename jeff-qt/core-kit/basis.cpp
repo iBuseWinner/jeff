@@ -32,6 +32,7 @@ void Basis::warn_about(QString warning_text) {
 
 /*! @brief Checks if there is a standard source, and otherwise sets the first source in the list as standard.  */
 void Basis::check_default_source() {
+  Yellog::Trace("Checking default source...");
   QVariant path = read(defaultSourcePath);
   QVariant container = read(defaultSourceContainer);
   if (not path.isValid() or not container.isValid()) set_first_source_as_default();
@@ -72,6 +73,7 @@ void Basis::write(const QString &key, const QVariant &data) {
 /*! @brief Loads @a _sources from file. */
 void Basis::load_sources() {
   if (not _sources.isEmpty()) _sources.clear();
+  Yellog::Trace("Loading sources...");
   Sources tmp = json->read_source_list(sql);
   for (int i = 0; i < tmp.length(); i++) {
     if (db_exists(tmp[i].path))
@@ -107,6 +109,7 @@ QJsonValue Basis::memory(const QString &key) { return _memory[key]; }
 QJsonObject Basis::handle_to_script(const QJsonObject &object) {
   QJsonObject transport;
   if (object.contains(readMemoryWk)) {
+    Yellog::Trace("We need to send some memory values to script");
     QJsonArray val_keys = object[readMemoryWk].toArray();
     if (not val_keys.isEmpty()) {
       QJsonObject obj;
@@ -127,6 +130,7 @@ QJsonObject Basis::handle_to_script(const QJsonObject &object) {
 void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
   /*! @details Common logic part. */
   if (object.contains(writeMemoryWk)) {
+    Yellog::Trace("We need to write some memory values from script");
     QJsonObject to_store = object[writeMemoryWk].toObject();
     for (auto key : to_store.keys()) {
       auto value = to_store[key];
@@ -142,19 +146,28 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
     object.contains(scenarioNameWk)  and
     not except_send
   ) {
-    if (object[scenarioReadyWk].toBool() and not object[scenarioNameWk].toString().isEmpty()) {
+    if (
+      object[scenarioReadyWk].toBool() and
+      not object[scenarioNameWk].toString().isEmpty()
+    ) {
+      Yellog::Trace("Got a scenario");
       auto server_addr = QHostAddress(object[scenarioAddrWk].toString());
       if (server_addr.isNull()) server_addr = QHostAddress("127.0.0.1");
       auto server_port = quint16(object[scenarioPortWk].toInt());
       auto name = object[scenarioNameWk].toString();
-      _scenario_token = sql->generate_uuid();
+      auto scenario_token = sql->generate_uuid();
       ScenarioServerMeta scenario_meta;
       scenario_meta.server_addr = server_addr;
       scenario_meta.server_port = server_port;
       scenario_meta.name = name;
-      scenario_meta.auth_key = _scenario_token;
-      emit start_scenario(scenario_meta);
-      send_auth = true;
+      scenario_meta.auth_key = scenario_token;
+      if (_scenario_token.isEmpty()) {
+        _scenario_token = scenario_token;
+        emit start_scenario(scenario_meta);
+        send_auth = true;
+      } else {
+        emit schedule_scenario(scenario_meta);
+      }
     }
   } else if (object.contains(scenarioContinueWk) and object.contains(scenarioTokenWk) and not except_send) {
     if (

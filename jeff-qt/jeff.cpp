@@ -25,6 +25,7 @@ Jeff::Jeff(int argc, char *argv[]) : QObject() {
       });
       QTimer::singleShot(5000, this, [this] {
         std::cout << tr("Answer not found.").toStdString() << std::endl;
+        core->em->shutdown_extensions();
         qt_shutdown();
       });
     }
@@ -71,7 +72,7 @@ void Jeff::ncurses_draw() {
       wprintw(stdscr, "%S", buffer.c_str());
       buffer_changed = false;
     }
-    delete filler;
+    delete[] filler;
     refresh();
     int y1, x1;
     getyx(stdscr, y1, x1);

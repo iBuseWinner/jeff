@@ -47,6 +47,18 @@
         <source>Authors</source>
         <translation>Автори</translation>
     </message>
+    <message>
+        <source>Help with translation</source>
+        <translation>Допомога з перекладом</translation>
+    </message>
+    <message>
+        <source>Link</source>
+        <translation>Посилання</translation>
+    </message>
+    <message>
+        <source>Thanks</source>
+        <translation>Подяки</translation>
+    </message>
 </context>
 <context>
     <name>Basis</name>

@@ -12,7 +12,7 @@ void NotifyClient::notify(MessageMeta *msg_meta, bool no_jck_output) {
         send_event(msg_meta, ext_m->server_addr, ext_m->server_port);
     }
   else if (msg_meta->author == Author::User)
-    send_event(msg_meta, scenario_server_meta.server_addr, scenario_server_meta.server_port);
+    send_event(msg_meta, scenario_meta.server_addr, scenario_meta.server_port);
 }
 
 /*! @brief Passes authentication data to the extension. */
@@ -28,7 +28,22 @@ void NotifyClient::notify_scenario_first_time(QString auth_key) {
     socket->write(bytes_to_send);
     socket->disconnectFromHost();
   });
-  socket->connectToHost(scenario_server_meta.server_addr, scenario_server_meta.server_port);
+  socket->connectToHost(scenario_meta.server_addr, scenario_meta.server_port);
+}
+
+/*! @brief TBD */
+void NotifyClient::notify_about_queued(ScenarioServerMeta _scenario_meta) {
+  auto *socket = new QTcpSocket(this);
+  connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
+  connect(socket, &QTcpSocket::connected, this, [this, socket] {
+    auto transport = QJsonObject();
+    transport[Basis::scenarioQueuedWk] = true;
+    QJsonDocument doc_to_script(transport);
+    auto bytes_to_send = doc_to_script.toJson();
+    socket->write(bytes_to_send);
+    socket->disconnectFromHost();
+  });
+  socket->connectToHost(_scenario_meta.server_addr, _scenario_meta.server_port);
 }
 
 /*! @brief TBD */
@@ -51,7 +66,7 @@ void NotifyClient::finish_scenario() {
     socket->write(bytes_to_send);
     socket->disconnectFromHost();
   });
-  socket->connectToHost(scenario_server_meta.server_addr, scenario_server_meta.server_port);
+  socket->connectToHost(scenario_meta.server_addr, scenario_meta.server_port);
   unset_scenario();
 }
 
@@ -76,8 +91,8 @@ void NotifyClient::unsubscribe(ExtensionMeta *extension_meta) { extensions_meta.
 /*! @brief Unsubscribes all extensions from notifications. */
 void NotifyClient::unsubscribe_all() { extensions_meta.clear(); }
 /*! @brief Organizes the temporary transfer of all new messages only to the scenario. */
-void NotifyClient::set_scenario(ScenarioServerMeta _scenario_server_meta) {
-  scenario_server_meta = _scenario_server_meta;
+void NotifyClient::set_scenario(ScenarioServerMeta _scenario_meta) {
+  scenario_meta = _scenario_meta;
   is_scenario_running = true;
 }
 /*! @brief Disables scenario notification. */

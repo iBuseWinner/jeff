@@ -10,6 +10,7 @@
 #include "core-kit/standard-templates.hpp"
 #include "core-kit/database/sqlite.hpp"
 #include "core-kit/extensions/extension.hpp"
+#include "core-kit/extensions/scenario.hpp"
 #include "core-kit/extensions/script.hpp"
 #include "dialogues/modal-handler.hpp"
 #include "yelloger.h"
@@ -40,7 +41,8 @@ public:
   void got_message_from_jck(const QString &result_expression);
   void got_no_jck_output(const QString &user_expression);
   void got_extension_start(ExtensionMeta *extension_meta);
-  void got_scenario_start(ScenarioServerMeta scenario_meta);
+  void got_scenario_start(const ScenarioServerMeta &scenario_meta);
+  void add_to_scheduler(const ScenarioServerMeta &scenario_meta);
   void got_scenario_shutting();
   void notify_scenario_first_time();
   void got_message_from_script(const QString &outter_message);
@@ -81,6 +83,7 @@ private:
   bool is_scenario_running = false;
   bool is_user_input_already_sent = false;
   ScenarioServerMeta current_scenario;
+  Scenarios _squeue = Scenarios(); /*!< Scenarios queue. */
   
   // Functions described in `core.cpp`:
   bool fits(const QString &input);

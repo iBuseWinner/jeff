@@ -66,6 +66,8 @@ void Jeff::apply_settings() {
     return;
   }
   resize((*basis)[basis->sizeSt].toSize());
+  auto p = (*basis)[basis->posSt].toPoint();
+  if (not p.isNull()) move(p);
   menubar->full_screen_action.setChecked((*basis)[basis->isFullScreenSt].toBool());
   emit menubar->full_screen_action.triggered();
   menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
@@ -104,10 +106,11 @@ void Jeff::closeEvent(QCloseEvent *event) {
 /*! @brief Writes changes to window settings to a file. */
 void Jeff::save_window_settings() {
   if (not basis->accessible()) return;
+  basis->write(basis->posSt, pos());
   basis->write(basis->sizeSt, size());
-  basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
-  basis->write(basis->isFullScreenSt, isFullScreen());
   basis->write(basis->isNotFirstStartSt, true);
+  basis->write(basis->isFullScreenSt, isFullScreen());
+  basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
   basis->write(basis->isMonologueEnabledSt, menubar->enable_monologue_mode.isChecked());
 }
 
@@ -127,8 +130,8 @@ void Jeff::user_input_handler() {
 
 /*! @brief Calls the dialog, asks for @a filename and saves the message history to it. */
 void Jeff::export_message_history() {
-  QString filename = QFileDialog::getSaveFileName(nullptr, tr("Save history"), nullptr,
-                                                  tr("Jeff's history file") + "(*.history.json)");
+  QString filename = QFileDialog::getSaveFileName(
+    nullptr, tr("Save history"), nullptr, tr("Jeff's history file") + "(*.history.json)");
   if (filename.isEmpty()) return;
   history_processor->save(filename);
 }

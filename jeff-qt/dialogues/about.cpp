@@ -45,14 +45,24 @@ About::About(QWidget *parent, ModalHandler *mhandler) : ScrollFreezerWidget(pare
   );
   tab2->setOpenExternalLinks(true);
   tab2->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+  auto *tab3 = new QLabel(this);
+  tab3->setText(
+    "<b>sTiKyt</b><br><i>" + tr("Help with translation") + "</i><br>" + tr("Link") + ": <a href=\"https://github.com/sTiKyt\">https://github.com/sTiKyt</a>"
+  );
+  tab3->setOpenExternalLinks(true);
+  tab3->setAlignment(Qt::AlignTop | Qt::AlignLeft);
   auto *scroll_area_1 = new QScrollArea(this);
   auto *scroll_area_2 = new QScrollArea(this);
+  auto *scroll_area_3 = new QScrollArea(this);
   scroll_area_1->setFocusPolicy(Qt::NoFocus);
   scroll_area_1->setFrameStyle(QFrame::NoFrame);
   scroll_area_1->setFrameShadow(QFrame::Plain);
   scroll_area_2->setFocusPolicy(Qt::NoFocus);
   scroll_area_2->setFrameStyle(QFrame::NoFrame);
   scroll_area_2->setFrameShadow(QFrame::Plain);
+  scroll_area_3->setFocusPolicy(Qt::NoFocus);
+  scroll_area_3->setFrameStyle(QFrame::NoFrame);
+  scroll_area_3->setFrameShadow(QFrame::Plain);
   auto *footer_w = new QWidget(this);
   auto *close_btn = new Button(tr("Close"), footer_w);
   close_btn->setIcon(
@@ -63,8 +73,10 @@ About::About(QWidget *parent, ModalHandler *mhandler) : ScrollFreezerWidget(pare
   connect(close_btn, &Button::clicked, this, [this, mhandler] { mhandler->closePrisoner(); });
   scroll_area_1->setWidget(tab1);
   scroll_area_2->setWidget(tab2);
+  scroll_area_3->setWidget(tab3);
   tabs->addTab(scroll_area_1, tr("About"));
   tabs->addTab(scroll_area_2, tr("Authors"));
+  tabs->addTab(scroll_area_3, tr("Thanks"));
   setLayout(GridLt::another()
     ->spacing(3)->addw(logo, 0, 0, 2, 1)->addw(title, 0, 1)->addw(version, 1, 1)
     ->addi(spacer, 0, 2, 2, 1)->addw(tabs, 2, 0, 1, 3)->addw(footer_w, 3, 0, 1, 3)

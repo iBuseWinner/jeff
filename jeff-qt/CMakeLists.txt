@@ -55,6 +55,7 @@ set(SRCS
   core-kit/extensions/daemon-process.hpp
   core-kit/extensions/extension.cpp
   core-kit/extensions/extension.hpp
+  core-kit/extensions/scenario.hpp
   core-kit/extensions/script.cpp
   core-kit/extensions/script.hpp
   core-kit/model/keystore.hpp
