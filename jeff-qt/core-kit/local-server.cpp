@@ -25,7 +25,7 @@ void Server::handle_connection() {
     auto doc_from_script = QJsonDocument::fromJson(byte_array);
     if (doc_from_script.isEmpty()) { connection->disconnectFromHost(); return; }
     auto data = doc_from_script.object();
-    if (not authorize_connection(data[basis->authKeyWk].toString())) {
+    if (not authorize_connection(data[Basis::authKeyWk].toString())) {
       connection->disconnectFromHost();
       return;
     }
@@ -42,7 +42,7 @@ void Server::handle_connection() {
 
 /*! @brief If protection against malicious connections is enabled, authorizes the connection by key. */
 bool Server::authorize_connection(const QString &key) {
-  if (not (*basis)[basis->serverAuthorizationOnSt].toBool()) return true;
-  if (key == (*basis)[basis->serverAuthKeySt].toString()) return true;
+  if (not (*basis)[Basis::serverAuthorizationOnSt].toBool()) return true;
+  if (key == (*basis)[Basis::serverAuthKeySt].toString()) return true;
   return false;
 }

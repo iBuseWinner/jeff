@@ -157,6 +157,22 @@ insert into "source" values ('x+1', '{
 
 And this can be easily done inside Jeff: the Qt version supports creating and editing React scripts.
 
+### `CustomScan` and `CustomCompose` scripts
+
+All possible `CustomScan` and `CustomCompose` scripts' fields are listed below:
+
+```c++
+ScriptType stype = CustomScan | CustomCompose;
+QString filepath;
+QString fn_name;
+QStringList required_memory_cells;
+bool required_user_input = false;
+int required_history_parts = 0;
+bool required_adprops = false;
+```
+
+*TBD*
+
 ### `extension*.j.json` format
 
 The `extensions` folder contains several examples of extensions. Some, like `vosk-voice-input`, are daemons: they only send external data to Jeff, such as recognized speech from a microphone. Others, like `gpt3-server` or `alice-aiml-server`, allow full processing of user input using TCP sockets.
@@ -310,6 +326,7 @@ Also, scripts cannot request something while they are being executed, so their s
 #### Usable memory cells
 
 1. `jeff-lang` - Jeff's language chosen with `QLocale::system().name()`
+2. `jeff-bundle-dir` - absolute path to Jeff's extensions folder
 
 #### Scenarios
 

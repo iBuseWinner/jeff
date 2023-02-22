@@ -19,7 +19,7 @@ TextEdit::TextEdit(QWidget *parent) : QTextEdit(parent) {
   setTabStopDistance(40);
   setup_context_menu();
   setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, &TextEdit::customContextMenuRequested, this, [this]() {
+  connect(this, &TextEdit::customContextMenuRequested, this, [this] {
     context_menu->exec(QCursor::pos());
   });
 }
@@ -110,6 +110,7 @@ int TextEdit::text_height() {
 /*! @brief Handles keyboard shortcuts. */
 void TextEdit::keyPressEvent(QKeyEvent *event) {
   if ((event->modifiers() == Qt::ShiftModifier) and (event->key() == Qt::Key_Return)) insert("\n");
+  else if ((event->modifiers() == Qt::ShiftModifier) and (event->key() == Qt::Key_2)) [] {} ();
   else if (event->key() == Qt::Key_Return) emit enter_triggered();
   else QTextEdit::keyPressEvent(event);
 }

@@ -393,7 +393,7 @@ QSqlDatabase SQLite::prepare(const QString &path, QString conn_name, Check optio
     case Exists: {
       if (result) *result = true;
       if (not QFile::exists(path)) {
-        Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toStdString().c_str());
+        Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toLocal8Bit().constData());
         if (not quiet) emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
         if (result) *result = false;
         break;
@@ -406,7 +406,7 @@ QSqlDatabase SQLite::prepare(const QString &path, QString conn_name, Check optio
       if (result) *result = true;
       db.setDatabaseName(path);
       if (not db.open()) {
-        Yellog::Error("Opening error. Error text: %s", db.lastError().text().toStdString().c_str());
+        Yellog::Error("Opening error. Error text: %s", db.lastError().text().toLocal8Bit().constData());
         if (not quiet) emit sqlite_error(tr("Opening error. Error text: ") + db.lastError().text());
         if (result) *result = false;
       }
@@ -416,14 +416,14 @@ QSqlDatabase SQLite::prepare(const QString &path, QString conn_name, Check optio
       /*! Correct = Exists + Openable + has the correct structure. */
       if (result) *result = true;
       if (not QFile::exists(path)) {
-        Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toStdString().c_str());
+        Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toLocal8Bit().constData());
         if (not quiet) emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
         if (result) *result = false;
         break;
       }
       db.setDatabaseName(path);
       if (not db.open()) {
-        Yellog::Error("Opening error. Error text: %s", db.lastError().text().toStdString().c_str());
+        Yellog::Error("Opening error. Error text: %s", db.lastError().text().toLocal8Bit().constData());
         if (not quiet) emit sqlite_error(tr("Opening error. Error text: ") + db.lastError().text());
         if (result) *result = false;
       }
@@ -434,14 +434,14 @@ QSqlDatabase SQLite::prepare(const QString &path, QString conn_name, Check optio
     case RecursivelyСorrect: {
       if (result) *result = true;
       if (not QFile::exists(path)) {
-        Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toStdString().c_str());
+        Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toLocal8Bit().constData());
         if (not quiet) emit sqlite_error(tr("Database \"%1\" doesn't exist.").arg(path));
         if (result) *result = false;
         break;
       }
       db.setDatabaseName(path);
       if (not db.open()) {
-        Yellog::Error("Opening error. Error text: %s", db.lastError().text().toStdString().c_str());
+        Yellog::Error("Opening error. Error text: %s", db.lastError().text().toLocal8Bit().constData());
         if (not quiet) emit sqlite_error(tr("Opening error. Error text: ") + db.lastError().text());
         if (result) *result = false;
       }
@@ -463,13 +463,13 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
   exec(&query, IfMainTableExists);
   query.first();
   if (not query.isValid() and not quiet) {
-    Yellog::Error("Validation error: table with sources does not exist. %s", db_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: table with sources does not exist. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: table with sources does not exist.") + " " + db_suffix);
     return false;
   }
   exec(&query, IfMainTableCorrect);
   if (not query.first() and not quiet) {
-    Yellog::Error("Validation error: table with sources is empty. %s", db_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: table with sources is empty. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: table with sources is empty.") + " " + db_suffix);
     return false;
   }
@@ -479,14 +479,14 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
   sourceColumnValid &= query.value(3).toInt() == 1;
   if (not sourceColumnValid and not quiet) {
     Yellog::Error("Validation error: the first column of the table with sources does not fit the description "
-                  "of \"source\" TEXT NOT NULL UNIQUE. %s", db_suffix.toStdString().c_str());
+                  "of \"source\" TEXT NOT NULL UNIQUE. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the first column of the table with sources does not fit the description of \"source\" TEXT NOT NULL UNIQUE.") + " " + db_suffix
     );
     return false;
   }
   if (not query.next() and not quiet) {
-    Yellog::Error("Validation error: the table with sources contains only one column. %s", db_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: the table with sources contains only one column. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the table with sources contains only one column.") + " " + db_suffix
     );
@@ -497,14 +497,14 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
   titleColumnValid &= query.value(2).toString() == "TEXT";
   if (not titleColumnValid and not quiet) {
     Yellog::Error("Validation error: the second column of the table with sources does not fit the description "
-                  "of \"title\" TEXT. %s", db_suffix.toStdString().c_str());
+                  "of \"title\" TEXT. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the second column of the table with sources does not fit the description of \"title\" TEXT.") + " " + db_suffix
     );
     return false;
   }
   if (not query.next() and not quiet) {
-    Yellog::Error("Validation error: the table with sources contains only two columns. %s", db_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: the table with sources contains only two columns. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: the table with sources contains only two columns.") + " " + db_suffix);
     return false;
   }
@@ -513,7 +513,7 @@ bool SQLite::validate(QSqlDatabase *db, bool recursive, bool quiet) {
   weightColumnValid &= query.value(2).toString() == "INTEGER";
   if (not weightColumnValid and not quiet) {
     Yellog::Error("Validation error: the third column of the table with sources does not fit the description "
-                  "of \"weight\" INTEGER. %s", db_suffix.toStdString().c_str());
+                  "of \"weight\" INTEGER. %s", db_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the third column of the table with sources does not fit the description of \"weight\" INTEGER.") + " " + db_suffix
     );
@@ -539,13 +539,13 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   auto query = QSqlQuery(*db);
   exec(&query, IfSourceTableExists, {source_table});
   if (not query.isValid() and not quiet) {
-    Yellog::Error("Validation error: source does not exist. %s", db_source_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: source does not exist. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: source does not exist.") + " " + db_source_suffix);
     return false;
   }
   exec(&query, IfSourceTableCorrect, {source_table});
   if (not query.first() and not quiet) {
-    Yellog::Error("Validation error: source is empty. %s", db_source_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: source is empty. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: source is empty.") + " " + db_source_suffix);
     return false;
   }
@@ -556,14 +556,14 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   addressColumnValid &= query.value(5).toInt() == 1;
   if (not addressColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
-                  "of \"address\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE. %s", db_source_suffix.toStdString().c_str());
+                  "of \"address\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the first column of the source does not fit the description of \"address\" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE.") + " " + db_source_suffix
     );
     return false;
   }
   if (not query.next() and not quiet) {
-    Yellog::Error("Validation error: the source contains only one column. %s", db_source_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: the source contains only one column. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: the source contains only one column.") + " " + db_source_suffix);
     return false;
   }
@@ -572,14 +572,14 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   expressionColumnValid &= query.value(2).toString() == "TEXT";
   if (not expressionColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
-                  "of \"phrase\" TEXT. %s", db_source_suffix.toStdString().c_str());
+                  "of \"phrase\" TEXT. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the second column of the source does not fit the description of \"phrase\" TEXT.") + " " + db_source_suffix
     );
     return false;
   }
   if (not query.next() and not quiet) {
-    Yellog::Error("Validation error: the source contains only two columns. %s", db_source_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: the source contains only two columns. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: the source contains only two columns.") + " " + db_source_suffix);
     return false;
   }
@@ -588,14 +588,14 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   linksColumnValid &= query.value(2).toString() == "TEXT";
   if (not linksColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
-                  "of \"links\" TEXT. %s", db_source_suffix.toStdString().c_str());
+                  "of \"links\" TEXT. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the third column of the source does not fit the description of \"links\" TEXT.") + " " + db_source_suffix
     );
     return false;
   }
   if (not query.next() and not quiet) {
-    Yellog::Error("Validation error: the source contains only three columns. %s", db_source_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: the source contains only three columns. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: the source contains only three columns.") + " " + db_source_suffix);
     return false;
   }
@@ -605,14 +605,14 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   execColumnValid &= query.value(3).toInt() == 1;
   if (not execColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
-                  "of \"exec\" INTEGER NOT NULL. %s", db_source_suffix.toStdString().c_str());
+                  "of \"exec\" INTEGER NOT NULL. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the fourth column of the source does not fit the description of \"exec\" INTEGER NOT NULL.") + " " + db_source_suffix
     );
     return false;
   }
   if (not query.next() and not quiet) {
-    Yellog::Error("Validation error: the source contains only four columns. %s", db_source_suffix.toStdString().c_str());
+    Yellog::Error("Validation error: the source contains only four columns. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(tr("Validation error: the source contains only four columns.") + " " + db_source_suffix);
     return false;
   }
@@ -621,7 +621,7 @@ bool SQLite::validate(QSqlDatabase *db, const QString &source_table, bool quiet)
   adpropsColumnValid &= query.value(2).toString() == "TEXT";
   if (not adpropsColumnValid and not quiet) {
     Yellog::Error("Validation error: the fifth column of the source does not fit the description "
-                  "of \"adprops\" TEXT. %s", db_source_suffix.toStdString().c_str());
+                  "of \"adprops\" TEXT. %s", db_source_suffix.toLocal8Bit().constData());
     emit sqlite_error(
       tr("Validation error: the fifth column of the source does not fit the description of \"adprops\" TEXT.") + " " + db_source_suffix
     );
@@ -751,7 +751,7 @@ bool SQLite::exec(QSqlQuery *query, ToDo option, QStringList values) {
     case NoneToDo:;
   }
   if (not query->exec()) {
-    Yellog::Error("Error during exec query: \"%s\", option %d.", query->lastError().text().toStdString().c_str(), int(option));
+    Yellog::Error("Error during exec query: \"%s\", option %d.", query->lastError().text().toLocal8Bit().constData(), int(option));
     emit sqlite_error(query->lastError().text() + " " + QString::number(int(option)));
     return false;
   }
@@ -765,6 +765,6 @@ QString SQLite::generate_uuid() {
                     uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)),
                     uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256)),
                     uchar(rand.bounded(0, 256)), uchar(rand.bounded(0, 256))).toString();
-  Yellog::Trace("Generated UUID: %s", uuid.toStdString().c_str());
+  Yellog::Trace("Generated UUID: %s", uuid.toLocal8Bit().constData());
   return uuid;
 }

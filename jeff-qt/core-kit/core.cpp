@@ -11,6 +11,8 @@ Core::Core(QObject *parent) : QObject(parent) {
   connect(basis, &Basis::start_scenario, this, &Core::got_scenario_start);
   connect(basis, &Basis::schedule_scenario, this, &Core::add_to_scheduler);
   connect(basis, &Basis::shutdown_scenario, this, &Core::got_scenario_shutting);
+  connect(basis, &Basis::custom_scanner_changed, this, [this] { jck->set_custom_scanner(basis->custom_scanner); });
+  connect(basis, &Basis::custom_composer_changed, this, [this] { jck->set_custom_scanner(basis->custom_composer); });
   basis->check_settings_file();
   basis->check_default_source();
   connect(server, &Server::server_error, this, &Core::got_error);
@@ -27,8 +29,8 @@ Core::Core(QObject *parent) : QObject(parent) {
           [this] { set_monologue_enabled(not monologue_enabled); });
   connect(std_templates, &StandardTemplates::show_info, this, &Core::got_info);
   connect(std_templates, &StandardTemplates::send_to_extension, this, &Core::got_to_extension);
-  set_monologue_enabled((*basis)[basis->isMonologueEnabledSt].toBool());
-  quint16 port = quint16((*basis)[basis->serverPortSt].toInt());
+  set_monologue_enabled((*basis)[Basis::isMonologueEnabledSt].toBool());
+  quint16 port = quint16((*basis)[Basis::serverPortSt].toInt());
   if (port == 0) port = 8005;
   server->start(QHostAddress::LocalHost, port);
   Yellog::Trace("All core things are connected. Waiting for Core::start()...");
@@ -37,16 +39,12 @@ Core::Core(QObject *parent) : QObject(parent) {
 /*! @brief Sends a greeting on behalf of the user, if the corresponding setting is enabled. */
 void Core::start() {
   em->startup();
-  if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->load();
-  if (not (*basis)[basis->customScannerSt].toString().isEmpty()) {
-    custom_scanner = ScriptMeta::from_string((*basis)[basis->customScannerSt].toString());
-    jck->set_custom_scanner(custom_scanner);
-  }
-  if (not (*basis)[basis->customComposerSt].toString().isEmpty()) {
-    custom_composer = ScriptMeta::from_string((*basis)[basis->customComposerSt].toString());
-    jck->set_custom_composer(custom_composer);
-  }
-  if ((*basis)[basis->isGreetingsEnabledSt].toBool()) got_message_from_user((*basis)[basis->greetingsMsg].toString());
+  if ((*basis)[Basis::isHistoryKeepingEnabledSt].toBool()) hp->load();
+  if (not (*basis)[Basis::customScannerSt].toString().isEmpty())
+    basis->set_custom_scanner(ScriptMeta::from_origin((*basis)[Basis::customScannerSt].toString()));
+  if (not (*basis)[Basis::customComposerSt].toString().isEmpty())
+    basis->set_custom_composer(ScriptMeta::from_origin((*basis)[Basis::customComposerSt].toString()));
+  if ((*basis)[Basis::isGreetingsEnabledSt].toBool()) got_message_from_user((*basis)[Basis::greetingsMsg].toString());
   Yellog::Trace("All core things are definitely done. Have a nice day!");
 }
 
@@ -54,23 +52,23 @@ void Core::start() {
 Core::~Core() {
   Yellog::Trace("After this message all core things will be definitely GONE.");
   Yellog::Trace("And again, have a nice day!");
+  if (basis->custom_scanner) basis->write(Basis::customScannerSt, basis->custom_scanner->origin);
+  if (basis->custom_composer) basis->write(Basis::customComposerSt, basis->custom_composer->origin);
   delete jck;
   delete em;
   delete notifier;
-  if ((*basis)[basis->isHistoryKeepingEnabledSt].toBool()) hp->save();
+  if ((*basis)[Basis::isHistoryKeepingEnabledSt].toBool()) hp->save();
   delete hp;
   delete std_templates;
   server->stop();
   delete server;
   delete basis;
-  if (custom_scanner) delete custom_scanner;
-  if (custom_composer) delete custom_composer;
 }
 
 /*! @brief Jeff does not respond to blank input. */
 bool Core::fits(const QString &input) { if (input.isEmpty()) return false; return true; }
 
-/*! @brief TBD */
+/*! @brief Checks if the user's input is a command. */
 bool Core::check(const QString &input) {
 #ifdef JEFF_WITH_QT_WIDGETS
   if (std_templates->dialogues(input)) return true;
@@ -79,12 +77,12 @@ bool Core::check(const QString &input) {
   return false;
 }
 
-/*! @brief TBD */
+/*! @brief Returns a random number of milliseconds that is typically used for a custom output delay. */
 int Core::time_bounds() {
-  auto is_bounded = (*basis)[basis->isDelayEnabledSt].toBool();
+  auto is_bounded = (*basis)[Basis::isDelayEnabledSt].toBool();
   if (is_bounded) {
-    auto b1 = (*basis)[basis->minDelaySt].toInt();
-    auto b2 = (*basis)[basis->maxDelaySt].toInt();
+    auto b1 = (*basis)[Basis::minDelaySt].toInt();
+    auto b2 = (*basis)[Basis::maxDelaySt].toInt();
     return QRandomGenerator().bounded(b1, b2);
   } else return 0;
 }
@@ -134,7 +132,7 @@ void Core::got_scenario_start(const ScenarioServerMeta &scenario_meta) {
   emit change_menubar_scenario_name(current_scenario.name);
 }
 
-/*! @brief TBD */
+/*! @brief Adds a script to the execution queue. */
 void Core::add_to_scheduler(const ScenarioServerMeta &scenario_meta) {
   _squeue.append(scenario_meta);
   notifier->notify_about_queued(scenario_meta);
@@ -224,7 +222,7 @@ void Core::got_error(const QString &error_text) {
   notifier->notify(message);
 }
 
-/*! @brief TBD */
+/*! @brief Sends text exclusively to the given extension (bridge between extensions). */
 void Core::got_to_extension(const QString &extension_name, const QString &text) {
   auto *extension_meta = em->get_ext_meta_by_name(extension_name);
   if (not extension_meta) return;

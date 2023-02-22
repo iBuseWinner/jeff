@@ -1,6 +1,6 @@
-[submodule "jeff-qt/lib/Yelloger"]
-	path = jeff-qt/lib/Yelloger
-	url = https://github.com/danielblagy/Yelloger
 [submodule "jeff-qt/lib/hoedown"]
 	path = jeff-qt/lib/hoedown
 	url = https://github.com/hoedown/hoedown
+[submodule "jeff-qt/lib/yelloger"]
+	path = jeff-qt/lib/yelloger
+	url = https://github.com/markcda/yelloger

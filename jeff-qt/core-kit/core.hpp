@@ -78,8 +78,6 @@ private:
   bool monologue_enabled = false;
   JCKController *jck = new JCKController(basis, hp);
   StandardTemplates *std_templates = new StandardTemplates(basis, hp, em);
-  ScriptMeta *custom_scanner = nullptr;
-  ScriptMeta *custom_composer = nullptr;
   bool is_scenario_running = false;
   bool is_user_input_already_sent = false;
   ScenarioServerMeta current_scenario;

@@ -35,7 +35,7 @@ void Jeff::connect_all() {
   connect(menubar, &MenuBar::export_triggered, this, &Jeff::export_message_history);
   connect(menubar, &MenuBar::import_triggered, this, &Jeff::import_message_history);
   connect(menubar, &MenuBar::exit_triggered, this, [this] { close(); });
-  connect(menubar, &MenuBar::stop_scenario_triggered, this, [this] { emit send((*basis)[basis->scenarioExitMsg].toString()); });
+  connect(menubar, &MenuBar::stop_scenario_triggered, this, [this] { emit send((*basis)[Basis::scenarioExitMsg].toString()); });
   // others
   connect(&(line->send_button), &Button::clicked, this, &Jeff::user_input_handler);
   connect(this, &Jeff::ready_state, core, &Core::start);
@@ -57,32 +57,32 @@ void Jeff::apply_settings() {
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
     resize(defaultWidth, defaultHeight);
-    emit send(basis->first_start_cmd);
-    basis->write(basis->isGreetingsEnabledSt, true);
-    basis->write(basis->greetingsMsg, tr("Hello!"));
-    basis->write(basis->scenarioExitMsg, "//e");
-    basis->write(basis->serverPortSt, 8005);
+    emit send(Basis::first_start_cmd);
+    basis->write(Basis::isGreetingsEnabledSt, true);
+    basis->write(Basis::greetingsMsg, tr("Hello!"));
+    basis->write(Basis::scenarioExitMsg, "//e");
+    basis->write(Basis::serverPortSt, 8005);
     save_window_settings();
     return;
   }
-  resize((*basis)[basis->sizeSt].toSize());
-  auto p = (*basis)[basis->posSt].toPoint();
+  resize((*basis)[Basis::sizeSt].toSize());
+  auto p = (*basis)[Basis::posSt].toPoint();
   if (not p.isNull()) move(p);
-  menubar->full_screen_action.setChecked((*basis)[basis->isFullScreenSt].toBool());
+  menubar->full_screen_action.setChecked((*basis)[Basis::isFullScreenSt].toBool());
   emit menubar->full_screen_action.triggered();
-  menubar->setVisible(not(*basis)[basis->isMenuBarHiddenSt].toBool());
-  menubar->enable_monologue_mode.setChecked((*basis)[basis->isMonologueEnabledSt].toBool());
+  menubar->setVisible(not(*basis)[Basis::isMenuBarHiddenSt].toBool());
+  menubar->enable_monologue_mode.setChecked((*basis)[Basis::isMonologueEnabledSt].toBool());
 }
 
 /*! @brief Handles keyboard shortcuts. */
 void Jeff::keyPressEvent(QKeyEvent *event) {
   if (event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-    if (event->key() == Qt::Key_M) emit send(basis->monologue_mode_cmd);
-    if (event->key() == Qt::Key_Less) emit send(basis->settings_cmd);
+    if (event->key() == Qt::Key_M) emit send(Basis::monologue_mode_cmd);
+    if (event->key() == Qt::Key_Less) emit send(Basis::settings_cmd);
   }
   if (event->modifiers() == Qt::ControlModifier) {
     if (event->key() == Qt::Key_H) menubar->setVisible(not menubar->isVisible());
-    if (event->key() == Qt::Key_M) emit send(basis->source_manager_cmd);
+    if (event->key() == Qt::Key_M) emit send(Basis::source_manager_cmd);
     if (event->key() == Qt::Key_E) export_message_history();
     if (event->key() == Qt::Key_I) import_message_history();
   }
@@ -106,12 +106,12 @@ void Jeff::closeEvent(QCloseEvent *event) {
 /*! @brief Writes changes to window settings to a file. */
 void Jeff::save_window_settings() {
   if (not basis->accessible()) return;
-  basis->write(basis->posSt, pos());
-  basis->write(basis->sizeSt, size());
-  basis->write(basis->isNotFirstStartSt, true);
-  basis->write(basis->isFullScreenSt, isFullScreen());
-  basis->write(basis->isMenuBarHiddenSt, menubar->isHidden());
-  basis->write(basis->isMonologueEnabledSt, menubar->enable_monologue_mode.isChecked());
+  basis->write(Basis::posSt, pos());
+  basis->write(Basis::sizeSt, size());
+  basis->write(Basis::isNotFirstStartSt, true);
+  basis->write(Basis::isFullScreenSt, isFullScreen());
+  basis->write(Basis::isMenuBarHiddenSt, menubar->isHidden());
+  basis->write(Basis::isMonologueEnabledSt, menubar->enable_monologue_mode.isChecked());
 }
 
 /*! @brief Shows a window in full screen or in normal mode. */

@@ -23,7 +23,7 @@ ExtensionsManager::~ExtensionsManager() {
 /*! @brief Kills daemons' and servers' processes. */
 void ExtensionsManager::shutdown_extensions() {
   bool ok = true;
-  int ms = (*basis)[basis->extensionKillSecSt].toInt(&ok) * 1000;
+  int ms = (*basis)[Basis::extensionKillSecSt].toInt(&ok) * 1000;
   if (not ok) ms = 60000;
   for (auto *extension : _running) extension->stop(ms);
   Yellog::Trace("All extensions have been stopped.");
@@ -48,8 +48,21 @@ void ExtensionsManager::add_extension(ExtensionMeta *extension_meta) {
 /*! @brief Starts the daemon. */
 void ExtensionsManager::start_extension(ExtensionMeta *extension_meta) {
   Yellog::Trace("Got extension %p", extension_meta);
+  // Removing old process if exists.
+  {
+    DaemonProcess *old_proc = nullptr;
+    for (auto *extension : _running)
+      if (extension->is_spawner(extension_meta)) {
+        old_proc = extension;
+        break;
+      }
+    if (old_proc) {
+      old_proc->disconnect();
+      _running.removeOne(old_proc);
+    }
+  }
   auto *proc = new DaemonProcess(basis, extension_meta, this);
-  connect(proc, &DaemonProcess::daemon_exception, this, [this](QString error_text) {
+  connect(proc, &DaemonProcess::daemon_exception, this, [this] (QString error_text) {
     emit extension_exception(error_text);
   });
   Yellog::Trace("\tStarting a process...");
@@ -69,7 +82,7 @@ void ExtensionsManager::stop_extension(ExtensionMeta *extension_meta) {
     notifier->unsubscribe(extension_meta);
   }
   bool ok = true;
-  int ms = (*basis)[basis->extensionKillSecSt].toInt(&ok) * 1000;
+  int ms = (*basis)[Basis::extensionKillSecSt].toInt(&ok) * 1000;
   if (not ok) ms = 60000;
   for (auto *proc : _running) if (proc->is_spawner(extension_meta)) {
     proc->stop(ms);
@@ -105,7 +118,7 @@ bool ExtensionsManager::is_running(ExtensionMeta *extension_meta) {
 /*! @brief Returns the general list of daemons' metadata. */
 ExtensionsMeta ExtensionsManager::get_extensions_meta() { return _extensions_meta; }
 
-/*! @brief TBD */
+/*! @brief Returns the output of the extension. */
 QByteArray ExtensionsManager::get_stdout(ExtensionMeta *extension_meta) {
   for (auto *extension : _running)
     if (extension->is_spawner(extension_meta))
@@ -113,7 +126,7 @@ QByteArray ExtensionsManager::get_stdout(ExtensionMeta *extension_meta) {
   return QByteArray();
 }
 
-/*! @brief TBD */
+/*! @brief Returns the errors of the extension. */
 QByteArray ExtensionsManager::get_stderr(ExtensionMeta *extension_meta) {
   for (auto *extension : _running)
     if (extension->is_spawner(extension_meta))
@@ -121,7 +134,7 @@ QByteArray ExtensionsManager::get_stderr(ExtensionMeta *extension_meta) {
   return QByteArray();
 }
 
-/*! @brief TBD */
+/*! @brief Looks for an extension by name. */
 ExtensionMeta *ExtensionsManager::get_ext_meta_by_name(QString name) {
   for (auto *extension_meta : _extensions_meta)
     if (name == extension_meta->name)

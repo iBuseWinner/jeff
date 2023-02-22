@@ -1,13 +1,13 @@
 #ifndef PHRASE_EDITOR_BRIEF_H
 #define PHRASE_EDITOR_BRIEF_H
 
+#include "scripteditor.hpp"
 #include "core-kit/basis.hpp"
 #include "widgets/button.hpp"
 #include "widgets/explanationlabel.hpp"
 #include "widgets/lineedit.hpp"
 #include "widgets/list.hpp"
 #include "widgets/menu.hpp"
-#include "widgets/scripteditor.hpp"
 #include "widgets/styling.hpp"
 #include "widgets/layouts/linears.hpp"
 #include <QApplication>
@@ -62,7 +62,7 @@ private:
   QWidget phrase_expression_edit_widget; /*! Expression editor widgets. */
   LineEdit phrase_expression_edit_line;
   Button phrase_expression_edit_save;
-  ScriptEditor *script_editor = nullptr;
+  ReactScriptEditor *script_editor = nullptr;
   Menu phrases_context_menu; /*! Context menus. */
   QAction
     add_phrase_action, connect_phrase_action, edit_phrase_action, 
