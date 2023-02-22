@@ -20,6 +20,15 @@ class Json : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(Json)
 public:
+  // Constants:
+  static constexpr const char *sources_store_filename    = "sources.json"    ;
+  static constexpr const char *cache_store_filename      = "nlp_cache.json"  ;
+  static constexpr const char *history_store_filename    = "history.json"    ;
+  static constexpr const char *extensions_store_filename = "extensions.json" ;
+  static constexpr const char *memory_store_filename     = "memory.json"     ;
+  static constexpr const char *log_filename              = "log.txt"         ;
+  static constexpr const char *subdir_name               = "jeff-qt"         ;
+  
   // Functions described in `json.cpp`:
   Json(QString settingsPath, QObject *parent = nullptr);
   Sources  read_source_list         (SQLite *sql) ;
@@ -36,15 +45,6 @@ public:
   void write_memory          (KeyStore memory)                           ;
 
 private:
-  // Constants:
-  const char *sources_store_filename    = "sources.json"    ;
-  const char *cache_store_filename      = "nlp_cache.json"  ;
-  const char *history_store_filename    = "history.json"    ;
-  const char *extensions_store_filename = "extensions.json" ;
-  const char *memory_store_filename     = "memory.json"     ;
-  const char *log_filename              = "log.txt"         ;
-  const char *subdir_name               = "jeff-qt"         ;
-
   // Objects:
   QString _settings_path;
 

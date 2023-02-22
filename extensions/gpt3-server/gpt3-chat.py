@@ -74,6 +74,7 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
+    if not 'content_type' in data: continue
     if data['content_type'] not in (1, 2): continue
     if len(data['content']) < 10: continue
     if data['author'] != 0: continue

@@ -9,9 +9,9 @@ DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObj
   QStringList args = extension_meta->args;
   for (int i = 0; i < args.length(); i++) {
     if (args[i] == "<JEFF_PORT>") {
-      if (not (*basis)[basis->serverPortSt].toString().isEmpty()) {
-        args[i] = (*basis)[basis->serverPortSt].toString();
-        Yellog::Trace("\tSetted up port %s.", (*basis)[basis->serverPortSt].toString().toStdString().c_str());
+      if (not (*basis)[Basis::serverPortSt].toString().isEmpty()) {
+        args[i] = (*basis)[Basis::serverPortSt].toString();
+        Yellog::Trace("\tSetted up port %s.", (*basis)[Basis::serverPortSt].toString().toLocal8Bit().constData());
       } else {
         args[i] = QString::number(8005);
         Yellog::Trace("\tSetted up port 8005");
@@ -26,18 +26,18 @@ DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObj
   setArguments(args);
   if (not extension_meta->working_dir.isEmpty()) {
     setWorkingDirectory(extension_meta->working_dir);
-    Yellog::Trace("\tSetted working dir %s", extension_meta->working_dir.toStdString().c_str());
+    Yellog::Trace("\tSetted working dir %s", extension_meta->working_dir.toLocal8Bit().constData());
   } else if (not extension_meta->origin.isEmpty()) {
     QFileInfo fi(extension_meta->origin);
     setWorkingDirectory(fi.canonicalPath());
-    Yellog::Trace("\tSetted working dir %s", fi.canonicalPath().toStdString().c_str());
+    Yellog::Trace("\tSetted working dir %s", fi.canonicalPath().toLocal8Bit().constData());
   }
   if (not extension_meta->envs.isEmpty()) {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     for (auto key : extension_meta->envs.keys()) env.insert(key, extension_meta->envs[key]);
     setProcessEnvironment(env);
   }
-  connect(this, &QProcess::errorOccurred, this, [this]() {
+  connect(this, &QProcess::errorOccurred, this, [this] {
     QString cmd = extension_meta->program;
     for (auto arg : extension_meta->args) cmd += QString(" ") + arg;
     emit daemon_exception(tr("An error occurred during daemon execution") + " (\"" + cmd + "\").");
@@ -63,7 +63,7 @@ QJsonObject DaemonProcess::request_output(
   process.setArguments(script_meta->args);
   if (not script_meta->working_dir.isEmpty()) {
     process.setWorkingDirectory(script_meta->working_dir);
-    Yellog::Trace("\tSetted working dir %s", script_meta->working_dir.toStdString().c_str());
+    Yellog::Trace("\tSetted working dir %s", script_meta->working_dir.toLocal8Bit().constData());
   }
   if (not script_meta->envs.isEmpty()) {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -74,20 +74,20 @@ QJsonObject DaemonProcess::request_output(
   if (not script_meta->required_memory_cells.isEmpty()) {
     QJsonObject memory_cells;
     for (auto key : script_meta->required_memory_cells) memory_cells[key] = basis->memory(key);
-    transport[basis->memoryValuesWk] = memory_cells;
+    transport[Basis::memoryValuesWk] = memory_cells;
   }
-  if (script_meta->required_history_parts and not (*basis)[basis->disableMessagesTransmissionSt].toBool()) {
+  if (script_meta->required_history_parts and not (*basis)[Basis::disableMessagesTransmissionSt].toBool()) {
     QJsonArray history_array;
     auto history = hp->recent(script_meta->required_history_parts);
     for (auto msg : history) 
       history_array.append(
         QString("%1: %2").arg(msg->author == Author::User ? "User" : "Jeff").arg(msg->content)
       );
-    transport[basis->recentMessagesWk] = history_array;
+    transport[Basis::recentMessagesWk] = history_array;
   }
   if (script_meta->required_user_input) transport["user_input"] = input;
   if (not expression.properties.isEmpty()) {
-    transport[basis->exprPropsWk] = Phrase::pack_props(expression.properties);
+    transport[Basis::exprPropsWk] = Phrase::pack_props(expression.properties);
   }
   QJsonDocument payload_doc(transport);
   process.start(QProcess::Unbuffered | QProcess::ReadWrite);
@@ -101,17 +101,17 @@ QJsonObject DaemonProcess::request_output(
   }
   if (not process.canReadLine()) {
     Yellog::Warn("\tNo line given at stdout.");
-    return QJsonObject({{basis->errorTypeWk, 13}});
+    return QJsonObject({{Basis::errorTypeWk, 13}});
   }
   QJsonParseError errors;
   QJsonDocument out_doc = QJsonDocument::fromJson(process.readAll(), &errors);
   if (errors.error != QJsonParseError::NoError) {
     Yellog::Error("\tIt's impossible to parse response from JSON. Error int: %d", int(errors.error));
-    return QJsonObject({{basis->errorTypeWk, 7}});
+    return QJsonObject({{Basis::errorTypeWk, 7}});
   }
   if (not out_doc.isObject()) {
     Yellog::Error("\tIt's impossible to get object from response JSON. Error int: %d", int(errors.error));
-    return {{basis->errorTypeWk, 8}};
+    return {{Basis::errorTypeWk, 8}};
   }
   return out_doc.object();
 }

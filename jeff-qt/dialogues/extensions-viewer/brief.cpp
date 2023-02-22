@@ -120,12 +120,12 @@ void ExtensionsViewerBrief::remove_extension() {
 void ExtensionsViewerBrief::get_ext_stdout() {
   auto bytes = em->get_stdout(extension_meta);
   if (bytes.isEmpty()) return;
-  emit show_info(tr("Stdout data from @") + extension_meta->name + ": \n" + QString::fromUtf8(bytes));
+  emit show_info(tr("Stdout data from @") + extension_meta->name + ": `" + QString::fromUtf8(bytes) + "`");
 }
 
 /*! @brief TBD */
 void ExtensionsViewerBrief::get_ext_stderr() {
   auto bytes = em->get_stderr(extension_meta);
   if (bytes.isEmpty()) return;
-  emit show_info(tr("Stderr data from @") + extension_meta->name + ": \n" + QString::fromUtf8(bytes));
+  emit show_info(tr("Stderr data from @") + extension_meta->name + ": `" + QString::fromUtf8(bytes) + "`");
 }

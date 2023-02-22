@@ -57,11 +57,16 @@ class Client:
   def store_cells(self, values_dict):
     j = {"store_in_memory": values_dict}
     self._send(Client._encode_json(j))
-    
+
+  def read_cell(self, key, buffer_size=8192):
+    j = {"memory_cells": [key]}
+    j = Client._decode_json(self._accept(Client._encode_json(j), buffer_size))
+    if "memory_values" not in j: return None
+    if key not in j["memory_values"]: return None
+    return j["memory_values"][key]
+
   def read_cells(self, keys_arr, buffer_size=8192):
     j = {"memory_cells": keys_arr}
     j = Client._decode_json(self._accept(Client._encode_json(j), buffer_size))
-    if "memory_values" not in j:
-      return None
-    else:
-      return j["memory_values"]
+    if "memory_values" not in j: return None
+    return j["memory_values"]

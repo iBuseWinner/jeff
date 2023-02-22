@@ -4,6 +4,7 @@
 #include "core-kit/database/json.hpp"
 #include "core-kit/database/sqlite.hpp"
 #include "core-kit/extensions/scenario.hpp"
+#include "core-kit/extensions/script.hpp"
 #include "core-kit/model/keystore.hpp"
 #include "core-kit/model/message.hpp"
 #include "core-kit/model/nlp/cacher.hpp"
@@ -115,20 +116,21 @@ public:
   static constexpr const char *fast_append_script_cmd = "/++ ";
   static constexpr const char *appeal_cmd             = "@";
   static constexpr const char *monologue_mode_cmd     = "/mm";
-  static constexpr const char *stop_scanner_cmd       = "/-s";
-  static constexpr const char *stop_composer_cmd      = "/-c";
   static constexpr const char *add_scanner_cmd        = "/+s";
   static constexpr const char *add_composer_cmd       = "/+c";
+  static constexpr const char *stop_scanner_cmd       = "/-s";
+  static constexpr const char *stop_composer_cmd      = "/-c";
+  
+  static constexpr const char *bundle_dir_name = "bundle";
   
   // Objects:
   Json *json = nullptr;     /*!< Json handler.   */
   SQLite *sql = nullptr;    /*!< SQLite handler. */
   Cacher *cacher = nullptr; /*!< Cache handler.  */
+  ScriptMeta *custom_scanner = nullptr;
+  ScriptMeta *custom_composer = nullptr;
 
   // Functions:
-  /*! @brief The destructor. */
-  ~Basis() { save_memory(); _settings.sync(); }
-
   /*! @brief Determines if a settings file exists. */
   inline bool exists() { return QFile::exists(_settings.fileName()); }
   /*! @brief Determines if a database specified by @a filename exists. */
@@ -154,6 +156,7 @@ public:
 
   // Functions described in `basis.cpp`:
   Basis(QObject *parent = nullptr);
+  ~Basis();
   void write(const QString &key, const QVariant &data);
   void check_settings_file();
   void check_default_source();
@@ -167,6 +170,8 @@ public:
   QJsonObject handle_to_script(const QJsonObject &object);
   void handle_from_script(const QJsonObject &object, bool except_send = false);
   void warn_about(QString warning_text);
+  void set_custom_scanner(ScriptMeta *_custom_scanner);
+  void set_custom_composer(ScriptMeta *_custom_composer);
 
 signals:
   /*! @brief Reports some information. */
@@ -190,6 +195,10 @@ signals:
   ScenarioServerMeta schedule_scenario(ScenarioServerMeta scenario_meta);
   /*! @brief Stops current scenario. */
   void shutdown_scenario();
+  /*! @brief TBD */
+  void custom_scanner_changed();
+  /*! @brief TBD */
+  void custom_composer_changed();
 
 private:
   // Objects:

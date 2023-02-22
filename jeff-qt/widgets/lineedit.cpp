@@ -9,7 +9,7 @@ LineEdit::LineEdit(QWidget *parent) : QLineEdit(parent) {
   setFrame(false);
   setup_context_menu();
   setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(this, &LineEdit::customContextMenuRequested, this, [this]() {
+  connect(this, &LineEdit::customContextMenuRequested, this, [this] {
     context_menu->exec(QCursor::pos());
   });
 }

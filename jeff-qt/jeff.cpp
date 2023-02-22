@@ -5,10 +5,10 @@ Jeff::Jeff(int argc, char *argv[]) : QObject() {
   setlocale(LC_ALL, "");
   /*! If settings file does not exist, sets default settings. */
   if (not basis->exists() or not basis->correct()) {
-    basis->write(basis->isGreetingsEnabledSt, true);
-    basis->write(basis->greetingsMsg, tr("Hello!"));
-    basis->write(basis->scenarioExitMsg, "//");
-    basis->write(basis->serverPortSt, 8005);
+    basis->write(Basis::isGreetingsEnabledSt, true);
+    basis->write(Basis::greetingsMsg, tr("Hello!"));
+    basis->write(Basis::scenarioExitMsg, "//");
+    basis->write(Basis::serverPortSt, 8005);
   }
   connect(this, &Jeff::send, core, &Core::got_message_from_user);
   if (argc > 1) {
@@ -53,17 +53,17 @@ void Jeff::ncurses_draw() {
     int h, w;
     getmaxyx(stdscr, h, w);
     wborder(stdscr, 0, 0, 0, 0, 0, 0, 0, 0);
-    mvwprintw(stdscr, 0, 2, "%s", tr("Jeff").toStdString().c_str());
+    mvwprintw(stdscr, 0, 2, "%s", tr("Jeff").toLocal8Bit().constData());
     int y0, x0;
     getyx(stdscr, y0, x0);
-    mvwprintw(stdscr, 0, x0 + 2, "%s", tr("Enter /q to quit").toStdString().c_str());
+    mvwprintw(stdscr, 0, x0 + 2, "%s", tr("Enter /q to quit").toLocal8Bit().constData());
     char *filler = new char[w - 1];
     for (int i = 0; i < w - 2; i++) { filler[i] = ' '; }
     filler[w - 2] = '\0';
     for (int i = 1; i < h - 2; i++) { mvwprintw(stdscr, i, 1, "%s", filler); }
     auto l = messages.length();
     for (int i = 0; i < l; i++) {
-      mvwprintw(stdscr, h - 3 - i, 1, "%s", messages[l - i - 1].toStdString().c_str());
+      mvwprintw(stdscr, h - 3 - i, 1, "%s", messages[l - i - 1].toLocal8Bit().constData());
     }
     move(h - 2, 5 + buffer.size());
     if (buffer_changed) {

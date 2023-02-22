@@ -52,26 +52,26 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
 
 /*! @brief Loads settings from file. */
 void Settings::loadStates() {
-  delay.setChecked(basis->read(basis->isDelayEnabledSt).toBool());
+  delay.setChecked((*basis)[Basis::isDelayEnabledSt].toBool());
   delayChecked();
-  keepHistory.setChecked(basis->read(basis->isHistoryKeepingEnabledSt).toBool());
-  minDelay.setValue(basis->read(basis->minDelaySt).toInt());
+  keepHistory.setChecked((*basis)[Basis::isHistoryKeepingEnabledSt].toBool());
+  minDelay.setValue((*basis)[Basis::minDelaySt].toInt());
   minDelayValueChanged(minDelay.value());
-  maxDelay.setValue(basis->read(basis->maxDelaySt).toInt());
+  maxDelay.setValue((*basis)[Basis::maxDelaySt].toInt());
   maxDelayValueChanged(maxDelay.value());
-  greetings.setChecked(basis->read(basis->isGreetingsEnabledSt).toBool());
+  greetings.setChecked((*basis)[Basis::isGreetingsEnabledSt].toBool());
   greetingsChecked();
-  greetingsMsg.setText(basis->read(basis->greetingsMsg).toString());
+  greetingsMsg.setText((*basis)[Basis::greetingsMsg].toString());
 }
 
 /*! @brief Saves Jeff's settings. */
 void Settings::saveAndClose() {
-  basis->write(basis->isDelayEnabledSt, delay.isChecked());
-  basis->write(basis->isHistoryKeepingEnabledSt, keepHistory.isChecked());
-  basis->write(basis->minDelaySt, minDelay.value());
-  basis->write(basis->maxDelaySt, maxDelay.value());
-  basis->write(basis->isGreetingsEnabledSt, greetings.isChecked());
-  basis->write(basis->greetingsMsg, greetingsMsg.text());
+  basis->write(Basis::isDelayEnabledSt, delay.isChecked());
+  basis->write(Basis::isHistoryKeepingEnabledSt, keepHistory.isChecked());
+  basis->write(Basis::minDelaySt, minDelay.value());
+  basis->write(Basis::maxDelaySt, maxDelay.value());
+  basis->write(Basis::isGreetingsEnabledSt, greetings.isChecked());
+  basis->write(Basis::greetingsMsg, greetingsMsg.text());
   Dialog::close();
 }
 

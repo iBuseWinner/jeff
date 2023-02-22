@@ -1,31 +1,22 @@
 #include "scripteditor.hpp"
 
 /*! @brief The constructor. */
-ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, ExtensionsManager *_em, ModalHandler *mhandler) 
-  : QWidget(parent), basis(_basis), em(_em), _mhandler(mhandler)
-{
+ReactScriptEditor::ReactScriptEditor(QWidget *parent, Basis *_basis) : QWidget(parent), basis(_basis) {
   stype_info = new QLabel(tr("Specify script type:"), this);
   auto *path_info = new QLabel(tr("Specify script path:"), this);
   path_input = new Button(tr("Select a file..."), this);
   connect(path_input, &Button::clicked, this, [this] {
     set_path(
-      QFileDialog::getOpenFileName(nullptr, tr("Select file..."), "", tr("Python script") + "(*.py);;" + tr("Any executable") + "(*.*)")
+      QFileDialog::getOpenFileName(
+        nullptr, tr("Select file..."), "", tr("Python script") + "(*.py);;" + tr("Any executable") + "(*.*)"
+      )
     );
   });
-  stype_input = new ComboBox(this);
-  stype_input->addItems({
-    tr("Custom scanner (another answering system)"),
-    tr("Custom composer (receives chosen variants and answers on them in another manner)")
-  });
-  connect(
-    stype_input, QOverload<int>::of(&QComboBox::currentIndexChanged),
-    this, [this](int _stype) { change_stype(_stype + 2); }
-  );
   auto *cancel_btn = new Button(tr("Cancel"), this);
   cancel_btn->setIcon(QIcon::fromTheme("window-close", QIcon(":/arts/icons/16/window-close.svg")));
   save_btn = new Button(tr("Add script"), this);
   save_btn->setIcon(QIcon::fromTheme("dialog-ok-apply", QIcon(":/arts/icons/16/dialog-ok-apply.svg")));
-  if (not _mhandler) save_btn->setText(tr("Save script"));
+  save_btn->setText(tr("Save script"));
   auto *buttons_layout = new QGridLayout();
   buttons_layout->setSpacing(0);
   buttons_layout->setMargin(0);
@@ -41,7 +32,6 @@ ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, ExtensionsManager *_e
   dynamic_properties_widget->setLayout(dynamic_properties_layout);
   auto *main_layout = new QGridLayout();
   main_layout->addWidget(stype_info, 0, 0);
-  main_layout->addWidget(stype_input, 0, 1);
   main_layout->addWidget(path_info, 1, 0);
   main_layout->addWidget(path_input, 1, 1);
   main_layout->addWidget(dynamic_properties_widget, 2, 0, 1, 2);
@@ -52,7 +42,7 @@ ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis, ExtensionsManager *_e
 }
 
 /*! @brief The destructor. */
-ScriptEditor::~ScriptEditor() {
+ReactScriptEditor::~ReactScriptEditor() {
   QLayoutItem *child = nullptr;
   if (dynamic_properties_layout->count())
     while ((child = dynamic_properties_layout->takeAt(0)) != nullptr) {
@@ -62,7 +52,7 @@ ScriptEditor::~ScriptEditor() {
 }
 
 /*! @brief Shows a name of the file and sets correct icons. */
-void ScriptEditor::set_path(QString path) {
+void ReactScriptEditor::set_path(QString path) {
   if (not path.isEmpty()) {
     filepath = path;
     QFileInfo fi(filepath);
@@ -76,11 +66,10 @@ void ScriptEditor::set_path(QString path) {
 }
 
 /*! @brief Changes the layout depending on the selected script type. */
-void ScriptEditor::change_stype() {
+void ReactScriptEditor::change_stype() {
   disconnect(save_btn, &Button::clicked, nullptr, nullptr);
   if (dynamic_properties_layout->parentWidget()->isHidden())
     dynamic_properties_layout->parentWidget()->show();
-  stype_input->setEnabled(false);
   QLayoutItem *child = nullptr;
   if (dynamic_properties_layout->count()) 
     while ((child = dynamic_properties_layout->takeAt(0)) != nullptr) {
@@ -129,75 +118,20 @@ void ScriptEditor::change_stype() {
       emit saved(react->to_string());
       delete react;
     });
-  } else if (stype == 2) {
-    // Custom scanner (another answering system)
-    auto *fn_name_info = new QLabel(tr("Specify function name:"));
-    fn_name_input = new LineEdit();
-    fn_name_input->setPlaceholderText(tr("Function name..."));
-    dynamic_properties_layout->addWidget(fn_name_info, 0, 0);
-    dynamic_properties_layout->addWidget(fn_name_input, 0, 1);
-    connect(save_btn, &Button::clicked, this, [this] {
-      if ((path_input->text() == tr("Select a file...") or fn_name_input->text().isEmpty())) {
-        basis->warn_about(tr("Please complete path and function name fields before saving."));
-        return;
-      }
-      auto *scanner = new ScriptMeta();
-      scanner->stype = ScriptType::CustomScan;
-      scanner->filepath = filepath;
-      scanner->fn_name = fn_name_input->text();
-      if (_mhandler) {
-        // sem->add_script(scanner);
-        emit closed();
-      } else {
-        emit saved(scanner->to_string());
-        delete scanner;
-      }
-    });
-  } else if (stype == 3) {
-    // Custom composer (receives chosed variants and answers on them in another manner)
-    auto *fn_name_info = new QLabel(tr("Specify function name:"));
-    fn_name_input = new LineEdit();
-    fn_name_input->setPlaceholderText(tr("Function name..."));
-    send_adprops = new QCheckBox(tr("Check if you need to pass additional values to the script"));
-    dynamic_properties_layout->addWidget(fn_name_info, 0, 0);
-    dynamic_properties_layout->addWidget(fn_name_input, 0, 1);
-    dynamic_properties_layout->addWidget(send_adprops, 1, 0, 1, 2);
-    connect(save_btn, &Button::clicked, this, [this] {
-      if ((path_input->text() == tr("Select a file...") or fn_name_input->text().isEmpty())) {
-        basis->warn_about(tr("Please complete path and function name fields before saving."));
-        return;
-      }
-      auto *composer = new ScriptMeta();
-      composer->stype = ScriptType::CustomCompose;
-      composer->filepath = filepath;
-      composer->fn_name = fn_name_input->text();
-      composer->required_adprops = send_adprops->isChecked();
-      if (_mhandler) {
-        // sem->add_script(composer);
-        emit closed();
-      } else {
-        emit saved(composer->to_string());
-        delete composer;
-      }
-    });
   }
-  stype_input->setEnabled(true);
 }
 
 /*! @brief Changes the script type and then calls the layout change function. */
-void ScriptEditor::change_stype(int _stype) { stype = _stype; change_stype(); }
+void ReactScriptEditor::change_stype(int _stype) { stype = _stype; change_stype(); }
 
 /*! @brief Fixes the script type, making it immutable. */
-void ScriptEditor::set_stype(int _stype) {
-  disconnect(stype_input, QOverload<int>::of(&QComboBox::currentIndexChanged), nullptr, nullptr);
-  stype_input->setEnabled(false);
-  stype_input->hide();
+void ReactScriptEditor::set_stype(int _stype) {
   stype_info->hide();
   change_stype(_stype);
 }
 
 /*! @brief Loads data into the form from a string. */
-bool ScriptEditor::load_from_text(QString json_text) {
+bool ReactScriptEditor::load_from_text(QString json_text) {
   if (json_text.isEmpty()) return false;
   auto *script = ScriptMeta::from_string(json_text);
   if (not script) return false;
@@ -206,7 +140,7 @@ bool ScriptEditor::load_from_text(QString json_text) {
 }
 
 /*! @brief Loads data into a form from a saved state. */
-bool ScriptEditor::load_from_script(ScriptMeta *script_meta) {
+bool ReactScriptEditor::load_from_script(ScriptMeta *script_meta) {
   if (script_meta->stype == ScriptType::React) {
     set_stype(1);
     set_path(script_meta->filepath);

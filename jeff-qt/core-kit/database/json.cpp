@@ -3,14 +3,18 @@
 /*! @brief The constructor. */
 Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {
   check_or_create_subdir();
-  _settings_path = _settings_path + QDir::separator() + subdir_name;
-  Yellog::EnableFileOutput(QString("%1%2%3").arg(_settings_path).arg(QDir::separator()).arg(log_filename).toStdString().c_str());
+  _settings_path = _settings_path + "/" + Json::subdir_name;
+  Yellog::EnableFileOutput(
+    QDir::toNativeSeparators(
+      QString("%1/%2").arg(_settings_path).arg(log_filename))
+    .toLocal8Bit().constData()
+  );
   Yellog::Trace("------------NEWSTART------------");
 }
 
 /*! @brief Reads the store and loads a list of connected sources. */
 Sources Json::read_source_list(SQLite *sql) {
-  QFile store = QFile(_settings_path + QDir::separator() + sources_store_filename);
+  QFile store = QFile(_settings_path + "/" + Json::sources_store_filename);
   if (not store.exists()) return Sources();
   QJsonArray sources_json = read_json(&store);
   Sources sources;
@@ -31,13 +35,13 @@ MessagesMeta Json::read_message_history(QFile *file) {
 
 /*! @brief Restores @a message_history from default storage. */
 MessagesMeta Json::read_message_history() {
-  QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
+  QFile store = QFile(_settings_path + "/" + Json::history_store_filename);
   return read_message_history(&store);
 }
 
 /*! @brief Reads the expressions most commonly used in Jeff's answers - @a cache. */
 Cache Json::read_NLP_cache() {
-  QFile store = QFile(_settings_path + QDir::separator() + cache_store_filename);
+  QFile store = QFile(_settings_path + "/" + Json::cache_store_filename);
   if (not store.exists()) return Cache();
   QJsonArray cache_json = read_json(&store);
   Cache cache;
@@ -47,7 +51,7 @@ Cache Json::read_NLP_cache() {
 
 /*! @brief Reads an extensions' metadata. */
 ExtensionsMeta Json::read_extensions() {
-  QFile store = QFile(_settings_path + QDir::separator() + extensions_store_filename);
+  QFile store = QFile(_settings_path + "/" + Json::extensions_store_filename);
   if (not store.exists()) return ExtensionsMeta();
   QJsonArray extensions_json = read_json(&store);
   ExtensionsMeta extensions_meta;
@@ -64,7 +68,7 @@ ExtensionsMeta Json::read_extensions() {
 
 /*! @brief Reads memory - @a keystore. */
 KeyStore Json::read_memory() {
-  QFile store = QFile(_settings_path + QDir::separator() + memory_store_filename);
+  QFile store = QFile(_settings_path + "/" + Json::memory_store_filename);
   if (not store.exists()) return KeyStore();
   QJsonArray memory_json = read_json(&store);
   KeyStore keystore;
@@ -84,7 +88,7 @@ void Json::write_source_list(SQLite *sql, Sources sources) {
     // Jeff writes them there.
     sql->write_source(sources[i]);
   }
-  QFile file = QFile(_settings_path + QDir::separator() + sources_store_filename);
+  QFile file = QFile(_settings_path + "/" + Json::sources_store_filename);
   write_json(&file, sources_json);
 }
 
@@ -97,7 +101,7 @@ void Json::write_message_history(MessagesMeta message_history, QFile *file) {
 
 /*! @brief Saves @a message_history at the default storage. */
 void Json::write_message_history(MessagesMeta message_history) {
-  QFile store = QFile(_settings_path + QDir::separator() + history_store_filename);
+  QFile store = QFile(_settings_path + "/" + Json::history_store_filename);
   write_message_history(message_history, &store);
 }
 
@@ -105,7 +109,7 @@ void Json::write_message_history(MessagesMeta message_history) {
 void Json::write_NLP_cache(Cache cache) {
   QJsonArray cache_json;
   for (auto expression : cache) cache_json.append(expression.to_json());
-  QFile file = QFile(_settings_path + QDir::separator() + cache_store_filename);
+  QFile file = QFile(_settings_path + "/" + Json::cache_store_filename);
   write_json(&file, cache_json);
 }
 
@@ -116,7 +120,7 @@ void Json::write_extensions(ExtensionsMeta extensions_meta) {
     {"origin", extension_meta->origin},
     {"enabled", extension_meta->enabled}
   }));
-  QFile file = QFile(_settings_path + QDir::separator() + extensions_store_filename);
+  QFile file = QFile(_settings_path + "/" + Json::extensions_store_filename);
   write_json(&file, json_arr);
 }
 
@@ -128,7 +132,7 @@ void Json::write_memory(KeyStore memory) {
     cell_obj[cell_key] = memory[cell_key];
     memory_json.append(cell_obj);
   }
-  QFile file = QFile(_settings_path + QDir::separator() + memory_store_filename);
+  QFile file = QFile(_settings_path + "/" + Json::memory_store_filename);
   write_json(&file, memory_json);
 }
 
@@ -152,18 +156,18 @@ QJsonArray Json::read_json(QFile *file) {
 void Json::write_json(QFile *savefile, const QJsonArray &json_array) {
   if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) {
     Yellog::Error("At Json::write_json:");
-    Yellog::Error("\tCannot open savefile \"%s\" as rw/text.", savefile->fileName().toStdString().c_str());
+    Yellog::Error("\tCannot open savefile \"%s\" as rw/text.", savefile->fileName().toLocal8Bit().constData());
     return;
   }
   QJsonDocument doc(json_array);
   QTextStream textStream(savefile);
-  textStream << doc.toJson(QJsonDocument::Compact);
+  textStream << doc.toJson(QJsonDocument::Indented);
   savefile->close();
 }
 
 /*! @brief Checks */
 void Json::check_or_create_subdir() {
   QDir dir;
-  auto subdir_path = _settings_path + QDir::separator() + subdir_name;
+  auto subdir_path = _settings_path + "/" + Json::subdir_name;
   if (not dir.exists(subdir_path)) dir.mkdir(subdir_path);
 }

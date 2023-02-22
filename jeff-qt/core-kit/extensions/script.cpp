@@ -106,3 +106,27 @@ ScriptMeta *ScriptMeta::from_string(QString string) {
   }
   return script_meta;
 }
+
+/*! @brief Reads script's metadata from @a origin file. */
+ScriptMeta *ScriptMeta::from_origin(const QString &origin) {
+  Yellog::Trace("Given file: %s", origin.toLocal8Bit().constData());
+  QFile file(origin);
+  if (not file.exists()) {
+    Yellog::Error("File doesn't exist.");
+    return nullptr;
+  }
+  if (not file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    Yellog::Error("Unable to open file as RO & Text.");
+    return nullptr;
+  }
+  QTextStream textStream(&file);
+  auto text = textStream.readAll().toUtf8();
+  file.close();
+  auto *script_meta = from_string(text);
+  if (not script_meta) {
+    Yellog::Error("Unable to make ScriptMeta object from origin.");
+    return nullptr;
+  }
+  script_meta->origin = origin;
+  return script_meta;
+}

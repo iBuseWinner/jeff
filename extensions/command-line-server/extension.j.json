@@ -1,0 +1,21 @@
+{
+  "name": "cmd",
+  "title": "Simple Terminal Extension",
+  "desc": "Simple Terminal Extension. Write '@cmd some-command' or just '@cmd' to invoke Konsole.",
+  "authors": [
+    {
+      "author": "Mark CDA",
+      "contacts": {"telegram": "@markcda"}
+    }
+  ],
+  "license": "MIT",
+  "links": ["https://realpython.com/python-subprocess/#the-standard-io-streams"],
+  "program": "python",
+  "args": [
+    "ste.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 23172
+}

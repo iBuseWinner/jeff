@@ -12,7 +12,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
-add_compile_options(-O3 -flto=auto -Wall -Wextra -pedantic -Wstrict-aliasing -Wno-format -Wno-format-security -Wno-unused-parameter)
+add_compile_options(
+  -O3
+  -flto=auto
+  -Wall
+  -Wextra
+  -pedantic
+  -Wstrict-aliasing
+  -Wno-format
+  -Wno-format-security
+  -Wno-unused-parameter
+)
 
 include_directories(
   .
@@ -24,7 +34,7 @@ include_directories(
   dialogues
   dialogues/phrase-editor
   dialogues/sources
-  lib/Yelloger/include
+  lib/yelloger/include
   widgets
 )
 
@@ -142,6 +152,8 @@ set(SRCS_UI
   dialogues/phrase-editor/brief.hpp
   dialogues/phrase-editor/overview.cpp
   dialogues/phrase-editor/overview.hpp
+  dialogues/phrase-editor/scripteditor.cpp
+  dialogues/phrase-editor/scripteditor.hpp
   dialogues/phrase-editor/selector.cpp
   dialogues/phrase-editor/selector.hpp
   dialogues/sources-editor/create-source.cpp
@@ -172,8 +184,6 @@ set(SRCS_UI
   widgets/message.hpp
   widgets/pairwidget.cpp
   widgets/pairwidget.hpp
-  widgets/scripteditor.cpp
-  widgets/scripteditor.hpp
   widgets/scrollarea.hpp
   widgets/scrollfreezerwidget.hpp
   widgets/spoiler.cpp

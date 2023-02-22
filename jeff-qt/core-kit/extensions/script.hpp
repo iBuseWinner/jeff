@@ -2,6 +2,7 @@
 #define SCRIPT_H
 
 #include "yelloger.h"
+#include <QFile>
 #include <QHostAddress>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -27,11 +28,13 @@ public:
   QJsonObject to_json() const;
   QString to_string() const;
   static ScriptMeta *from_string(QString string);
+  static ScriptMeta *from_origin(const QString &origin);
 
   // Objects:
   /*! @brief inner props */
   bool valid = false;
   bool is_for_embedded_python = true;
+  QString origin;
   /*! @brief props from file */
   ScriptType stype = NoneScript;
   QString filepath;

@@ -2,15 +2,32 @@
 
 /*! @brief The constructor. */
 Basis::Basis(QObject *parent) : QObject(parent) {
-  json = new Json(get_settings_path(), this); /*!< @details Json object will be created first 'cause it inits yelloger. */
+  json = new Json(get_settings_path(), this); /*!< @details Json object will be created first as it inits yelloger. */
   sql = new SQLite(this);
   cacher = new Cacher(this);
   load_sources();
   load_memory();
   // Setting the `jeff-lang` value:
-  auto l = QLocale::system().name();
-  l.truncate(2);
-  memory("jeff-lang", l);
+  {
+    auto l = QLocale::system().name();
+    l.truncate(2);
+    memory("jeff-lang", l);
+  }
+  // Setting the `jeff-bundle-dir` value:
+  {
+    auto p = get_settings_path() + "/" + Json::subdir_name + "/" + Basis::bundle_dir_name;
+    QDir dir;
+    if (not dir.exists(p)) dir.mkdir(p);
+    memory("jeff-bundle-dir", p);
+  }
+}
+
+/*! @brief The destructor. */
+Basis::~Basis() {
+  save_memory();
+  _settings.sync();
+  if (custom_scanner) delete custom_scanner;
+  if (custom_composer) delete custom_composer;
 }
 
 /*! @brief Checks the settings file for any errors. */
@@ -26,7 +43,7 @@ void Basis::check_settings_file() {
 
 /*! @brief Sends a warning to the screen. */
 void Basis::warn_about(QString warning_text) {
-  Yellog::Warn(warning_text.toStdString().c_str());
+  Yellog::Warn(warning_text.toLocal8Bit().constData());
   emit warn(warning_text);
 }
 
@@ -50,8 +67,8 @@ void Basis::set_first_source_as_default() {
     write(defaultSourcePath, _sources[0].path);
     write(defaultSourceContainer, _sources[0].table_name);
     Yellog::Info("New default source: %s, %s",
-                 _sources[0].path.toStdString().c_str(),
-                 _sources[0].table_name.toStdString().c_str());
+                 _sources[0].path.toLocal8Bit().constData(),
+                 _sources[0].table_name.toLocal8Bit().constData());
   } else {
     write(defaultSourcePath, "");
     write(defaultSourceContainer, "");
@@ -209,4 +226,16 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
       emit info(info_message);
     }
   }
+}
+
+/*! @brief TBD */
+void Basis::set_custom_scanner(ScriptMeta *_custom_scanner) {
+  custom_scanner = _custom_scanner;
+  emit custom_scanner_changed();
+}
+
+/*! @brief TBD */
+void Basis::set_custom_composer(ScriptMeta *_custom_composer) {
+  custom_composer = _custom_composer;
+  emit custom_composer_changed();
 }
