@@ -10,11 +10,13 @@ parser = argparse.ArgumentParser(description="Wikipedia is the Jeff extension th
 parser.add_argument("extension_port", type=int, help="extension's server port")
 parser.add_argument("jeff_port", type=int, help="Jeff port")
 parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+parser.add_argument("-w", "--with_name", action="store_true", help="send messages with identifier")
 
 args = parser.parse_args()
 extension_port = args.extension_port
 jeff_port = args.jeff_port
 verbose = args.verbose
+wn = args.with_name
 
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
@@ -30,7 +32,8 @@ def wiki_navigator(query, at_words):
   try:
     try:
       msg = wiki.summary(query)
-      scn.send_msg(msg)
+      if not wn: scn.send_msg(msg)
+      else: scn.send_msg('**[Wiki]** ' + msg)
     except wiki.DisambiguationError as e:
       if verbose: print('Several options')
       variants = wiki.search(query, results=10, suggestion=True)
