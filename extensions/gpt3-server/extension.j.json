@@ -27,7 +27,8 @@
   "args": [
     "gpt3-chat.py",
     "<SERVER_PORT>",
-    "<JEFF_PORT>"
+    "<JEFF_PORT>",
+    "-w"
   ],
   "server_ip": "",
   "server_port": 23174

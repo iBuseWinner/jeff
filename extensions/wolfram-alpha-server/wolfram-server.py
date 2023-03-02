@@ -10,11 +10,13 @@ parser = argparse.ArgumentParser(description="An extension that uses the Wolfram
 parser.add_argument("extension_port", type=int, help="extension's server port")
 parser.add_argument("jeff_port", type=int, help="Jeff port")
 parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+parser.add_argument("-w", "--with_name", action="store_true", help="send messages with identifier")
 
 args = parser.parse_args()
 extension_port = args.extension_port
 jeff_port = args.jeff_port
 verbose = args.verbose
+wn = args.with_name
 
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
@@ -35,9 +37,11 @@ def main():
     res = wa_cli.query(text)
     try:
       answer = next(res.results).text
-      cli.send_msg(answer)
+      if not wn: cli.send_msg(answer)
+      else: cli.send_msg('**[Wolfram]** ' + answer)
     except StopIteration:
-      cli.send_msg('I don\'t know.' if lang != 'ru' else 'Я не знаю.')
+      if not wn: cli.send_msg('I don\'t know.' if lang != 'ru' else 'Я не знаю.')
+      else: cli.send_msg('**[Wolfram]** I don\'t know.' if lang != 'ru' else '**[Wolfram]** Я не знаю.')
 
 
 try:

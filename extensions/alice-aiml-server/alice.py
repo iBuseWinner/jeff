@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import aiml, json, os.path, argparse, signal, sys, uuid
+import aiml, json, os.path, argparse, signal, sys
 import argostranslate.package, argostranslate.translate
 from jeff_api import client, server
 
@@ -8,11 +8,13 @@ parser = argparse.ArgumentParser(description="Alice AIML is an extension that in
 parser.add_argument("extension_port", type=int, help="extension's server port")
 parser.add_argument("jeff_port", type=int, help="Jeff port")
 parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+parser.add_argument("-w", "--with_name", action="store_true", help="send messages with identifier")
 
 args = parser.parse_args()
 extension_port = args.extension_port
 jeff_port = args.jeff_port
 verbose = args.verbose
+wn = args.with_name
 
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
@@ -108,14 +110,14 @@ class AliceResponder:
       if self.tr:
         msg = self.tr.from_aiml(msg)
         if verbose: print(f'Translated back to: {msg}')
-      cli.send_msg(msg)
+      if not wn: cli.send_msg(msg)
+      else: cli.send_msg('**[Alice]** ' + msg)
 
 
 def main():
   aiml_kernel = aiml.Kernel()
   aiml_kernel.setTextEncoding(None)
-  load_status_id = str(uuid.uuid4())
-  cli.send_status(load_status_id, '*[Alice] Waiting...*' if lang != 'ru' else '*[Alice] Ожидание...*')
+  if verbose: print('*[Alice] Waiting...*' if lang != 'ru' else '*[Alice] Ожидание...*')
   if os.path.isfile('brain.brn') and os.path.isfile('sessions.brn'):
     aiml_kernel.bootstrap(brainFile='brain.brn', sessionsFile='sessions.brn')
   else:
@@ -131,7 +133,7 @@ def main():
     del translator # you MUST do this before (!) process terminating because of ctranslate2 side effects
     sys.exit(0)
   
-  cli.send_status(load_status_id, '[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
+  cli.send_info('[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
   signal.signal(signal.SIGINT, exit_gracefully)
   signal.signal(signal.SIGTERM, exit_gracefully)
   alice.run_loop(cli, srv)
