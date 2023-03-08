@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from jeff_api import client, server
-import json, subprocess, socket, os, uuid, locale, argparse
+import argparse, json, os, socket, subprocess, uuid
 
 parser = argparse.ArgumentParser(description="Darknet & YOLOv7 Objects-on-Image Recognition Jeff's extension.")
 parser.add_argument("extension_port", type=int, help="extension's server port")

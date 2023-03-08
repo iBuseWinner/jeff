@@ -1,0 +1,29 @@
+{
+  "name": "rhvoice",
+  "title": "RHVoice TTS Server",
+  "desc": "An extension that uses the Speech Dispatcher and RHVoice to speak out Jeff's messages.",
+  "authors": [
+    {
+      "author": "Olga Yakovleva (+37 more at GitHub)",
+      "contacts": {"gitHub": "https://github.com/Olga-Yakovleva"}
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {"telegram": "@markcda"}
+    }
+  ],
+  "license": "MIT",
+  "links": [
+    "https://gb.ru/posts/tts_python",
+    "https://github.com/RHVoice/RHVoice"
+  ],
+  "program": "python",
+  "args": [
+    "rhvoice-server.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 23175,
+  "always_send": true
+}

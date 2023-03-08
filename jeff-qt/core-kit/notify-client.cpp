@@ -6,13 +6,24 @@ NotifyClient::NotifyClient(QObject *parent) : QObject(parent) {}
 /*! @brief Notifies all extensions that have subscribed to notifications about a new message. */
 void NotifyClient::notify(MessageMeta *msg_meta, bool no_jck_output) {
   Yellog::Trace("Notifier working...");
-  if (not is_scenario_running)
+  if (not is_scenario_running) {
     for (auto *ext_m : extensions_meta) {
-      if ((ext_m->always_send and not no_jck_output) or (not ext_m->always_send and no_jck_output))
+      if ((ext_m->always_send and not no_jck_output) or (not ext_m->always_send and no_jck_output)) {
         send_event(msg_meta, ext_m->server_addr, ext_m->server_port);
+      }
     }
-  else if (msg_meta->author == Author::User)
+  } else if (msg_meta->author == Author::User) {
     send_event(msg_meta, scenario_meta.server_addr, scenario_meta.server_port);
+  } else {
+    for (auto *ext_m : extensions_meta) {
+      if (
+        ext_m->always_send and
+        (scenario_meta.server_addr != ext_m->server_addr or scenario_meta.server_port != ext_m->server_port)
+      ) {
+        send_event(msg_meta, ext_m->server_addr, ext_m->server_port);
+      }
+    }
+  }
 }
 
 /*! @brief Passes authentication data to the extension. */

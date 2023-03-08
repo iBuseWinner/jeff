@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argparse, credentials, locale, openai, os, uuid
+import argparse, credentials, locale, openai, os
 from jeff_api import client, server
 
 KEEP_QNA = 9
@@ -21,7 +21,7 @@ srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
 lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
-prompt = "The following is a conversation with an AI assistant. The assistant is helpful, clever and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff, automation tool. I use an AI model created by OpenAI. How can I help you today?" #if lang != 'ru' else "Ниже приведена переписка с ИИ-ассистентом. Ассистент полезный, умный и очень дружелюбный.\n\nЧеловек: Привет, кто ты?\nИИ: Я - Джефф, средство автоматизации. Я использую ИИ-модель, созданную OpenAI. Как я могу вам помочь?"
+prompt = "The following is a conversation with an AI assistant called Jeff. The assistant is helpful, clever and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff, automation tool. I use an AI model created by OpenAI. How can I help you today?" #if lang != 'ru' else "Ниже приведена переписка с ИИ-ассистентом. Ассистент полезный, умный и очень дружелюбный.\n\nЧеловек: Привет, кто ты?\nИИ: Я - Джефф, средство автоматизации. Я использую ИИ-модель, созданную OpenAI. Как я могу вам помочь?"
 
 stop_keys = ["Human:", "AI:"] #if lang != 'ru' else ["Человек:", "ИИ:"]
 
@@ -84,17 +84,16 @@ def main():
     if len(data['content']) < 10: continue
     text = data['content']
     if data['author'] == 1: continue
-    msg_id = str(uuid.uuid4())
     if verbose: print('*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
-    cli.send_status(msg_id, '*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
+    cli.send_status('*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
     history.append(human_sequence + text)
     response = generate_response(make_prompt(history)).strip()
     if len(response) == 0:
-      cli.send_status(msg_id, '[GPT-3] Asnwer is not found.' if lang != 'ru' else '[GPT-3] Ответ не найден.')
+      cli.send_msg('[GPT-3] Asnwer is not found.' if lang != 'ru' else '[GPT-3] Ответ не найден.')
     else:
       history.append(response)
-      if not wn: cli.send_status(msg_id, response.replace(ai_sequence, '').capitalize())
-      else: cli.send_status(msg_id, '**[GPT-3]** ' + response.replace(ai_sequence, '').capitalize())
+      if not wn: cli.send_msg(response.replace(ai_sequence, '').capitalize())
+      else: cli.send_msg('**[GPT-3]** ' + response.replace(ai_sequence, '').capitalize())
       if verbose: print(response.replace(ai_sequence, ''))
       history = history_reducer(history)
 
