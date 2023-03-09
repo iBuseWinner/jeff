@@ -5,6 +5,7 @@ ExtensionsManager::ExtensionsManager(
   HProcessor *_hp, Basis *_basis, NotifyClient *_notifier, QObject *parent
 ) : QObject(parent), hp(_hp), basis(_basis), notifier(_notifier) {
   _extensions_meta = basis->json->read_extensions();
+  write_exts_in_memory();
 }
 
 /*! @brief The destructor. */
@@ -43,6 +44,7 @@ void ExtensionsManager::add_extension(ExtensionMeta *extension_meta) {
   Yellog::Trace("\tExtension added.");
   start_extension(extension_meta);
   Yellog::Trace("\tExtension started.");
+  write_exts_in_memory();
 }
 
 /*! @brief Starts the daemon. */
@@ -101,6 +103,7 @@ void ExtensionsManager::remove_extension(ExtensionMeta *extension_meta) {
   Yellog::Trace("\tExtension has been removed from Jeff.");
   delete extension_meta;
   Yellog::Trace("\tExtension memory has been freed.");
+  write_exts_in_memory();
 }
 
 /*! @brief Returns the state of the extension. */
@@ -140,4 +143,11 @@ ExtensionMeta *ExtensionsManager::get_ext_meta_by_name(QString name) {
     if (name == extension_meta->name)
       return extension_meta;
   return nullptr;
+}
+
+/*! @brief TBD */
+void ExtensionsManager::write_exts_in_memory() {
+  QJsonArray arr;
+  for (auto *ext_meta : _extensions_meta) arr.append(ext_meta->name);
+  basis->memory("jeff-extensions-list", arr);
 }

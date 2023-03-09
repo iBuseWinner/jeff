@@ -62,6 +62,9 @@ private:
   ExtensionsMeta _extensions_meta;
   RunningExtensions _running;
   QString _current_path;
+  
+  // Functions described in `extensions-manager`:
+  void write_exts_in_memory();
 };
 
 #endif
