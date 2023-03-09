@@ -199,7 +199,6 @@ void Core::got_status_from_script(QPair<QString, QString> id_and_message) {
 void Core::got_info(const QString &info_text) {
   if (not fits(info_text)) return;
   auto *message = create_message(info_text, Author::Jeff, ContentType::Markdown, Theme::Green);
-  hp->append(message);
   emit show(message);
   notifier->notify(message);
 }
@@ -208,7 +207,6 @@ void Core::got_info(const QString &info_text) {
 void Core::got_warning(const QString &warning_text) {
   if (not fits(warning_text)) return;
   auto *message = create_message(warning_text, Author::Jeff, ContentType::Warning, Theme::Yellow);
-  hp->append(message);
   emit show(message);
   notifier->notify(message);
 }
@@ -217,7 +215,6 @@ void Core::got_warning(const QString &warning_text) {
 void Core::got_error(const QString &error_text) {
   if (not fits(error_text)) return;
   auto *message = create_message(error_text, Author::Jeff, ContentType::Error, Theme::Red);
-  hp->append(message);
   emit show(message);
   notifier->notify(message);
 }

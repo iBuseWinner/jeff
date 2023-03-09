@@ -175,36 +175,36 @@ bool SQLite::insert_expression(const Source &source, const Expression &expressio
       auto links = Phrase::unpack_links(query.value(0).toString());
       links.insert(reagent_expr_address);
       result = exec(&query, UpdateLinksByAddress, {source.table_name,
-                                                  QString::number(activator_expr_addr),
-                                                  Phrase::pack_links(links)});
+                                                   QString::number(activator_expr_addr),
+                                                   Phrase::pack_links(links)});
     } else {
       exec(&query, SelectLinksByAddress, {source.table_name, QString::number(activator_expr_addr)});
       query.first();
       auto links = Phrase::unpack_links(query.value(0).toString());
       links.insert(new_address);
       result = exec(&query, UpdateLinksByAddress, {source.table_name,
-                                                  QString::number(activator_expr_addr),
-                                                  Phrase::pack_links(links)});
+                                                   QString::number(activator_expr_addr),
+                                                   Phrase::pack_links(links)});
       result &= exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
-                                               expression.reagent_text, "",
-                                               QString::number(int(expression.exec)),
-                                               Phrase::text_props(expression.properties)});
+                                            expression.reagent_text, "",
+                                            QString::number(int(expression.exec)),
+                                            Phrase::text_props(expression.properties)});
     }
   } else {
     if (reagent_expr_address > 0) {
       result = exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
-                                              expression.activator_text,
-                                              QString::number(reagent_expr_address), "0",
-                                              Phrase::text_props(expression.properties)});
+                                           expression.activator_text,
+                                           QString::number(reagent_expr_address), "0",
+                                           Phrase::text_props(expression.properties)});
     } else {
       result = exec(&query, InsertPhrase, {source.table_name, QString::number(new_address),
-                                              expression.activator_text,
-                                              QString::number(new_address + 1), "0",
-                                              Phrase::text_props(expression.properties)});
+                                           expression.activator_text,
+                                           QString::number(new_address + 1), "0",
+                                           Phrase::text_props(expression.properties)});
       result &= exec(&query, InsertPhrase, {source.table_name, QString::number(new_address + 1),
-                                               expression.reagent_text, "",
-                                               QString::number(int(expression.exec)),
-                                               Phrase::text_props(expression.properties)});
+                                            expression.reagent_text, "",
+                                            QString::number(int(expression.exec)),
+                                            Phrase::text_props(expression.properties)});
     }
   }
   db.close();
