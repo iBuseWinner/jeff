@@ -145,7 +145,7 @@ ExtensionMeta *ExtensionsManager::get_ext_meta_by_name(QString name) {
   return nullptr;
 }
 
-/*! @brief TBD */
+/*! @brief Writes the default value of the list of extensions. */
 void ExtensionsManager::write_exts_in_memory() {
   QJsonArray arr;
   for (auto *ext_meta : _extensions_meta) arr.append(ext_meta->name);

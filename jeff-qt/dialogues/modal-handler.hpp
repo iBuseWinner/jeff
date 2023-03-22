@@ -14,8 +14,7 @@ class ModalHandler : public QObject {
   Q_DISABLE_COPY(ModalHandler)
 public:
   /*! @brief The constructor. */
-  ModalHandler(QObject *parent = nullptr, QWidget *prisoner = nullptr)
-      : QObject(parent), _prisoner(prisoner) {}
+  ModalHandler(QObject *parent = nullptr, QWidget *prisoner = nullptr) : QObject(parent), _prisoner(prisoner) {}
   /*! Closes the @a _prisoner. */
   void closePrisoner() {
     emit prisonerClosed();

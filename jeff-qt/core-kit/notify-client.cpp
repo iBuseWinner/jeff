@@ -31,7 +31,7 @@ void NotifyClient::notify_scenario_first_time(QString auth_key) {
   if (not is_scenario_running) return;
   auto *socket = new QTcpSocket(this);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
-  connect(socket, &QTcpSocket::connected, this, [this, socket, auth_key] {
+  connect(socket, &QTcpSocket::connected, this, [socket, auth_key] {
     auto transport = QJsonObject();
     transport[Basis::scenarioTokenWk] = auth_key;
     QJsonDocument doc_to_script(transport);
@@ -46,7 +46,7 @@ void NotifyClient::notify_scenario_first_time(QString auth_key) {
 void NotifyClient::notify_about_queued(ScenarioServerMeta _scenario_meta) {
   auto *socket = new QTcpSocket(this);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
-  connect(socket, &QTcpSocket::connected, this, [this, socket] {
+  connect(socket, &QTcpSocket::connected, this, [socket] {
     auto transport = QJsonObject();
     transport[Basis::scenarioQueuedWk] = true;
     QJsonDocument doc_to_script(transport);
@@ -69,7 +69,7 @@ void NotifyClient::finish_scenario() {
   if (not is_scenario_running) return;
   auto *socket = new QTcpSocket(this);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
-  connect(socket, &QTcpSocket::connected, this, [this, socket] {
+  connect(socket, &QTcpSocket::connected, this, [socket] {
     QJsonObject transport;
     transport[Basis::scenarioFinishWk] = true;
     QJsonDocument doc_to_script(transport);
@@ -85,7 +85,7 @@ void NotifyClient::finish_scenario() {
 void NotifyClient::send_event(MessageMeta *msg_meta, QHostAddress addr, quint16 port) {
   auto *socket = new QTcpSocket(this);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
-  connect(socket, &QTcpSocket::connected, this, [this, msg_meta, socket] {
+  connect(socket, &QTcpSocket::connected, this, [msg_meta, socket] {
     auto transport = msg_meta->to_json();
     QJsonDocument doc_to_script(transport);
     auto bytes_to_send = doc_to_script.toJson();

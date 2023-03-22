@@ -23,7 +23,7 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
   });
   auto *context_menu = new Menu(this);
   context_menu->addAction(copy_text_action);
-  connect(&authors_lbl, &QLabel::customContextMenuRequested, this, [this, context_menu] {
+  connect(&authors_lbl, &QLabel::customContextMenuRequested, this, [context_menu] {
     context_menu->exec(QCursor::pos());
   });
   links_lbl.setContextMenuPolicy(Qt::NoContextMenu);

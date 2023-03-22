@@ -6,11 +6,8 @@
 #include "core-kit/extensions/scenario.hpp"
 #include "core-kit/extensions/script.hpp"
 #include "core-kit/model/keystore.hpp"
-#include "core-kit/model/message.hpp"
 #include "core-kit/model/nlp/cacher.hpp"
-#include "core-kit/model/nlp/options.hpp"
 #include "core-kit/model/source.hpp"
-#include "yelloger.h"
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>

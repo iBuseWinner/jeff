@@ -50,7 +50,7 @@ public:
   /*! Message theme. */
   Theme theme = Theme::Std;
   /*! Compares two messages. They are identical if the authors, content types,
-   * content and posting times are the same. */
+   *  content and posting times are the same.  */
   friend bool operator==(MessageMeta m1, MessageMeta m2) {
     return m1.author == m2.author and m1.content_type == m2.content_type and
            m1.content == m2.content and m1.datetime == m2.datetime;

@@ -5,9 +5,7 @@
 #include "dialogues/modal-handler.hpp"
 #include "dialogues/sources-editor/create-source.hpp"
 #include "widgets/button.hpp"
-#include "widgets/menu.hpp"
 #include "widgets/list.hpp"
-#include "widgets/scrollfreezerwidget.hpp"
 #include "widgets/layouts/grid.hpp"
 #include <QApplication>
 #include <QDialog>

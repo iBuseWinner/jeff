@@ -8,12 +8,9 @@
 #include "core-kit/notify-client.hpp"
 #include "core-kit/extensions-manager.hpp"
 #include "core-kit/standard-templates.hpp"
-#include "core-kit/database/sqlite.hpp"
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/extensions/scenario.hpp"
-#include "core-kit/extensions/script.hpp"
 #include "dialogues/modal-handler.hpp"
-#include "yelloger.h"
 #include <QObject>
 #include <QPair>
 #include <QTimer>

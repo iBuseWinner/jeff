@@ -109,7 +109,7 @@ void JCK::search_for_suggests(const QString &input) {
     else emit empty(input);
   } else {
     composition = compose_answer(input, sorted);
-    if (composition.first.length() / input.length() > 0.33 and not from_db) {
+    if (float(composition.first.length()) / input.length() > 0.33 and not from_db) {
       selection = select_from_db(input);
       if (selection.isEmpty()) { emit empty(input); return; }
       sorted = select_candidates(selection);
