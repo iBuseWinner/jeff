@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import json, socket, time, uuid, argparse, locale
+import argparse, time, uuid
 from jeff_api import client
 
 desc = "Jeff Extension: clock that sends time to Jeff every 5 seconds."

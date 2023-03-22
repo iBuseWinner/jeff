@@ -21,4 +21,4 @@ except scenario.ScenarioTerminatedException:
 except scenario.ScenarioNotStartedException:
   print('not started')
 except Exception as e:
-  print(e) 
+  print(e)

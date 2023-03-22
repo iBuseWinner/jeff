@@ -29,6 +29,7 @@ def list_subdirs(path):
 
 def shutdown():
   """Turns off speech recognition."""
+  global SHUTDOWN
   SHUTDOWN = True
 
 
@@ -69,10 +70,10 @@ def try_import():
 
 def main():
   """Starts speech recognition."""
-  import sounddevice, vosk, queue, os.path, json
-  
-  # We select the appropriate model from the list of downloaded ones according to the language used 
-  # in the system. If there is no suitable model, we take the first one that comes across. 
+  import sounddevice, vosk, queue, os.path, json, sys
+
+  # We select the appropriate model from the list of downloaded ones according to the language used
+  # in the system. If there is no suitable model, we take the first one that comes across.
   #
   # You can specify a specific model by entering its name below instead of 'searched_folders[0]'.
   guess = '-' + lang + '-'
@@ -82,14 +83,14 @@ def main():
   selected_model = searched_folders[0]
   print(f'Selected "{selected_model}".')
   vosk_model = vosk.Model(os.path.join('models', selected_model))
-  
   audio_block_queue = queue.Queue()
+
   def checkout(indata, frames, time, status):
     """Writes recorded audio to queue that handled below."""
     if status: print(status, file=sys.stderr)
     audio_block_queue.put(bytes(indata))
-  
-  # Usually personal computers and laptops are equipped with a maximum of one microphone, so 
+
+  # Usually personal computers and laptops are equipped with a maximum of one microphone, so
   # if there are microphones at all, we will choose the first one that comes across.
   #
   # If you have more than one microphone, you can specify which microphone to use by assigning
@@ -105,8 +106,8 @@ def main():
         if SHUTDOWN: break
         data = audio_block_queue.get()
         if vosk_recognizer.AcceptWaveform(data):
-          #res = json.loads(vosk_recognizer.PartialResult())
-          #print(res)
+          # res = json.loads(vosk_recognizer.PartialResult())
+          # print(res)
           text = json.loads(vosk_recognizer.Result())["text"]
           for word in text.split():
             if word in ATTENTION_WORDS:

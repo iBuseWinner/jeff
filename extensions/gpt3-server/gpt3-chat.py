@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argparse, credentials, locale, openai, os
+import argparse, credentials, openai
 from jeff_api import client, server
 
 KEEP_QNA = 9
@@ -21,12 +21,12 @@ srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
 lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
-prompt = "The following is a conversation with an AI assistant called Jeff. The assistant is helpful, clever and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff, automation tool. I use an AI model created by OpenAI. How can I help you today?" #if lang != 'ru' else "Ниже приведена переписка с ИИ-ассистентом. Ассистент полезный, умный и очень дружелюбный.\n\nЧеловек: Привет, кто ты?\nИИ: Я - Джефф, средство автоматизации. Я использую ИИ-модель, созданную OpenAI. Как я могу вам помочь?"
+prompt = "The following is a conversation with an AI assistant called Jeff. The assistant is helpful, clever and very friendly.\n\nHuman: Hello, who are you?\nAI: I am Jeff, automation tool. I use an AI model created by OpenAI. How can I help you today?"  # if lang != 'ru' else "Ниже приведена переписка с ИИ-ассистентом. Ассистент полезный, умный и очень дружелюбный.\n\nЧеловек: Привет, кто ты?\nИИ: Я - Джефф, средство автоматизации. Я использую ИИ-модель, созданную OpenAI. Как я могу вам помочь?"
 
-stop_keys = ["Human:", "AI:"] #if lang != 'ru' else ["Человек:", "ИИ:"]
+stop_keys = ["Human:", "AI:"]  # if lang != 'ru' else ["Человек:", "ИИ:"]
 
-ai_sequence = "\nAI: " #if lang != 'ru' else "\nИИ: " 
-human_sequence = "\nHuman: " #if lang != 'ru' else "\nЧеловек: "
+ai_sequence = "\nAI: "  # if lang != 'ru' else "\nИИ: "
+human_sequence = "\nHuman: "  # if lang != 'ru' else "\nЧеловек: "
 
 # WARNING To use credentials, you have to fill it in `credentials-example.py` file and rename it to `credentials.py`.
 
@@ -79,7 +79,7 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
-    if not 'content_type' in data: continue
+    if 'content_type' not in data: continue
     if data['content_type'] not in (1, 2): continue
     if len(data['content']) < 10: continue
     text = data['content']

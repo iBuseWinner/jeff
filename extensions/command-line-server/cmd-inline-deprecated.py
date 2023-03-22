@@ -45,7 +45,7 @@ class Process:
     finally:
       self.process.terminate()
 
-  def write_and_flush(data):
+  def write_and_flush(self, data):
     try:
       self.process.stdin.write(data + '\n')
       self.process.stdin.flush()
@@ -56,54 +56,58 @@ class Process:
 
   def mk_msg(msg):
     return '[cmd] `' + msg + '`'
-  
+
   def terminate(self):
     self.process.terminate()
+
+
+def pna(process):
+  try:
+    sleep(0.001)
+    poll, out = process.poll_and_read()
+    if poll is not None and out:
+      cli.send_msg(Process.mk_msg(out))
+      _, out = process.poll_and_read()
+      while out:
+        cli.send_msg(Process.mk_msg(out))
+        _, out = process.poll_and_read()
+    else:
+      if verbose: print('Long-time process')
+      if out: scn.send_msg(Process.mk_msg(out))
+      poll, out = process.poll_and_read()
+      while poll is None:
+        if verbose: print('poll is None')
+        sleep(0.01)
+        if out: cli.send_msg(Process.mk_msg(out))
+        in_cmd = scn.listen()
+        if 'content' not in in_cmd: continue
+        if not len(in_cmd['content']): continue
+        process.write_and_flush(in_cmd['content'])
+        poll, out = process.poll_and_read()
+      while out:
+        scn.send_msg(Process.mk_msg(out))
+        _, out = process.poll_and_read()
+      scn.terminate()
+  except Exception as e:
+    if str(e):
+      print(str(e))
+      err_msg = 'Got an error: ' if lang != 'ru' else 'Произошла ошибка: '
+      scn.terminate()
+      cli.send_error(err_msg + str(e))
+  finally:
+    process.terminate()
 
 
 def exec_cmd(cmd):
   try:
     process = Process(cmd)
     if verbose: print('Process is started.')
-    try:
-      sleep(0.001)
-      poll, out = process.poll_and_read()
-      if poll is not None and out:
-        cli.send_msg(Process.mk_msg(out))
-        _, out = process.poll_and_read()
-        while out:
-          cli.send_msg(Process.mk_msg(out))
-          _, out = process.poll_and_read()
-      else:
-        if verbose: print('Long-time process')
-        if out: scn.send_msg(Process.mk_msg(out))
-        poll, out = process.poll_and_read()
-        while poll is None:
-          if verbose: print('poll is None')
-          sleep(0.01)
-          if out: cli.send_msg(Process.mk_msg(out))
-          in_cmd = scn.listen()
-          if 'content' not in in_cmd: continue
-          if not len(in_cmd['content']): continue
-          process.write_and_flush(in_cmd['content'])
-          poll, out = process.poll_and_read()
-        while out:
-          scn.send_msg(Process.mk_msg(out))
-          _, out = process.poll_and_read()
-        scn.terminate()
-    except Exception as e:
-      if str(e):
-        print(str(e))
-        err_msg = 'Got an error: ' if lang != 'ru' else 'Произошла ошибка: '
-        scn.terminate()
-        cli.send_error(err_msg + str(e))
-    finally:
-      process.terminate()
+    pna(process)
   except Exception as e:
     if str(e):
       print(str(e))
       scn.terminate()
-      cli.send_error(err_msg + str(e))
+      cli.send_error(str(e))
   if verbose: print('Process finished')
 
 
@@ -112,11 +116,11 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
-    if not 'content_type' in data: continue
+    if 'content_type' not in data: continue
     if data['content_type'] not in (1, 2): continue
     if 'author' not in data: continue
     if data['author'] != 0: continue
-    if not 'content' in data: continue
+    if 'content' not in data: continue
     cc = data['content']
     if verbose: print(f'Got: $ {cc}')
     exec_cmd(cc)

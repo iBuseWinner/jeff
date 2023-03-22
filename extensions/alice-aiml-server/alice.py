@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import aiml, json, os.path, argparse, signal, sys
+import aiml, os.path, argparse, signal, sys
 import argostranslate.package, argostranslate.translate
 from jeff_api import client, server
 
@@ -73,14 +73,14 @@ class Argos2Alice:
     try:
       if self.alice_lang == self.jeff_lang: return text
       return self.j2al.translate(text)
-    except:
+    except Exception:
       return text
-  
+
   def from_aiml(self, text):
     try:
       if self.alice_lang == self.jeff_lang: return text
       return self.al2j.translate(text)
-    except:
+    except Exception:
         return text
 
 
@@ -127,12 +127,13 @@ def main():
     aiml_kernel.bootstrap(learnFiles='startup.xml', commands='load aiml b', chdir=current_path)
   translator = Argos2Alice('en', lang)
   alice = AliceResponder(aiml_kernel).with_tr(translator)
-  
+
   def exit_gracefully(*args):
     aiml_kernel.saveBrain('brain.brn', 'sessions.brn')
-    del translator # you MUST do this before (!) process terminating because of ctranslate2 side effects
+    global translator
+    del translator  # you MUST do this before (!) process terminating because of ctranslate2 side effects
     sys.exit(0)
-  
+
   cli.send_info('[Alice] Kernel is ready to work.' if lang != 'ru' else '[Alice] Ядро готово к работе.')
   signal.signal(signal.SIGINT, exit_gracefully)
   signal.signal(signal.SIGTERM, exit_gracefully)

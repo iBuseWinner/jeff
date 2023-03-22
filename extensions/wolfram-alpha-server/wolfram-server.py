@@ -24,6 +24,7 @@ lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
 wa_cli = wolframalpha.Client(app_id)
 
+
 def main():
   cli.send_info('[Wolfram] Extension started.' if lang != 'ru' else '[Wolfram] Расширение запущено.')
   while True:

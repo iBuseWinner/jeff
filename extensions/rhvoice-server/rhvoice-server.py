@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from jeff_api import client, server
-import argparse, speechd, subprocess
+import argparse, speechd
 
 parser = argparse.ArgumentParser(description="RHVoice' TTS server for Jeff.")
 parser.add_argument("extension_port", type=int, help="extension's server port")
@@ -31,7 +31,7 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
-    if not 'content_type' in data: continue
+    if 'content_type' not in data: continue
     if data['content_type'] not in (1, 2): continue
     if data['author'] != 1: continue
     text = data['content']

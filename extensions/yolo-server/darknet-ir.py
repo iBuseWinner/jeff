@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from jeff_api import client, server
-import argparse, json, os, socket, subprocess, uuid
+import argparse, os, subprocess, uuid
 
 parser = argparse.ArgumentParser(description="Darknet & YOLOv7 Objects-on-Image Recognition Jeff's extension.")
 parser.add_argument("extension_port", type=int, help="extension's server port")
@@ -17,6 +17,7 @@ srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
 lang = cli.read_cells(['jeff-lang'])['jeff-lang']
 
+
 def try_locate():
   if not os.path.exists('darknet'):
     err_msg = 'Darknet is not installed. Please install it from <a href=\"https://github.com/AlexeyAB/darknet\">this link</a> before using the extension.' if lang != 'ru' else 'Darknet не установлен. Пожалуйста, установите его по <a href=\"https://github.com/AlexeyAB/darknet\">ссылке</a>, прежде чем использовать расширение.'
@@ -25,8 +26,7 @@ def try_locate():
     cli.send_error('[Darknet] ' + err_msg)
     return False
   if not (
-    os.path.exists(os.path.join('darknet', 'darknet')) or
-    os.path.exists(os.path.join('darknet', 'darknet.exe'))
+    os.path.exists(os.path.join('darknet', 'darknet')) or os.path.exists(os.path.join('darknet', 'darknet.exe'))
   ):
     err_msg = 'Darknet is not compiled yet (darknet/darknet[.exe]). Please build it before using the extension (read darknet/README.md for building instructions).' if lang != 'ru' else 'Darknet не скомпилирован (darknet/darknet[.exe]). Пожалуйста, соберите его, прежде чем использовать расширение (прочтите darknet/README.md для инструкций по сборке).'
     if verbose: print(err_msg)
@@ -70,7 +70,7 @@ def main():
   if not os.path.isdir('recognized'): os.mkdir('recognized')
   savepath = os.path.abspath('recognized')
   os.chdir('darknet')
-  print(f'Darknet enabled on port {str(extension_port)}.' if lang != 'ru' \
+  print(f'Darknet enabled on port {str(extension_port)}.' if lang != 'ru'
         else f'Darknet слушает на порту {str(extension_port)}.')
   while True:
     j = srv.listen()

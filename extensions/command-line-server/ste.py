@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-import argparse, shlex, subprocess
+import argparse, subprocess
 from time import sleep
-from jeff_api import client, server, scenario
+from jeff_api import client, server
 
 parser = argparse.ArgumentParser(description="Simple Terminal Extension.")
 parser.add_argument("extension_port", type=int, help="extension's server port")
@@ -46,7 +46,7 @@ def exec_cmd(cmd):
   except Exception as e:
     if str(e):
       print(str(e))
-      cli.send_error(err_msg + str(e))
+      cli.send_error(str(e))
   if verbose: print('Process finished')
 
 
@@ -55,11 +55,11 @@ def main():
   while True:
     data = srv.listen()
     if len(data) == 0: continue
-    if not 'content_type' in data: continue
+    if 'content_type' not in data: continue
     if data['content_type'] not in (1, 2): continue
     if 'author' not in data: continue
     if data['author'] != 0: continue
-    if not 'content' in data: continue
+    if 'content' not in data: continue
     cc = data['content']
     if verbose: print(f'Got: $ {cc}')
     exec_cmd(cc)
