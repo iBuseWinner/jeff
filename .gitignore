@@ -15,3 +15,8 @@ extensions/alice-aiml-server/brain.brn
 extensions/alice-aiml-server/sessions.brn
 extensions/google-tts-server/tts-creds.json
 extensions/wolfram-alpha-server/credentials.py
+jeff-qt/.cache/
+jeff-core/ca_cert.pem
+jeff-core/ca_key.pem
+jeff-core/Rocket.toml
+jeff-core/migration/target

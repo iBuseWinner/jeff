@@ -1,46 +1,32 @@
-//! Jeff Core.
+#[macro_use] extern crate rocket;
 
-mod hyper_router;
-mod logic;
-mod model;
+mod common;
 mod setup;
+mod types;
 
-use std::sync::Arc;
-use tokio::sync::Mutex;
+use rocket::tokio::time::{sleep, Duration};
+use rocket::serde::json::Json;
+use crate::types::SignUpRequestData;
 
-use model::{Db, DaemonsHolder};
-
-pub async fn shutdown() {
-  tokio::signal::ctrl_c()
-    .await
-    .expect("Failed to set Ctrl+C combination as shutdown.");
+#[get("/")]
+fn index() -> &'static str {
+  "Jeff is running smoothly. Have a nice day!\n\nhttps://github.com/markcda/jeff"
 }
 
-#[tokio::main]
-pub async fn main() {
-  let cfg = setup::get_config();
-  let manager = bb8_postgres::PostgresConnectionManager::new_from_stringlike(
-                    cfg.pg.clone(),
-                    tokio_postgres::NoTls)
-                  .unwrap();
-  let pool = bb8::Pool::builder().max_size(15).build(manager).await.unwrap();
-  let db = Db::new(pool);
-  let service = hyper::service::make_service_fn(move |conn: &hyper::server::conn::AddrStream| {
-    let db = db.clone();
-    let admin_key = cfg.admin_key.clone();
-    let addr = conn.remote_addr();
-    let daemons = DaemonsHolder::load(&cfg.daemons);
-    let daemons_mutex = Arc::new(Mutex::new(daemons));
-    let service = hyper::service::service_fn(move |req| {
-      hyper_router::router(req, db.clone(), admin_key.clone(), addr, daemons_mutex.clone())
-    });
-    async move { Ok::<_, std::convert::Infallible>(service) }
-  });
-  let server = hyper::Server::bind(&cfg.hyper_addr).serve(service);
-  println!("Server listening at http://{}", cfg.hyper_addr);
-  let finisher = server.with_graceful_shutdown(shutdown());
-  match finisher.await {
-    Err(e) => eprintln!("Server Error: {}", e),
-    _ => println!("\nServer successfully shutted down."),
-  }
+#[post("/sign-up", format = "json", data = "<data>")]
+async fn new_user(data: Json<SignUpRequestData>) {
+  unimplemented!();
+}
+
+
+#[launch]
+async fn rocket() -> _ {
+  let (state, db) = match setup::load_app_state().await {
+    Ok((state, db)) => (state, db),
+    Err(err) => panic!("{}", err),
+  };
+  rocket::build()
+    .manage(state)
+    .manage(db)
+    .mount("/", routes![index, new_user])
 }
