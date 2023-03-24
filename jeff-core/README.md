@@ -39,17 +39,19 @@
 
 ```bash
 sudo -iu postgres
-createuser username
+createuser my_username
 psql
 ```
 
 ```sql
-alter user username password password;
-create database db_name with owner username;
+alter user my_username password my_password;
+create database db_name with owner my_username;
 ```
 
 ### Отладка запросов
 
+<!--
 ```bash
 curl -X GET -H "App-Token: your-token" http://127.0.0.1:55219/db-setup
 ```
+-->

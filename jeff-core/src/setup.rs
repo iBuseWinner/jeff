@@ -21,7 +21,7 @@ pub(super) async fn load_app_state() -> Result<(AppState, DatabaseConnection), E
   let (db, new_url) = connect_db(&state.db_url).await?;
   if let Some(url) = new_url { state.db_url = url; };
   match state.admin_key.len() < 64 {
-    true => Err("Длина ключа администратора меньше 64 символов.".into()),
+    true => Err("Administrator key length less than 64.".into()),
     false => Ok((state, db)),
   }
 }

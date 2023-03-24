@@ -1,8 +1,11 @@
+//! Some common things to all JC code.
+
 use sea_orm::DbErr;
 use rocket::response::Responder;
 use std::{io, fmt};
 use serde_json::Error as JsonError;
 
+/// Custom error struct for Rocket and other functions.
 #[derive(Responder, Debug)]
 #[response(status = 500, content_type = "json")]
 pub struct ErrorResponder {
