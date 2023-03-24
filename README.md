@@ -70,7 +70,7 @@ Expressions compete with each other for the right to be a reagent for a given ac
 2. Output delay. Sets the time period in milliseconds in which the response message will be displayed and can be used to simulate human delay. Settings: `core-kit/isdelayenabled` (bool), `core-kit/mindelay` (ms), `core-kit/maxdelay` (ms)
 3. Save history. Can save all your correspondence with Jeff. Setting: `core-kit/ishistorykeepingenabled` (bool)
 4. Greeting. Sets the first message that is automatically sent to Jeff on startup. Settings: `core-kit/isgreetingsenabled` (bool), `core-kit/greetings` (str)
-5. Script exit message. Keyword/expression that forces the script to end. Setting: `core-kit/scenarioexitter`
+5. Scenario exit message. Keyword/expression that forces the scenario to end. Setting: `core-kit/scenarioexitter`
 6. Server port. The port on which Jeff will listen for incoming connections from extensions. Setting: `core-kit/serverport` (uint16)
 7. The time Jeff waits after sending the `terminate` signal and before forcing the extension to terminate. Setting: `core-kit/extensionkillsec` (sec)
 8. Force search in the sources, not in the cache, if the user's current input is identical to his previous one. Setting: `core-kit/repeatedexplicitindb` (bool)
