@@ -14,7 +14,7 @@ use sec::hash_password;
 use types::{SignUpRequestData, UserSettings};
 
 use base64::{Engine as _, engine::general_purpose};
-use rocket::{State, serde::json::Json};
+use rocket::{http::CookieJar, State, serde::json::Json};
 use serde_json::{json, Value};
 use sea_orm::*;
 
@@ -41,6 +41,18 @@ async fn new_user(data: Json<SignUpRequestData>, db: &State<DatabaseConnection>)
   Ok(json!({ "id": res.last_insert_id }))
 }
 
+#[delete("/user")]
+async fn remove_user(jar: &CookieJar<'_>, db: &State<DatabaseConnection>) -> Result<(), ErrorResponder> {
+  let user_id: i64 = jar
+    .get_private("user_id")
+    .ok_or::<String>("You haven't logged in.".into())?
+    .value()
+    .parse::<i64>()?;
+  let db = db as &DatabaseConnection;
+  let _ = User::delete_by_id(user_id).exec(db).await?;
+  Ok(())
+}
+
 /// Loads the application state from config file and starts JC up.
 #[launch]
 async fn rocket() -> _ {
@@ -51,5 +63,5 @@ async fn rocket() -> _ {
   rocket::build()
     .manage(state)
     .manage(db)
-    .mount("/", routes![index, new_user])
+    .mount("/", routes![index, new_user, remove_user])
 }

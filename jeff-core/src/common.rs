@@ -2,7 +2,7 @@
 
 use sea_orm::DbErr;
 use rocket::response::Responder;
-use std::{io, fmt};
+use std::{io, fmt, num::ParseIntError};
 use serde_json::Error as JsonError;
 
 /// Custom error struct for Rocket and other functions.
@@ -44,6 +44,12 @@ impl From<io::Error> for ErrorResponder {
 
 impl From<JsonError> for ErrorResponder {
   fn from(err: JsonError) -> ErrorResponder {
+    err.to_string().into()
+  }
+}
+
+impl From<ParseIntError> for ErrorResponder {
+  fn from(err: ParseIntError) -> ErrorResponder {
     err.to_string().into()
   }
 }

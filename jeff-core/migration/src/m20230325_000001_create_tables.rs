@@ -11,7 +11,9 @@ impl MigrationTrait for Migration {
         Table::create()
           .table(User::Table)
           .if_not_exists()
-          .col(ColumnDef::new(User::Id).integer().not_null().auto_increment().primary_key())
+          .col(ColumnDef::new(User::Id).big_integer().not_null().auto_increment().primary_key())
+          .col(ColumnDef::new(User::Login).string().not_null().unique_key())
+          .col(ColumnDef::new(User::PHash).string().not_null())
           .col(ColumnDef::new(User::Settings).string().not_null())
           .to_owned()
       ).await?;
@@ -20,7 +22,7 @@ impl MigrationTrait for Migration {
         Table::create()
           .table(Phrase::Table)
           .if_not_exists()
-          .col(ColumnDef::new(Phrase::Id).integer().not_null().auto_increment().primary_key())
+          .col(ColumnDef::new(Phrase::Id).big_integer().not_null().auto_increment().primary_key())
           .col(ColumnDef::new(Phrase::Text).string().not_null())
           .col(ColumnDef::new(Phrase::Links).string())
           .to_owned()
@@ -30,7 +32,7 @@ impl MigrationTrait for Migration {
         Table::create()
           .table(Source::Table)
           .if_not_exists()
-          .col(ColumnDef::new(Source::Id).integer().not_null().auto_increment().primary_key())
+          .col(ColumnDef::new(Source::Id).big_integer().not_null().auto_increment().primary_key())
           .col(ColumnDef::new(Source::Users).string().not_null())
           .col(ColumnDef::new(Source::Name).string().not_null())
           .to_owned()
@@ -49,6 +51,8 @@ impl MigrationTrait for Migration {
 enum User {
   Table,
   Id,
+  Login,
+  PHash,
   Settings,
 }
 
