@@ -20,3 +20,5 @@ jeff-core/ca_cert.pem
 jeff-core/ca_key.pem
 jeff-core/Rocket.toml
 jeff-core/migration/target
+jeff-core/migration/Cargo.lock
+jeff-qt/compile_commands.json
