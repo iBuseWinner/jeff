@@ -1,5 +1,6 @@
 //! Some common things to all JC code.
 
+use bb8_redis::redis::RedisError;
 use sea_orm::DbErr;
 use rocket::response::Responder;
 use std::{io, fmt, num::ParseIntError};
@@ -50,6 +51,12 @@ impl From<JsonError> for ErrorResponder {
 
 impl From<ParseIntError> for ErrorResponder {
   fn from(err: ParseIntError) -> ErrorResponder {
+    err.to_string().into()
+  }
+}
+
+impl From<RedisError> for ErrorResponder {
+  fn from(err: RedisError) -> ErrorResponder {
     err.to_string().into()
   }
 }

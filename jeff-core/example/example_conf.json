@@ -1,5 +1,6 @@
 {
   "db_url": "postgres://root:root@localhost:5432",
+  "redis_url": "redis://:password@localhost:6379",
   "admin_key": "7016954044713488495610357872868821215871528863508495594769251880",
   "rocket_addr": "0.0.0.0:55219"
 }
