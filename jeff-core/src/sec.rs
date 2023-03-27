@@ -14,7 +14,7 @@ pub const MAX_TOKENS_PER_USER: isize = 3;
 pub const TOKEN_COOKIE_NAME: &'static str = "user_token";
 pub const DAYS_VALID: i64 = 14;
 
-/// TBD.
+/// Stores the user token.
 #[derive(Deserialize, Serialize)]
 pub struct UserToken {
   pub user_id: i64,
@@ -36,7 +36,7 @@ pub fn check_hash(phash: &Vec<u8>) -> MResult<()> {
   Ok(())
 }
 
-/// TBD.
+/// Checks if the hashes are equal.
 pub fn validate_hashes(phash_u: &Vec<u8>, phash_db: &Vec<u8>) -> MResult<()> {
   if hash_password(phash_u).eq(phash_db) { return Ok(()); }
   else { return Err("Wrong password.".into()) }
@@ -47,7 +47,7 @@ pub fn get_user_tokens_list_name(user_id: &i64) -> String {
   format!("user_tokens:id{}", user_id)
 }
 
-/// TBD.
+/// Validates current user by cookie token and cache db.
 pub async fn check_user(jar: &CookieJar<'_>, cacher: &State<RedisPool>) -> MResult<i64> {
   let user_token_str = jar
     .get_private(TOKEN_COOKIE_NAME)
@@ -71,7 +71,7 @@ pub async fn check_user(jar: &CookieJar<'_>, cacher: &State<RedisPool>) -> MResu
   Ok(user_token.user_id)
 }
 
-/// TBD.
+/// Generates another token to client.
 pub fn generate_token(user_id: i64) -> MResult<UserToken> {
   let pg = PasswordGenerator {
     length: TOKEN_LENGTH,

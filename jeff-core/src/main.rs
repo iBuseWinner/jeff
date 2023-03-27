@@ -8,7 +8,13 @@ mod model;
 mod sec;
 mod setup;
 
-use core_kit::rocket_users::{new_user, login, remove_user};
+use core_kit::rocket_users::{
+  new_user,
+  login,
+  change_password,
+  deauth_all_clients,
+  remove_user,
+};
 
 /// Index page with project link.
 #[get("/")]
@@ -31,6 +37,8 @@ async fn rocket() -> _ {
       index,
       new_user,
       login,
+      change_password,
+      deauth_all_clients,
       remove_user,
     ])
 }

@@ -1,4 +1,4 @@
-//! TBD.
+//! Structs needed for working with users routes.
 
 use crate::model::serde_vec;
 
@@ -19,6 +19,15 @@ pub struct SignInRequestData {
   pub login: String,
   #[serde(with="serde_vec")]
   pub phash: Vec<u8>,
+}
+
+/// Struct for changing password request (see at `crate::core_kit::users::change_password`).
+#[derive(Deserialize, Serialize)]
+pub struct ChangePasswordRequestData {
+  #[serde(with="serde_vec")]
+  pub old_phash: Vec<u8>,
+  #[serde(with="serde_vec")]
+  pub new_phash: Vec<u8>,
 }
 
 /// Struct for storing user settings.
