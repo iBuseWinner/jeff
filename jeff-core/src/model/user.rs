@@ -13,6 +13,14 @@ pub struct SignUpRequestData {
   pub phash: Vec<u8>,
 }
 
+/// Struct for sign in request (see at `crate::core_kit::users::login`).
+#[derive(Deserialize, Serialize)]
+pub struct SignInRequestData {
+  pub login: String,
+  #[serde(with="serde_vec")]
+  pub phash: Vec<u8>,
+}
+
 /// Struct for storing user settings.
 #[derive(Deserialize, Serialize)]
 pub struct UserSettings {

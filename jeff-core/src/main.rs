@@ -2,14 +2,13 @@
 
 #[macro_use] extern crate rocket;
 
-mod common;
 mod core_kit;
 mod entities;
 mod model;
 mod sec;
 mod setup;
 
-use core_kit::users::{new_user, remove_user};
+use core_kit::rocket_users::{new_user, login, remove_user};
 
 /// Index page with project link.
 #[get("/")]
@@ -28,5 +27,10 @@ async fn rocket() -> _ {
     .manage(state)
     .manage(db)
     .manage(cacher)
-    .mount("/", routes![index, new_user, remove_user])
+    .mount("/", routes![
+      index,
+      new_user,
+      login,
+      remove_user,
+    ])
 }

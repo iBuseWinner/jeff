@@ -1,3 +1,3 @@
 //! Core Kit module. 
 
-pub mod users;
+pub mod rocket_users;

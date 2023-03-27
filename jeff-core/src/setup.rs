@@ -1,7 +1,7 @@
 //! TDB.
 
-use crate::common::ErrorResponder;
-use crate::model::{PostgresPool, RedisPool};
+use crate::model::MResult;
+use crate::model::{DbPool, RedisPool};
 
 use bb8_redis::{bb8::Pool as Bb8Pool, RedisConnectionManager};
 use sea_orm::*;
@@ -18,7 +18,7 @@ pub struct AppState {
 
 const DB_NAME: &str = "jeff_core";
 
-pub(super) async fn load_app_state() -> Result<(AppState, PostgresPool, RedisPool), ErrorResponder> {
+pub(super) async fn load_app_state() -> MResult<(AppState, DbPool, RedisPool)> {
   let filepath = env::args().nth(1).unwrap();
   let mut file = fs::File::open(filepath)?;
   let mut buffer = String::new();
@@ -33,7 +33,7 @@ pub(super) async fn load_app_state() -> Result<(AppState, PostgresPool, RedisPoo
   }
 }
 
-pub(crate) async fn connect_db(db_url: &str) -> Result<(PostgresPool, Option<String>), ErrorResponder> {
+pub(crate) async fn connect_db(db_url: &str) -> MResult<(DbPool, Option<String>)> {
   let db = Database::connect(db_url).await?;
   match db.get_database_backend() {
     DbBackend::MySql | DbBackend::Postgres => {
@@ -44,7 +44,7 @@ pub(crate) async fn connect_db(db_url: &str) -> Result<(PostgresPool, Option<Str
   }
 }
 
-async fn connect_redis(redis_url: &str) -> Result<RedisPool, ErrorResponder> {
+async fn connect_redis(redis_url: &str) -> MResult<RedisPool> {
   let manager = RedisConnectionManager::new(redis_url)?;
   Ok(Bb8Pool::builder().build(manager).await?)
 }

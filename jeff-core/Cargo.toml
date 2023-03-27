@@ -12,6 +12,8 @@ panic = 'abort'
 [dependencies]
 base64 = "0.21"
 bb8-redis = "0.12"
+chrono = { version = "0.4", features = ["serde"] }
+passwords = "3.1"
 rocket = {version = "0.5.0-rc.2", features = ["tls", "json", "secrets"]}
 sea-orm = {version = "0.11", features = ["sqlx-postgres", "sqlx-sqlite", "runtime-tokio-native-tls", "macros", "mock"]}
 sea-orm-migration = "0.11"
