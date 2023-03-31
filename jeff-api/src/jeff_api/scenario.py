@@ -1,13 +1,15 @@
-from . import client, server
-import json, socket
+import json
+
 
 class ScenarioTerminatedException(Exception):
   "The scenario is ended by the user forcibly."
   pass
 
+
 class ScenarioNotStartedException(Exception):
   "The scenario is ended by the user forcibly."
   pass
+
 
 class Scenario:
   def __init__(self, cli, srv, name=None):
