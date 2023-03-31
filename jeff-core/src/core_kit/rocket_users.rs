@@ -99,7 +99,7 @@ pub async fn change_password(
   validate_hashes(&data.old_phash, &old_phash_db)?;
   let new_phash = hash_password(&data.new_phash);
   let mut user_data: users::ActiveModel = user_data.into();
-  user_data.p_hash = Set(base64.encode(new_phash));
+  user_data.p_hash = ActiveValue::set(base64.encode(new_phash));
   user_data.update(db as &DbPool).await?;
   Ok(())
 }
