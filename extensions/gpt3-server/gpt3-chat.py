@@ -85,7 +85,7 @@ def main():
     text = data['content']
     if data['author'] == 1: continue
     if verbose: print('*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
-    cli.send_status('*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
+    cli.send_msg('*[GPT-3] Waiting...*' if lang != 'ru' else '*[GPT-3] Ожидание...*')
     history.append(human_sequence + text)
     response = generate_response(make_prompt(history)).strip()
     if len(response) == 0:

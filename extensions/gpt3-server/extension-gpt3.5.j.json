@@ -1,0 +1,35 @@
+{
+  "name": "chatgpt",
+  "title": "ChatGPT Chat",
+  "desc": "Chat resolver written on top of OpenAI's ChatGPT model.",
+  "authors": [
+    {
+      "author": "Tom B Brown (+30 more at arXiv)",
+      "contacts": {
+        "email": "nottombrown@gmail.com"
+      }
+    },
+    {
+      "author": "Mark CDA",
+      "contacts": {
+        "telegram": "@markcda"
+      }
+    }
+  ],
+  "license": "MIT",
+  "links": [
+    "https://arxiv.org/abs/2005.14165",
+    "https://openai.com/api/",
+    "https://openai.com/blog/chatgpt/",
+    "https://github.com/openai/"
+  ],
+  "program": "python",
+  "args": [
+    "chatgpt.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>",
+    "-w"
+  ],
+  "server_ip": "",
+  "server_port": 23174
+}
