@@ -15,6 +15,8 @@ use core_kit::rocket_users::{
 };
 use core_kit::rocket_phrases::{
   create_phrase,
+  get_phrase,
+  patch_phrase,
 };
 
 use rocket::{get, launch, routes};
@@ -44,5 +46,7 @@ async fn rocket() -> _ {
       deauth_all_clients,
       remove_user,
       create_phrase,
+      get_phrase,
+      patch_phrase,
     ])
 }

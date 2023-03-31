@@ -12,6 +12,15 @@ pub struct CreatePhraseRequest {
   pub properties: Map<String, Value>,
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct GetPhraseResponse {
+  pub id: i64,
+  pub phrase: String,
+  pub links: Vec<i64>,
+  pub exec: bool,
+  pub properties: Map<String, Value>,
+}
+
 /// TBD.
 pub fn pack_links(links: &Vec<i64>) -> String {
   let mut packed = String::new();
