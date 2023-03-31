@@ -1,7 +1,5 @@
 //! Jeff Core, the server version of Jeff.
 
-#[macro_use] extern crate rocket;
-
 mod core_kit;
 mod entities;
 mod model;
@@ -15,6 +13,11 @@ use core_kit::rocket_users::{
   deauth_all_clients,
   remove_user,
 };
+use core_kit::rocket_phrases::{
+  create_phrase,
+};
+
+use rocket::{get, launch, routes};
 
 /// Index page with project link.
 #[get("/")]
@@ -40,5 +43,6 @@ async fn rocket() -> _ {
       change_password,
       deauth_all_clients,
       remove_user,
+      create_phrase,
     ])
 }

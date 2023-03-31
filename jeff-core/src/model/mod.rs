@@ -1,6 +1,7 @@
 //! Core model.
 
 pub mod error_handler;
+pub mod phrase;
 pub mod serde_vec;
 pub mod user;
 

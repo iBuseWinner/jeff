@@ -2,6 +2,5 @@
 
 pub mod prelude;
 
-pub mod phrase;
-pub mod source;
-pub mod user;
+pub mod phrases;
+pub mod users;

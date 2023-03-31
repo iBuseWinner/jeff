@@ -12,22 +12,22 @@ use crate::sec::*;
 use base64::{Engine as _, engine::general_purpose::STANDARD as base64};
 use bb8_redis::redis::AsyncCommands;
 use rocket::{http::{Cookie, CookieJar}, State, serde::json::Json};
-// use serde_json::{json, Value};
+use rocket::{post, put, patch, get, delete};
 use sea_orm::*;
 
 /// Finds a user entry by id.
-async fn find_by_id(user_id: &i64, db: &State<DbPool>) -> MResult<user::Model> {
-  let user_data: Option<user::Model> = User::find()
-    .filter(user::Column::Id.eq(*user_id))
+async fn find_by_id(user_id: &i64, db: &State<DbPool>) -> MResult<users::Model> {
+  let user_data: Option<users::Model> = Users::find()
+    .filter(users::Column::Id.eq(*user_id))
     .one(db as &DbPool)
     .await?;
   Ok(user_data.ok_or::<String>("There is no such user.".into())?)
 }
 
 /// Finds a user entry by login.
-async fn find_by_login(login: &str, db: &State<DbPool>) -> MResult<user::Model> {
-  let user_data: Option<user::Model> = User::find()
-    .filter(user::Column::Login.eq(login))
+async fn find_by_login(login: &str, db: &State<DbPool>) -> MResult<users::Model> {
+  let user_data: Option<users::Model> = Users::find()
+    .filter(users::Column::Login.eq(login))
     .one(db as &DbPool)
     .await?;
   Ok(user_data.ok_or::<String>("There is no such user.".into())?)
@@ -39,13 +39,13 @@ pub async fn new_user(data: Json<SignUpRequestData>, db: &State<DbPool>) -> MRes
   check_hash(&data.phash)?;
   let settings = UserSettings { name: data.name.clone(), ..Default::default() };
   let p_hash = hash_password(&data.phash);
-  let new_user = user::ActiveModel { 
+  let new_user = users::ActiveModel { 
     login: ActiveValue::Set(data.login.clone()),
     p_hash: ActiveValue::Set(base64.encode(p_hash)),
     settings: ActiveValue::Set(serde_json::to_string(&settings)?),
     ..Default::default()
   };
-  User::insert(new_user).exec(db as &DbPool).await?;
+  Users::insert(new_user).exec(db as &DbPool).await?;
   Ok(())
 }
 
@@ -98,7 +98,7 @@ pub async fn change_password(
   let old_phash_db = base64.decode(user_data.p_hash.as_bytes())?;
   validate_hashes(&data.old_phash, &old_phash_db)?;
   let new_phash = hash_password(&data.new_phash);
-  let mut user_data: user::ActiveModel = user_data.into();
+  let mut user_data: users::ActiveModel = user_data.into();
   user_data.p_hash = Set(base64.encode(new_phash));
   user_data.update(db as &DbPool).await?;
   Ok(())
@@ -126,7 +126,7 @@ pub async fn deauth_all_clients(jar: &CookieJar<'_>, cacher: &State<RedisPool>) 
 #[delete("/user")]
 pub async fn remove_user(jar: &CookieJar<'_>, db: &State<DbPool>, cacher: &State<RedisPool>) -> MResult<()> {
   let user_id = check_user(jar, cacher).await?;
-  let _ = User::delete_by_id(user_id).exec(db as &DbPool).await?;
+  let _ = Users::delete_by_id(user_id).exec(db as &DbPool).await?;
   delete_tokens(&user_id, cacher).await?;
   jar.remove_private(Cookie::named(TOKEN_COOKIE_NAME));
   Ok(())

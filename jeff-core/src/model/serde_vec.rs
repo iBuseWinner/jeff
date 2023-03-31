@@ -1,4 +1,4 @@
-//! Module to serialize Vec<u8> to String and back again.
+//! Module to serialize `Vec<u8>` to `String` and back again.
 
 use rocket::serde::{Serialize, Deserialize};
 use rocket::serde::{Deserializer, Serializer};
