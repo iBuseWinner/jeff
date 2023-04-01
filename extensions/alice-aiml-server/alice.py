@@ -37,7 +37,7 @@ class Argos2Alice:
         to_lang = list(filter(lambda x: x.code == self.alice_lang, installed_languages))[0]
         self.j2al = from_lang.get_translation(to_lang)
         self.al2j = to_lang.get_translation(from_lang)
-      except Exception as e:
+      except Exception:
         self.download()
         installed_languages = argostranslate.translate.get_installed_languages()
         from_lang = list(filter(lambda x: x.code == self.jeff_lang, installed_languages))[0]
@@ -47,7 +47,7 @@ class Argos2Alice:
       try:
         text = self.al2j.translate("Hello!")
         self.j2al.translate(text)
-      except:
+      except Exception:
         cli.send_error('[Argos] Unable to get translator.' if lang != 'ru' else '[Argos] Невозможно воспользоваться переводчиком.')
 
   def download(self):

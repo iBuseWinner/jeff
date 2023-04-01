@@ -59,8 +59,8 @@ def main():
     if 'content_type' not in data: continue
     if data['content_type'] not in (1, 2): continue
     if len(data['content']) < 10: continue
-    text = data['content']
     if data['author'] == 1: continue
+    text = data['content']
     if verbose: print('*[ChatGPT] Waiting...*' if lang != 'ru' else '*[ChatGPT] Ожидание...*')
     cli.send_msg('*[ChatGPT] Waiting...*' if lang != 'ru' else '*[ChatGPT] Ожидание...*')
     response = generate_response(text)
