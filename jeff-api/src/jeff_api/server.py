@@ -1,4 +1,4 @@
-import json, socket
+import json, signal, socket
 
 
 class Server:
@@ -8,6 +8,12 @@ class Server:
     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self.server_socket.bind((host if host is not None else socket.gethostname(), port))
     self.server_socket.listen()
+
+    def exit_gracefully(*args):
+      self.server_socket.close()
+
+    signal.signal(signal.SIGINT, exit_gracefully)
+    signal.signal(signal.SIGTERM, exit_gracefully)
 
   def _waits_for(self, buffer_size=8192):
     (socket, address) = self.server_socket.accept()
