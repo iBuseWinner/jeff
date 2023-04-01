@@ -12,6 +12,7 @@ pub struct CreatePhraseRequest {
   pub properties: Map<String, Value>,
 }
 
+/// TBD.
 #[derive(Deserialize, Serialize)]
 pub struct GetPhraseResponse {
   pub id: i64,
@@ -34,5 +35,5 @@ pub fn pack_links(links: &Vec<i64>) -> String {
 
 /// TBD.
 pub fn unpack_links(links: &String) -> Vec<i64> {
-  links.split(',').map(|el| el.parse::<i64>().unwrap()).collect()
+  links.split(',').map(|el| el.parse::<i64>()).try_collect::<Vec<i64>>().unwrap_or(Vec::new())
 }

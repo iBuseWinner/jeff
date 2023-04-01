@@ -5,7 +5,7 @@ use crate::model::{DbPool, MResult, RedisPool, phrase::*};
 use crate::sec::*;
 
 use rocket::{State, serde::json::Json, http::CookieJar};
-use rocket::{get, put, patch};
+use rocket::{get, put, patch, delete};
 use sea_orm::*;
 use serde_json::{Value as JsonValue, Map as JsonMap};
 
@@ -30,6 +30,7 @@ pub async fn create_phrase(
   let user_id = check_user(jar, cacher).await?;
   for phrase_id in &data.links { check_phrase(&user_id, &phrase_id, db).await?; }
   let new_phrase = phrases::ActiveModel {
+    user_id: ActiveValue::set(user_id),
     phrase: ActiveValue::set(data.phrase.clone()),
     links: ActiveValue::set(Some(pack_links(&data.links))),
     exec: ActiveValue::set(data.exec),
@@ -63,8 +64,9 @@ pub async fn get_phrase(
 }
 
 /// Patches the phrase.
-#[patch("/phrase", data = "<data>")]
+#[patch("/phrase/<phrase_id>", data = "<data>")]
 pub async fn patch_phrase(
+  phrase_id: i64,
   data: String,
   db: &State<DbPool>,
   cacher: &State<RedisPool>,
@@ -75,9 +77,6 @@ pub async fn patch_phrase(
   let generic_patch: &JsonMap<String, JsonValue> = generic_patch
     .as_object()
     .ok_or::<String>("Required data type is JSON.".into())?;
-  let phrase_id: i64 = generic_patch
-    .get("id").ok_or::<String>("Patch doesn't contain phrase id.".into())?
-    .as_i64() .ok_or::<String>("Phrase id must be a number."     .into())?;
   let phrase = check_phrase(&user_id, &phrase_id, db).await?;
   let mut phrase: phrases::ActiveModel = phrase.into();
   if let Some(phrase_text) = generic_patch.get("phrase") {
@@ -102,5 +101,19 @@ pub async fn patch_phrase(
     );
   }
   phrase.update(db as &DbPool).await?;
+  Ok(())
+}
+
+/// Removes the phrase.
+#[delete("/phrase/<phrase_id>")]
+pub async fn remove_phrase(
+  phrase_id: i64,
+  db: &State<DbPool>,
+  cacher: &State<RedisPool>,
+  jar: &CookieJar<'_>,
+) -> MResult<()> {
+  let user_id = check_user(jar, cacher).await?;
+  let phrase = check_phrase(&user_id, &phrase_id, db).await?;
+  phrase.delete(db as &DbPool).await?;
   Ok(())
 }

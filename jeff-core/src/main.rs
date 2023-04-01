@@ -1,5 +1,7 @@
 //! Jeff Core, the server version of Jeff.
 
+#![feature(iterator_try_collect)]
+
 mod core_kit;
 mod entities;
 mod model;
@@ -17,6 +19,7 @@ use core_kit::rocket_phrases::{
   create_phrase,
   get_phrase,
   patch_phrase,
+  remove_phrase,
 };
 
 use rocket::{get, launch, routes};
@@ -48,5 +51,6 @@ async fn rocket() -> _ {
       create_phrase,
       get_phrase,
       patch_phrase,
+      remove_phrase,
     ])
 }

@@ -33,7 +33,7 @@ pub(super) async fn load_app_state() -> MResult<(AppState, DbPool, RedisPool)> {
   }
 }
 
-pub(crate) async fn connect_db(db_url: &str) -> MResult<(DbPool, Option<String>)> {
+async fn connect_db(db_url: &str) -> MResult<(DbPool, Option<String>)> {
   let db = Database::connect(db_url).await?;
   match db.get_database_backend() {
     DbBackend::MySql | DbBackend::Postgres => {
