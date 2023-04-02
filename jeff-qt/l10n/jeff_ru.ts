@@ -659,6 +659,85 @@
     </message>
 </context>
 <context>
+    <name>ReactScriptEditor</name>
+    <message>
+        <source>Specify script type:</source>
+        <translation>Укажите тип скрипта:</translation>
+    </message>
+    <message>
+        <source>Specify script path:</source>
+        <translation>Укажите путь к скрипту:</translation>
+    </message>
+    <message>
+        <source>Select a file...</source>
+        <translation>Выберите файл...</translation>
+    </message>
+    <message>
+        <source>Select file...</source>
+        <translation>Выбрать файл...</translation>
+    </message>
+    <message>
+        <source>Python script</source>
+        <translation>Скрипт Python</translation>
+    </message>
+    <message>
+        <source>Any executable</source>
+        <translation>Любая программа</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отменить</translation>
+    </message>
+    <message>
+        <source>Add script</source>
+        <translation>Добавить скрипт</translation>
+    </message>
+    <message>
+        <source>Save script</source>
+        <translation>Сохранить скрипт</translation>
+    </message>
+    <message>
+        <source>Specify function name:</source>
+        <translation>Укажите название функции:</translation>
+    </message>
+    <message>
+        <source>Function name...</source>
+        <translation>Название функции...</translation>
+    </message>
+    <message>
+        <source>Specify amount of message history to be sent:</source>
+        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
+    </message>
+    <message>
+        <source>Check if script needs whole user input</source>
+        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
+    </message>
+    <message>
+        <source>Add the memory cells to be passed to the script:</source>
+        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
+    </message>
+    <message>
+        <source>Add memory cell</source>
+        <translation>Добавить ячейку памяти</translation>
+    </message>
+    <message>
+        <source>Remove selected cell</source>
+        <translation>Удалить выбранную ячейку</translation>
+    </message>
+    <message>
+        <source>Memory cell name...</source>
+        <translation>Название ячейки памяти...</translation>
+    </message>
+    <message>
+        <source>Cells list</source>
+        <translation>Список ячеек</translation>
+    </message>
+    <message>
+        <source>Please complete path and function name fields before saving.</source>
+        <translation>Пожалуйста, укажите путь и название функции перед сохранением.</translation>
+    </message>
+</context>
+<context>
     <name>SQLite</name>
     <message>
         <source>Database &quot;%1&quot; doesn&apos;t exist.</source>
@@ -762,97 +841,6 @@
     </message>
 </context>
 <context>
-    <name>ScriptEditor</name>
-    <message>
-        <source>Specify script path:</source>
-        <translation>Укажите путь к скрипту:</translation>
-    </message>
-    <message>
-        <source>Specify script type:</source>
-        <translation>Укажите тип скрипта:</translation>
-    </message>
-    <message>
-        <source>Select a file...</source>
-        <translation>Выберите файл...</translation>
-    </message>
-    <message>
-        <source>Select file...</source>
-        <translation>Выбрать файл...</translation>
-    </message>
-    <message>
-        <source>Python script</source>
-        <translation>Скрипт Python</translation>
-    </message>
-    <message>
-        <source>Custom scanner (another answering system)</source>
-        <translation>Пользовательский сканер (другой автоответчик)</translation>
-    </message>
-    <message>
-        <source>Custom composer (receives chosen variants and answers on them in another manner)</source>
-        <translation>Пользовательский композитор (получает выбранные варианты и отвечает на них другим способом)</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Отменить</translation>
-    </message>
-    <message>
-        <source>Add script</source>
-        <translation>Добавить скрипт</translation>
-    </message>
-    <message>
-        <source>Save script</source>
-        <translation>Сохранить скрипт</translation>
-    </message>
-    <message>
-        <source>Specify function name:</source>
-        <translation>Укажите название функции:</translation>
-    </message>
-    <message>
-        <source>Function name...</source>
-        <translation>Название функции...</translation>
-    </message>
-    <message>
-        <source>Add the memory cells to be passed to the script:</source>
-        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
-    </message>
-    <message>
-        <source>Add memory cell</source>
-        <translation>Добавить ячейку памяти</translation>
-    </message>
-    <message>
-        <source>Remove selected cell</source>
-        <translation>Удалить выбранную ячейку</translation>
-    </message>
-    <message>
-        <source>Memory cell name...</source>
-        <translation>Название ячейки памяти...</translation>
-    </message>
-    <message>
-        <source>Cells list</source>
-        <translation>Список ячеек</translation>
-    </message>
-    <message>
-        <source>Please complete path and function name fields before saving.</source>
-        <translation>Пожалуйста, укажите путь и название функции перед сохранением.</translation>
-    </message>
-    <message>
-        <source>Specify amount of message history to be sent:</source>
-        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
-    </message>
-    <message>
-        <source>Check if script needs whole user input</source>
-        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
-    </message>
-    <message>
-        <source>Check if you need to pass additional values to the script</source>
-        <translation>Отметьте, если вам нужно передавать дополнительные свойства в скрипт</translation>
-    </message>
-    <message>
-        <source>Any executable</source>
-        <translation>Любая программа</translation>
-    </message>
-</context>
-<context>
     <name>Server</name>
     <message>
         <source>Unable to start server. Perhaps the port %1 is busy.</source>
@@ -900,6 +888,46 @@
     <message>
         <source>OK</source>
         <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Enter a greetings message...</source>
+        <translation>Введите приветствие...</translation>
+    </message>
+    <message>
+        <source>Changes the Jeff server port.</source>
+        <translation>Меняет порт сервера Джеффа.</translation>
+    </message>
+    <message>
+        <source>Sets the time to wait for extensions to shutdown after the terminate signal.</source>
+        <translation>Устанавливает время ожидания выключения расширений после сигнала terminate.</translation>
+    </message>
+    <message>
+        <source>Tells Jeff if he should look up input sent twice by the user directly in the database.</source>
+        <translation>Говорит Джеффу, должен ли тот искать ввод, отправленный пользователем дважды, напрямую в базе данных.</translation>
+    </message>
+    <message>
+        <source>Repeated - explicitly in DB</source>
+        <translation>Повторения - напрямую в источниках</translation>
+    </message>
+    <message>
+        <source>Authenticates all the messages sent to Jeff&apos;s server.</source>
+        <translation>Авторизовывает все сообщения, приходящие на сервер Джеффа.</translation>
+    </message>
+    <message>
+        <source>Enable authentication by key</source>
+        <translation>Включить аутентификацию по ключу</translation>
+    </message>
+    <message>
+        <source>Enter a private key...</source>
+        <translation>Введите ключ...</translation>
+    </message>
+    <message>
+        <source>Disables message history transmission to scripts and extensions.</source>
+        <translation>Отключает передачу истории сообщений скриптам и расширениям.</translation>
+    </message>
+    <message>
+        <source>Disable message transmission</source>
+        <translation>Отключить передачу сообщений</translation>
     </message>
 </context>
 <context>

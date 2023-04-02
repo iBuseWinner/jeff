@@ -31,6 +31,12 @@ private:
   QCheckBox delay, keepHistory, greetings;
   QWidget delayBox;
   QSpinBox minDelay, maxDelay;
+  QSpinBox serverPort;
+  QSpinBox extensionKillSec;
+  QCheckBox repeatedExplicitInDb;
+  QCheckBox auth;
+  LineEdit authKey;
+  QCheckBox noMessageTransmission;
   LineEdit greetingsMsg;
   Button save_and_close;
 
@@ -41,6 +47,7 @@ private:
   void minDelayValueChanged(int value);
   void maxDelayValueChanged(int value);
   void greetingsChecked();
+  void authChecked();
 };
 
 #endif
