@@ -1,0 +1,7 @@
+Package: jeff
+Source: jeff
+Version: 2.3.0
+Architecture: amd64
+Maintainer: Mark CDA <aclo.create@gmail.com>
+Depends: libc6 (>= 2.14), libgcc-s1 (>= 3.0), libpython3.9 (>= 3.9.1), libqt5core5a (>= 5.15.1), libqt5gui5 (>= 5.0.2) | libqt5gui5-gles (>= 5.0.2), libqt5network5 (>= 5.0.2), libqt5sql5 (>= 5.0.2), libqt5widgets5 (>= 5.15.1), libstdc++6 (>= 5)
+Description: Extensible chatbot and automation tool
