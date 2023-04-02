@@ -40,7 +40,7 @@ Settings::Settings(Basis *_basis, QWidget *parent, ModalHandler *mhandler)
   );
   greetingsMsg.setPlaceholderText(tr("Enter a greetings message..."));
   // Server port.
-  auto *serverPortExplanation = new ExplanationLabel(tr("Changes the Jeff server port."), this);
+  auto *serverPortExplanation = new ExplanationLabel(tr("Changes the Jeff server port. The option will take effect after a restart."), this);
   serverPort.setMinimum(8000);
   serverPort.setMaximum(65535);
   // Extensions' kill delay.

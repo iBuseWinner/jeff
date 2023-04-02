@@ -894,10 +894,6 @@
         <translation>Введіть привітання...</translation>
     </message>
     <message>
-        <source>Changes the Jeff server port.</source>
-        <translation>Змінює порт сервера Джефа.</translation>
-    </message>
-    <message>
         <source>Sets the time to wait for extensions to shutdown after the terminate signal.</source>
         <translation>Встановлює час очікування вимкнення розширень після сигналу terminate.</translation>
     </message>
@@ -928,6 +924,10 @@
     <message>
         <source>Disable message transmission</source>
         <translation>Вимкнути надсилання повідомлень</translation>
+    </message>
+    <message>
+        <source>Changes the Jeff server port. The option will take effect after a restart.</source>
+        <translation>Змінює порт сервера Джеффа. Опція набуде чинності після перезавантаження.</translation>
     </message>
 </context>
 <context>

@@ -51,7 +51,7 @@ private:
   MenuBar *menubar = new MenuBar(core, line, this);
 
   // Constants:
-  static const int minimalWidth = 800;
+  static const int minimalWidth = 640;
   static const int minimalHeight = 370;
   static const int defaultWidth = 800;
   static const int defaultHeight = 496;
