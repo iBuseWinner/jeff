@@ -4,7 +4,7 @@
 PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent) : QObject(parent), basis(_basis), hp(_hp) {
   Py_InitializeEx(1);
   // Adds current path to sys.path for importing scripts from this directory.
-  _current_path = QDir::toNativeSeparators(QDir::currentPath());
+  _current_path = QDir::currentPath();
   QString command = "import sys; sys.path.append('" + _current_path + "')";
   PyRun_SimpleString(command.toLocal8Bit().constData());
 }

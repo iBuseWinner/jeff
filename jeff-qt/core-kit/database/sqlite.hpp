@@ -26,7 +26,7 @@
 
 /*! @enum Check
  *  @brief Enumeration of possible types of checking the state of database.  */
-enum Check { NoCheck, Exists, Openable, Correct, RecursivelyСorrect };
+enum Check { NoCheck, Exists, Openable, Correct, RecursivelyCorrect };
 
 /*! @enum ToDo
  *  @brief Enumeration of possible types of operations with database.  */

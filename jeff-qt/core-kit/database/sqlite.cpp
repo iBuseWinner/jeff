@@ -431,7 +431,7 @@ QSqlDatabase SQLite::prepare(const QString &path, QString conn_name, Check optio
       if (result) *result = valid;
       break;
     }
-    case RecursivelyСorrect: {
+    case RecursivelyCorrect: {
       if (result) *result = true;
       if (not QFile::exists(path)) {
         Yellog::Error(QString("Database \"%1\" doesn't exist.").arg(path).toLocal8Bit().constData());
