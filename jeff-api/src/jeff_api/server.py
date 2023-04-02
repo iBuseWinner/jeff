@@ -6,7 +6,7 @@ class Server:
     self.host = host
     self.port = port
     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.server_socket.bind((host if host is not None else socket.gethostname(), port))
+    self.server_socket.bind((host if host is not None else "0.0.0.0", port))
     self.server_socket.listen()
 
     def exit_gracefully(*args):
@@ -16,9 +16,10 @@ class Server:
     signal.signal(signal.SIGTERM, exit_gracefully)
 
   def _waits_for(self, buffer_size=8192):
-    (socket, address) = self.server_socket.accept()
     try:
+      (socket, address) = self.server_socket.accept()
       data = socket.recv(buffer_size)
+      socket.close()
       return data
     except ConnectionRefusedError:
       print("Connection refused.")
