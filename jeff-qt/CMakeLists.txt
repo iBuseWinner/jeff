@@ -13,17 +13,17 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(Qt5 COMPONENTS Core Gui Network Sql Widgets REQUIRED)
 find_package(Python COMPONENTS Development Interpreter REQUIRED)
 
-add_compile_options(
-  -O3
-  -flto=auto
-  -Wall
-  -Wextra
-  -pedantic
-  -Wstrict-aliasing
-  -Wno-format
-  -Wno-format-security
-  -Wno-unused-parameter
-)
+#add_compile_options(
+#  -O3
+#  -flto=auto
+#  -Wall
+#  -Wextra
+#  -pedantic
+#  -Wstrict-aliasing
+#  -Wno-format
+#  -Wno-format-security
+#  -Wno-unused-parameter
+#)
 
 include_directories(
   .
@@ -86,21 +86,21 @@ set(SRCS
   main.cpp
 )
 
-add_executable(jeff-cli ${SRCS} jeff.cpp jeff.hpp resources.qrc)
+#add_executable(jeff-cli ${SRCS} jeff.cpp jeff.hpp resources.qrc)
 
 # Available definitions:
 #
 # YELLOGER_TRACING
 # target_compile_definitions(jeff-cli PRIVATE YELLOGER_TRACING)
 
-target_link_libraries(
-  jeff-cli PRIVATE
-    Python::Python
-    Qt5::Core
-    Qt5::Network
-    Qt5::Sql
-    ncursesw
-)
+#target_link_libraries(
+#  jeff-cli PRIVATE
+#    Python::Python
+#    Qt5::Core
+#    Qt5::Network
+#    Qt5::Sql
+#    ncursesw
+#)
 
 # Jeff-Qt part
 
@@ -215,3 +215,7 @@ target_link_libraries(
     Qt5::Sql
     Qt5::Widgets
 )
+
+#if(CMAKE_BUILD_TYPE STREQUAL "Release")
+set_property(TARGET jeff-qt PROPERTY WIN32_EXECUTABLE true)
+#endif()

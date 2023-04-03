@@ -7,7 +7,7 @@ Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_p
   Yellog::EnableFileOutput(
     QDir::toNativeSeparators(
       QString("%1/%2").arg(_settings_path).arg(log_filename))
-    .toLocal8Bit().constData()
+    .toStdString().c_str()
   );
   Yellog::Trace("------------NEWSTART------------");
 }
@@ -141,6 +141,7 @@ QJsonArray Json::read_json(QFile *file) {
   if (not file->exists()) return QJsonArray();
   if (not file->open(QIODevice::ReadOnly | QIODevice::Text)) return QJsonArray();
   QTextStream textStream(file);
+  textStream.setCodec("UTF-8");
   QJsonParseError errors;
   QJsonDocument document = QJsonDocument::fromJson(textStream.readAll().toUtf8(), &errors);
   if (errors.error != QJsonParseError::NoError) {
@@ -156,11 +157,12 @@ QJsonArray Json::read_json(QFile *file) {
 void Json::write_json(QFile *savefile, const QJsonArray &json_array) {
   if (not savefile->open(QIODevice::WriteOnly | QIODevice::Text)) {
     Yellog::Error("At Json::write_json:");
-    Yellog::Error("\tCannot open savefile \"%s\" as rw/text.", savefile->fileName().toLocal8Bit().constData());
+    Yellog::Error("\tCannot open savefile \"%s\" as rw/text.", savefile->fileName().toStdString().c_str());
     return;
   }
   QJsonDocument doc(json_array);
   QTextStream textStream(savefile);
+  textStream.setCodec("UTF-8");
   textStream << doc.toJson(QJsonDocument::Indented);
   savefile->close();
 }

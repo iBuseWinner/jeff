@@ -11,7 +11,7 @@ DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObj
     if (args[i] == "<JEFF_PORT>") {
       if (not (*basis)[Basis::serverPortSt].toString().isEmpty()) {
         args[i] = (*basis)[Basis::serverPortSt].toString();
-        Yellog::Trace("\tSetted up port %s.", (*basis)[Basis::serverPortSt].toString().toLocal8Bit().constData());
+        Yellog::Trace("\tSetted up port %s.", (*basis)[Basis::serverPortSt].toString().toStdString().c_str());
       } else {
         args[i] = QString::number(8005);
         Yellog::Trace("\tSetted up port 8005");
@@ -26,11 +26,11 @@ DaemonProcess::DaemonProcess(Basis *_basis, ExtensionMeta *_extension_meta, QObj
   setArguments(args);
   if (not extension_meta->working_dir.isEmpty()) {
     setWorkingDirectory(extension_meta->working_dir);
-    Yellog::Trace("\tSetted working dir %s", extension_meta->working_dir.toLocal8Bit().constData());
+    Yellog::Trace("\tSetted working dir %s", extension_meta->working_dir.toStdString().c_str());
   } else if (not extension_meta->origin.isEmpty()) {
     QFileInfo fi(extension_meta->origin);
     setWorkingDirectory(fi.canonicalPath());
-    Yellog::Trace("\tSetted working dir %s", fi.canonicalPath().toLocal8Bit().constData());
+    Yellog::Trace("\tSetted working dir %s", fi.canonicalPath().toStdString().c_str());
   }
   if (not extension_meta->envs.isEmpty()) {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
@@ -63,7 +63,7 @@ QJsonObject DaemonProcess::request_output(
   process.setArguments(script_meta->args);
   if (not script_meta->working_dir.isEmpty()) {
     process.setWorkingDirectory(script_meta->working_dir);
-    Yellog::Trace("\tSetted working dir %s", script_meta->working_dir.toLocal8Bit().constData());
+    Yellog::Trace("\tSetted working dir %s", script_meta->working_dir.toStdString().c_str());
   }
   if (not script_meta->envs.isEmpty()) {
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();

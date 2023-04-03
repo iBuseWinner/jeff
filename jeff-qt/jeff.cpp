@@ -53,17 +53,17 @@ void Jeff::ncurses_draw() {
     int h, w;
     getmaxyx(stdscr, h, w);
     wborder(stdscr, 0, 0, 0, 0, 0, 0, 0, 0);
-    mvwprintw(stdscr, 0, 2, "%s", tr("Jeff").toLocal8Bit().constData());
+    mvwprintw(stdscr, 0, 2, "%s", tr("Jeff").toStdString().c_str());
     int y0, x0;
     getyx(stdscr, y0, x0);
-    mvwprintw(stdscr, 0, x0 + 2, "%s", tr("Enter /q to quit").toLocal8Bit().constData());
+    mvwprintw(stdscr, 0, x0 + 2, "%s", tr("Enter /q to quit").toStdString().c_str());
     char *filler = new char[w - 1];
     for (int i = 0; i < w - 2; i++) { filler[i] = ' '; }
     filler[w - 2] = '\0';
     for (int i = 1; i < h - 2; i++) { mvwprintw(stdscr, i, 1, "%s", filler); }
     auto l = messages.length();
     for (int i = 0; i < l; i++) {
-      mvwprintw(stdscr, h - 3 - i, 1, "%s", messages[l - i - 1].toLocal8Bit().constData());
+      mvwprintw(stdscr, h - 3 - i, 1, "%s", messages[l - i - 1].toStdString().c_str());
     }
     move(h - 2, 5 + buffer.size());
     if (buffer_changed) {

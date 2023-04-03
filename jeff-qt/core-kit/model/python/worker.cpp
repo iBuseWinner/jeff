@@ -6,7 +6,7 @@ PythonWorker::PythonWorker(Basis *_basis, HProcessor *_hp, QObject *parent) : QO
   // Adds current path to sys.path for importing scripts from this directory.
   _current_path = QDir::currentPath();
   QString command = "import sys; sys.path.append('" + _current_path + "')";
-  PyRun_SimpleString(command.toLocal8Bit().constData());
+  PyRun_SimpleString(command.toStdString().c_str());
 }
 
 /*! @brief The destructor. */
@@ -18,16 +18,16 @@ QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transp
   QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());
   if (dir_path != _current_path) {
     QString command = "import sys; sys.path.append('" + dir_path + "')";
-    PyRun_SimpleString(command.toLocal8Bit().constData());
+    PyRun_SimpleString(command.toStdString().c_str());
   }
   QString module_nick = module_info.fileName().split('.')[0];
-  Object module_name = PyUnicode_FromString(module_nick.toLocal8Bit().constData());
+  Object module_name = PyUnicode_FromString(module_nick.toStdString().c_str());
   Object mod = PyImport_Import(module_name);
   if (not mod) {
     emit script_exception(tr("Failed to connect the module."));
     return {{Basis::errorTypeWk, 1}};
   }
-  Object answer_func = PyObject_GetAttrString(mod, def_name.toLocal8Bit().constData());
+  Object answer_func = PyObject_GetAttrString(mod, def_name.toStdString().c_str());
   if (not answer_func) {
     emit script_exception(tr("Could not find \"answer\" attribute in module."));
     return {{Basis::errorTypeWk, 2}};

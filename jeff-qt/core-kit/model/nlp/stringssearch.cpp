@@ -11,8 +11,8 @@ QPair<QMap<int, int>, float> StringSearch::contains(QString that, QString inner,
   QList<WordMetadata> that_metadata, inner_metadata;
   auto p1 = lemmatize(that), p2 = lemmatize(inner);
   Yellog::Trace("\t\t\tAfter lemmatization: \"%s\", \"%s\"",
-                p1.toLocal8Bit().constData(),
-                p2.toLocal8Bit().constData());
+                p1.toStdString().c_str(),
+                p2.toStdString().c_str());
   if (p1.length() < p2.length()) {
     Yellog::Trace("\t\t\tp1 is less than p2, reversing it...");
     auto x = p1;
@@ -22,7 +22,7 @@ QPair<QMap<int, int>, float> StringSearch::contains(QString that, QString inner,
   int last = 0;
   Yellog::Trace("\t\t\tWords in p1:");
   for (auto word : p1.split(" ")) {
-    Yellog::Trace("\t\t\t\t%s", word.toLocal8Bit().constData());
+    Yellog::Trace("\t\t\t\t%s", word.toStdString().c_str());
     WordMetadata wmd;
     wmd.word = word;
     wmd.i1 = p1.indexOf(wmd.word, last);
@@ -37,7 +37,7 @@ QPair<QMap<int, int>, float> StringSearch::contains(QString that, QString inner,
     WordMetadata wmd;
     if (HA and (word == "*" or word == "_")) wmd.word = locate(p1, last);
     else wmd.word = word;
-    Yellog::Trace("\t\t\t\t%s", wmd.word.toLocal8Bit().constData());
+    Yellog::Trace("\t\t\t\t%s", wmd.word.toStdString().c_str());
     wmd.i1 = p2.indexOf(wmd.word, last);
     wmd.i2 = wmd.i1 + wmd.word.length();
     Yellog::Trace("\t\t\t\t\t%d-%d", wmd.i1, wmd.i2);
@@ -58,8 +58,8 @@ QPair<QMap<int, int>, float> StringSearch::contains(QString that, QString inner,
     /*! @details#lang=ru Можно ещё сделать реализацию POC по синонимам. */
     for (auto w1 : that_metadata) {
       Yellog::Trace("\t\t\t\t\tWords are \"%s\" and \"%s\"",
-                    w1.word.toLocal8Bit().constData(),
-                    w2.word.toLocal8Bit().constData());
+                    w1.word.toStdString().c_str(),
+                    w2.word.toStdString().c_str());
       float POC = get_POC(w1.word, w2.word);
       Yellog::Trace("\t\t\t\t\tGot POC = %5.2f", POC);
       if (POC >= EL and POC > max_POC.first) {
@@ -78,7 +78,7 @@ QPair<QMap<int, int>, float> StringSearch::contains(QString that, QString inner,
     m.remove(0);
     Yellog::Trace("\t\t\tAppending these wmd_pairs:");
     for (auto wmd_pair : common) {
-      Yellog::Trace("\t\t\t\t\"%s\": %d-%d", wmd_pair.second.word.toLocal8Bit().constData(), wmd_pair.second.i1, wmd_pair.second.i2);
+      Yellog::Trace("\t\t\t\t\"%s\": %d-%d", wmd_pair.second.word.toStdString().c_str(), wmd_pair.second.i1, wmd_pair.second.i2);
       m[wmd_pair.second.i1] = wmd_pair.second.i2;
     }
     Yellog::Trace("\t\t\tKeys in common:");

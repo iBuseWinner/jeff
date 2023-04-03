@@ -109,7 +109,7 @@ ScriptMeta *ScriptMeta::from_string(QString string) {
 
 /*! @brief Reads script's metadata from @a origin file. */
 ScriptMeta *ScriptMeta::from_origin(const QString &origin) {
-  Yellog::Trace("Given file: %s", origin.toLocal8Bit().constData());
+  Yellog::Trace("Given file: %s", origin.toStdString().c_str());
   QFile file(origin);
   if (not file.exists()) {
     Yellog::Error("File doesn't exist.");

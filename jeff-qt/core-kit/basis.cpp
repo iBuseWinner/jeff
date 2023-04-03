@@ -43,7 +43,7 @@ void Basis::check_settings_file() {
 
 /*! @brief Sends a warning to the screen. */
 void Basis::warn_about(QString warning_text) {
-  Yellog::Warn(warning_text.toLocal8Bit().constData());
+  Yellog::Warn(warning_text.toStdString().c_str());
   emit warn(warning_text);
 }
 
@@ -67,8 +67,8 @@ void Basis::set_first_source_as_default() {
     write(defaultSourcePath, _sources[0].path);
     write(defaultSourceContainer, _sources[0].table_name);
     Yellog::Info("New default source: %s, %s",
-                 _sources[0].path.toLocal8Bit().constData(),
-                 _sources[0].table_name.toLocal8Bit().constData());
+                 _sources[0].path.toStdString().c_str(),
+                 _sources[0].table_name.toStdString().c_str());
   } else {
     write(defaultSourcePath, "");
     write(defaultSourceContainer, "");

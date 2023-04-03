@@ -60,7 +60,7 @@ CoverageCache JCK::get_from_json(const QJsonArray &array) {
 
 /*! @brief Matches the answer based on the input.  */
 void JCK::search_for_suggests(const QString &input) {
-  Yellog::Trace("Searching in JCK now: %s", input.toLocal8Bit().constData());
+  Yellog::Trace("Searching in JCK now: %s", input.toStdString().c_str());
   CoverageCache selection;
   bool from_db = false;
   if (scanner) {
@@ -137,8 +137,8 @@ CoverageCache JCK::select_candidates(CoverageCache selection) {
   CoverageCache candidates;
   for (auto ec : selection) {
     Yellog::Trace("\t\tCandidate: activator is \"%s\", reagent is \"%s\"",
-                  ec.expression.activator_text.toLocal8Bit().constData(),
-                  ec.expression.reagent_text.toLocal8Bit().constData());
+                  ec.expression.activator_text.toStdString().c_str(),
+                  ec.expression.reagent_text.toStdString().c_str());
     Yellog::Trace("\t\tIndices are:");
     for (auto key : ec.coverage_indices.keys()) {
       Yellog::Trace("\t\t\t%d-%d", key, ec.coverage_indices[key]);
@@ -161,18 +161,18 @@ CoverageCache JCK::select_candidates(CoverageCache selection) {
         if (rival.expression.consonant()) continue;
         if (StringSearch::intersects(ec.coverage_indices, rival.coverage_indices) == StringSearch::Intersects::No) {
           Yellog::Trace("\t\t\tNo intersection \"%s\"-\"%s\" with \"%s\"-\"%s\"",
-                        ec.expression.activator_text.toLocal8Bit().constData(),
-                        ec.expression.reagent_text.toLocal8Bit().constData(),
-                        rival.expression.activator_text.toLocal8Bit().constData(),
-                        rival.expression.reagent_text.toLocal8Bit().constData());
+                        ec.expression.activator_text.toStdString().c_str(),
+                        ec.expression.reagent_text.toStdString().c_str(),
+                        rival.expression.activator_text.toStdString().c_str(),
+                        rival.expression.reagent_text.toStdString().c_str());
         } else {
           intersects = true;
           if (ec.total_POC > rival.total_POC) {
             Yellog::Trace("\t\t\tThe \"%s\"-\"%s\" is more accurately activated than \"%s\"-\"%s\"",
-                          ec.expression.activator_text.toLocal8Bit().constData(),
-                          ec.expression.reagent_text.toLocal8Bit().constData(),
-                          rival.expression.activator_text.toLocal8Bit().constData(),
-                          rival.expression.reagent_text.toLocal8Bit().constData());
+                          ec.expression.activator_text.toStdString().c_str(),
+                          ec.expression.reagent_text.toStdString().c_str(),
+                          rival.expression.activator_text.toStdString().c_str(),
+                          rival.expression.reagent_text.toStdString().c_str());
             to_add = true;
             rivals_iter.remove();
             continue;
@@ -180,28 +180,28 @@ CoverageCache JCK::select_candidates(CoverageCache selection) {
             auto weights = ec.expression.weight() - rival.expression.weight();
             if (weights > 0) {
               Yellog::Trace("\t\t\tWeight of \"%s\"-\"%s\" bigger than \"%s\"-\"%s\"",
-                          ec.expression.activator_text.toLocal8Bit().constData(),
-                          ec.expression.reagent_text.toLocal8Bit().constData(),
-                          rival.expression.activator_text.toLocal8Bit().constData(),
-                          rival.expression.reagent_text.toLocal8Bit().constData());
+                          ec.expression.activator_text.toStdString().c_str(),
+                          ec.expression.reagent_text.toStdString().c_str(),
+                          rival.expression.activator_text.toStdString().c_str(),
+                          rival.expression.reagent_text.toStdString().c_str());
               to_add = true;
               rivals_iter.remove();
             } else if (weights == 0) {
               if (ec.expression.use_cases < rival.expression.use_cases) {
                 Yellog::Trace("\t\t\tExpression \"%s\"-\"%s\" is more rarely used than \"%s\"-\"%s\"",
-                          ec.expression.activator_text.toLocal8Bit().constData(),
-                          ec.expression.reagent_text.toLocal8Bit().constData(),
-                          rival.expression.activator_text.toLocal8Bit().constData(),
-                          rival.expression.reagent_text.toLocal8Bit().constData());
+                          ec.expression.activator_text.toStdString().c_str(),
+                          ec.expression.reagent_text.toStdString().c_str(),
+                          rival.expression.activator_text.toStdString().c_str(),
+                          rival.expression.reagent_text.toStdString().c_str());
                 to_add = true;
                 rivals_iter.remove();
               } else if (ec.expression.use_cases == rival.expression.use_cases) {
                 if (gen->bounded(0, 2) == 1) {
                   Yellog::Trace("\t\t\tRandomly selected \"%s\"-\"%s\" over \"%s\"-\"%s\"",
-                          ec.expression.activator_text.toLocal8Bit().constData(),
-                          ec.expression.reagent_text.toLocal8Bit().constData(),
-                          rival.expression.activator_text.toLocal8Bit().constData(),
-                          rival.expression.reagent_text.toLocal8Bit().constData());
+                          ec.expression.activator_text.toStdString().c_str(),
+                          ec.expression.reagent_text.toStdString().c_str(),
+                          rival.expression.activator_text.toStdString().c_str(),
+                          rival.expression.reagent_text.toStdString().c_str());
                   to_add = true;
                   rivals_iter.remove();
                 }
@@ -288,7 +288,7 @@ QPair<QString, QString> JCK::compose_answer(QString input, CoverageCache candida
 
 /*! @brief Selects expressions to compose a response from the cache. */
 CoverageCache JCK::select_from_cache(const QString &input) {
-  Yellog::Trace("\tSelecting from cache: %s", input.toLocal8Bit().constData());
+  Yellog::Trace("\tSelecting from cache: %s", input.toStdString().c_str());
   CoverageCache selection;
   Cache cache = basis->cacher->get();
   for (int i = 0; i < cache.length(); i++) {
@@ -296,8 +296,8 @@ CoverageCache JCK::select_from_cache(const QString &input) {
     if (indices_and_POC.second == 0.0) continue;
     for (auto ec : selection) if (ec.expression == cache[i]) continue;
     Yellog::Trace("\t\tChoosed \"%s\": reagent is \"%s\"",
-                  cache[i].activator_text.toLocal8Bit().constData(),
-                  cache[i].reagent_text.toLocal8Bit().constData());
+                  cache[i].activator_text.toStdString().c_str(),
+                  cache[i].reagent_text.toStdString().c_str());
     for (auto key : indices_and_POC.first.keys()) {
       Yellog::Trace("\t\tIts indices are %d-%d.", key, indices_and_POC.first[key]);
     }
@@ -312,15 +312,15 @@ CoverageCache JCK::select_from_cache(const QString &input) {
 
 /*! @brief Selects expressions to compose a response from the database. */
 CoverageCache JCK::select_from_db(const QString &input) {
-  Yellog::Trace("\tSelecting from database: %s", input.toLocal8Bit().constData());
+  Yellog::Trace("\tSelecting from database: %s", input.toStdString().c_str());
   CoverageCache selection;
   Sources sources = basis->sources();
   for (int i = 0; i < sources.length(); i++) {
     auto cc = basis->sql->scan_source(sources[i], input, thread_conn_wk);
     for (auto ec : cc) {
       Yellog::Trace("\t\tChoosed \"%s\": reagent is \"%s\"",
-                    ec.expression.activator_text.toLocal8Bit().constData(),
-                    ec.expression.reagent_text.toLocal8Bit().constData());
+                    ec.expression.activator_text.toStdString().c_str(),
+                    ec.expression.reagent_text.toStdString().c_str());
       for (auto key : ec.coverage_indices.keys()) { Yellog::Trace("\t\tIts indices are %d-%d.", key, ec.coverage_indices[key]); }
       // Appending source weight:
       ec.expression.properties["weight"] = QString::number(ec.expression.weight() + sources[i].weight);

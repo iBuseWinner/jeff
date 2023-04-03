@@ -125,7 +125,7 @@ ExtensionMeta *ExtensionMeta::from_string(QString string) {
 
 /*! @brief Reads extension's metadata from @a origin file. */
 ExtensionMeta *ExtensionMeta::from_origin(const QString &origin, bool enabled) {
-  Yellog::Trace("Given file: %s", origin.toLocal8Bit().constData());
+  Yellog::Trace("Given file: %s", origin.toStdString().c_str());
   QFile file(origin);
   if (not file.exists()) {
     Yellog::Error("File doesn't exist.");
