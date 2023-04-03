@@ -3,10 +3,10 @@ import json, signal, socket
 
 class Server:
   def __init__(self, host, port):
-    self.host = host
+    self.host = host if host is not None else "0.0.0.0"
     self.port = port
     self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    self.server_socket.bind((host if host is not None else "0.0.0.0", port))
+    self.server_socket.bind((self.host, self.port))
     self.server_socket.listen()
 
     def exit_gracefully(*args):
