@@ -42,7 +42,8 @@ void NotifyClient::notify_scenario_first_time(QString auth_key) {
   socket->connectToHost(scenario_meta.server_addr, scenario_meta.server_port);
 }
 
-/*! @brief TBD */
+/*! @brief When a scenario is already running and a request for the next scenario comes in,
+ *  it is placed on the waiting list (the scenario queue) and the extension is notified.  */
 void NotifyClient::notify_about_queued(ScenarioServerMeta _scenario_meta) {
   auto *socket = new QTcpSocket(this);
   connect(socket, &QTcpSocket::disconnected, socket, &QObject::deleteLater);
@@ -57,7 +58,7 @@ void NotifyClient::notify_about_queued(ScenarioServerMeta _scenario_meta) {
   socket->connectToHost(_scenario_meta.server_addr, _scenario_meta.server_port);
 }
 
-/*! @brief TBD */
+/*! @brief Notifies only one specific extension. */
 void NotifyClient::notify_only(ExtensionMeta *target, MessageMeta *msg_meta) {
   for (auto *extension_meta : extensions_meta)
     if (target == extension_meta)

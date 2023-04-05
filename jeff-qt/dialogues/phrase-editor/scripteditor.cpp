@@ -1,7 +1,8 @@
 #include "scripteditor.hpp"
+#include "extensions/script.hpp"
 
 /*! @brief The constructor. */
-ReactScriptEditor::ReactScriptEditor(QWidget *parent, Basis *_basis) : QWidget(parent), basis(_basis) {
+ScriptEditor::ScriptEditor(QWidget *parent, Basis *_basis) : QWidget(parent), basis(_basis) {
   stype_info = new QLabel(tr("Specify script type:"), this);
   auto *path_info = new QLabel(tr("Specify script path:"), this);
   path_input = new Button(tr("Select a file..."), this);
@@ -42,7 +43,7 @@ ReactScriptEditor::ReactScriptEditor(QWidget *parent, Basis *_basis) : QWidget(p
 }
 
 /*! @brief The destructor. */
-ReactScriptEditor::~ReactScriptEditor() {
+ScriptEditor::~ScriptEditor() {
   QLayoutItem *child = nullptr;
   if (dynamic_properties_layout->count())
     while ((child = dynamic_properties_layout->takeAt(0)) != nullptr) {
@@ -52,7 +53,7 @@ ReactScriptEditor::~ReactScriptEditor() {
 }
 
 /*! @brief Shows a name of the file and sets correct icons. */
-void ReactScriptEditor::set_path(QString path) {
+void ScriptEditor::set_path(QString path) {
   if (not path.isEmpty()) {
     filepath = path;
     QFileInfo fi(filepath);
@@ -66,7 +67,7 @@ void ReactScriptEditor::set_path(QString path) {
 }
 
 /*! @brief Changes the layout depending on the selected script type. */
-void ReactScriptEditor::change_stype() {
+void ScriptEditor::change_stype() {
   disconnect(save_btn, &Button::clicked, nullptr, nullptr);
   if (dynamic_properties_layout->parentWidget()->isHidden())
     dynamic_properties_layout->parentWidget()->show();
@@ -118,20 +119,52 @@ void ReactScriptEditor::change_stype() {
       emit saved(react->to_string());
       delete react;
     });
+  } else {
+    disconnect(path_input, &Button::clicked, nullptr, nullptr);
+    connect(path_input, &Button::clicked, this, [this] {
+      set_path(
+        QFileDialog::getOpenFileName(
+          nullptr, tr("Select file..."), "", tr("Custom script") + "(*.j.json);;" + tr("Jeff script") + "(*.*)"
+        )
+      );
+    });
+    if (stype == 2) {
+      connect(save_btn, &Button::clicked, this, [this] {
+        if (path_input->text() == tr("Select a file...")) {
+          basis->warn_about(tr("Please select a path before saving."));
+          return;
+        }
+        auto *scanner = ScriptMeta::from_origin(filepath);
+        if (not scanner) return;
+        basis->set_custom_scanner(scanner);
+        emit closed();
+      });
+    } else { // stype == 3
+      connect(save_btn, &Button::clicked, this, [this] {
+        if (path_input->text() == tr("Select a file...")) {
+          basis->warn_about(tr("Please select a path before saving."));
+          return;
+        }
+        auto *composer = ScriptMeta::from_origin(filepath);
+        if (not composer) return;
+        basis->set_custom_composer(composer);
+        emit closed();
+      });
+    }
   }
 }
 
 /*! @brief Changes the script type and then calls the layout change function. */
-void ReactScriptEditor::change_stype(int _stype) { stype = _stype; change_stype(); }
+void ScriptEditor::change_stype(int _stype) { stype = _stype; change_stype(); }
 
 /*! @brief Fixes the script type, making it immutable. */
-void ReactScriptEditor::set_stype(int _stype) {
+void ScriptEditor::set_stype(int _stype) {
   stype_info->hide();
   change_stype(_stype);
 }
 
 /*! @brief Loads data into the form from a string. */
-bool ReactScriptEditor::load_from_text(QString json_text) {
+bool ScriptEditor::load_from_text(QString json_text) {
   if (json_text.isEmpty()) return false;
   auto *script = ScriptMeta::from_string(json_text);
   if (not script) return false;
@@ -140,7 +173,7 @@ bool ReactScriptEditor::load_from_text(QString json_text) {
 }
 
 /*! @brief Loads data into a form from a saved state. */
-bool ReactScriptEditor::load_from_script(ScriptMeta *script_meta) {
+bool ScriptEditor::load_from_script(ScriptMeta *script_meta) {
   if (script_meta->stype == ScriptType::React) {
     set_stype(1);
     set_path(script_meta->filepath);
@@ -148,17 +181,6 @@ bool ReactScriptEditor::load_from_script(ScriptMeta *script_meta) {
     hist_amount_input->setValue(script_meta->required_history_parts);
     needs_ue_input->setChecked(script_meta->required_user_input);
     memory_cells_list->append(script_meta->required_memory_cells);
-    return true;
-  } else if (script_meta->stype == ScriptType::CustomScan) {
-    change_stype(2);
-    set_path(script_meta->filepath);
-    fn_name_input->setText(script_meta->fn_name);
-    return true;
-  } else if (script_meta->stype == ScriptType::CustomCompose) {
-    change_stype(3);
-    set_path(script_meta->filepath);
-    fn_name_input->setText(script_meta->fn_name);
-    send_adprops->setChecked(script_meta->required_adprops);
     return true;
   } else return false;
 }

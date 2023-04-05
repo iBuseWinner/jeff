@@ -1,6 +1,8 @@
 #ifndef BASIS_H
 #define BASIS_H
 
+#define sccc static constexpr const char *
+
 #include "core-kit/database/json.hpp"
 #include "core-kit/database/sqlite.hpp"
 #include "core-kit/extensions/scenario.hpp"
@@ -37,88 +39,89 @@ class Basis : public QObject {
   Q_DISABLE_COPY(Basis)
 public:
   // Constants:
-  static constexpr const char *companyName     = "cclc";
-  static constexpr const char *applicationName = "jeff";
+  sccc companyName     = "cclc";
+  sccc applicationName = "jeff";
 
-  static constexpr const char *isMenuBarHiddenSt = "jeff-qt/menubarishidden";
-  static constexpr const char *posSt             = "jeff-qt/pos";
-  static constexpr const char *sizeSt            = "jeff-qt/size";
-  static constexpr const char *isFullScreenSt    = "jeff-qt/isfullscreen";
-  static constexpr const char *isNotFirstStartSt = "jeff-qt/isnotfirststart";
-  static constexpr const char *helpTipSt         = "jeff-qt/helptip";
+  sccc isMenuBarHiddenSt = "jeff-qt/menubarishidden";
+  sccc posSt             = "jeff-qt/pos";
+  sccc sizeSt            = "jeff-qt/size";
+  sccc isFullScreenSt    = "jeff-qt/isfullscreen";
+  sccc isNotFirstStartSt = "jeff-qt/isnotfirststart";
+  sccc helpTipSt         = "jeff-qt/helptip";
 
-  static constexpr const char *isMonologueEnabledSt          = "core-kit/ismonologuemodeenabled";
-  static constexpr const char *isDelayEnabledSt              = "core-kit/isdelayenabled";
-  static constexpr const char *minDelaySt                    = "core-kit/mindelay";
-  static constexpr const char *maxDelaySt                    = "core-kit/maxdelay";
-  static constexpr const char *isHistoryKeepingEnabledSt     = "core-kit/ishistorykeepingenabled";
-  static constexpr const char *isGreetingsEnabledSt          = "core-kit/isgreetingsenabled";
-  static constexpr const char *greetingsMsg                  = "core-kit/greetings";
-  static constexpr const char *scenarioExitMsg               = "core-kit/scenarioexitter";
-  static constexpr const char *serverPortSt                  = "core-kit/serverport";
-  static constexpr const char *extensionKillSecSt            = "core-kit/extensionkillsec";
-  static constexpr const char *seacrhInDbWhenRepeated        = "core-kit/repeatedexplicitindb";
-  static constexpr const char *disableMessagesTransmissionSt = "core-kit/nomessagetransmission";
+  sccc isMonologueEnabledSt          = "core-kit/ismonologuemodeenabled";
+  sccc isDelayEnabledSt              = "core-kit/isdelayenabled";
+  sccc minDelaySt                    = "core-kit/mindelay";
+  sccc maxDelaySt                    = "core-kit/maxdelay";
+  sccc isHistoryKeepingEnabledSt     = "core-kit/ishistorykeepingenabled";
+  sccc isGreetingsEnabledSt          = "core-kit/isgreetingsenabled";
+  sccc greetingsMsg                  = "core-kit/greetings";
+  sccc scenarioExitMsg               = "core-kit/scenarioexitter";
+  sccc serverPortSt                  = "core-kit/serverport";
+  sccc extensionKillSecSt            = "core-kit/extensionkillsec";
+  sccc seacrhInDbWhenRepeated        = "core-kit/repeatedexplicitindb";
+  sccc disableMessagesTransmissionSt = "core-kit/nomessagetransmission";
 
-  static constexpr const char *defaultSourcePath      = "sources/defaultsourcepath";
-  static constexpr const char *defaultSourceContainer = "sources/defaultsourcecontainer";
+  sccc defaultSourcePath      = "sources/defaultsourcepath";
+  sccc defaultSourceContainer = "sources/defaultsourcecontainer";
 
-  static constexpr const char *serverAuthorizationOnSt = "server/authorize";
-  static constexpr const char *serverAuthKeySt         = "server/auth_key";
+  sccc serverAuthorizationOnSt = "server/authorize";
+  sccc serverAuthKeySt         = "server/auth_key";
 
-  static constexpr const char *customScannerSt    = "scripts/custom_scanner";
-  static constexpr const char *customScannerFnSt  = "scripts/custom_scanner_fn_name";
-  static constexpr const char *customComposerSt   = "scripts/custom_composer";
-  static constexpr const char *customComposerFnSt = "scripts/custom_composer_fn_name";
-  static constexpr const char *customComposerSASt = "scripts/custom_composer_send_adprops";
+  sccc customScannerSt    = "scripts/custom_scanner";
+  sccc customScannerFnSt  = "scripts/custom_scanner_fn_name";
+  sccc customComposerSt   = "scripts/custom_composer";
+  sccc customComposerFnSt = "scripts/custom_composer_fn_name";
+  sccc customComposerSASt = "scripts/custom_composer_send_adprops";
 
-  static constexpr const char *scriptPathWk       = "path";
-  static constexpr const char *funcNameWk         = "fn_name";
-  static constexpr const char *getHistWk          = "hist_parts";
-  static constexpr const char *errorTypeWk        = "error_type";
-  static constexpr const char *recentMessagesWk   = "recent_messages";
-  static constexpr const char *readMemoryWk       = "memory_cells";
-  static constexpr const char *memoryValuesWk     = "memory_values";
-  static constexpr const char *contextWk          = "context";
-  static constexpr const char *exprPropsWk        = "expression_properties";
-  static constexpr const char *writeMemoryWk      = "store_in_memory";
-  static constexpr const char *scenarioReadyWk    = "sready";
-  static constexpr const char *scenarioQueuedWk   = "squeued";
-  static constexpr const char *scenarioAddrWk     = "saddr";
-  static constexpr const char *scenarioPortWk     = "sport";
-  static constexpr const char *scenarioNameWk     = "sname";
-  static constexpr const char *scenarioTokenWk    = "stoken";
-  static constexpr const char *scenarioContinueWk = "scontinue";
-  static constexpr const char *scenarioFinishWk   = "sfinish";
-  static constexpr const char *sendWk             = "send";
-  static constexpr const char *selectionWk        = "selection";
-  static constexpr const char *searchAgainWk      = "search_again";
-  static constexpr const char *sendAsUserWk       = "send_as_user";
-  static constexpr const char *sendStatusWk       = "send_status";
-  static constexpr const char *sendWarningWk      = "send_warning";
-  static constexpr const char *sendInfoWk         = "send_info";
-  static constexpr const char *authKeyWk          = "auth_key";
+  sccc scriptPathWk       = "path";
+  sccc funcNameWk         = "fn_name";
+  sccc getHistWk          = "hist_parts";
+  sccc errorTypeWk        = "error_type";
+  sccc recentMessagesWk   = "recent_messages";
+  sccc readMemoryWk       = "memory_cells";
+  sccc memoryValuesWk     = "memory_values";
+  sccc contextWk          = "context";
+  sccc exprPropsWk        = "expression_properties";
+  sccc writeMemoryWk      = "store_in_memory";
+  sccc scenarioReadyWk    = "sready";
+  sccc scenarioQueuedWk   = "squeued";
+  sccc scenarioAddrWk     = "saddr";
+  sccc scenarioPortWk     = "sport";
+  sccc scenarioNameWk     = "sname";
+  sccc scenarioTokenWk    = "stoken";
+  sccc scenarioContinueWk = "scontinue";
+  sccc scenarioFinishWk   = "sfinish";
+  sccc sendWk             = "send";
+  sccc selectionWk        = "selection";
+  sccc searchAgainWk      = "search_again";
+  sccc sendAsUserWk       = "send_as_user";
+  sccc sendStatusWk       = "send_status";
+  sccc sendWarningWk      = "send_warning";
+  sccc sendInfoWk         = "send_info";
+  sccc authKeyWk          = "auth_key";
+  sccc addExpressionWk    = "add_expr";
 
 #ifdef JEFF_WITH_QT_WIDGETS
-  static constexpr const char *source_manager_cmd    = "/sources";
-  static constexpr const char *script_manager_cmd    = "/scripts";
-  static constexpr const char *first_start_cmd       = "/first";
-  static constexpr const char *about_cmd             = "/about";
-  static constexpr const char *help_cmd              = "/help";
-  static constexpr const char *settings_cmd          = "/settings";
-  static constexpr const char *phrase_editor_cmd     = "/phrases";
-  static constexpr const char *extensions_viewer_cmd = "/extensions";
+  sccc source_manager_cmd    = "/sources";
+  sccc script_manager_cmd    = "/scripts";
+  sccc first_start_cmd       = "/first";
+  sccc about_cmd             = "/about";
+  sccc help_cmd              = "/help";
+  sccc settings_cmd          = "/settings";
+  sccc phrase_editor_cmd     = "/phrases";
+  sccc extensions_viewer_cmd = "/extensions";
 #endif
-  static constexpr const char *fast_append_cmd        = "/+ ";
-  static constexpr const char *fast_append_script_cmd = "/++ ";
-  static constexpr const char *appeal_cmd             = "@";
-  static constexpr const char *monologue_mode_cmd     = "/mm";
-  static constexpr const char *add_scanner_cmd        = "/+s";
-  static constexpr const char *add_composer_cmd       = "/+c";
-  static constexpr const char *stop_scanner_cmd       = "/-s";
-  static constexpr const char *stop_composer_cmd      = "/-c";
+  sccc fast_append_cmd        = "/+ ";
+  sccc fast_append_script_cmd = "/++ ";
+  sccc appeal_cmd             = "@";
+  sccc monologue_mode_cmd     = "/mm";
+  sccc add_scanner_cmd        = "/+s";
+  sccc add_composer_cmd       = "/+c";
+  sccc stop_scanner_cmd       = "/-s";
+  sccc stop_composer_cmd      = "/-c";
   
-  static constexpr const char *bundle_dir_name = "bundle";
+  sccc bundle_dir_name = "bundle";
   
   // Objects:
   Json *json = nullptr;     /*!< Json handler.   */
@@ -192,9 +195,9 @@ signals:
   ScenarioServerMeta schedule_scenario(ScenarioServerMeta scenario_meta);
   /*! @brief Stops current scenario. */
   void shutdown_scenario();
-  /*! @brief TBD */
+  /*! @brief Notifies that the custom scanner has been changed. */
   void custom_scanner_changed();
-  /*! @brief TBD */
+  /*! @brief Notifies that the custom composer has been changed. */
   void custom_composer_changed();
 
 private:
@@ -208,6 +211,7 @@ private:
 
   // Functions described in `basis.cpp`:
   void set_first_source_as_default();
+  Source get_default_source();
 };
 
 #endif

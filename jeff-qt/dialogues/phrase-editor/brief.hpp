@@ -62,7 +62,7 @@ private:
   QWidget phrase_expression_edit_widget; /*! Expression editor widgets. */
   LineEdit phrase_expression_edit_line;
   Button phrase_expression_edit_save;
-  ReactScriptEditor *script_editor = nullptr;
+  ScriptEditor *script_editor = nullptr;
   Menu phrases_context_menu; /*! Context menus. */
   QAction
     add_phrase_action, connect_phrase_action, edit_phrase_action, 

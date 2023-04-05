@@ -218,7 +218,8 @@ void Message::setWidth(int width) {
   _width = width;
 }
 
-/*! @brief TBD */
+/*! @brief Aligns the text of the message according to the maximum message width specified.
+ *  @details By symbols, not by pixels.  */
 void Message::fit_text(int width) {
   auto *label = qobject_cast<QLabel *>(w);
   if (not label) {

@@ -26,7 +26,7 @@ public:
 signals:
   /*! @brief Asks to close brief and show overview again. */
   void close_brief();
-  /*! @brief TBD */
+  /*! @brief Causes the display of detailed information about the extension. */
   QString show_info(QString text);
 
 private:

@@ -15,7 +15,7 @@ PythonWorker::~PythonWorker() { Py_Finalize(); }
 /*! @brief Provides data transfer to the script and unpacking data from the script. */
 QJsonObject PythonWorker::run(QString path, QString def_name, QJsonObject transport) {
   QFileInfo module_info(path);
-  QString dir_path = QDir::toNativeSeparators(module_info.canonicalPath());
+  QString dir_path = module_info.canonicalPath();
   if (dir_path != _current_path) {
     QString command = "import sys; sys.path.append('" + dir_path + "')";
     PyRun_SimpleString(command.toStdString().c_str());
@@ -127,7 +127,7 @@ QJsonObject PythonWorker::request_scan(ScriptMeta *script, const Sources &source
   QJsonArray sources_obj;
   for (auto source : sources) sources_obj.append(source.to_json());
   transport["sources"] = sources_obj;
-  return run(script->origin + "/" + script->filepath, script->fn_name, transport);
+  return run(QFileInfo(script->origin).absolutePath() + "/" + script->filepath, script->fn_name, transport);
 }
 
 /*! @brief Prepares data for custom composing. */
@@ -147,5 +147,5 @@ QJsonObject PythonWorker::request_compose(ScriptMeta *script, const QString &use
     candidates.append(candidate);
   }
   transport["candidates"] = candidates;
-  return run(script->origin + "/" + script->filepath, script->fn_name, transport);
+  return run(QFileInfo(script->origin).absolutePath() + "/" + script->filepath, script->fn_name, transport);
 }

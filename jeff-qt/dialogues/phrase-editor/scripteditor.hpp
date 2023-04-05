@@ -19,15 +19,15 @@
 #include <QRegularExpressionValidator>
 #include <QSpinBox>
 
-/*! @class ReactScriptEditor
+/*! @class ScriptEditor
  *  @brief Adds information about scripts to Jeff.  */
-class ReactScriptEditor : public QWidget {
+class ScriptEditor : public QWidget {
   Q_OBJECT
-  Q_DISABLE_COPY(ReactScriptEditor)
+  Q_DISABLE_COPY(ScriptEditor)
 public:  
   // Functions described in `scripteditor.cpp`:
-  ReactScriptEditor(QWidget *parent = nullptr, Basis *_basis = nullptr);
-  ~ReactScriptEditor();
+  ScriptEditor(QWidget *parent = nullptr, Basis *_basis = nullptr);
+  ~ScriptEditor();
   bool load_from_text(QString json_text);
   bool load_from_script(ScriptMeta *script_meta);
   void set_stype(int _stype);

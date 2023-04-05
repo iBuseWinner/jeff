@@ -2,7 +2,7 @@
 
 /*! @brief The constructor. */
 MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), core(_core) {
-  QString space = " ";
+  constexpr const char space = ' ';
   // File
   file_menu.setTitle(tr("File"));
   source_manager_action.setText(tr("Source manager") + space + Basis::source_manager_cmd);
@@ -50,7 +50,7 @@ MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), c
   connect(&enable_monologue_mode, &QAction::triggered, this, [this] {
     core->got_message_from_user(Basis::monologue_mode_cmd);
   });
-  connect(&enable_monologue_mode, &QAction::toggled, this, [this, space] {
+  connect(&enable_monologue_mode, &QAction::toggled, this, [this] {
     if (enable_monologue_mode.isChecked())
       enable_monologue_mode.setText(tr("Disable monologue mode") + space + Basis::monologue_mode_cmd);
     else
@@ -116,6 +116,10 @@ MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), c
       connect(&scenario_running_info, &QAction::triggered, core, &Core::got_scenario_shutting);
     }
   });
+  handle_scanner();
+  handle_composer();
+  connect(core->basis, &Basis::custom_scanner_changed, this, &MenuBar::handle_scanner);
+  connect(core->basis, &Basis::custom_composer_changed, this, &MenuBar::handle_composer);
   current_scanner_info.setText(tr("No custom scanner enabled"));
   current_scanner_info.setEnabled(false);
   select_scanner_action.setText(tr("Select custom scanner..."));
@@ -192,4 +196,34 @@ MenuBar::MenuBar(Core *_core, Line *line, QWidget *parent) : QMenuBar(parent), c
     core->got_message_from_user(Basis::about_cmd);
   });
   addMenu(&help_menu);
+}
+
+/*! @brief TBD */
+void MenuBar::handle_scanner() {
+  if (not core->basis->custom_scanner) {
+    disconnect(&current_scanner_info, &QAction::triggered, nullptr, nullptr);
+    current_scanner_info.setText(tr("No custom scanner enabled"));
+    current_scanner_info.setEnabled(false);
+  } else {
+    current_scanner_info.setText(tr("Running: ") + QFileInfo(core->basis->custom_scanner->origin).fileName());
+    current_scanner_info.setEnabled(true);
+    connect(&current_scanner_info, &QAction::triggered, core, [this] {
+      core->basis->set_custom_scanner(nullptr);
+    });
+  }
+}
+
+/*! @brief TBD */
+void MenuBar::handle_composer() {
+  if (not core->basis->custom_composer) {
+    disconnect(&current_composer_info, &QAction::triggered, nullptr, nullptr);
+    current_composer_info.setText(tr("No custom composer enabled"));
+    current_composer_info.setEnabled(false);
+  } else {
+    current_composer_info.setText(tr("Running: ") + QFileInfo(core->basis->custom_composer->origin).fileName());
+    current_composer_info.setEnabled(true);
+    connect(&current_composer_info, &QAction::triggered, core, [this] {
+      core->basis->set_custom_composer(nullptr);
+    });
+  }
 }

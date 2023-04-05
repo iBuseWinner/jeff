@@ -136,6 +136,7 @@ ExtensionMeta *ExtensionMeta::from_origin(const QString &origin, bool enabled) {
     return nullptr;
   }
   QTextStream textStream(&file);
+  textStream.setCodec("UTF-8");
   auto text = textStream.readAll().toUtf8();
   file.close();
   auto *extension_meta = from_string(text);

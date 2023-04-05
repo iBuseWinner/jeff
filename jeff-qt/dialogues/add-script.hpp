@@ -26,7 +26,7 @@ class AddScriptDialog : public Dialog {
   Q_DISABLE_COPY(AddScriptDialog)
 public:
   // Objects:
-  ReactScriptEditor *script_editor = nullptr;
+  ScriptEditor *script_editor = nullptr;
   
   // Functions described in `add-script.cpp`:
   AddScriptDialog(QWidget *parent = nullptr, ModalHandler *mhandler = nullptr, Basis *_basis = nullptr);

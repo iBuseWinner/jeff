@@ -61,6 +61,22 @@ void Basis::check_default_source() {
   if (not sources().contains(s)) set_first_source_as_default();
 }
 
+/*! @brief Gets the default source used for autoadding expressions etc.
+ *  Automatically set by Jeff when selected the first source.  */
+Source Basis::get_default_source() {
+  Yellog::Trace("Getting default source...");
+  QVariant path = read(defaultSourcePath);
+  QVariant container = read(defaultSourceContainer);
+  if (not path.isValid() or not container.isValid()) set_first_source_as_default();
+  QString p = path.toString();
+  QString c = container.toString();
+  Source s;
+  s.path = p;
+  s.table_name = c;
+  if (not sources().contains(s)) set_first_source_as_default();
+  return s;
+}
+
 /*! @brief @see Basis::check_default_source */
 void Basis::set_first_source_as_default() {
   if (not _sources.isEmpty()) {
@@ -147,11 +163,36 @@ QJsonObject Basis::handle_to_script(const QJsonObject &object) {
 void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
   /*! @details Common logic part. */
   if (object.contains(writeMemoryWk)) {
-    Yellog::Trace("We need to write some memory values from script");
-    QJsonObject to_store = object[writeMemoryWk].toObject();
-    for (auto key : to_store.keys()) {
-      auto value = to_store[key];
-      memory(key, value);
+    if (object[writeMemoryWk].isObject()) {
+      Yellog::Trace("We need to write some memory values from script");
+      auto to_store = object[writeMemoryWk].toObject();
+      for (auto key : to_store.keys()) {
+        auto value = to_store[key];
+        memory(key, value);
+      }
+    }
+  }
+  if (object.contains(addExpressionWk)) {
+    if (object[addExpressionWk].isArray()) {
+      Yellog::Trace("We need to add the expression in the default source");
+      auto to_add = object[addExpressionWk].toArray();
+      auto default_source = get_default_source();
+      for (auto expr_json_v : to_add) {
+        if (not expr_json_v.isObject()) continue;
+        auto expr_json = expr_json_v.toObject();
+        if (
+          not expr_json.contains("activator_text") or
+          not expr_json.contains("reagent_text") or
+          not expr_json.contains("properties") or
+          not expr_json.contains("exec")
+        ) continue;
+        Expression new_expr;
+        new_expr.activator_text = expr_json["activator_text"]                 .toString();
+        new_expr.reagent_text   = expr_json["reagent_text"]                   .toString();
+        new_expr.properties     = Phrase::parse_props(expr_json["properties"] .toObject());
+        new_expr.exec           = expr_json["exec"]                           .toBool();
+        sql->insert_expression(default_source, new_expr);
+      }
     }
   }
   /*! @details Scenario logic part. */
@@ -228,13 +269,13 @@ void Basis::handle_from_script(const QJsonObject &object, bool except_send) {
   }
 }
 
-/*! @brief TBD */
+/*! @brief Sets the selected custom scanner. */
 void Basis::set_custom_scanner(ScriptMeta *_custom_scanner) {
   custom_scanner = _custom_scanner;
   emit custom_scanner_changed();
 }
 
-/*! @brief TBD */
+/*! @brief Sets the selected custom composer. */
 void Basis::set_custom_composer(ScriptMeta *_custom_composer) {
   custom_composer = _custom_composer;
   emit custom_composer_changed();

@@ -1,6 +1,8 @@
 #ifndef JSON_H
 #define JSON_H
 
+#define sccc static constexpr const char *
+
 #include "core-kit/database/sqlite.hpp"
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/model/keystore.hpp"
@@ -21,13 +23,13 @@ class Json : public QObject {
   Q_DISABLE_COPY(Json)
 public:
   // Constants:
-  static constexpr const char *sources_store_filename    = "sources.json"    ;
-  static constexpr const char *cache_store_filename      = "nlp_cache.json"  ;
-  static constexpr const char *history_store_filename    = "history.json"    ;
-  static constexpr const char *extensions_store_filename = "extensions.json" ;
-  static constexpr const char *memory_store_filename     = "memory.json"     ;
-  static constexpr const char *log_filename              = "log.txt"         ;
-  static constexpr const char *subdir_name               = "jeff-qt"         ;
+  sccc sources_store_filename    = "sources.json"    ;
+  sccc cache_store_filename      = "nlp_cache.json"  ;
+  sccc history_store_filename    = "history.json"    ;
+  sccc extensions_store_filename = "extensions.json" ;
+  sccc memory_store_filename     = "memory.json"     ;
+  sccc log_filename              = "log.txt"         ;
+  sccc subdir_name               = "jeff-qt"         ;
   
   // Functions described in `json.cpp`:
   Json(QString settingsPath, QObject *parent = nullptr);

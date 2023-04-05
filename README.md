@@ -171,7 +171,13 @@ int required_history_parts = 0;
 bool required_adprops = false;
 ```
 
-*TBD*
+The custom scanner searches for expressions bypassing JCK, that is, completely independently. Including, if he suddenly decides to search the database, he is provided with all the information about the sources that Jeff uses.
+
+The custom composer in this case replaces Jeff's composer, which combines responses to different phrases into one message.
+
+**However, custom scanners and composers are allowed to be written only in Python.** They are run using Jeff's built-in Python interpreter.
+
+See `examples/custom-jck` if necessary.
 
 ### `extension*.j.json` format
 

@@ -53,7 +53,9 @@ Core::~Core() {
   Yellog::Trace("After this message all core things will be definitely GONE.");
   Yellog::Trace("And again, have a nice day!");
   if (basis->custom_scanner) basis->write(Basis::customScannerSt, basis->custom_scanner->origin);
+  else basis->write(Basis::customScannerSt, "");
   if (basis->custom_composer) basis->write(Basis::customComposerSt, basis->custom_composer->origin);
+  else basis->write(Basis::customComposerSt, "");
   delete jck;
   delete em;
   delete notifier;

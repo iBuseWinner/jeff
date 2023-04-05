@@ -51,6 +51,10 @@ private:
     hide_menubar_action, settings_action,
     /*! `Help`  menu. */
     novice_guide, database_guide, scripts_guide, extensions_guide, about_jeff_action;
+  
+  // Functions described in `menubar.cpp`:
+  void handle_scanner();
+  void handle_composer();
 };
 
 #endif

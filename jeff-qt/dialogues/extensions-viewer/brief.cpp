@@ -95,8 +95,9 @@ void ExtensionsViewerBrief::update_status() {
         extension_meta->enabled = false;
       });
       status_lbl.setText("<p style=\"color:#3b961a\">" + tr("Running") + "</p>");
-    }
-    else {
+      print_stdout_btn.setHidden(true);
+      print_stderr_btn.setHidden(true);
+    } else {
       disconnect(&on_off_btn, &Button::clicked, nullptr, nullptr);
       on_off_btn.setText(tr("Enable the extension"));
       on_off_btn.setIcon(QIcon::fromTheme("media-playback-start", QIcon(":/arts/icons/16/media-playback-start.svg")));
@@ -105,6 +106,8 @@ void ExtensionsViewerBrief::update_status() {
         extension_meta->enabled = true;
       });
       status_lbl.setText("<p style=\"color:#d22a2a\">" + tr("Stopped") + "</p>");
+      print_stdout_btn.setHidden(false);
+      print_stderr_btn.setHidden(false);
     }
   }
   QTimer::singleShot(1000, this, &ExtensionsViewerBrief::update_status);
@@ -116,14 +119,14 @@ void ExtensionsViewerBrief::remove_extension() {
   emit close_brief();
 }
 
-/*! @brief TBD */
+/*! @brief Prints stdout after the extension terminates. */
 void ExtensionsViewerBrief::get_ext_stdout() {
   auto bytes = em->get_stdout(extension_meta);
   if (bytes.isEmpty()) return;
   emit show_info(tr("Stdout data from @") + extension_meta->name + ": `" + QString::fromUtf8(bytes) + "`");
 }
 
-/*! @brief TBD */
+/*! @brief Prints stderr after the extension terminates. */
 void ExtensionsViewerBrief::get_ext_stderr() {
   auto bytes = em->get_stderr(extension_meta);
   if (bytes.isEmpty()) return;

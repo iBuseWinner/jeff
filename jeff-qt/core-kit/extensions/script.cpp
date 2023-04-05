@@ -120,6 +120,7 @@ ScriptMeta *ScriptMeta::from_origin(const QString &origin) {
     return nullptr;
   }
   QTextStream textStream(&file);
+  textStream.setCodec("UTF-8");
   auto text = textStream.readAll().toUtf8();
   file.close();
   auto *script_meta = from_string(text);

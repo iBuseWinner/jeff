@@ -131,18 +131,18 @@ void PhraseEditorBrief::edit_phrase_text() {
   header.hide();
   if (exec_checkbox.isChecked()) {
     if (not script_editor) {
-      script_editor = new ReactScriptEditor(this, basis);
-      script_editor->set_stype(1); /*!< @details This is hidden function in @a ReactScriptEditor
+      script_editor = new ScriptEditor(this, basis);
+      script_editor->set_stype(1); /*!< @details This is hidden function in @a ScriptEditor
                                     *   for @a ScriptType::React scripts. */
       script_editor->setMaximumWidth(maximumWidth() - 6);
     }
     auto json_script = header.text();
     script_editor->load_from_text(json_script);
     connect(
-      script_editor, &ReactScriptEditor::saved, this, &PhraseEditorBrief::save_script
+      script_editor, &ScriptEditor::saved, this, &PhraseEditorBrief::save_script
     );
     connect(
-      script_editor, &ReactScriptEditor::closed, this, [this, json_script] { save_script(json_script); }
+      script_editor, &ScriptEditor::closed, this, [this, json_script] { save_script(json_script); }
     );
     widget_layout->replaceWidget(&header, script_editor);
     script_editor->show();
@@ -178,8 +178,8 @@ void PhraseEditorBrief::save_script(QString script_json) {
   script_editor->hide();
   header.setText(script_json);
   widget_layout->replaceWidget(script_editor, &header);
-  disconnect(script_editor, &ReactScriptEditor::saved, nullptr, nullptr);
-  disconnect(script_editor, &ReactScriptEditor::closed, nullptr, nullptr);
+  disconnect(script_editor, &ScriptEditor::saved, nullptr, nullptr);
+  disconnect(script_editor, &ScriptEditor::closed, nullptr, nullptr);
   header.show();
   edit_expression.show();
   activators_list.setEnabled(true);

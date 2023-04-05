@@ -21,7 +21,7 @@ public:
   ExtensionsViewer(ExtensionsManager *_em, QWidget *parent = nullptr, ModalHandler *mhandler = nullptr);
   
 signals:
-  /*! @brief TBD */
+  /*! @brief Causes the display of detailed information about the extension. */
   QString show_info(QString text);
   
 private:

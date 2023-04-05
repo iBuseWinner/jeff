@@ -44,7 +44,7 @@ signals:
   void shutdown_scenario();
   /*! @brief Sends an informational message. */
   QString show_info(QString info);
-  /*! @brief TBD */
+  /*! @brief Redirects a specific message to a specific extension. */
   QString send_to_extension(QString extension_name, QString text);
 
 private:
