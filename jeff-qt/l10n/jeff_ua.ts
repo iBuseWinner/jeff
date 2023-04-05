@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="uk_UA">
 <context>
     <name>About</name>
     <message>
@@ -662,79 +662,79 @@
     <name>ReactScriptEditor</name>
     <message>
         <source>Specify script type:</source>
-        <translation>Вкажіть тип скрипту:</translation>
+        <translation type="vanished">Вкажіть тип скрипту:</translation>
     </message>
     <message>
         <source>Specify script path:</source>
-        <translation>Вкажіть шлях до скрипту:</translation>
+        <translation type="vanished">Вкажіть шлях до скрипту:</translation>
     </message>
     <message>
         <source>Select a file...</source>
-        <translation>Оберіть файл...</translation>
+        <translation type="vanished">Оберіть файл...</translation>
     </message>
     <message>
         <source>Select file...</source>
-        <translation>Вибрати файл...</translation>
+        <translation type="vanished">Вибрати файл...</translation>
     </message>
     <message>
         <source>Python script</source>
-        <translation>Скрипт Python</translation>
+        <translation type="vanished">Скрипт Python</translation>
     </message>
     <message>
         <source>Any executable</source>
-        <translation>Будь-яка програма</translation>
+        <translation type="vanished">Будь-яка програма</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Скасувати</translation>
+        <translation type="vanished">Скасувати</translation>
     </message>
     <message>
         <source>Add script</source>
-        <translation>Додати скрипт</translation>
+        <translation type="vanished">Додати скрипт</translation>
     </message>
     <message>
         <source>Save script</source>
-        <translation>Зберегти скрипт</translation>
+        <translation type="vanished">Зберегти скрипт</translation>
     </message>
     <message>
         <source>Specify function name:</source>
-        <translation>Вкажіть назву функції:</translation>
+        <translation type="vanished">Вкажіть назву функції:</translation>
     </message>
     <message>
         <source>Function name...</source>
-        <translation>Назва функції...</translation>
+        <translation type="vanished">Назва функції...</translation>
     </message>
     <message>
         <source>Specify amount of message history to be sent:</source>
-        <translation>Вкажіть кількість останніх повідомлень які потрібно надіслати:</translation>
+        <translation type="vanished">Вкажіть кількість останніх повідомлень які потрібно надіслати:</translation>
     </message>
     <message>
         <source>Check if script needs whole user input</source>
-        <translation>Відмітьте, якщо скрипт потребує все введене користувачем</translation>
+        <translation type="vanished">Відмітьте, якщо скрипт потребує все введене користувачем</translation>
     </message>
     <message>
         <source>Add the memory cells to be passed to the script:</source>
-        <translation>Додайте комірки пам&apos;яті які потрібно передати в скрипт:</translation>
+        <translation type="vanished">Додайте комірки пам&apos;яті які потрібно передати в скрипт:</translation>
     </message>
     <message>
         <source>Add memory cell</source>
-        <translation>Додати комірку пам&apos;яті</translation>
+        <translation type="vanished">Додати комірку пам&apos;яті</translation>
     </message>
     <message>
         <source>Remove selected cell</source>
-        <translation>Видалити обрану комірку</translation>
+        <translation type="vanished">Видалити обрану комірку</translation>
     </message>
     <message>
         <source>Memory cell name...</source>
-        <translation>Назва комірки пам&apos;яті...</translation>
+        <translation type="vanished">Назва комірки пам&apos;яті...</translation>
     </message>
     <message>
         <source>Cells list</source>
-        <translation>Список комірок</translation>
+        <translation type="vanished">Список комірок</translation>
     </message>
     <message>
         <source>Please complete path and function name fields before saving.</source>
-        <translation>Будь ласка, вкажіть шлях та назву функції перед збереженням.</translation>
+        <translation type="vanished">Будь ласка, вкажіть шлях та назву функції перед збереженням.</translation>
     </message>
 </context>
 <context>
@@ -838,6 +838,97 @@
     <message>
         <source>Validation error: the second column of the source does not fit the description of &quot;phrase&quot; TEXT.</source>
         <translation>Помилка в ході перевірки: другий стовпець джерела не відповідає опису &quot;phrase&quot; TEXT.</translation>
+    </message>
+</context>
+<context>
+    <name>ScriptEditor</name>
+    <message>
+        <source>Specify script type:</source>
+        <translation>Вкажіть тип скрипту:</translation>
+    </message>
+    <message>
+        <source>Specify script path:</source>
+        <translation>Вкажіть шлях до скрипту:</translation>
+    </message>
+    <message>
+        <source>Select a file...</source>
+        <translation>Оберіть файл...</translation>
+    </message>
+    <message>
+        <source>Select file...</source>
+        <translation>Вибрати файл...</translation>
+    </message>
+    <message>
+        <source>Python script</source>
+        <translation>Скрипт Python</translation>
+    </message>
+    <message>
+        <source>Any executable</source>
+        <translation>Будь-яка програма</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Скасувати</translation>
+    </message>
+    <message>
+        <source>Add script</source>
+        <translation>Додати скрипт</translation>
+    </message>
+    <message>
+        <source>Save script</source>
+        <translation>Зберегти скрипт</translation>
+    </message>
+    <message>
+        <source>Specify function name:</source>
+        <translation>Вкажіть назву функції:</translation>
+    </message>
+    <message>
+        <source>Function name...</source>
+        <translation>Назва функції...</translation>
+    </message>
+    <message>
+        <source>Specify amount of message history to be sent:</source>
+        <translation>Вкажіть кількість останніх повідомлень які потрібно надіслати:</translation>
+    </message>
+    <message>
+        <source>Check if script needs whole user input</source>
+        <translation>Відмітьте, якщо скрипт потребує все введене користувачем</translation>
+    </message>
+    <message>
+        <source>Add the memory cells to be passed to the script:</source>
+        <translation>Додайте комірки пам&apos;яті які потрібно передати в скрипт:</translation>
+    </message>
+    <message>
+        <source>Add memory cell</source>
+        <translation>Додати комірку пам&apos;яті</translation>
+    </message>
+    <message>
+        <source>Remove selected cell</source>
+        <translation>Видалити обрану комірку</translation>
+    </message>
+    <message>
+        <source>Memory cell name...</source>
+        <translation>Назва комірки пам&apos;яті...</translation>
+    </message>
+    <message>
+        <source>Cells list</source>
+        <translation>Список комірок</translation>
+    </message>
+    <message>
+        <source>Please complete path and function name fields before saving.</source>
+        <translation>Будь ласка, вкажіть шлях та назву функції перед збереженням.</translation>
+    </message>
+    <message>
+        <source>Custom script</source>
+        <translation>Кастомний скрипт</translation>
+    </message>
+    <message>
+        <source>Jeff script</source>
+        <translation>Скрипт Джеффа</translation>
+    </message>
+    <message>
+        <source>Please select a path before saving.</source>
+        <translation>Будь ласка, виберіть шлях перед збереженням.</translation>
     </message>
 </context>
 <context>

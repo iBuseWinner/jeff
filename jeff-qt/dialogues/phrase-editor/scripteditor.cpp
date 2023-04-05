@@ -136,6 +136,10 @@ void ScriptEditor::change_stype() {
         }
         auto *scanner = ScriptMeta::from_origin(filepath);
         if (not scanner) return;
+        if (scanner->stype != 2) {
+          delete scanner;
+          return;
+        }
         basis->set_custom_scanner(scanner);
         emit closed();
       });
@@ -147,6 +151,10 @@ void ScriptEditor::change_stype() {
         }
         auto *composer = ScriptMeta::from_origin(filepath);
         if (not composer) return;
+        if (composer->stype != 3) {
+          delete composer;
+          return;
+        }
         basis->set_custom_composer(composer);
         emit closed();
       });

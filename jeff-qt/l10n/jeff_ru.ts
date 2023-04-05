@@ -662,79 +662,79 @@
     <name>ReactScriptEditor</name>
     <message>
         <source>Specify script type:</source>
-        <translation>Укажите тип скрипта:</translation>
+        <translation type="vanished">Укажите тип скрипта:</translation>
     </message>
     <message>
         <source>Specify script path:</source>
-        <translation>Укажите путь к скрипту:</translation>
+        <translation type="vanished">Укажите путь к скрипту:</translation>
     </message>
     <message>
         <source>Select a file...</source>
-        <translation>Выберите файл...</translation>
+        <translation type="vanished">Выберите файл...</translation>
     </message>
     <message>
         <source>Select file...</source>
-        <translation>Выбрать файл...</translation>
+        <translation type="vanished">Выбрать файл...</translation>
     </message>
     <message>
         <source>Python script</source>
-        <translation>Скрипт Python</translation>
+        <translation type="vanished">Скрипт Python</translation>
     </message>
     <message>
         <source>Any executable</source>
-        <translation>Любая программа</translation>
+        <translation type="vanished">Любая программа</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation>Отменить</translation>
+        <translation type="vanished">Отменить</translation>
     </message>
     <message>
         <source>Add script</source>
-        <translation>Добавить скрипт</translation>
+        <translation type="vanished">Добавить скрипт</translation>
     </message>
     <message>
         <source>Save script</source>
-        <translation>Сохранить скрипт</translation>
+        <translation type="vanished">Сохранить скрипт</translation>
     </message>
     <message>
         <source>Specify function name:</source>
-        <translation>Укажите название функции:</translation>
+        <translation type="vanished">Укажите название функции:</translation>
     </message>
     <message>
         <source>Function name...</source>
-        <translation>Название функции...</translation>
+        <translation type="vanished">Название функции...</translation>
     </message>
     <message>
         <source>Specify amount of message history to be sent:</source>
-        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
+        <translation type="vanished">Укажите количество последних сообщений, которые нужно отправить:</translation>
     </message>
     <message>
         <source>Check if script needs whole user input</source>
-        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
+        <translation type="vanished">Отметьте, если скрипту нужен весь ввод пользователя</translation>
     </message>
     <message>
         <source>Add the memory cells to be passed to the script:</source>
-        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
+        <translation type="vanished">Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
     </message>
     <message>
         <source>Add memory cell</source>
-        <translation>Добавить ячейку памяти</translation>
+        <translation type="vanished">Добавить ячейку памяти</translation>
     </message>
     <message>
         <source>Remove selected cell</source>
-        <translation>Удалить выбранную ячейку</translation>
+        <translation type="vanished">Удалить выбранную ячейку</translation>
     </message>
     <message>
         <source>Memory cell name...</source>
-        <translation>Название ячейки памяти...</translation>
+        <translation type="vanished">Название ячейки памяти...</translation>
     </message>
     <message>
         <source>Cells list</source>
-        <translation>Список ячеек</translation>
+        <translation type="vanished">Список ячеек</translation>
     </message>
     <message>
         <source>Please complete path and function name fields before saving.</source>
-        <translation>Пожалуйста, укажите путь и название функции перед сохранением.</translation>
+        <translation type="vanished">Пожалуйста, укажите путь и название функции перед сохранением.</translation>
     </message>
 </context>
 <context>
@@ -838,6 +838,97 @@
     <message>
         <source>Validation error: the second column of the source does not fit the description of &quot;phrase&quot; TEXT.</source>
         <translation>Ошибка в ходе проверки: второй столбец источника не соответствует описанию &quot;phrase&quot; TEXT.</translation>
+    </message>
+</context>
+<context>
+    <name>ScriptEditor</name>
+    <message>
+        <source>Specify script type:</source>
+        <translation>Укажите тип скрипта:</translation>
+    </message>
+    <message>
+        <source>Specify script path:</source>
+        <translation>Укажите путь к скрипту:</translation>
+    </message>
+    <message>
+        <source>Select a file...</source>
+        <translation>Выберите файл...</translation>
+    </message>
+    <message>
+        <source>Select file...</source>
+        <translation>Выбрать файл...</translation>
+    </message>
+    <message>
+        <source>Python script</source>
+        <translation>Скрипт Python</translation>
+    </message>
+    <message>
+        <source>Any executable</source>
+        <translation>Любая программа</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отменить</translation>
+    </message>
+    <message>
+        <source>Add script</source>
+        <translation>Добавить скрипт</translation>
+    </message>
+    <message>
+        <source>Save script</source>
+        <translation>Сохранить скрипт</translation>
+    </message>
+    <message>
+        <source>Specify function name:</source>
+        <translation>Укажите название функции:</translation>
+    </message>
+    <message>
+        <source>Function name...</source>
+        <translation>Название функции...</translation>
+    </message>
+    <message>
+        <source>Specify amount of message history to be sent:</source>
+        <translation>Укажите количество последних сообщений, которые нужно отправить:</translation>
+    </message>
+    <message>
+        <source>Check if script needs whole user input</source>
+        <translation>Отметьте, если скрипту нужен весь ввод пользователя</translation>
+    </message>
+    <message>
+        <source>Add the memory cells to be passed to the script:</source>
+        <translation>Добавьте ячейки памяти, которые нужно передать в скрипт:</translation>
+    </message>
+    <message>
+        <source>Add memory cell</source>
+        <translation>Добавить ячейку памяти</translation>
+    </message>
+    <message>
+        <source>Remove selected cell</source>
+        <translation>Удалить выбранную ячейку</translation>
+    </message>
+    <message>
+        <source>Memory cell name...</source>
+        <translation>Название ячейки памяти...</translation>
+    </message>
+    <message>
+        <source>Cells list</source>
+        <translation>Список ячеек</translation>
+    </message>
+    <message>
+        <source>Please complete path and function name fields before saving.</source>
+        <translation>Пожалуйста, укажите путь и название функции перед сохранением.</translation>
+    </message>
+    <message>
+        <source>Custom script</source>
+        <translation>Кастомный скрипт</translation>
+    </message>
+    <message>
+        <source>Jeff script</source>
+        <translation>Скрипт Джеффа</translation>
+    </message>
+    <message>
+        <source>Please select a path before saving.</source>
+        <translation>Пожалуйста, выберите путь перед сохранением.</translation>
     </message>
 </context>
 <context>
