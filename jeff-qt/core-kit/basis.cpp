@@ -13,6 +13,18 @@ Basis::Basis(QObject *parent) : QObject(parent) {
     l.truncate(2);
     memory("jeff-lang", l);
   }
+  // Setting the `jeff-os` value:
+  {
+#ifdef __linux__
+    memory("jeff-os", "Linux");
+#elif __APPLE__
+    memory("jeff-os", "macOS");
+#elif _WIN32
+    memory("jeff-os", "Windows");
+#else
+    memory("jeff-os", "unknown");
+#endif
+  }
   // Setting the `jeff-bundle-dir` value:
   {
     auto p = get_settings_path() + "/" + Json::subdir_name + "/" + Basis::bundle_dir_name;
