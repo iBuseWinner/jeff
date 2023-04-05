@@ -329,10 +329,28 @@ Scripts, if specified in their JSON configuration, *can also request a list of m
 
 Also, scripts cannot request something while they are being executed, so their scope is often limited. On the other hand, this is for the best; in addition, Jeff Qt supports the execution of scripts written in Python using a built-in interpreter, so it is guaranteed that if Jeff is built for the target platform, Python scripts will be executed on it.
 
+#### Adding new expressions to the database
+
+Extensions can add new expressions to the database to improve the quality of communication. To add one or more new expressions, send the following request to the Jeff:
+
+```json
+{"add_expr": [
+  {
+    "activator_text": "User input to be recognized",
+    "reagent_text": "Jeff's answer",
+    "properties": {"some": "properties",..},
+    "exec": false | true
+  },..
+]}
+```
+
 #### Usable memory cells
 
 1. `jeff-lang` - Jeff's language chosen with `QLocale::system().name()`
-2. `jeff-bundle-dir` - absolute path to Jeff's extensions folder
+2. `jeff-os` - operation system on working computer
+3. `jeff-bundle-dir` - absolute path to Jeff's extensions folder
+
+**Note:** in Jeff Core `jeff-os` and `jeff-bundle-dir` are restricted due to security suggests.
 
 #### Scenarios
 
