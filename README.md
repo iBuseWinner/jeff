@@ -25,9 +25,9 @@ Jeff is a highly customizable, extensible and cross-platform chatbot with a MIT 
 
 There are several subprojects:
 
-1. `jeff-qt` desktop app
-2. `jeff-api` extensions API for Python
-3. `jeff-core` server
+1. `jeff-desktop` desktop app
+2. `jeff-core` server
+3. `jeff-api` extensions API for Python
 
 ## Screenshots
 
@@ -78,7 +78,7 @@ Expressions compete with each other for the right to be a reagent for a given ac
 10. **[Security]** Authorization with a key on the server. Jeff will only process messages that contain the key in JSON (note that `jeff-qt` sockets do not use encryption). Settings: `server/authorize` (bool), `server/auth_key` (str)
 11. **[Security]** The prohibition on the transmission of message history. Jeff doesn't have to pass the message history to anyone, even to scripts that require it to use it to determine the context. Setting: `core-kit/nomessagetransmission` (bool)
 
-**Note 1:** Depending on whether you are using Jeff Qt or jeff-core, the configuration files may be in different locations.
+**Note 1:** Depending on whether you are using Jeff Desktop or Jeff Core, the configuration files may be in different locations.
 
 **Note 2:** By default, 10 and 11 options are disabled, i.e. Jeff passes the history to the scripts that requested it and accepts all incoming TCP connections.
 
@@ -327,7 +327,7 @@ Accordingly, if your extension wants to store something in Jeff, it should send 
 
 Scripts, if specified in their JSON configuration, *can also request a list of memory values and set new values*, as well as receive additional properties specified in the phrase containing the script, the input of the user who called this script, and additionally a certain number of messages from the history (but first look at [parameter 11](#usable_settings)).
 
-Also, scripts cannot request something while they are being executed, so their scope is often limited. On the other hand, this is for the best; in addition, Jeff Qt supports the execution of scripts written in Python using a built-in interpreter, so it is guaranteed that if Jeff is built for the target platform, Python scripts will be executed on it.
+Also, scripts cannot request something while they are being executed, so their scope is often limited. On the other hand, this is for the best; in addition, Jeff Desktop supports the execution of scripts written in Python using a built-in interpreter, so it is guaranteed that if Jeff is built for the target platform, Python scripts will be executed on it.
 
 #### Adding new expressions to the database
 
@@ -370,7 +370,7 @@ You will receive a `{"sfinish": true}` message in response. *If you received suc
 
 ### Using `jeff-api` in your projects
 
-The jeff-api library is written for the Python language, it can be installed via `pip`. The source code is in the `jeff-api` folder. The library simplifies interaction with Jeff by implementing the main entities. The extension examples found in the `extensions` folder mostly use this library.
+The Jeff API library is written for the Python language, it can be installed via `pip`. The source code is in the `jeff-api` folder. The library simplifies interaction with Jeff by implementing the main entities. The extension examples found in the `extensions` folder mostly use this library.
 
 Examples of creating API objects:
 
@@ -388,7 +388,7 @@ If you're going to route large amounts of text through Jeff, it's a good idea to
 
 ## Building and running
 
-### `jeff-qt`
+### `jeff-desktop`
 
 Dependencies:
 
@@ -401,7 +401,7 @@ Dependencies:
 Building:
 
 ```bash
-cd jeff-qt
+cd jeff-desktop
 mkdir target
 cmake -S . -B target
 cd target
