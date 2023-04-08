@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import argparse, subprocess
+import argparse, shlex, subprocess
 from time import sleep
 from jeff_api import client, server
 
@@ -17,14 +17,19 @@ verbose = args.verbose
 srv = server.Server(None, extension_port)
 cli = client.Client('localhost', jeff_port)
 
-cells = cli.read_cells(['jeff-lang', 'jeff-bundle-dir'])
-lang, bundle_dir = cells['jeff-lang'], cells['jeff-bundle-dir']
+cells = cli.read_cells(['jeff-lang', 'jeff-bundle-dir', 'jeff-os'])
+lang, bundle_dir, target_os = cells['jeff-lang'], cells['jeff-bundle-dir'], cells['jeff-os']
 
 
 class Process:
   def __init__(self, cmd):
-    self.args = ['konsole', '-e', 'zsh', '-c', f'{cmd}; zsh -i']
+    if target_os == 'Linux':
+      self.args = ['konsole', '-e', 'zsh', '-c', f'{cmd}; zsh -i']
+    else:
+      self.args = [cmd]  # TBD
     if verbose: print(self.args)
+
+  def run(self):
     self.process = subprocess.Popen(
       self.args,
       stdin=subprocess.PIPE,
@@ -40,6 +45,22 @@ class Process:
 def exec_cmd(cmd):
   try:
     process = Process(cmd)
+    process.run()
+    if verbose: print('Process is started.')
+    while process.poll() is None:
+      sleep(0.01)
+  except Exception as e:
+    if str(e):
+      print(str(e))
+      cli.send_error(str(e))
+  if verbose: print('Process finished')
+
+
+def exec_simple(cmd):
+  try:
+    process = Process(cmd)
+    process.args = shlex.split(cmd)
+    process.run()
     if verbose: print('Process is started.')
     while process.poll() is None:
       sleep(0.01)
@@ -62,7 +83,10 @@ def main():
     if 'content' not in data: continue
     cc = data['content']
     if verbose: print(f'Got: $ {cc}')
-    exec_cmd(cc)
+    if '/simple ' in cc:
+      exec_simple(cc.replace('/simple ', ''))
+    else:
+      exec_cmd(cc)
 
 
 try:
