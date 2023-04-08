@@ -1,0 +1,21 @@
+{
+  "name": "alias",
+  "title": "Alias Maker",
+  "desc": "Alias Maker is an extension that creates aliases for your phrases. For example, the complex command `@cmd cd * && git describe --long --abbrev=7 --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'` could be replaced with `Describe a repository for me *`. Note that the asterisk is used to replace the changing content.",
+  "authors": [
+    {
+      "author": "Mark CDA",
+      "contacts": {"telegram": "@markcda"}
+    }
+  ],
+  "license": "MIT",
+  "links": [],
+  "program": "python",
+  "args": [
+    "alias-maker.py",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>"
+  ],
+  "server_ip": "",
+  "server_port": 23179
+}
