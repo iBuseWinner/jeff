@@ -272,11 +272,12 @@ QPair<QString, QString> JCK::compose_answer(QString input, CoverageCache candida
           output += obj[Basis::sendWk].toString() + " ";
         }
         if (obj.contains(Basis::ignoreWk)) {
-          if (obj[Basis::ignoreWk].toBool())
+          if (obj[Basis::ignoreWk].toBool()) {
             if (ignore) {
               *ignore = true;
               return QPair<QString, QString>();
             }
+          }
         }
       } else {
         auto *extension_meta = ExtensionMeta::from_string(ec.expression.reagent_text);
