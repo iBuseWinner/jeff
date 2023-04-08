@@ -157,6 +157,8 @@ insert into "source" values ('x+1', '{
 
 And this can be easily done inside Jeff: the Qt version supports creating and editing React scripts.
 
+**Also note** that if you do some off-side things from your script and don't want send anything to user as well as notify all other extensions about this user input, just send `{"ignore": true}`.
+
 ### `CustomScan` and `CustomCompose` scripts
 
 All possible `CustomScan` and `CustomCompose` scripts' fields are listed below:

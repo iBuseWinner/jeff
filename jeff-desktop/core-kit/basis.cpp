@@ -2,6 +2,7 @@
 
 /*! @brief The constructor. */
 Basis::Basis(QObject *parent) : QObject(parent) {
+  _settings.sync();
   json = new Json(get_settings_path(), this); /*!< @details Json object will be created first as it inits yelloger. */
   sql = new SQLite(this);
   cacher = new Cacher(this);

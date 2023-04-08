@@ -39,15 +39,15 @@ class Basis : public QObject {
   Q_DISABLE_COPY(Basis)
 public:
   // Constants:
-  sccc companyName     = "cclc";
-  sccc applicationName = "jeff";
+  sccc companyName     = "jeff";
+  sccc applicationName = "jeff-desktop";
 
-  sccc isMenuBarHiddenSt = "jeff-qt/menubarishidden";
-  sccc posSt             = "jeff-qt/pos";
-  sccc sizeSt            = "jeff-qt/size";
-  sccc isFullScreenSt    = "jeff-qt/isfullscreen";
-  sccc isNotFirstStartSt = "jeff-qt/isnotfirststart";
-  sccc helpTipSt         = "jeff-qt/helptip";
+  sccc isMenuBarHiddenSt = "jeff-desktop/menubarishidden";
+  sccc posSt             = "jeff-desktop/pos";
+  sccc sizeSt            = "jeff-desktop/size";
+  sccc isFullScreenSt    = "jeff-desktop/isfullscreen";
+  sccc isNotFirstStartSt = "jeff-desktop/isnotfirststart";
+  sccc helpTipSt         = "jeff-desktop/helptip";
 
   sccc isMonologueEnabledSt          = "core-kit/ismonologuemodeenabled";
   sccc isDelayEnabledSt              = "core-kit/isdelayenabled";
@@ -99,6 +99,7 @@ public:
   sccc sendStatusWk       = "send_status";
   sccc sendWarningWk      = "send_warning";
   sccc sendInfoWk         = "send_info";
+  sccc ignoreWk           = "ignore";
   sccc authKeyWk          = "auth_key";
   sccc addExpressionWk    = "add_expr";
 

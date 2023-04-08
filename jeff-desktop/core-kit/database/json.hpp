@@ -29,7 +29,7 @@ public:
   sccc extensions_store_filename = "extensions.json" ;
   sccc memory_store_filename     = "memory.json"     ;
   sccc log_filename              = "log.txt"         ;
-  sccc subdir_name               = "jeff-qt"         ;
+  sccc subdir_name               = "jeff-desktop"         ;
   
   // Functions described in `json.cpp`:
   Json(QString settingsPath, QObject *parent = nullptr);

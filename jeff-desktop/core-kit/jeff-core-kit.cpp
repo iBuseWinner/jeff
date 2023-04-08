@@ -108,13 +108,16 @@ void JCK::search_for_suggests(const QString &input) {
     if (json_object.contains(Basis::sendWk)) emit response(json_object[Basis::sendWk].toString());
     else emit empty(input);
   } else {
-    composition = compose_answer(input, sorted);
+    bool ignore = false;
+    composition = compose_answer(input, sorted, &ignore);
+    if (ignore) return;
     if (float(composition.first.length()) / input.length() > 0.33 and not from_db) {
       selection = select_from_db(input);
       if (selection.isEmpty()) { emit empty(input); return; }
       sorted = select_candidates(selection);
-      composition = compose_answer(input, sorted);
+      composition = compose_answer(input, sorted, &ignore);
     }
+    if (ignore) return;
     if (composition.second.length()) emit response(composition.second.trimmed());
     else emit empty(input);
   }
@@ -242,7 +245,7 @@ CoverageCache JCK::select_candidates(CoverageCache selection) {
 
 /*! @brief Builds an answer in the order of the indices of the occurrence and
  *  fills the uncovered part of the expression.  */
-QPair<QString, QString> JCK::compose_answer(QString input, CoverageCache candidates) {
+QPair<QString, QString> JCK::compose_answer(QString input, CoverageCache candidates, bool *ignore = nullptr) {
   QString output;
   auto lemmatized = StringSearch::lemmatize(input);
   for (auto ec : candidates) {
@@ -267,6 +270,13 @@ QPair<QString, QString> JCK::compose_answer(QString input, CoverageCache candida
           ec.expression.use_cases += 1;
           basis->cacher->append(ec.expression);
           output += obj[Basis::sendWk].toString() + " ";
+        }
+        if (obj.contains(Basis::ignoreWk)) {
+          if (obj[Basis::ignoreWk].toBool())
+            if (ignore) {
+              *ignore = true;
+              return QPair<QString, QString>();
+            }
         }
       } else {
         auto *extension_meta = ExtensionMeta::from_string(ec.expression.reagent_text);

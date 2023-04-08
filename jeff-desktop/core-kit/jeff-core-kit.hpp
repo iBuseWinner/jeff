@@ -2,6 +2,7 @@
 #define JCK_H
 
 #include "core-kit/basis.hpp"
+#include "core-kit/history-processor.hpp"
 #include "core-kit/database/sqlite.hpp"
 #include "core-kit/extensions/extension.hpp"
 #include "core-kit/extensions/script.hpp"
@@ -66,7 +67,7 @@ private:
   CoverageCache select_from_cache(const QString &input);
   CoverageCache select_from_db(const QString &input);
   CoverageCache select_candidates(CoverageCache selection);
-  QPair<QString, QString> compose_answer(QString input, CoverageCache candidates);
+  QPair<QString, QString> compose_answer(QString input, CoverageCache candidates, bool *ignore);
   void reset_cache_use_cases(CoverageCache &selection);
   CoverageCache get_from_json(const QJsonArray &array);
 };

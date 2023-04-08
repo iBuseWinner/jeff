@@ -2,8 +2,8 @@
 
 /*! @brief The constructor. */
 Json::Json(QString settingsPath, QObject *parent) : QObject(parent), _settings_path(settingsPath) {
-  check_or_create_subdir();
   _settings_path = _settings_path + "/" + Json::subdir_name;
+  check_or_create_subdir();
   Yellog::EnableFileOutput(
     QDir::toNativeSeparators(
       QString("%1/%2").arg(_settings_path).arg(log_filename))
@@ -167,9 +167,8 @@ void Json::write_json(QFile *savefile, const QJsonArray &json_array) {
   savefile->close();
 }
 
-/*! @brief Checks */
+/*! @brief Checks if @a _settings_path is accessible and creates it if it's not. */
 void Json::check_or_create_subdir() {
   QDir dir;
-  auto subdir_path = _settings_path + "/" + Json::subdir_name;
-  if (not dir.exists(subdir_path)) dir.mkdir(subdir_path);
+  dir.mkpath(_settings_path);
 }
