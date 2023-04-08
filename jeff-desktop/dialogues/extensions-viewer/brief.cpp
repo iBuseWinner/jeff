@@ -29,6 +29,8 @@ ExtensionsViewerBrief::ExtensionsViewerBrief(ExtensionsManager *_em, QWidget *pa
   links_lbl.setContextMenuPolicy(Qt::NoContextMenu);
   status_lbl.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
   auto *spacer = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed);
+  print_stdout_btn.setHidden(true);
+  print_stderr_btn.setHidden(true);
   setLayout(
     VLineLt::another()
       ->addlt(HLineLt::another()->addw(&back_btn)->addw(&name_lbl)->addi(spacer))
