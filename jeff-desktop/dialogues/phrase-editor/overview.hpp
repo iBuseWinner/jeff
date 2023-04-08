@@ -12,6 +12,7 @@
 #include <QAction>
 #include <QCursor>
 #include <QGridLayout>
+#include <QMutableListIterator>
 #include <QPoint>
 #include <QTreeWidgetItem>
 #include <QWidget>

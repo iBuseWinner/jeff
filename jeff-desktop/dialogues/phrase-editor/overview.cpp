@@ -1,4 +1,5 @@
 #include "overview.hpp"
+#include <iostream>
 
 /*! @brief The constructor. */
 PhraseEditorOverview::PhraseEditorOverview(Basis *_basis, QWidget *parent)
@@ -48,8 +49,15 @@ void PhraseEditorOverview::show_context_menu(const QPoint &pos) {
         basis->sql->update_links(selected_source(), phrases[i].links, phrases[i].address);
       }
     }
-    auto *item = phrases_list.takeTopLevelItem(phrases_list.indexOfTopLevelItem(selected_item));
-    if (item) delete item;
+    QMutableListIterator<Phrase> phrases_iter(phrases);
+    while (phrases_iter.hasNext()) {
+      auto &phrase = phrases_iter.next();
+      if (phrase.address == address) {
+        phrases_iter.remove();
+        break;
+      }
+    }
+    phrases_list.removeTopLevelItem(phrases_list.indexOfTopLevelItem(selected_item));
   });
   phrase_context_menu.exec(QCursor::pos());
 }

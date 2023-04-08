@@ -14,6 +14,7 @@ public:
   // Functions described in `list.cpp`:
   List(QWidget *parent = nullptr);
   void addTopLevelItem(QTreeWidgetItem *item);
+  void removeTopLevelItem(int index);
   void clear();
   
 private:

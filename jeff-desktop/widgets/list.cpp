@@ -23,12 +23,20 @@ void List::addTopLevelItem(QTreeWidgetItem *item) {
   items_counter++;
   top_level_items.append(item);
   QTreeWidget::addTopLevelItem(item);
-  while (topLevelItemCount() > max_items_amount) takeTopLevelItem(0);
+  while (topLevelItemCount() > max_items_amount) QTreeWidget::takeTopLevelItem(0);
+}
+
+/*! @brief TBD */
+void List::removeTopLevelItem(int index) {
+  items_counter--;
+  auto *item = QTreeWidget::takeTopLevelItem(index);
+  if (item) top_level_items.removeOne(item);
+  if (item) delete item;
 }
 
 /*! @brief Clears the list of all elements. */
 void List::clear() {
-  while (takeTopLevelItem(0)) {}
+  while (QTreeWidget::takeTopLevelItem(0)) {}
   items_counter = 0;
   top_level_items.clear();
 }
@@ -49,7 +57,7 @@ void List::show_items(int value) {
       short portion = min_index < normal_portion ? min_index : normal_portion;
       if (portion < 1) return;
       while (portion--) {
-        takeTopLevelItem(total - 1);
+        QTreeWidget::takeTopLevelItem(total - 1);
         insertTopLevelItem(0, top_level_items[--min_index]);
       }
       scrollTo(model()->index(3, 0), QAbstractItemView::PositionAtTop);
@@ -59,7 +67,7 @@ void List::show_items(int value) {
         (top_level_items.length() - max_index - 1) : normal_portion;
       if (portion < 1) return;
       while (portion--) {
-        takeTopLevelItem(0);
+        QTreeWidget::takeTopLevelItem(0);
         insertTopLevelItem(total - 1, top_level_items[++max_index]);
       }
       scrollTo(model()->index(max_items_amount - 3, 0), QAbstractItemView::PositionAtBottom);
