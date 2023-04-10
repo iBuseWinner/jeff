@@ -37,9 +37,9 @@ def start_alias_maker_scenario(content: str) -> None:
   else:
     # `@alias`
     scn.send_msg('Enter the alias:' if lang != 'ru' else 'Введите альяс:')
-    cmds.append(scn.wait())
+    activator = scn.wait()
     scn.send_msg('Enter the full expression:' if lang != 'ru' else 'Введите полное выражение:')
-    cmds.append(scn.wait())
+    reagent = scn.wait()
     scn.terminate()
   f = open('alias-template.py', 'r')
   text: str = f.read()
