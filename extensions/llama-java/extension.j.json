@@ -1,0 +1,30 @@
+{
+  "name": "llama",
+  "title": "Llama Communication",
+  "desc": "Chat with Llama writen on C++.",
+  "authors": [
+    {
+      "author": "iBuseWinner"
+    }
+  ],
+  "license": "MIT",
+  "links": [
+    "https://github.com/ggerganov/llama.cpp"
+  ],
+  "program": "java",
+  "args": [
+    "-Xmx256M",
+    "-Dfile.encoding=UTF-8",
+    "-jar",
+    "LlamaCommunication.jar",
+    "<SERVER_PORT>",
+    "<JEFF_PORT>",
+    "2048",
+    "1.1",
+    "2048",
+    "4",
+    "ggml-vicuna-7b-4bit-rev1.bin"
+  ],
+  "server_ip": "",
+  "server_port": 23180
+}
